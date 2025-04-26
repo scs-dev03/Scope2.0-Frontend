@@ -1,0 +1,279 @@
+<div class="relative h-[100vh] w-[100vw]  bg-[#c2dedb] overflow-auto">
+    <div class="h-auto flex w-full bg-white items-center justify-between px-4 py-2 relative">
+      <!-- Logo -->
+       <div class="flex">
+        <p-button (click)='onClickSidebar()' class="mt-2"  icon="pi pi-bars" />
+        <img src="logo/sparecare_horizontal_logo.png" class="w-40 h-auto ml-4" alt="Logo" />
+  
+  
+       </div>
+      
+      <!-- Mobile Menu Toggle Button -->
+      <button (click)="toggleMenu()" class="md:hidden text-blue-500 focus:outline-none">
+        <!-- Hamburger Icon -->
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+  
+      <!-- Nav Links -->
+      <ul
+        [ngClass]="{ 'hidden': !isMenuOpen }"
+        class="md:flex flex-col md:flex-row absolute md:static top-14 left-0 bg-white w-full md:w-auto md:bg-transparent md:space-x-4 gap-4 px-4 py-2 md:py-0 z-50 shadow-md md:shadow-none">
+        <li class="text-blue-400 font-bold">All</li>
+        <li class="text-blue-400 font-bold">Sims</li>
+        <li class="text-blue-400 font-bold">Gainer</li>
+        <li class="text-blue-400 font-bold">Audit</li>
+      </ul>
+  </div>
+  
+  
+    <div class="flex gap-4 p-4 overflow-auto sm:overflow-hidden">
+      <!-- Card -->
+      <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
+        <div class="text-2xl font-bold text-indigo-900">3450</div>
+        <div class="text-gray-500 mt-1">Stock Audit</div>
+        <div class="flex justify-between items-center mt-4">
+          <div class="text-green-500 font-semibold flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M5 10l5-5 5 5H5z"/></svg>
+            25%
+          </div>
+          <div class="bg-yellow-400 text-white p-2 rounded-md">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 12h4v8H4v-8zm6-6h4v14h-4V6zm6 4h4v10h-4V10z"/></svg>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Card -->
+      <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
+        <div class="text-2xl font-bold text-indigo-900">₹35.256 lakhs</div>
+        <div class="text-gray-500 mt-1">Inventory Under Management </div>
+        <div class="flex justify-between items-center mt-4">
+          <div class="text-green-500 font-semibold flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M5 10l5-5 5 5H5z"/></svg>
+            15%
+          </div>
+          <div class="bg-cyan-400 text-white p-2 rounded-md">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h4v16H4V4zm6 4h4v12h-4V8zm6 6h4v6h-4v-6z"/></svg>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Card -->
+      <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
+        <div class="text-2xl font-bold text-indigo-900">431</div>
+        <div class="text-gray-500 mt-1"> Stock Upload</div>
+        <div class="flex justify-between items-center mt-4">
+          <div class="text-red-500 font-semibold flex items-center">
+            <svg class="w-4 h-4 mr-1 transform rotate-180" fill="currentColor" viewBox="0 0 20 20"><path d="M5 10l5-5 5 5H5z"/></svg>
+            15%
+          </div>
+          <div class="bg-green-500 text-white p-2 rounded-md">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zm1 17.93V19h-2v-.07c-1.767-.228-3.19-1.508-3.484-3.234h1.707c.26.928 1.096 1.57 2.043 1.57 1.188 0 2.156-.968 2.156-2.156 0-.838-.482-1.563-1.188-1.906L11 12.235V10.5h2v.705l1.031.516c1.088.543 1.788 1.65 1.788 2.829 0 1.826-1.375 3.356-3.094 3.896z"/></svg>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Card -->
+      <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
+        <div class="text-2xl font-bold text-indigo-900">573</div>
+        <div class="text-gray-500 mt-1">PPNI</div>
+        <div class="flex justify-between items-center mt-4">
+          <div class="text-green-500 font-semibold flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M5 10l5-5 5 5H5z"/></svg>
+            15%
+          </div>
+          <div class="bg-cyan-400 text-white p-2 rounded-md">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h4v16H4V4zm6 4h4v12h-4V8zm6 6h4v6h-4v-6z"/></svg>
+          </div>
+        </div>
+      </div>
+  
+      <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
+        <div class="text-2xl font-bold text-indigo-900">3450</div>
+        <div class="text-gray-500 mt-1">Total Approvals</div>
+        <div class="flex justify-between items-center mt-4">
+          <div class="text-green-500 font-semibold flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M5 10l5-5 5 5H5z"/></svg>
+            25%
+          </div>
+          <div class="bg-yellow-400 text-white p-2 rounded-md">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 12h4v8H4v-8zm6-6h4v14h-4V6zm6 4h4v10h-4V10z"/></svg>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  
+    <!-- charts  -->
+  
+    <div class="flex flex-wrap sm:flex-nowrap gap-8 justify-start m-5 items-start">
+      <!-- Left charts container -->
+      <div class="flex flex-col  gap-8">
+        <!-- Chart 1 -->
+        <div class=" bg-white rounded-md">
+          <h3 class="text-lg ml-4 mt-4 font-semibold">Stock View</h3>
+          <div echarts [options]="chart1" class="w-[350px] h-[250px] scale-75 text-xs"></div>
+        </div>
+    
+        <!-- Chart 2 -->
+        <div class=" bg-white rounded-md">
+          <h3 class="text-lg ml-4 mt-4 font-semibold">Stock View</h3>
+          <div echarts [options]="lineGrade" class="w-[350px] h-[250px] scale-75 text-xs"></div>
+        </div>
+  
+        <!-- Chart 3 -->
+        <div class="bg-white rounded-md">
+          <h3 class="text-lg ml-4 mt-4 font-semibold">Stock View</h3>
+          <div echarts [options]="rader" class="w-[350px] h-[250px] scale-75 text-xs"></div>
+        </div>
+  
+      </div>
+    
+      <!-- Right cards container -->
+      <div class="flex flex-col gap-y-5 max-h-[800px] overflow-y-auto pr-2">
+        <!-- Card 1 -->
+        <div class="max-w-lg bg-white shadow-md rounded-2xl p-4 flex items-start justify-between relative">
+          <div class="absolute left-0 top-0 bottom-0 w-2 bg-green-300 rounded-l-2xl"></div>
+          <div class="ml-4">
+            <h3 class="text-lg font-semibold">Stock Upload</h3>
+            <p class="text-gray-500 text-sm">Last upload Date 11/04/25</p>
+            <p class="text-gray-500 text-sm">Last upload Value 27 lakhs</p>
+            <!-- <a  class="text-pink-500 text-sm mt-2 inline-block underline">View task</a> -->
+          </div>
+          <div class="flex flex-col items-end ml-auto">
+            <button class="text-gray-400 hover:text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M17.414 2.586a2 2 0 010 2.828l-9.192 9.192a1 1 0 01-.39.243l-4 1.333a1 1 0 01-1.263-1.263l1.333-4a1 1 0 01.243-.39l9.192-9.192a2 2 0 012.828 0zM15 4l1 1L5.414 15H4v-1.414L15 4z" />
+              </svg>
+            </button>
+            <span class="mt-6 bg-pink-100 text-pink-700 text-sm px-4 py-1 rounded-full">Pending</span>
+          </div>
+        </div>
+    
+        <!-- Card 2 -->
+        <div class="max-w-lg bg-white shadow-md rounded-2xl p-4 flex items-start justify-between relative">
+          <div class="absolute left-0 top-0 bottom-0 w-2 bg-green-300 rounded-l-2xl"></div>
+          <div class="ml-4">
+            <h3 class="text-lg font-semibold">Job Line / Job Card Closer</h3>
+            <p class="text-gray-500 text-sm">Last upload Date 11/04/25</p>
+            <!-- <a  class="text-pink-500 text-sm mt-2 inline-block underline">View task</a> -->
+          </div>
+          <div class="flex flex-col items-end ml-auto">
+            <button class="text-gray-400 hover:text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M17.414 2.586a2 2 0 010 2.828l-9.192 9.192a1 1 0 01-.39.243l-4 1.333a1 1 0 01-1.263-1.263l1.333-4a1 1 0 01.243-.39l9.192-9.192a2 2 0 012.828 0zM15 4l1 1L5.414 15H4v-1.414L15 4z" />
+              </svg>
+            </button>
+            <span class="mt-6 bg-pink-100 text-pink-700 text-sm px-4 py-1 rounded-full">Pending</span>
+          </div>
+        </div>
+    
+        <!-- Repeat same structure for more cards -->
+        <!-- Card 3 -->
+        <div class="max-w-lg bg-white shadow-md rounded-2xl p-4 flex items-start justify-between relative">
+          <div class="absolute left-0 top-0 bottom-0 w-2 bg-green-300 rounded-l-2xl"></div>
+          <div class="ml-4">
+            <h3 class="text-lg font-semibold">Job Line / Job Card Closer</h3>
+            <p class="text-gray-500 text-sm">Last upload Date 11/04/25</p>
+            <!-- <a  class="text-pink-500 text-sm mt-2 inline-block underline">View task</a> -->
+          </div>
+          <div class="flex flex-col items-end ml-auto">
+            <button class="text-gray-400 hover:text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M17.414 2.586a2 2 0 010 2.828l-9.192 9.192a1 1 0 01-.39.243l-4 1.333a1 1 0 01-1.263-1.263l1.333-4a1 1 0 01.243-.39l9.192-9.192a2 2 0 012.828 0zM15 4l1 1L5.414 15H4v-1.414L15 4z" />
+              </svg>
+            </button>
+            <span class="mt-6 bg-pink-100 text-pink-700 text-sm px-4 py-1 rounded-full">Pending</span>
+          </div>
+        </div>
+  
+        <div class="max-w-lg bg-white shadow-md rounded-2xl p-4 flex items-start justify-between relative">
+          <div class="absolute left-0 top-0 bottom-0 w-2 bg-green-300 rounded-l-2xl"></div>
+          <div class="ml-4">
+            <h3 class="text-lg font-semibold">Job Line / Job Card Closer</h3>
+            <p class="text-gray-500 text-sm">Last upload Date 11/04/25</p>
+            <!-- <a  class="text-pink-500 text-sm mt-2 inline-block underline">View task</a> -->
+          </div>
+          <div class="flex flex-col items-end ml-auto">
+            <button class="text-gray-400 hover:text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M17.414 2.586a2 2 0 010 2.828l-9.192 9.192a1 1 0 01-.39.243l-4 1.333a1 1 0 01-1.263-1.263l1.333-4a1 1 0 01.243-.39l9.192-9.192a2 2 0 012.828 0zM15 4l1 1L5.414 15H4v-1.414L15 4z" />
+              </svg>
+            </button>
+            <span class="mt-6 bg-pink-100 text-pink-700 text-sm px-4 py-1 rounded-full">Pending</span>
+          </div>
+        </div>
+    
+        
+      </div>
+  
+      <div class="w-96 space-y-4 bg-white rounded-lg p-3">
+        <div class="flex justify-between">
+          <h3 class="text-lg ml-4 mt-2 font-semibold">Notification</h3>
+          <div class="bg-blue-100 text-blue-600 rounded-full p-2">
+            <!-- Notification Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+          </div>
+        </div>
+        <!-- Notification Card 1 -->
+        <div class="bg-white shadow-lg rounded-2xl p-2 flex items-start relative space-x-4">
+          <div class="absolute left-0 top-0 bottom-0 w-2 bg-yellow-300 rounded-l-2xl"></div>
+          <div>
+            <h4 class="text-lg font-semibold">New Message</h4>
+            <p class="text-gray-600">You received a new message from Ali.</p>
+            <span class="text-xs text-gray-400">2 minutes ago</span>
+          </div>
+        </div>
+      
+        <!-- Notification Card 2 -->
+        <div class="bg-white shadow-lg rounded-2xl p-2 flex relative items-start space-x-4">
+          <div class="absolute left-0 top-0 bottom-0 w-2 bg-yellow-300 rounded-l-2xl"></div>
+  
+          <div>
+            <h4 class="text-lg font-semibold">Task Completed</h4>
+            <p class="text-gray-600">Your task "Update Profile" is done.</p>
+            <span class="text-xs text-gray-400">10 minutes ago</span>
+          </div>
+        </div>
+      
+        <!-- Notification Card 3 -->
+        <div class="bg-white shadow-lg rounded-2xl p-2 relative flex items-start space-x-4">
+  
+          <div class="absolute left-0 top-0 bottom-0 w-2 bg-yellow-300 rounded-l-2xl"></div>
+          <div>
+  
+            <h4 class="text-lg font-semibold">Alert</h4>
+            <p class="text-gray-600">Your account password is weak.</p>
+            <span class="text-xs text-gray-400">1 hour ago</span>
+          </div>
+        </div>
+  
+        <!-- Notification Card-4 -->
+  
+        <div class="bg-white shadow-lg rounded-2xl p-2 flex relative items-start space-x-4">
+          <div class="absolute left-0 top-0 bottom-0 w-2 bg-yellow-300 rounded-l-2xl"></div>
+  
+          <div>
+            <h4 class="text-lg font-semibold">Task Completed</h4>
+            <p class="text-gray-600">Your task "Update Profile" is done.</p>
+            <span class="text-xs text-gray-400">10 minutes ago</span>
+          </div>
+        </div>
+  
+  
+      </div>
+  
+  
+    </div>
+  
+  
+  
+  </div>
+  <app-sidebar-2 [sidebarvisible]="sidebarvisible" (close)="sidebarvisible = false"></app-sidebar-2>
+  
+  
+  

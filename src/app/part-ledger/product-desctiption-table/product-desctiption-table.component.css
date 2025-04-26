@@ -1,0 +1,37 @@
+th {
+    padding: 10px;
+    font-size: 10px;
+}
+td {
+    padding: 9px;
+    font-size: 12px;
+}
+.p-datatable-gridlines table {
+    border-collapse: collapse;
+  }
+  
+  .p-datatable-gridlines th,
+  .p-datatable-gridlines td {
+    border: 1px solid #ddd; /* Light border for gridlines */
+  }
+  
+  .p-datatable-gridlines th {
+    background-color: #f9f9f9; /* Slightly shaded header */
+    text-align: left; /* Align text */
+  }
+  
+  .p-datatable-gridlines {
+    border: 1px solid #ccc; /* Outer table border */
+  }
+
+  .custom-paginator-style {
+    background-color: #10cbbe;
+    padding: 10px;
+    border-top: 2px solid #ccc;
+  }
+
+  ::ng-deep .custome-table .p-paginator-rpp-dropdown {
+    
+    scale: 0.8;
+   
+  }

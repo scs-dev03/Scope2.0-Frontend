@@ -1,0 +1,535 @@
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { PrimengModuleModule } from '../../shared/primeng-module/primeng-module.module';
+import { SharedModule } from '../../shared/shared.module';
+import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
+import { DealervonserviceService } from '../../services/Von/dealervonservice.service';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import { Sidebar2Component } from "../../core/sidebar-2/sidebar-2.component";
+import { LoaderComponent } from "../../shared/components/loader/loader.component";
+@Component({
+  selector: 'app-dealer-von',
+  imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS, Sidebar2Component, LoaderComponent],
+  templateUrl: './dealer-von.component.html',
+  styleUrl: './dealer-von.component.css'
+})
+export class DealerVonComponent {
+
+  dealerFilterData = new FormGroup({
+    location: new FormControl('', Validators.required),
+    max: new FormControl(),
+    partnumber: new FormControl(),
+    model: new FormControl(),
+    seasonal: new FormControl(),
+    fromrange: new FormControl(),
+    torange: new FormControl(),
+    nature: new FormControl(),
+    selectedCategory: new FormControl(),
+    fromrate: new FormControl(),
+    torate: new FormControl(),
+    parttype: new FormControl(),
+    status: new FormControl()
+  });
+  
+  constructor(private dealerVonService: DealervonserviceService) {}
+
+  categories: any[] = [
+    { name: 'WS', key: '0' },
+    { name: 'CS', key: '1' },
+    { name: 'Both', key: '2' },
+  ];
+
+  ngOnInit(): void {
+    //this.dealerVonService.setLocalStorage()
+    this.dealerFilterData.reset();
+    this.isloading = true;
+    this.dealerstatus = [
+      { name: 'Reviewd', code: '2' },
+      { name: 'Unreviewd', code: '1' },
+      { name: 'No Feedback', code: '0'}
+      
+    ];
+    this.maxData = [
+      { name: 'Planned', code: '1' },
+      { name: 'Unplanned', code: '0' },
+    ];
+    //this.dealerVonService.setLocalStorage();
+    this.fetchlocation(localStorage.getItem('dealerid'));
+    this.fetchNature();
+    this.fetchModel(localStorage.getItem('brandid'));
+    this.fetchSeasonaData();
+    this.fetchPartType();
+    this.isloading = false;
+    this.dealerFilterData.patchValue({
+      max: '1',  // Code set karna hoga kyunki optionValue="code" hai
+      
+    });
+  }
+
+
+ //Declaretion of all Variables
+
+  rangeValues: any;
+
+  locationData: any = [];
+  natureData: any = [];
+  modelData: any = [];
+  maxData: any = [];
+  tableData: any = [];
+  seasondata: any = [];
+  partType: any = [];
+  dealerstatus: any 
+  noOfRow: number = 0;
+  pendingCount: number = 0;
+  reviewedCount: number = 0;
+  partFamilySaleData: any = [];
+  columns: any[] = [];
+  dealerRemark: any[] = [];
+  dealerViewLog: any = [];
+  familyPartData: any = [];
+  familyPartDataVisible:boolean = false 
+  isloading: boolean = false;
+  isWSenable: boolean = false;
+  isCsenable: boolean = false;
+  showTable: boolean = false;
+  changelogDialog: boolean = false;
+  showOtherInput: boolean = false;
+  showSale: boolean = false
+  customRemark: any = null;
+  Result: any;
+  visible: any;
+
+
+  
+
+
+// for sending dealer logs
+  sendlog(
+    partid: any,
+    max: any,
+    remarkid: any,
+    customrem: any,
+    proposedqty: any
+  ) {
+    this.dealerVonService
+      .submituserlog({
+        partid: partid,
+        max: max,
+        remarkid: remarkid,
+        customrem: null,
+        proposedqty: proposedqty,
+      })
+      .subscribe((res: any) => {
+        this.visible = true;
+        this.Result = res.message;
+      });
+  }
+
+  // for view log 
+
+  onClickViewLog(rowData: any) {
+    this.fetchDelerViewlog(
+      localStorage.getItem('brandid'),
+      localStorage.getItem('dealerid'),
+      rowData.locationid,
+      rowData.Partid
+    );
+  }
+// reset filter button
+  onClickReset() {
+    this.dealerFilterData.reset();
+  }
+
+  // fetching table data for showing table
+  onSubmitfilterData() {
+    if (!this.dealerFilterData.valid) {
+      this.dealerFilterData.markAllAsTouched();
+    } else {
+      if (!this.dealerFilterData.value.selectedCategory) {
+        this.dealerFilterData.patchValue({
+          selectedCategory: { name: 'Both', key: '2' },
+        });
+      }
+
+      this.fetchDealerTableData(
+        this.dealerFilterData.value.fromrate,
+        this.dealerFilterData.value.torate,
+        localStorage.getItem('dealerid'),
+        this.dealerFilterData.value.parttype,
+        this.dealerFilterData.value.fromrange,
+        this.dealerFilterData.value.torange,
+        this.dealerFilterData.value.partnumber,
+        this.dealerFilterData.value.location,
+        this.dealerFilterData.value.max,
+        this.dealerFilterData.value.seasonal,
+        this.dealerFilterData.value.nature,
+        this.dealerFilterData.value.model,
+        localStorage.getItem('brandid')
+      );
+    }
+  }
+// fetching location from master api
+  // Fetch Location Data
+fetchlocation(dealerId: any) {
+  this.isloading = true;
+  this.dealerVonService.getlocationMaster({ dealerid: dealerId }).subscribe({
+      next: (res: any) => {
+          this.locationData = res;
+          this.isloading = false;
+      },
+      error: (err: any) => {
+          console.error("Error fetching location data:", err);
+          this.isloading = false;
+      }
+  });
+}
+
+// Fetch Nature Data
+fetchNature() {
+  this.isloading = true;
+  this.dealerVonService.getNature().subscribe({
+      next: (res: any) => {
+          this.natureData = res.Data;
+          this.isloading = false;
+      },
+      error: (err: any) => {
+          console.error("Error fetching nature data:", err);
+          this.isloading = false;
+      }
+  });
+}
+
+// Fetch Model Data
+fetchModel(brandid: any) {
+  this.isloading = true;
+  this.dealerVonService.getModel({ brandid }).subscribe({
+      next: (res: any) => {
+          this.modelData = res.Data;
+          this.isloading = false;
+      },
+      error: (err: any) => {
+          console.error("Error fetching model data:", err);
+          this.isloading = false;
+      }
+  });
+}
+
+// for populating the dynamic columns for month wise sale
+  getValues(rowData: any): any[] {
+    return this.columns
+      .filter(
+        (col: any) =>
+          col.field !== 'Brand' &&
+          col.field !== 'Dealer' &&
+          col.field !== 'Partid'
+      ) // "Brand", "Dealer", "PartID" ko hata diya
+      .map((col: any) => {
+        const value = col.field
+          .split('.')
+          .reduce((obj: any, key: any) => obj && obj[key], rowData);
+        return value;
+      });
+  }
+// fetch function for dealer table 
+fetchDealerTableData(
+  l1: any, l2: any, dealerid: any, parttype: any, from: any, to: any, 
+  partnumber: any, location: any, max: any, seasonalid: any, 
+  natureid: any, modelid: any, brandid: any
+) {
+  this.isloading = true;
+  this.dealerVonService.getdelarTableView({
+      l1, l2, dealerid, parttype, r1: from, r2: to, partnumber,
+      locationid: location, flag: max, seasonalid, natureid, modelid, brandid
+  }).subscribe({
+      next: (res: any) => {
+        this.pendingCount = 0;
+        this.reviewedCount = 0;
+          if (res.Data && res.Data.length) {
+              if(this.dealerFilterData.value.status == '0'){
+                this.tableData = res.Data.filter((item:any)=> item.status == '0')
+              }
+              else if(this.dealerFilterData.value.status == '1'){
+                this.tableData = res.Data.filter((item:any)=> item.status == '1')
+              }
+              else if(this.dealerFilterData.value.status == '2'){
+                this.tableData = res.Data.filter((item:any)=> item.status == '2')
+              }
+              else{
+                this.tableData = res.Data
+              }
+              this.noOfRow = res.Data.length
+
+              res.Data.forEach((item:any)=>{
+                console.log(item.status);
+                if(item.status == 1){
+                  this.pendingCount++;
+                  
+                }
+                else if(item.status == 2){
+                  this.reviewedCount++
+
+                }
+              })
+              
+          } else {
+              this.visible = true;
+              this.Result = 'No Data Available';
+          }
+
+          this.fetchDealerRemark(
+              localStorage.getItem('brandid'),
+              localStorage.getItem('usertype')
+          );
+
+          this.showTable = true;
+          this.isloading = false;  // Ensure `isloading` is reset in success case
+      },
+      error: (err: any) => {
+          console.error("Error fetching dealer table data:", err);
+          this.Result = "Failed to fetch data. Please try again.";
+          this.visible = true;
+          this.isloading = false;  // Ensure `isloading` is reset in failure case
+      }
+  });
+}
+
+  // switching between dropdown and input field
+  onRemarkChange(rowData: any, index: number) {
+    let obj = this.dealerRemark.find((item: any) => {
+      return rowData.selectedRemark == item.Remarkid;
+    });
+    //console.log(obj);
+    if (obj.remark == 'Custom') {
+      rowData.showOtherInput = true;
+    } else {
+      rowData.showOtherInput = false;
+    }
+  }
+  // fatching partfamily details
+  onclickPartNumber(rowData: any) {
+    this.fetchFamilyPart(rowData.partnumber);
+  }
+
+  onClickShowSales(rowData: any){
+   
+    this.fetchPartSale(
+      localStorage.getItem('brandid'),
+      localStorage.getItem('dealerid'),
+      rowData.Locationid,
+      rowData.partnumber
+    )
+  }
+// submitting user remarks
+  submitRow(rowData: any) {
+    this.isloading = true
+  
+    const validCustomRemarkRegex = /^(?![\s,@-]*$)(?!-?\d+$)[a-zA-Z0-9\s,@-]*$/;
+
+    if (rowData.selectedRemark == null) {
+      this.isloading = false
+      this.visible = true;
+      this.Result = ' Select the Remark';
+    } else if (rowData.qty == null) {
+      this.isloading = false
+      this.visible = true;
+      this.Result = 'Input the Quantity';
+    }else if(rowData.qty<0){
+      this.isloading = false
+      this.visible = true;
+      this.Result = ' Invalid Qty'
+    }
+    else if(rowData.customRemark == ''){
+      this.isloading = false
+      this.visible = true;
+      this.Result = ' Input Custom Remark'
+    }
+    else if (
+      rowData.customRemark &&
+      !validCustomRemarkRegex.test(rowData.customRemark.trim())
+    ) {
+      this.isloading = false
+      this.visible = true;
+      this.Result = 'Invalid Custom Remark Only Number are not Allowed and  Allowed Special Character are - and @';
+    } 
+     else {
+      
+        if (
+          !rowData.customRemark || 
+          !validCustomRemarkRegex.test(rowData.customRemark.trim())
+        ) {
+          this.isloading = false
+          this.visible = true;
+          this.Result = 'Invalid Custom Remark Only Number are not Allowed and  Allowed Special Character are - and @';
+          this.isloading = false;
+          return;
+        }
+
+      
+      this.dealerVonService
+        .submituserlog({
+          brandid: localStorage.getItem('brandid'),
+          dealerid: localStorage.getItem('dealerid'),
+          locationid: rowData.Locationid,
+          partid: rowData.Partid,
+          max: rowData.Maxvalue,
+          remarkid: rowData.selectedRemark,
+          customrem: rowData.customRemark,
+          proposedqty: rowData.qty,
+        })
+        .subscribe((res: any) => {
+          this.isloading = false
+          this.visible = true;
+          this.Result = res.message;
+        },(error: any) => {
+          this.isloading = false
+          this.Result = 'There is no dealer remark for this part, so you cannot add a remark.';
+          this.visible = true;
+          this.isloading = false;
+        });
+    }
+    
+  }
+
+  formatHeader(key: string): string {
+    return key
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  }
+  fetchSeasonaData() {
+    this.dealerVonService.getseason().subscribe((res: any) => {
+      this.seasondata = res.Data;
+    });
+  }
+  // fetching dealer Remark
+  fetchDealerRemark(brandid: any, usertype: any) {
+    this.dealerVonService
+      .getDealerRemark({ brandid: brandid, usertype: usertype })
+      .subscribe((res: any) => {
+        this.dealerRemark = res.Data;
+      });
+  }
+
+  formattedKeys: any;
+  wsCsKeys: any;
+
+  extractKeys(data: any) {
+    const keys = Object.keys(data[0]);
+  
+    if (this.dealerFilterData.value.selectedCategory.key == '0') {
+      this.wsCsKeys = keys.filter((key) => key.endsWith('_WS'));
+    } else if (this.dealerFilterData.value.selectedCategory.key == '1') {
+      this.wsCsKeys = keys.filter((key) => key.endsWith('_CS'));
+    } else {
+      this.wsCsKeys = keys.filter((key) => key.endsWith('_CS') || key.endsWith('_WS'));
+    }
+  
+    // partnumber ko shuru me add karne ke liye ek aur object insert karenge
+    this.formattedKeys = [
+      { header: 'Part Number', field: 'partnumber' }, // Part Number column added
+      ...this.wsCsKeys.map((key: any) => {
+        const [month, year, type] = key.split('_');
+        const header = `${month} ${year} ${type}`;
+        const field = key;
+        return { header, field };
+      }),
+    ];
+  
+    return this.formattedKeys;
+  }
+  
+  // fetching dealer view log
+  fetchDelerViewlog(brandid: any, dealerid: any, locationid: any, partid: any) {
+    this.isloading = true;
+    this.dealerVonService
+      .getDealerViewLog({
+        brandid: brandid,
+        dealerid: dealerid,
+        locationid: locationid,
+        partid: partid,
+      })
+      .subscribe((res: any) => {
+
+        if(res.Data && res.Data.length){
+          this.changelogDialog = true;
+          this.dealerViewLog = res.Data;
+          this.isloading = false;
+        }
+        else{
+          this.Result = 'There is No Previous Record, Please Give new Remark for this Part'
+          this.visible = true
+          this.isloading = false;
+        }
+      });
+  }
+
+  // fetching parttype dropdowndata
+  fetchPartType() {
+    this.isloading = true;
+    this.dealerVonService.getPartType().subscribe((res: any) => {
+      this.partType = res.Data;
+      this.isloading = false;
+    });
+  }
+// fetching part family detils
+  fetchFamilyPart(partnumber: any) {
+    this.isloading = true;
+    this.dealerVonService
+      .getSubstitutePart({ partnumber: partnumber })
+      .subscribe((res: any) => {
+        if (res.Data && res.Data.length) {
+          this.familyPartDataVisible = true
+          this.familyPartData = res.Data;
+          this.isloading = false;
+        } else {
+          this.visible = true;
+          this.Result = 'There is No Substitute Part Available for this Part';
+          this.isloading = false; // Set a default message or empty state
+
+        }
+      });
+  }
+  
+  exportToExcel(): void {
+
+    // Unwanted keys hatao aur columns ko order karo
+    const formattedData = this.tableData.map(({Brandid,Dealerid,Partid,Locationid,status, feedbackid, UserRemark, ProposedQty, ...rest }: any) => ({
+      ...rest, // Baaki sab pehle rahega
+      UserRemark, // UserRemark ko last me shift kiya
+      ProposedQty,        
+    }));
+    console.log(formattedData);
+    
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook: XLSX.WorkBook = { Sheets: { 'Data': worksheet }, SheetNames: ['Data'] };
+
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+
+    saveAs(data, `${this.tableData[0].Dealer}_Norms_Data.xlsx`);
+  }
+
+
+  fetchPartSale(brandid: any, dealerid: any, locationid:any, partnumber: any){
+    this.isloading = true
+    this.dealerVonService.getPartFamilySales({brandid:brandid,dealerid:dealerid, locationid:locationid, partnumber:partnumber}).subscribe((res: any)=>{
+        
+      this.partFamilySaleData = res.Data
+      this.showSale = true;
+
+        this.columns = this.extractKeys(this.partFamilySaleData);
+        
+    })
+    this.isloading = false
+  }
+
+
+
+  sidebarvisible: boolean = false;
+
+  onClickSidebar(){
+    this.sidebarvisible = true
+    console.log(this.sidebarvisible);
+        
+  }
+}

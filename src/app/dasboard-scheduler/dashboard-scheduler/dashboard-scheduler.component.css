@@ -1,0 +1,106 @@
+/* From Uiverse.io by KINGFRESS */ 
+button {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: white;
+    background-color: #25313d;
+    padding: 1em 2em;
+    border: none;
+    border-radius: .6rem;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  
+  button span:not(:nth-child(6)) {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    height: 30px;
+    width: 30px;
+    background-color: #5ca2a6;
+    border-radius: 50%;
+    transition: .6s ease;
+  }
+  
+  button span:nth-child(6) {
+    position: relative;
+  }
+  
+  button span:nth-child(1) {
+    transform: translate(-3.3em, -4em);
+  }
+  
+  button span:nth-child(2) {
+    transform: translate(-6em, 1.3em);
+  }
+  
+  button span:nth-child(3) {
+    transform: translate(-.2em, 1.8em);
+  }
+  
+  button span:nth-child(4) {
+    transform: translate(3.5em, 1.4em);
+  }
+  
+  button span:nth-child(5) {
+    transform: translate(3.5em, -3.8em);
+  }
+  
+  button:hover span:not(:nth-child(6)) {
+    transform: translate(-50%, -50%) scale(4);
+    transition: 1.5s ease;
+  }
+    
+:host ::ng-deep .p-datatable-table-container {
+    height: 75vh;
+}
+
+
+:host ::ng-deep tr.bg-gray-200.text-gray-700.text-sm.font-semibold {
+    height: 35px;
+}
+
+:host ::ng-deep div#pn_id_13_panel {
+  scale: .7;
+}
+
+:host ::ng-deep div#pn_id_14_panel {
+  scale: 0.7;
+}
+ /* .ng-trigger .ng-tns-c2456691946-4 .p-datepicker-panel .p-component .ng-star-inserted{
+  scale: 0.5;
+} */
+
+
+:host ::ng-deep #pn_id_15_panel {
+  scale: 0.7;
+}
+
+:host ::ng-deep #pn_id_16_panel{
+  scale: 0.7;
+}
+
+:host ::ng-deep span.p-button-label.ng-star-inserted {
+  display: none;
+}
+
+:host ::ng-deep div#pn_id_18_panel {
+  scale: .7;
+}
+
+:host ::ng-deep div#pn_id_19_panel {
+  scale: .7;
+}
+
+
+/* :host ::ng-deep input.p-inputtext.p-component {
+  width: 130px;
+} */
+
+  
+::ng-deep .table-input input.p-inputtext.p-component{
+  width: 130px !important;
+}
+

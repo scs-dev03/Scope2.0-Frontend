@@ -1,0 +1,8 @@
+#submit {
+    color: #228b22;
+}
+
+:host ::ng-deep span.filelabel {
+  display: none;
+}
+

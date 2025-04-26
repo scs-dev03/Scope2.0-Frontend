@@ -1,0 +1,491 @@
+<div class="relative h-[100vh] w-[100vw] overflow-auto">
+    <app-loader [isloading]="isloading"></app-loader>
+  
+    <div class="card flex justify-center">
+      <!-- it is for error Message -->
+      <p-dialog
+        header="Message"
+        [(visible)]="visible"
+        [modal]="true"
+        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+        [style]="{ width: '30vw' }"
+        [draggable]="false"
+        [resizable]="false"
+      >
+        <p class="text-lg font-semibold">
+          {{ scheduleResult }}
+        </p>
+      </p-dialog>
+    </div>
+    <!-- <app-header></app-header> -->
+    <img
+      src="background\backgroundImage.png"
+      class="w-[100vw] h-[100vh] -z-10 fixed"
+      alt="Background Image"
+    />
+    <div
+      class="flex items-center justify-between h-[8vh] bg-customBlue lg:h-[10vh] px-2"
+    >
+      <!-- Center Text -->
+      <h1 class="text-white text-center text-lg font-bold lg:text-3xl mx-auto">
+        Dashboard Scheduler
+      </h1>
+  
+      <!-- Logo -->
+      <img src="logo/sparecarelogo.png" class="w-16 h-10" alt="Sparecare Logo" />
+    </div>
+  
+    <div class="mt-7">
+      <form action="" [formGroup]="dashboardInputData">
+        <div class="flex flex-wrap gap-5 w-full py-2 justify-center">
+          <p-select
+            placeholder="BDM"
+            formControlName="bdmID"
+            [options]="BdmData"
+            [filter]="true"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                dashboardInputData.get('bdmID')?.touched &&
+                dashboardInputData.get('bdmID')?.invalid
+            }"
+            optionLabel="Name"
+            optionValue="bintId_Pk"
+            (onChange)="onClickBrand()"
+            class="!w-40"
+            (onChange)="onClickBDM()"
+          ></p-select>
+  
+          <p-select
+            placeholder="Brand"
+            formControlName="brandID"
+            [options]="brandData"
+            [filter]="true"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                dashboardInputData.get('brandID')?.touched &&
+                dashboardInputData.get('brandID')?.invalid
+            }"
+            optionLabel="vcbrand"
+            optionValue="bigid"
+            (onChange)="onClickBrand()"
+            class="!w-40"
+          ></p-select>
+  
+          <p-select
+            placeholder="Dealer"
+            formControlName="dealerID"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                dashboardInputData.get('dealerID')?.touched &&
+                dashboardInputData.get('dealerID')?.invalid
+            }"
+            class="!w-40"
+            [options]="dealerData"
+            [filter]="true"
+            filterPlaceholder="Search for a dealer"
+            optionLabel="dealer"
+            optionValue="dealerid"
+            (onChange)="onclickDealer()"
+          ></p-select>
+          <p-multiselect
+            [options]="dashBoardData"
+            class="!w-40"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                dashboardInputData.get('dashboardID')?.touched &&
+                dashboardInputData.get('dashboardID')?.invalid
+            }"
+            formControlName="dashboardID"
+            optionLabel="Dashboard"
+            placeholder="Dashboard"
+            [maxSelectedLabels]="3"
+            optionValue="tCode"
+          />
+  
+          <p-datepicker
+            placeholder="Date to Schedule"
+            formControlName="date"
+            id="datetopick"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                dashboardInputData.get('date')?.touched &&
+                dashboardInputData.get('date')?.invalid
+            }"
+            dateFormat="dd.mm.yy"
+            [minDate]="minDate"
+            class="!w-40 datepicker"
+          />
+          <p-datepicker
+            placeholder="Time to Schedule"
+            class="!w-40 !text-xs timepicker"
+            id="timetopick"
+            formControlName="time"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                dashboardInputData.get('time')?.touched &&
+                dashboardInputData.get('time')?.invalid
+            }"
+            [timeOnly]="true"
+            [stepMinute]="30"
+            hourFormat="12"
+            minuteValues="[0, 30]"
+            (onSelect)="fixMinutes()"
+          />
+  
+          <button
+            (click)="onSubmitDashboardRequest()"
+            type="submit"
+            class="w-auto h-11 flex text-xs items-center justify-center"
+          >
+            <span class="circle1"></span>
+            <span class="circle2"></span>
+            <span class="circle3"></span>
+            <span class="circle4"></span>
+            <span class="circle5"></span>
+            <span class="text">Submit</span>
+          </button>
+  
+          <button
+          *ngIf="false"
+            [routerLink]="['/request']"
+            routerLinkActive="router-link-active"
+            type="submit"
+            class="w-auto h-11 flex text-xs items-center justify-center"
+          >
+            <span class="circle1"></span>
+            <span class="circle2"></span>
+            <span class="circle3"></span>
+            <span class="circle4"></span>
+            <span class="circle5"></span>
+            <span class="text">Request New Dashboard</span>
+          </button>
+  
+          <button
+          
+            type="submit"
+            class="w-auto h-11 flex text-xs items-center justify-center"
+            (click)="onclickExportDashboard()"
+            *ngIf="false"
+          >
+            <span class="circle1"></span>
+            <span class="circle2"></span>
+            <span class="circle3"></span>
+            <span class="circle4"></span>
+            <span class="circle5"></span>
+            <span class="text">Export Table</span>
+          </button>
+  
+        </div>
+      </form>
+    </div>
+    <div class="flex justify-center">
+      <div
+        class="card w-[90vw] scale-[80%] h-auto md:w-[120vw] flex justify-center p-3 bg-gray-50 rounded-lg shadow-lg mb-5"
+      >
+        <p-table
+          [value]="updatedData"
+          [paginator]="true"
+          [rows]="30"
+          [showGridlines]="true"
+          [scrollHeight]="'400px'"
+          [scrollable]="true"
+          [rowsPerPageOptions]="[20, 30, 40, 50, 100]"
+          class="bg-white !w-full !rounded-lg border border-gray-200 shadow-md"
+          [globalFilterFields]="['Dashboard', 'Brand', 'Dealer', 'statusname']"
+        >
+          <!-- Table Header -->
+          <ng-template pTemplate="header">
+            <tr class="bg-gray-200 text-gray-700 text-xs font-semibold">
+              <th class="p-5 text-center text-nowrap">S.NO</th>
+              <th class="p-5 text-left pFrozenColumn">
+                DashBoard Name
+                <p-columnFilter
+                  class="table-input"
+                  field="Dashboard"
+                  matchMode="contains"
+                  placeholder="Search"
+                ></p-columnFilter>
+              </th>
+              <th class="p-5 text-left">
+                Brand Name
+                <p-columnFilter
+                  class="table-input"
+                  field="Brand"
+                  matchMode="contains"
+                  placeholder="Search"
+                ></p-columnFilter>
+              </th>
+              <th class="p-5 text-left">
+                Dealer Name
+                <p-columnFilter
+                  class="table-input"
+                  field="Dealer"
+                  matchMode="contains"
+                  placeholder="Search"
+                ></p-columnFilter>
+              </th>
+              <th class="p-5 text-left">
+                BDM
+                <p-columnFilter
+                  class="table-input"
+                  field="BDM"
+                  matchMode="contains"
+                  placeholder="Search"
+                ></p-columnFilter>
+              </th>
+              <th class="p-5 text-left text-nowrap">
+                Scheduled For / Time
+                <p-columnFilter
+                  class="table-input"
+                  field="ScheduledOn"
+                  matchMode="contains"
+                  placeholder="Search"
+                ></p-columnFilter>
+              </th>
+  
+              <th class="p-5 text-left">Added By</th>
+              <th class="p-5 text-center text-nowrap">Added On / Time</th>
+              <th class="p-5 text-center text-nowrap">Edited By</th>
+              <th class="p-5 text-center text-nowrap">Edited On</th>
+              <th class="p-5 text-center text-nowrap">Deleted By</th>
+              <th class="p-5 text-center text-nowrap">Deleted On</th>
+              <th class="p-5 text-center">
+                Status
+                <p-columnFilter
+                  class="table-input"
+                  field="StatusName"
+                  matchMode="contains"
+                  placeholder="Search"
+                ></p-columnFilter>
+              </th>
+              <th class="p-5 text-center">Actions</th>
+            </tr>
+          </ng-template>
+  
+          <!-- Table Body -->
+          <ng-template pTemplate="body" let-data let-i="rowIndex">
+            <tr
+              class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-xs h-10"
+            >
+              <td class="!p-3 !text-base">{{i+1 }}</td>
+              <td class="!p-3 !text-base">{{ data.Dashboard }}</td>
+              <td class="!p-3 !text-base">{{ data.Brand }}</td>
+              <td class="!p-3 !text-base">{{ data.Dealer }}</td>
+              <td class="!p-3 !text-base">{{ data.BDM }}</td>
+  
+              <td class="!p-3 !text-base text-nowrap">
+                {{ data.ScheduledOn | date : "dd-MMM-yy / h:mm a" : "UTC" }}
+              </td>
+              <td class="!p-3 !text-base text-nowrap">{{ data.Addedby }}</td>
+              <td class="!p-3 !text-base">
+                {{ data.Addedon | date : "dd-MMM-yy / h:mm a" : "IST" }}
+              </td>
+              <td class="!p-3 !text-base text-nowrap">{{ data.Editedby }}</td>
+              <td class="!p-3 !text-base text-nowrap">
+                {{ data.Editedon | date : "dd-MMM-yy / h:mm a" : "UTC" }}
+              </td>
+              <td class="!p-3 !text-base text-nowrap">{{ data.Deletedby }}</td>
+              <td class="!p-3 !text-base text-nowrap">
+                {{ data.Deletedon | date : "dd-MMM-yy / h:mm a" : "UTC" }}
+              </td>
+              <td class="!p-3 !text-base">
+                {{ data.StatusName }}
+              </td>
+              <td class="!p-3 flex">
+                <p-button
+                  class="m-1"
+                  icon="pi pi-pen-to-square"
+                  [raised]="true"
+                  [rounded]="true"
+                  severity="info"
+                  aria-label="Edit"
+                  (click)="showDialog(data)"
+                ></p-button>
+  
+                @if (data.StatusName != 'Scheduled') {
+                <p-button
+                  class="m-1"
+                  icon="pi pi-trash"
+                  [raised]="true"
+                  severity="danger"
+                  [disabled]="true"
+                  [rounded]="true"
+                  aria-label="Delete"
+                  (click)="showDeleteDialog(data)"
+                ></p-button>
+  
+                } @else {
+                <p-button
+                  class="m-1"
+                  icon="pi pi-trash"
+                  [raised]="true"
+                  severity="danger"
+                  [rounded]="true"
+                  aria-label="Delete"
+                  (click)="showDeleteDialog(data)"
+                ></p-button>
+                }
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+  <div class="card flex justify-center">
+    <p-dialog
+      header="Edit Schedule"
+      [modal]="true"
+      [(visible)]="visibleEdit"
+      [style]="{ width: '50%', height: '80%' }"
+    >
+      <!-- <span class="p-text-secondary block ">Update your information.</span> -->
+      <div class="my-10">
+        <form action="" [formGroup]="editDashboardInputData">
+          <div class="flex flex-wrap gap-5 w-full py-5 justify-center">
+            <div class="card flex justify-center">
+              <p-floatlabel variant="on">
+                <label for="dashboard">Dashboard Name</label>
+                <input
+                  pInputText
+                  id="dashboard"
+                  class="!w-40"
+                  formControlName="editDashboard"
+                  placeholder="Dashboard"
+                />
+              </p-floatlabel>
+            </div>
+            <div class="card flex justify-center">
+              <p-floatlabel variant="on">
+                <label for="brandname">Brand Name</label>
+                <input
+                  pInputText
+                  id="brandname"
+                  class="!w-40"
+                  formControlName="editBrand"
+                  placeholder="Dashboard"
+                />
+              </p-floatlabel>
+            </div>
+            <div class="card flex justify-center">
+              <p-floatlabel variant="on">
+                <label for="dealername">Dealer Name</label>
+                <input
+                  pInputText
+                  id="dealername"
+                  class="!w-40"
+                  formControlName="editDealer"
+                  placeholder="Dashboard"
+                />
+              </p-floatlabel>
+            </div>
+            <div class="flex-auto ml-10 mt-16">
+              <label for="date" class="font-bold block mb-2"> Date </label>
+              <p-datepicker
+                id="date"
+                placeholder="Date to Schedule"
+                formControlName="editDate"
+                [minDate]="minDate"
+                dateFormat="d-MM-yy"
+                [ngClass]="{
+                  'ng-invalid !text-red-500 ng-dirty':
+                    editDashboardInputData.get('editDate')?.touched &&
+                    editDashboardInputData.get('editDate')?.invalid
+                }"
+                dateFormat="dd-MMM-yy"
+                class="!w-40"
+                readonlyInput="true"
+              />
+            </div>
+  
+            <div class="flex-auto mt-16">
+              <label for="time" class="font-bold block mb-2"> Time Only </label>
+              <!-- <p-datepicker
+                class="!w-40"
+                id="time"
+                inputId="calendar-timeonly"
+                placeholder="Time to Schedule"
+                formControlName="editTime"
+                [ngClass]="{
+                  'ng-invalid !text-red-500 ng-dirty':
+                    editDashboardInputData.get('editTime')?.touched &&
+                    editDashboardInputData.get('editTime')?.invalid
+                }"
+                hourFormat="12"
+                [timeOnly]="true"
+                readonlyInput="true"
+                minuteValues="[0, 30]"
+                (onSelect)="fixMinutesEdit()"
+              /> -->
+  
+              <p-datepicker
+                placeholder="Time to Schedule"
+                class="!w-40 !text-xs timepicker"
+                id="timetopick"
+                formControlName="editTime"
+                [ngClass]="{
+                  'ng-invalid !text-red-500 ng-dirty':
+                    editDashboardInputData.get('editTime')?.touched &&
+                    editDashboardInputData.get('editTime')?.invalid
+                }"
+                [timeOnly]="true"
+                [stepMinute]="30"
+                hourFormat="12"
+                minuteValues="[0, 30]"
+                (onSelect)="fixMinutesEdit()"
+              />
+            </div>
+          </div>
+  
+          <div class="flex items-center justify-center">
+            <button
+              (click)="onEditDashboard()"
+              type="submit"
+              class="w-24 h-11 flex items-center justify-center"
+            >
+              <span class="circle1"></span>
+              <span class="circle2"></span>
+              <span class="circle3"></span>
+              <span class="circle4"></span>
+              <span class="circle5"></span>
+              <span class="text">Submit</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </p-dialog>
+  </div>
+  <div class="card flex justify-center">
+    <p-dialog
+      header="Edit Profile"
+      [modal]="true"
+      [(visible)]="visibleDelete"
+      [style]="{ width: '25rem' }"
+    >
+      <div class="flex items-center gap-4 mb-4">
+        <span class="text-xl font-semibold">Do you want to Delete</span><br />
+      </div>
+      <div class="flex justify-end">
+        <p-button label="Okay" severity="danger" (click)="onDeleteDashboard()" />
+      </div>
+    </p-dialog>
+  </div>
+  
+  <div class="card flex justify-center">
+    <p-dialog
+      header="Enter Dates"
+      [modal]="true"
+      [(visible)]="isExport"
+      
+      [style]="{ width: '50%', height: '80%' }"
+    >
+    <form [formGroup]="exportInfoInputData" class="flex flex-wrap gap-5 ">
+      <p-datepicker formControlName="FromDate" placeholder="From" dateFormat=" dd-mm-yy" />
+      <p-datepicker formControlName="ToDate" placeholder="To" dateFormat=" dd-mm-yy" />
+      <p-button label="Export" severity="info" class="!text-xs" (onClick)="onClickExport()" />
+  </form>
+    </p-dialog>
+  </div>
+  
+  
+  

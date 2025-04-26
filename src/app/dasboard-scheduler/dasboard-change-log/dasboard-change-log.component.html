@@ -1,0 +1,242 @@
+<div class="relative h-[100vh] w-[100vw] overflow-auto">
+    <app-loader [isloading]="isloading"></app-loader>
+  
+      
+  <div class="card flex justify-center">
+      <p-dialog
+        header="Message"
+        [(visible)]="visible"
+        [modal]="true"
+        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+        [style]="{ width: '30vw' }"
+        [draggable]="false"
+        [resizable]="false"
+      >
+        <p class="text-lg font-semibold">
+          {{ scheduleResult }}
+        </p>
+      </p-dialog>
+    </div>
+    <img
+      src="background\backgroundImage.png"
+      class="w-[100vw] h-[100vh] -z-10 fixed"
+      alt="Background Image"
+    />
+    <div
+      class="flex items-center justify-between h-[8vh] bg-customBlue lg:h-[10vh] px-2"
+    >
+      <!-- Center Text -->
+      <h1 class="text-white text-center text-lg font-bold lg:text-3xl mx-auto">
+        Change Log
+      </h1>
+  
+      <!-- Logo -->
+      <img src="logo/sparecarelogo.png" class="w-16 h-10" alt="Sparecare Logo" />
+    </div>
+  
+    <div class="mt-7">
+      <form action="" [formGroup]="changeLogInputData">
+        <div class="flex flex-wrap gap-5 w-full py-2 justify-center">
+          
+          <p-multiselect
+            [options]="dashBoardChangeData"
+            class="!w-40"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+              changeLogInputData.get('dashboardID')?.touched &&
+              changeLogInputData.get('dashboardID')?.invalid
+            }"
+            formControlName="dashboardID"
+            optionLabel="Dashboard"
+            placeholder="Dashboard"
+            [maxSelectedLabels]="3"
+            optionValue="tcode"
+          />
+  
+          <p-select
+            placeholder="Workspace"
+            formControlName="workspaceID"
+            [options]="workspaceData"
+            [filter]="true"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+              changeLogInputData.get('brandID')?.touched &&
+              changeLogInputData.get('brandID')?.invalid
+            }"
+            optionLabel="Workspace"
+            optionValue="WorkspaceID"
+            class="!w-40"
+          ></p-select>
+  
+          <p-select
+            placeholder="Brand"
+            formControlName="brandID"
+            [options]="brandData"
+            [filter]="true"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+              changeLogInputData.get('brandID')?.touched &&
+              changeLogInputData.get('brandID')?.invalid
+            }"
+            optionLabel="vcbrand"
+            optionValue="bigid"
+            (onChange)="onClickBrand()"
+            class="!w-40"
+          ></p-select>
+  
+          <p-select
+            placeholder="Dealer"
+            formControlName="dealerID"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+              changeLogInputData.get('dealerID')?.touched &&
+              changeLogInputData.get('dealerID')?.invalid
+            }"
+            class="!w-40"
+            [options]="dealerData"
+            [filter]="true"
+            filterPlaceholder="Search for a dealer"
+            optionLabel="dealer"
+            optionValue="dealerid"
+          ></p-select>
+          <p-select
+            placeholder="Requested By"
+            formControlName="requestedByID"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+              changeLogInputData.get('requestedByID')?.touched &&
+              changeLogInputData.get('requestedByID')?.invalid
+            }"
+            class="!w-40"
+            [options]="requestBy"
+            [filter]="true"
+            filterPlaceholder="Search for Name"
+            optionLabel="Name"
+            optionValue="Aid"
+          ></p-select>
+          <p-datepicker
+            placeholder="Request On"
+            formControlName="requestedDate"
+            id="datetopick"
+            dateFormat="dd-mmm-yy"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+              changeLogInputData.get('date')?.touched &&
+              changeLogInputData.get('date')?.invalid
+            }"
+            dateFormat="d-MM-yy"
+            class="!w-40 datepicker"
+          />
+          <div class="card flex justify-center">
+            <input type="url"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+              changeLogInputData.get('url')?.touched &&
+              changeLogInputData.get('url')?.invalid
+            }" class="!w-40" placeholder="Enter URL" pInputText formControlName="url" />
+        </div>
+          <div class="card flex justify-center">
+            <textarea class="w-auto h-auto"
+            placeholder="Enter Remarks" rows="5"cols="30" pTextarea formControlName="remark"></textarea>
+          </div>
+  
+          <button
+            (click)="onSubmitDashboardChange()"
+            type="submit"
+            class="w-auto h-11 flex text-xs items-center justify-center"
+          >
+            <span class="circle1"></span>
+            <span class="circle2"></span>
+            <span class="circle3"></span>
+            <span class="circle4"></span>
+            <span class="circle5"></span>
+            <span class="text">Submit</span>
+          </button>
+        </div>
+        
+      </form>
+  
+      
+  
+    </div>
+  
+    <div class="flex justify-center">
+      <div
+        class="card w-[90vw] scale-[80%] h-auto md:w-[120vw] flex justify-center p-3 bg-gray-50 rounded-lg shadow-lg mb-5"
+      >
+        <p-table
+          [value]="changeViewData"
+          [paginator]="true"
+          [rows]="10"
+          [showGridlines]="true"
+          [scrollHeight]="'400px'"
+          [scrollable]="true"
+          class="bg-white !w-full !rounded-lg border border-gray-200 shadow-md"
+          [globalFilterFields]="['Dashboard', 'Brand', 'Dealer', 'statusname']"
+        >
+          <!-- Table Header -->
+          <ng-template pTemplate="header">
+            <tr class="bg-gray-200 text-gray-700 text-xs font-semibold">
+              <th class="p-5 text-left text-base">
+                DashBoard Name
+              </th>
+              <th class="p-5 text-left text-base">
+                Workspace Name
+              </th>
+              <th class="p-5 text-left text-base">
+                Brand Name
+                <!-- <p-columnFilter
+                  class="table-input"
+                  field="Brand"
+                  matchMode="contains"
+                  placeholder="Search"
+                ></p-columnFilter> -->
+              </th>
+              <th class="p-5 text-left text-base">
+                Dealer Name
+                <!-- <p-columnFilter
+                  class="table-input"
+                  field="Dealer"
+                  matchMode="contains"
+                  placeholder="Search"
+                ></p-columnFilter> -->
+              </th>
+              <th class="p-5 text-left text-base">
+                Requested By
+              </th>
+              
+              <th class="p-5 text-left text-nowrap text-base">Requested Date / Time</th>
+              <th class="p-5 text-left text-base">
+                Remarks
+              </th>
+             
+            </tr>
+          </ng-template>
+  
+          <!-- Table Body -->
+          <ng-template pTemplate="body" let-data>
+            <tr
+              class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-xs h-10"
+            >
+              <td class="!p-3 !text-base">{{ data.Dashboard }}</td>
+              <td class="!p-3 !text-base">{{ data.Workspace }}</td>
+              <td class="!p-3 !text-base">{{ data.Brand }}</td>
+              <td class="!p-3 !text-base">{{ data.Dealer }}</td>
+  
+              <td class="!p-3 !text-base">
+                {{ data.RequestedBy }}
+              </td>
+              <td class="!p-3 !text-base">{{ data.RequestOn | date : "dd-MMM-yy / h:mm a" }}</td>
+              <td class="!p-3 !text-base">
+                {{ data.remarks  }}
+              </td>
+             
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  
+  
+  </div>
+  

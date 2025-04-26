@@ -1,0 +1,10 @@
+<div class="w-[100vw] h-[10vh] bg-customBlue mx-auto flex justify-between overflow-x-hidden">
+    <div class="flex  h-full p-1 ">
+        <img src="sparecarelogo.png" alt="sparcare logo">
+        <h2 class="text-white text-xs mr-10 p-1 sm:text-3xl font-semibold">Lead Time</h2>
+    </div>
+    <div class="flex h-full p-1 justify-end ">
+        <p-button icon="pi pi-ellipsis-v" class="!text-customeGreen" raised="true" [rounded]="true" (click)="menu.toggle($event)" />
+        <p-tieredmenu #menu [model]="items"  [popup]="true" />
+    </div>
+</div>

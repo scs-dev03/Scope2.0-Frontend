@@ -1,0 +1,209 @@
+<div class="relative h-[100vh] w-[100vw] overflow-auto">
+
+    <app-loader [isloading]="isloading"></app-loader>
+  
+  
+    <div class="card flex justify-center">
+      <p-dialog
+        header="Message"
+        [(visible)]="visible"
+        [modal]="true"
+        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+        [style]="{ width: '30vw' }"
+        [draggable]="false"
+        [resizable]="false"
+      >
+        <p class="text-lg font-semibold">
+          {{ scheduleResult }}
+        </p>
+      </p-dialog>
+    </div>
+    <img
+      src="background\backgroundImage.png"
+      class="w-[100vw] h-[100vh] -z-10 fixed"
+      alt="Background Image"
+    />
+    <div
+      class="flex items-center justify-between h-[8vh] bg-customBlue lg:h-[10vh] px-2"
+    >
+      <!-- Center Text -->
+      <h1 class="text-white text-center text-lg font-bold lg:text-3xl mx-auto">
+        Dashboard Request
+      </h1>
+  
+      <!-- Logo -->
+      <img src="logo/sparecarelogo.png" class="w-16 h-10" alt="Sparecare Logo" />
+    </div>
+  
+    <div class="mt-7 ">
+      <form action="" [formGroup]="requestInputData">
+          <div class="flex flex-wrap gap-5 w-full py-2 justify-center">
+              
+              <p-select
+                placeholder="Brand"
+                formControlName="brandID"
+                [options]="brandData"
+                [filter]="true"
+                [ngClass]="{
+                  'ng-invalid ng-dirty':
+                    requestInputData.get('brandID')?.touched &&
+                    requestInputData.get('brandID')?.invalid
+                }"
+                optionLabel="vcbrand"
+                optionValue="bigid"
+                class="!w-40"
+                (onChange)="onClickBrand()"
+              ></p-select>
+          
+              <p-select
+                placeholder="Dealer"
+                formControlName="dealerID"
+                [options]="dealerData"
+                [ngClass]="{
+                  'ng-invalid ng-dirty':
+                    requestInputData.get('dealerID')?.touched &&
+                    requestInputData.get('dealerID')?.invalid
+                }"
+                class="!w-40"
+                filterPlaceholder="Search for a dealer"
+                optionLabel="dealer"
+                optionValue="dealerid"
+                (onChange)="onClickDealer()"
+              ></p-select>
+  
+              <p-multiselect
+            [options]="dashBoardRequestData"
+            class="!w-40"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                requestInputData.get('dashboardID')?.touched &&
+                requestInputData.get('dashboardID')?.invalid
+            }"
+            formControlName="dashboardID"
+            optionLabel="Dashboard"
+            placeholder="Dashboard"
+            [maxSelectedLabels]="3"
+            optionValue="tcode"
+          />
+              
+          
+              <p-datepicker
+                placeholder="Date to Schedule"
+                formControlName="date"
+                id="datetopick"
+                dateFormat="d-MM-yy"
+                [ngClass]="{
+                  'ng-invalid ng-dirty':
+                    requestInputData.get('date')?.touched &&
+                    requestInputData.get('date')?.invalid
+                }"
+                dateFormat="dd.mm.yy"
+                class="!w-40 datepicker"
+              />
+              <p-datepicker
+            placeholder="Time to Schedule"
+            class="!w-40 !text-xs timepicker"
+            id="timetopick"
+            formControlName="time"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                requestInputData.get('time')?.touched &&
+                requestInputData.get('time')?.invalid
+            }"
+            [timeOnly]="true"
+            hourFormat="12"
+          />
+              <button type="submit" class="w-24 h-11 flex items-center justify-center" (click)="onSubmitDashboard()">
+                
+                <span class="circle1"></span>
+                <span class="circle2"></span>
+                <span class="circle3"></span>
+                <span class="circle4"></span>
+                <span class="circle5"></span>
+                <span class="text">Submit</span>
+              </button>
+            </div>
+        </form>
+    </div>
+  
+    <div class="flex justify-center">
+      <div
+        class="card w-[90vw] scale-[80%] h-auto md:w-[120vw] flex justify-center p-3 bg-gray-50 rounded-lg shadow-lg mb-5"
+      >
+        <p-table
+          [value]="dashboardviewData"
+          [paginator]="true"
+          [rows]="10"
+          [showGridlines]="true"
+          [scrollHeight]="'400px'"
+          [scrollable]="true"
+          class="bg-white !w-full !rounded-lg border border-gray-200 shadow-md"
+          [globalFilterFields]="['Dashboard', 'Brand', 'Dealer', 'statusname']"
+        >
+          <!-- Table Header -->
+          <ng-template pTemplate="header">
+            <tr class="bg-gray-200 text-gray-700 text-xs font-semibold">
+              <th class="p-5 text-left text-base">
+                DashBoard Name
+                <!-- <p-columnFilter
+                  class="table-input"
+                  field="Dashboard"
+                  matchMode="contains"
+                  placeholder="Search"
+                ></p-columnFilter> -->
+              </th>
+              <th class="p-5 text-left text-base">
+                Brand Name
+                <!-- <p-columnFilter
+                  class="table-input"
+                  field="Brand"
+                  matchMode="contains"
+                  placeholder="Search"
+                ></p-columnFilter> -->
+              </th>
+              <th class="p-5 text-left text-base">
+                Dealer Name
+                <!-- <p-columnFilter
+                  class="table-input"
+                  field="Dealer"
+                  matchMode="contains"
+                  placeholder="Search"
+                ></p-columnFilter> -->
+              </th>
+              
+              <th class="p-5 text-left text-nowrap text-base">Requested Date / Time</th>
+              <th class="p-5 text-center text-base">
+                Added by
+                <!-- <p-columnFilter
+                  class="table-input"
+                  field="StatusName"
+                  matchMode="contains"
+                  placeholder="Search"
+                ></p-columnFilter> -->
+              </th>
+             
+            </tr>
+          </ng-template>
+  
+          <!-- Table Body -->
+          <ng-template pTemplate="body" let-data>
+            <tr
+              class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-xs h-10"
+            >
+              <td class="!p-3 !text-base">{{ data.dashboard }}</td>
+              <td class="!p-3 !text-base">{{ data.brand }}</td>
+              <td class="!p-3 !text-base">{{ data.dealer }}</td>
+              <td class="!p-3 !text-base">{{ data.addedon | date : "dd-MMM-yy / h:mm a" }}</td>
+              <td class="!p-3 !text-base">{{ data.Addedby}}</td>
+  
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  
+      
+    
+    
+  </div>
+  

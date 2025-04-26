@@ -1,0 +1,104 @@
+<!-- <div class="w-[95vw] custome-table">
+  
+<div>
+  <h1 class="font-semibold text-2xl" >Parts Details</h1>
+</div>
+<div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
+  <div
+    class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden"
+  >
+    <p-table
+      [rows]="1"
+      scrollable="true"
+      scrollHeight="500px"
+      paginator="true"
+      [rowsPerPageOptions]="[20, 30, 40, 50, 100]"
+      [paginatorStyleClass]="'!h-[47px]'"
+      [rows]="10"
+      paginatorDropdownScrollwidth="25px"
+      [value]="PartDetails"
+      [showGridlines]="true"f
+      class="!w-[90vw]"
+      [tableStyle]="{ 'min-width': '50rem' }"
+    >
+    <ng-template pTemplate="header" >
+      <tr class="!bg-gray-200 !text-gray-800 text-sm font-semibold">
+        <th>S.No</th>
+        <th>Part Number</th>
+        <th>Latest Part No.</th>
+        <th>Description</th>
+        <th>MOQ</th>
+        <th>Category</th>
+        <th>Landed Cost</th>
+        <th>MRP </th>
+      </tr>
+
+    </ng-template>
+
+    <ng-template pTemplate="body" let-PartDetails let-i = 'rowIndex'>
+      <tr>
+        <td>{{i+1}}</td>
+        <td>{{ PartDetails.partnumber }}</td>
+        <td>{{ PartDetails.LatestPartno }}</td>
+        <td>{{ PartDetails.partdesc }}</td>
+        <td>{{ PartDetails.moq }}</td>
+        <td>{{ PartDetails.category }}</td>
+        <td>{{ PartDetails.landedcost }}</td>
+        <td>{{ PartDetails.mrp}}</td>
+
+        
+      </tr>
+    </ng-template>
+    </p-table>
+  </div>
+</div>
+
+</div> -->
+
+
+<div ngClass="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"  >
+    
+    <div ngClass=" bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+      <p-table
+      [scrollable]="true"
+      scrollHeight="400px"
+      [value]="PartDetails"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[20, 30, 40, 50, 100]"
+      [showGridlines]="true"
+      scrollDirection="both"
+      ngClass=" !w-[90vw] "
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [globalFilterFields]="['partnumber', 'partdesc', 'UserRemark']"
+    >
+      <ng-template #header>
+        <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
+          <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">S.No</th>
+          <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Part Number</th>
+          <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Latest Part No.</th>
+          <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Description</th>
+          <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">MOQ </th>
+          <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Category </th>
+          <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Landed Cost </th>
+          <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">MRP</th>
+          </tr>
+      </ng-template>
+      <ng-template #body let-PartDetails let-i = 'rowIndex'>
+        <tr class="!border-b hover:!shadow-xl !hover:!border-2	 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0">
+          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{i+1}}</td>
+          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ PartDetails.partnumber }}</td>
+          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ PartDetails.LatestPartno }}</td>
+          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ PartDetails.partdesc }}</td>
+          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ PartDetails.moq }}</td>
+          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ PartDetails.category }}</td>
+          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ PartDetails.landedcost }}</td>
+          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ PartDetails.mrp}}</td>
+          </tr>
+      </ng-template>  
+    </p-table>
+    </div>
+  
+  
+  </div>
+  
