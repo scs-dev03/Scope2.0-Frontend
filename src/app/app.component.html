@@ -58,18 +58,18 @@
   </div>
  
 </p-blockUI>
-<div class="row flex-row">
+<div class="w-full h-full flex flex-row overflow-hidden">
  
-  <div class="col-3" *ngIf="!isLoginPage">
+  <div class="w-auto h-auto" *ngIf="!isLoginPage">
     <app-sidebar
       #sidebar
       [ngClass]="{ 'sidebar card bg-gray-50 rounded-lg shadow-sm': visibleSidebar, 'w-0': !visibleSidebar }"
-      class="transition-all duration-300 h-[100vh] fixed"
+      class="transition-all duration-300 h-[100vh]"
     ></app-sidebar>
   </div>
-  <div class="col-9">
+  <div>
     
-    <div class="d-flex  align-items-center">
+    <div class="w-auto h-auto ">
       <router-outlet></router-outlet>
     </div>
   </div>
