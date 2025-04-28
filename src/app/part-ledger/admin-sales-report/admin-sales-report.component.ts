@@ -9,9 +9,10 @@ import { ProductSaleInfoComponent } from "../product-sale-info/product-sale-info
 import { TotalsumComponent } from "../totalsum/totalsum.component";
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
 import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-admin-sales-report',
-  imports: [PrimengModuleModule, SharedModule,SHARED_IMPORTS, ProductDesctiptionTableComponent, ProductSaleInfoComponent, TotalsumComponent, LoaderComponent],
+  imports: [PrimengModuleModule, SharedModule,SHARED_IMPORTS,CommonModule, ProductDesctiptionTableComponent, ProductSaleInfoComponent, TotalsumComponent, LoaderComponent],
   templateUrl: './admin-sales-report.component.html',
   styleUrl: './admin-sales-report.component.css'
 })

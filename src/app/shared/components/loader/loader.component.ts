@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
+import { SHARED_IMPORTS } from '../../shared-imports/shared-module';
 
 @Component({
   selector: 'app-loader',
-  imports: [],
+  imports: [SHARED_IMPORTS],
   templateUrl: './loader.component.html',
   styleUrl: './loader.component.css'
 })
