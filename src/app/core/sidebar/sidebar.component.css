@@ -45,6 +45,10 @@
     width: 100%;
     padding: 0rem !important;
     padding-left: 0.25rem !important;
+    background: none;
+    border: none;
+    box-shadow: none;
+
    
   }
   
@@ -199,7 +203,7 @@ li{
     margin: 20px 0;
   }
 
-  :host ::ng-deep input.p-inputtext.p-component.sidebar-search{
+  /* :host ::ng-deep input.p-inputtext.p-component.sidebar-search{
     padding: 0rem !important;
-  }
+  } */
   

@@ -49,4 +49,94 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   top: 0 !important;
   left: 0 !important;
   }
+
+  -select#pn_id_5 {
+    scale: 1.4;
+  }
+  
+  #pn_id_5 {
+      transform: scale(0.7);
+      transform-origin: top left;
+    }
+  
+  
+    #pn_id_4 {
+      transform: scale(0.7);
+      transform-origin: top left;
+    }
+  
+    #pn_id_6 {
+      transform: scale(0.7);
+      transform-origin: top left;
+    }
+  
+    .table-Data {
+      z-index: 1 !important; /* Ensure this is lower than the dropdown's z-index */
+    }
+  
+  
+    .ng-tns-c1151199684-3.p-overlay.p-component.ng-star-inserted {
+  
+      width: fit-content;
+      max-width: 150px;
+      font-size: 12px;
+     
+   }
+   .ng-tns-c1151199684-4.p-overlay.p-component.ng-star-inserted {
+  
+    width: fit-content;
+    max-width: 150px;
+    font-size: 12px;
+   
+  }
+  
+   .ng-tns-c1151199684-5.p-overlay.p-component.ng-star-inserted {
+  
+    width: fit-content;
+      max-width: 150px;
+      font-size: 12px;
+  
+   }
+  
+   .ng-tns-c1151199684-6.p-overlay.p-component.ng-star-inserted {
+  
+    width: fit-content;
+      max-width: 150px;
+      font-size: 12px;
+  
+   }
+  
+   .ng-tns-c1151199684-7.p-overlay.p-component.ng-star-inserted {
+  
+    width: fit-content;
+      max-width: 150px;
+      font-size: 12px;
+  
+   }
+  
+   .ng-tns-c1151199684-8.p-overlay.p-component.ng-star-inserted {
+  
+    width: fit-content;
+      max-width: 150px;
+      font-size: 12px;
+  
+   }
+  
+   .ng-tns-c1151199684-9.p-overlay.p-component.ng-star-inserted {
+  
+    width: fit-content;
+      max-width: 150px;
+      font-size: 12px;
+  
+   }
+  
+   .ng-tns-c1151199684-10.p-overlay.p-component.ng-star-inserted{
+  
+  
+    width: fit-content;
+      max-width: 150px;
+      font-size: 12px;
+  
+   }
+  
   
