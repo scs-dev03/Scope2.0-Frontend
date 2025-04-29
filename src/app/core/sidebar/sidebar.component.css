@@ -203,7 +203,8 @@ li{
     margin: 20px 0;
   }
 
-  /* :host ::ng-deep input.p-inputtext.p-component.sidebar-search{
+  :host ::ng-deep input.p-inputtext.p-component.sidebar-search{
     padding: 0rem !important;
-  } */
+    background: none !important;
+  }
   
