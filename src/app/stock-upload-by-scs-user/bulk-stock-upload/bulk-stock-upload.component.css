@@ -20,7 +20,8 @@
 :host ::ng-deep button.p-ripple.p-button.p-component.p-button-secondary{
     border: none !important;
   outline: none !important;
-  background-color: rgba(0, 0, 255, 0.164);
+  /* background-color: rgba(0, 0, 255, 0.164); */
+  background-color: rgb(0 0 255 / 34%);
   padding: 8px;
   border-radius: 4px;
   z-index: auto;

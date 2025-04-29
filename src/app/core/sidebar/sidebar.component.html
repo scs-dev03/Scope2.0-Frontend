@@ -49,7 +49,7 @@
 
       <!-- Child items that are toggled -->
       <ul *ngIf="item.isExpanded">
-        <li *ngFor="let child of item?.children" class="menu-item child">
+        <li *ngFor="let child of item?.children" class="menu-item child ms-3">
           <a
             [routerLink]="child.route"
             (click)="setActive(child, item)"

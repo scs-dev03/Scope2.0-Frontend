@@ -22,6 +22,7 @@ export class AppComponent {
   blocked:boolean=false;
   isLoginPage = false;
   @ViewChild('blockUI') blockUI!: BlockUI;
+  @ViewChild('sidebar') sidebar!: SidebarComponent;
   constructor(private globalBlockUIService: GlobalBlockUiService,
     private router:Router, private route: ActivatedRoute,
     private renderer: Renderer2) {}
@@ -59,6 +60,17 @@ export class AppComponent {
       this.blockUI.el.nativeElement.style.height = newHeight;
       this.blockUI.el.nativeElement.style.width = `${viewportWidth}px`;
     }
+
+    // if(this.sidebar){
+    //   const contentHeight = document.documentElement.scrollHeight; // Full page height
+    //   const viewportHeight = window.innerHeight; // Viewport height
+    //   const viewportWidth = window.innerWidth; // Full screen width
+
+    //   const newHeight = contentHeight > viewportHeight ? `${contentHeight}px` : '100vh';
+
+    //   this.blockUI.el.nativeElement.style.height = newHeight;
+    //   this.blockUI.el.nativeElement.style.width = `${viewportWidth}px`;
+    // }
   }
 
   ngAfterViewInit() {
@@ -67,5 +79,9 @@ export class AppComponent {
   }
   ngAfterContentChecked() {
     this.updateLoaderHeight(); // Adjust height when content updates
+  }
+
+  toggleSidebar() {
+    this.visibleSidebar = !this.visibleSidebar;
   }
 }

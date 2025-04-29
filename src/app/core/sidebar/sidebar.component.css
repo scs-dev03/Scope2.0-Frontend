@@ -4,6 +4,7 @@
     height: 100%;
     padding-top: 20px;
     
+    
   }
   :host ::ng-deep .sidebar {
     width: 250px;
@@ -36,11 +37,15 @@
     flex-direction: row;
     align-items: center;
     margin-bottom: 10px;
+    margin-inline: 8px !important;
     /* width: 80%; */
   }
   
   .sidebar-search {
     width: 100%;
+    padding: 0rem !important;
+    padding-left: 0.25rem !important;
+   
   }
   
   /* Menu Items */
@@ -135,8 +140,12 @@ li{
     /* display: grid !important; */
 }
 
-:host ::ng-deep li.menu-item.child .ng-star-inserted{
-    margin-left: 13px;
+:host ::ng-deep li.menu-item.child.ng-star-inserted{
+    margin-left: 13px !important;
+}
+
+:host ::ng-deep li.menu-item.child{
+  margin-left: 13px !important;
 }
 
 
@@ -188,5 +197,9 @@ li{
   .sidebar-logo {
     width: 100%;
     margin: 20px 0;
+  }
+
+  :host ::ng-deep input.p-inputtext.p-component.sidebar-search{
+    padding: 0rem !important;
   }
   

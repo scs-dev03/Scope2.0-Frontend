@@ -58,13 +58,13 @@
   </div>
  
 </p-blockUI>
-<div class="w-full h-full flex flex-row overflow-hidden">
+<!-- <div class="w-full h-full flex flex-row">
  
   <div class="w-auto h-auto" *ngIf="!isLoginPage">
     <app-sidebar
       #sidebar
       [ngClass]="{ 'sidebar card bg-gray-50 rounded-lg shadow-sm': visibleSidebar, 'w-0': !visibleSidebar }"
-      class="transition-all duration-300 h-[100vh]"
+      class="transition-all duration-300 h-[100vh] "
     ></app-sidebar>
   </div>
   <div>
@@ -73,7 +73,62 @@
       <router-outlet></router-outlet>
     </div>
   </div>
+</div> -->
+
+
+<!-- <div class="row flex-row">
+ 
+  <div class="col-3" *ngIf="!isLoginPage">
+    <app-sidebar
+      #sidebar
+      [ngClass]="{ 'sidebar card bg-gray-50 rounded-lg shadow-sm': visibleSidebar, 'w-0': !visibleSidebar }"
+      class="transition-all duration-300 h-[100vh] fixed"
+    ></app-sidebar>
+  </div>
+  <div class="col-9">
+    
+    <div class="d-flex  align-items-center">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div> -->
+
+<div class="d-flex">
+  <!-- Sidebar -->
+  <div
+    *ngIf="!isLoginPage"
+    [ngClass]="{
+      'w-64': visibleSidebar,
+      'w-0 overflow-hidden': !visibleSidebar
+    }"
+    class="transition-all duration-300 h-screen bg-gray-50 shadow fixed"
+  >
+    <app-sidebar #sidebar></app-sidebar>
+  </div>
+
+  <!-- Main Content -->
+  <div
+    [ngClass]="{
+      'ml-64': visibleSidebar,
+      'ml-0': !visibleSidebar
+    }"
+    class="flex-1 transition-all duration-300"
+  >
+    <!-- Toggle Button -->
+    <button
+      (click)="toggleSidebar()"
+      class="m-2 p-2 bg-blue-500 text-white rounded" [ngClass]="visibleSidebar?'bx bx-menu':'bx bx-right-arrow-alt'"
+    >
+      
+    </button>
+    <!-- {{ visibleSidebar ? 'Hide Sidebar' : 'Show Sidebar' }} -->
+    <!-- Page Content -->
+    <div class="p-4 pt-2">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 </div>
+
 
 
 
