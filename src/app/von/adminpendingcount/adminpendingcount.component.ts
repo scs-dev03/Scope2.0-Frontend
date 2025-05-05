@@ -16,6 +16,7 @@ import { LoaderComponent } from "../../shared/components/loader/loader.component
 export class AdminpendingcountComponent {
 
   ngOnInit(): void {
+    localStorage.clear()
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.fetchpendingcount()
@@ -29,7 +30,7 @@ export class AdminpendingcountComponent {
   isloading: any;
 
   navigateToAvon(rowData: any) {
-    this.router.navigate(['/avon'], {
+    this.router.navigate(['/von/avon'], {
       queryParams: {
         brandid: rowData.brandid,
         dealerid: rowData.dealerid,
@@ -39,8 +40,10 @@ export class AdminpendingcountComponent {
   }
 
    fetchpendingcount(){
+    this.isloading = true
     this.adminvonservice.getPendingCount().subscribe((res:any)=>{
       this.pendingcount = res.Data
+      this.isloading = false
     })
    }
 

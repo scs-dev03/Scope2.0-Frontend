@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardRequestComponent } from './dashboard-request/dashboard-request.component';
 import { DasboardChangeLogComponent } from './dasboard-change-log/dasboard-change-log.component';
+import { DashboardSchedulerComponent } from './dashboard-scheduler/dashboard-scheduler.component';
 
 const routes: Routes = [
   {
@@ -11,7 +12,10 @@ const routes: Routes = [
   {
     path: 'change',
     component: DasboardChangeLogComponent,
-  },
+  },{
+    path: 'ds',
+    component: DashboardSchedulerComponent
+  }
 ];
 
 @NgModule({

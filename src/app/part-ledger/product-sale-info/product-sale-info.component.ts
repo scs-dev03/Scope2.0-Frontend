@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { PrimengModuleModule } from '../../shared/primeng-module/primeng-module.module';
 import { SharedModule } from '../../shared/shared.module';
+import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
 
 @Component({
   selector: 'app-product-sale-info',
-  imports: [PrimengModuleModule,SharedModule],
+  imports: [PrimengModuleModule,SharedModule,SHARED_IMPORTS],
   templateUrl: './product-sale-info.component.html',
   styleUrl: './product-sale-info.component.css'
 })

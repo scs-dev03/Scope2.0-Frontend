@@ -17,6 +17,7 @@ import { LoaderComponent } from "../../shared/components/loader/loader.component
 })
 export class AdminVonComponent {
   ngOnInit(): void {
+    localStorage.clear()
 
     this.fetchBrandData();
     console.log(this.adminFilterData.value.dealer);
@@ -619,17 +620,15 @@ fetchAdminRemark(brandid: any, usertype: any) {
     if(!this.adminFilterData.valid){
       this.adminFilterData.markAllAsTouched();
     }
-    const formattedData = this.AdminPeningView.map(({brand,dealer,location,model,Subpartcount,partid,feedbackdate,status,LatestAdminRemark,AdminRemark ,RemarkQty	,ApprovedQty,
-      ...rest }: any) => ({
-        Brand: brand,
-        Dealer: dealer,
-        Location: location,
-        ...rest, // Pehle sab kuch
-      // Default value if undefined
-      ProposedQty: rest.ProposedQty ?? '',
-      SPMRemark: rest.SPMRemark ?? '',
-      AdminRemark: AdminRemark ?? '', 
-      ApprovedQty:  ''
+    const formattedData = this.AdminPeningView.map(({brand,dealer,location,model,Subpartcount,partid,feedbackdate,BlockAvg,	LocPer,LocCount,
+      status,LatestAdminRemark,AdminRemark ,RemarkQty	,ApprovedQty,
+            ...rest }: any) => ({
+              brand: brand,
+              dealer: dealer,
+              location: location,
+              Block_Average:BlockAvg,
+              Location_percentage:LocPer,
+              Location_count:	LocCount,
 
     }));
   
@@ -757,11 +756,34 @@ fetchAdminRemark(brandid: any, usertype: any) {
         this.visible = true;
       },
       (error) => {
-        console.error("File upload failed:", error);
+        if(error.error.Error){
+          this.visible = true
+          this.Result = "File Upload Failed"
+          this.selectedFileName = ""
+        }
+        else if(error.error.message){
+          console.error("File upload failed:", error);
         this.visible = true
-        this.Result = "File upload failed"
+        //const partNumbers = error.error.pendingRecords.map((rec:any )=> rec.PartNumber).join(', ');
+        this.Result = `${error.error.message} `;
         this.isloading = false
         this.showupload = false
+        this.selectedFileName = ""
+        
+
+        }
+        else if(error.error.pendingRecords){
+          console.error("File upload failed:", error);
+          this.visible = true
+          const partNumbers = error.error.pendingRecords.map((rec:any )=> rec.PartNumber).join(', ');
+          this.Result = `${error.error.message} (${partNumbers}) `;
+          this.isloading = false
+          this.showupload = false
+          this.selectedFileName = ""
+          
+
+        }
+        
       }
     );
   }
@@ -785,14 +807,15 @@ fetchAdminRemark(brandid: any, usertype: any) {
       return;
     }
     const formData = new FormData();
-  formData.append("file", this.AdminExcel);
+    formData.append("file2", this.AdminExcel);
     this.adminvonservice.AdminuploadExcel(formData).subscribe(
       (res: any) => {
-        if(res.length() )
+       
         this.Result = res.message
         this.showupload = false
         this.isloading = false
         this.visible = true;
+        this.adminFileName = ""
 
       },
       (error) => {
@@ -801,6 +824,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
         this.Result = "File upload failed"
         this.isloading = false
         this.showupload = false
+        this.adminFileName = ""
       }
     );
   }

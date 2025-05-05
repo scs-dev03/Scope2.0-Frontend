@@ -3,7 +3,7 @@ import { SHARED_IMPORTS } from '../../shared-imports/shared-module';
 
 @Component({
   selector: 'app-loader',
-  imports: [SHARED_IMPORTS],
+  imports: [SHARED_IMPORTS ],
   templateUrl: './loader.component.html',
   styleUrl: './loader.component.css'
 })

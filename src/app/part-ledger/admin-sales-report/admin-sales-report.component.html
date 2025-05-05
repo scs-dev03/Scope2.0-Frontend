@@ -1,20 +1,9 @@
-<div class="w-full flex flex-col h-full overflow-x-hidden">
-    <app-loader [isloading]="isloading"></app-loader>
-    <div class="relative flex items-center h-16 w-full bg-gray-300">
-      <img
-        src="logo/sparecare_horizontal_logo.png"
-        width="200px"
-        height="50px"
-        alt=""
-      />
-      <h1
-        class="absolute left-1/2 text-3xl transform -translate-x-1/2 font-semibold"
-      >
-        Sales Report
-      </h1>
-    </div>
-  
-    <div class="flex ">
+
+    <!-- <app-loader [isloading]="isloading"></app-loader> -->
+     <div class="w-full h-full">
+      
+      
+    <div class="flex flex-wrap ">
       <form
         action=""
         [formGroup]="AdminSalesReportInputData"
@@ -168,8 +157,8 @@
         <h1 class="font-semibold text-2xl" >Parts Sales Info</h1>
       </div>
       <div class="flex gap-3 mr-10">
-        <p-button label="Show Sales" size="small" (onClick)="onClickShowSaleinfo()" />
-        <p-button label="Total Sales" size="small" (onClick)="onclicktotal()" />
+        <!-- <p-button label="Show Sales" size="small" (onClick)="onClickShowSaleinfo()" />
+        <p-button label="Total Sales" size="small" (onClick)="onclicktotal()" /> -->
         <p-button label="Export Data" size="small" [disabled]="exportVisible" (onClick)="exportToExcel()" />
       </div>
     </div>
@@ -182,9 +171,11 @@
     <div class="w-full h-auto flex justify-center items-center !p-3" *ngIf="istotal">
       <app-totalsum [SalesInfo] = 'SalesInfo[1]' [DataTypeArray]="DataTypeArray" ></app-totalsum>
     </div>
-  </div>
+
+     </div>
+
   
-  <div class="card flex justify-center">
+
     <!-- it is for error Message -->
     <p-dialog
       header="Message"
@@ -199,7 +190,7 @@
         {{ Result }}
       </p>
     </p-dialog>
-  </div>
+  
   
   <p-dialog
     header="Upload"

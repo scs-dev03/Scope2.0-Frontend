@@ -41,6 +41,7 @@ export class DealerVonComponent {
   ];
 
   ngOnInit(): void {
+    localStorage.clear()
     //this.dealerVonService.setLocalStorage()
     this.dealerFilterData.reset();
     this.isloading = true;
@@ -321,76 +322,77 @@ fetchDealerTableData(
     )
   }
 // submitting user remarks
-  submitRow(rowData: any) {
-    this.isloading = true
-  
-    const validCustomRemarkRegex = /^(?![\s,@-]*$)(?!-?\d+$)[a-zA-Z0-9\s,@-]*$/;
+submitRow(rowData: any) {
+  this.isloading = true;
 
-    if (rowData.selectedRemark == null) {
-      this.isloading = false
-      this.visible = true;
-      this.Result = ' Select the Remark';
-    } else if (rowData.qty == null) {
-      this.isloading = false
-      this.visible = true;
-      this.Result = 'Input the Quantity';
-    }else if(rowData.qty<0){
-      this.isloading = false
-      this.visible = true;
-      this.Result = ' Invalid Qty'
-    }
-    else if(rowData.customRemark == ''){
-      this.isloading = false
-      this.visible = true;
-      this.Result = ' Input Custom Remark'
-    }
-    else if (
-      rowData.customRemark &&
-      !validCustomRemarkRegex.test(rowData.customRemark.trim())
-    ) {
-      this.isloading = false
-      this.visible = true;
-      this.Result = 'Invalid Custom Remark Only Number are not Allowed and  Allowed Special Character are - and @';
-    } 
-     else {
-      
-        if (
-          !rowData.customRemark || 
-          !validCustomRemarkRegex.test(rowData.customRemark.trim())
-        ) {
-          this.isloading = false
-          this.visible = true;
-          this.Result = 'Invalid Custom Remark Only Number are not Allowed and  Allowed Special Character are - and @';
-          this.isloading = false;
-          return;
-        }
+  const validCustomRemarkRegex = /^(?![\s,@-]*$)(?!-?\d+$)[a-zA-Z0-9\s,@-]*$/;
 
-      
-      this.dealerVonService
-        .submituserlog({
-          brandid: localStorage.getItem('brandid'),
-          dealerid: localStorage.getItem('dealerid'),
-          locationid: rowData.Locationid,
-          partid: rowData.Partid,
-          max: rowData.Maxvalue,
-          remarkid: rowData.selectedRemark,
-          customrem: rowData.customRemark,
-          proposedqty: rowData.qty,
-        })
-        .subscribe((res: any) => {
-          this.isloading = false
-          this.visible = true;
-          this.Result = res.message;
-        },(error: any) => {
-          this.isloading = false
-          this.Result = 'There is no dealer remark for this part, so you cannot add a remark.';
-          this.visible = true;
-          this.isloading = false;
-        });
-    }
-    
+  // Validate selected remark
+  if (rowData.selectedRemark == null) {
+    this.isloading = false;
+    this.visible = true;
+    this.Result = 'Select the Remark';
+    return;
   }
 
+  // Validate quantity
+  if (rowData.qty == null) {
+    this.isloading = false;
+    this.visible = true;
+    this.Result = 'Input the Quantity';
+    return;
+  }
+
+  if (rowData.qty < 0) {
+    this.isloading = false;
+    this.visible = true;
+    this.Result = 'Invalid Qty';
+    return;
+  }
+
+  // Validate custom remark only if selectedRemark is 'custom'
+  // Adjust condition if your dropdown uses numeric ID for custom, like (rowData.selectedRemark === -1)
+  if (rowData.showOtherInput) {
+    if (rowData.customRemark == '') {
+      this.isloading = false;
+      this.visible = true;
+      this.Result = 'Input Custom Remark';
+      return;
+    }
+
+    if (!validCustomRemarkRegex.test(rowData.customRemark.trim())) {
+      this.isloading = false;
+      this.visible = true;
+      this.Result = 'Invalid Custom Remark. Only numbers are not allowed. Allowed characters: letters, space, "-", and "@"';
+      return;
+    }
+  }
+
+  // Proceed with submission
+  this.dealerVonService
+    .submituserlog({
+      brandid: localStorage.getItem('brandid'),
+      dealerid: localStorage.getItem('dealerid'),
+      locationid: rowData.Locationid,
+      partid: rowData.Partid,
+      max: rowData.Maxvalue,
+      remarkid: rowData.selectedRemark,
+      customrem: rowData.customRemark,
+      proposedqty: rowData.qty,
+    })
+    .subscribe(
+      (res: any) => {
+        this.isloading = false;
+        this.visible = true;
+        this.Result = res.message;
+      },
+      (error: any) => {
+        this.isloading = false;
+        this.visible = true;
+        this.Result = error.error?.Error || 'Something went wrong.';
+      }
+    );
+}
   formatHeader(key: string): string {
     return key
       .replace(/_/g, ' ')
