@@ -42,7 +42,7 @@ export class DealerVonComponent {
 
   ngOnInit(): void {
     localStorage.clear()
-    //this.dealerVonService.setLocalStorage()
+    this.dealerVonService.setLocalStorage()
     this.dealerFilterData.reset();
     this.isloading = true;
     this.dealerstatus = [
@@ -497,8 +497,8 @@ submitRow(rowData: any) {
     // Unwanted keys hatao aur columns ko order karo
     const formattedData = this.tableData.map(({Brandid,Dealerid,Partid,Locationid,status, feedbackid, UserRemark, ProposedQty, ...rest }: any) => ({
       ...rest, // Baaki sab pehle rahega
-      UserRemark, // UserRemark ko last me shift kiya
-      ProposedQty,        
+      UserRemark:null, // UserRemark ko last me shift kiya
+      ProposedQty:null        
     }));
     console.log(formattedData);
     

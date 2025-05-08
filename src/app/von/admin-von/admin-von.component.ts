@@ -749,7 +749,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
   formData.append("file", this.DealerExcel);
     this.adminvonservice.uploadExcelDealer(formData).subscribe(
       (res: any) => {
-        if(res.length() )
+        
         this.Result = res.message
         this.showupload = false
         this.isloading = false
@@ -761,16 +761,15 @@ fetchAdminRemark(brandid: any, usertype: any) {
           this.Result = "File Upload Failed"
           this.selectedFileName = ""
         }
-        else if(error.error.message){
+        else if(error.error.message && error.error.pendingRecords){
           console.error("File upload failed:", error);
         this.visible = true
-        //const partNumbers = error.error.pendingRecords.map((rec:any )=> rec.PartNumber).join(', ');
-        this.Result = `${error.error.message} `;
+        const partNumbers = error.error.pendingRecords.map((rec:any )=> rec.PartNumber).join(', ');
+        this.Result = `${error.error.message} following are the Partnumber ${partNumbers} `;
         this.isloading = false
         this.showupload = false
         this.selectedFileName = ""
         
-
         }
         else if(error.error.pendingRecords){
           console.error("File upload failed:", error);
@@ -780,8 +779,6 @@ fetchAdminRemark(brandid: any, usertype: any) {
           this.isloading = false
           this.showupload = false
           this.selectedFileName = ""
-          
-
         }
         
       }
