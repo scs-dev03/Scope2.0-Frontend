@@ -7,6 +7,7 @@ import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
 import { PrimengModuleModule } from '../../shared/primeng-module/primeng-module.module';
 import { SharedModule } from '../../shared/shared.module';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
+import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 
 @Component({
   selector: 'app-dashboard-scheduler',
@@ -67,7 +68,7 @@ export class DashboardSchedulerComponent {
   constructor(
     private getDashboardService: DashboardSchedulerService,
     private messageService: MessageService,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,private globalBlockUiService:GlobalBlockUiService
   ) {}
 
   Severity: any;
@@ -284,17 +285,17 @@ export class DashboardSchedulerComponent {
   }
 // Fetch Dashboard Data for Drop down except gsi
   fetchDashboardData(dealerid: any) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.getDashboardService.getDashboard({ dealerid: dealerid }).subscribe(
       (res: any) => {
         this.dashBoardData = res.Data;
         //console.log('data of dashboard', this.dashBoardData);
-        this.isloading = false;
+        this.globalBlockUiService.stopLoading();
         this.removeGSI();
       },
       (error: any) => {
         this.scheduleResult = error.error?.message || 'Refresh Again';
-        this.isloading = false;
+        this.globalBlockUiService.stopLoading();
 
         this.showDialogforResult();
       }
@@ -302,15 +303,15 @@ export class DashboardSchedulerComponent {
   }
    // fetch brand form master
   fetchBrandData() {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.getDashboardService.getBrandMaster().subscribe(
       (res: any) => {
         this.brandData = res;
-        this.isloading = false;
+        this.globalBlockUiService.stopLoading();
       },
       (error: any) => {
         this.scheduleResult = error.error?.message || 'Refresh Again';
-        this.isloading = false;
+        this.globalBlockUiService.stopLoading();
 
         this.showDialogforResult();
       }
@@ -318,19 +319,19 @@ export class DashboardSchedulerComponent {
   }
    // fetch dealer from master
   fetchDealerData(brandid: any) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.getDashboardService.getDealersMaster({ brandid: brandid }).subscribe(
       (res: any) => {
         this.dealerData = res;
         this.dealerData.sort((a: any, b: any) => {
           return a.dealer.localeCompare(b.dealer);
         });
-        this.isloading = false;
+        this.globalBlockUiService.stopLoading();
         console.log('this is dealer', this.dealerData);
       },
       (error: any) => {
         this.scheduleResult = error.error?.message || 'Refresh Again';
-        this.isloading = false;
+        this.globalBlockUiService.stopLoading();
 
         this.showDialogforResult();
       }
@@ -346,7 +347,7 @@ export class DashboardSchedulerComponent {
     scheduledon: any,
     addedby: any
   ) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.getDashboardService
       .setDashboardSchedule({
         dashboardcodes: dashboardcode,
@@ -361,7 +362,7 @@ export class DashboardSchedulerComponent {
         (res: any) => {
           this.scheduleResult = res.message;
           this.fetchDashboardSchedule();
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
           this.showDialogforResult();
         },
         (error: any) => {
@@ -382,7 +383,7 @@ export class DashboardSchedulerComponent {
           
           console.log(this.scheduleResult);
           
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
           this.showDialogforResult();
         }
       );
@@ -391,7 +392,7 @@ export class DashboardSchedulerComponent {
   // fetch table data 
 
   fetchDashboardSchedule() {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.getDashboardService.getDashboardSchedule().subscribe(
       (res: any) => {
         // console.log(res.Request);
@@ -405,21 +406,21 @@ export class DashboardSchedulerComponent {
           }
           
         });
-        this.isloading = false;
+        this.globalBlockUiService.stopLoading();
         this.updatedData = this.adjustAddedOnTime(this.dashboardScheduleData);
         //console.log(this.updatedData);
       },
       (error: any) => {
         this.scheduleResult = error.error?.message || 'Refresh Again';
 
-        this.isloading = false;
+        this.globalBlockUiService.stopLoading();
         this.showDialogforResult();
       }
     );
   }
 // edit dashboard data from edit button
   updateDashoardSchedule(reqid: any, scheduledon: any, userid: any) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.getDashboardService
       .getEditDashboard({
         reqid: reqid,
@@ -433,12 +434,12 @@ export class DashboardSchedulerComponent {
           console.log(this.scheduleResult);
           this.fetchDashboardSchedule();
           this.showDialogforResult();
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
           this.visibleEdit = false;
         },
         (error: any) => {
           this.scheduleResult = error.error?.message || 'Updation Failed';
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
 
           this.showDialogforResult();
         }
@@ -447,7 +448,7 @@ export class DashboardSchedulerComponent {
 
   //delete dashboard from table
   deleteDashboardSchedule(reqid: any, bintid_pk: any) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.getDashboardService
       .getDeletDashboard({ reqid: reqid, bintid_pk: bintid_pk })
       .subscribe(
@@ -455,12 +456,12 @@ export class DashboardSchedulerComponent {
           this.scheduleResult = res.message;
           this.fetchDashboardSchedule();
           this.showDialogforResult();
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
           this.visibleDelete = false;
         },
         (error: any) => {
           this.scheduleResult = error.error?.message || 'Deletion Failed Choose your Name From BDM';
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
 
           this.showDialogforResult();
         }
@@ -492,10 +493,10 @@ export class DashboardSchedulerComponent {
   }
 // fetching bdm form master
   fetchBdm() {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.getDashboardService.getBDM().subscribe((res: any) => {
       this.BdmData = res;
-      this.isloading = false;
+      this.globalBlockUiService.stopLoading();
     });
   }
   

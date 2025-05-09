@@ -6,15 +6,18 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { Sidebar2Component } from "../sidebar-2/sidebar-2.component";
 import { HomePageService } from '../../services/home-page/home-page.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { IndianCurrencyPipe } from "../../shared/Indian-currency/indian-currency.pipe";
+import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 @Component({
   selector: 'app-home-page',
-  imports: [SHARED_IMPORTS, SharedModule, PrimengModuleModule, NgxEchartsModule, Sidebar2Component],
+  imports: [SHARED_IMPORTS, SharedModule, PrimengModuleModule, NgxEchartsModule, Sidebar2Component, IndianCurrencyPipe],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'
 })
 export class HomePageComponent {
 
   ngOnInit(): void {
+    this.globalBlockUiService.startLoading()
     // this.fetchCardsData(localStorage.get())
     localStorage.setItem('usertoken',this.token)
 
@@ -22,7 +25,7 @@ export class HomePageComponent {
     this.fetchCardsData(localStorage.getItem('def_location'),localStorage.getItem('dealerid'))    
   }
 
-  constructor(private homepageservice: HomePageService){}
+  constructor(private homepageservice: HomePageService,private globalBlockUiService:GlobalBlockUiService){}
 
 
   token : any = "0x02000000D1B3C7E7D011498C812162DDAFB9D30E887E185EF7F1D27ED92D60F85858FCBF"
@@ -32,6 +35,12 @@ export class HomePageComponent {
   CardsData: any = []
   userInfo: any = []
   filteredLocationData:any =[]
+  snStockValue:any = {}
+  StockValue:any = 0
+  NonStockValue:any = 0
+  chartDataLoaded = false;
+
+  
 
   homeData = new FormGroup({
     locationId : new FormControl(),
@@ -39,10 +48,11 @@ export class HomePageComponent {
 
 
   async fetchUserinfo(usertoken:any,usertype:any){
+    this.globalBlockUiService.startLoading()
     // console.log('fetch method',usertoken);
     // console.log('fetch method',usertype);
     
-    this.isloading = true
+    this.globalBlockUiService.startLoading()
     await this.homepageservice.getuserinfo({ token: usertoken, usertype: usertype }).subscribe({
       next: (res: any) => {
 
@@ -55,13 +65,14 @@ export class HomePageComponent {
         }));
 
         console.log(this.filteredLocationData);
+        this.globalBlockUiService.stopLoading()
         
         
         
       },
       error: (err) => {
       //  console.error('Error fetching user info:', err);
-        this.isloading = false;
+        this.globalBlockUiService.stopLoading();
     
         // Optional: show user-friendly message
         alert('Something went wrong while fetching user info. Please try again.');
@@ -77,18 +88,24 @@ export class HomePageComponent {
   }
 
   fetchCardsData(locationId: any, dealerid: any){
-    this.isloading = true
+    this.globalBlockUiService.startLoading()
     this.homepageservice.getcardsdata({locationId:locationId,dealerid:dealerid}).subscribe({
       next: (res: any) =>{
         this.CardsData = res
-        this.isloading = false
-        console.log(this.locationData);
+        this.globalBlockUiService.stopLoading()
+        //console.log(this.locationData);
+        this.StockValue = res.SNStockValue[0].StockableValue;
+        this.NonStockValue = res.SNStockValue[0].NonStockableValue;
+        console.log("stockable",this.StockValue);
+        console.log("nonstockable",this.NonStockValue);
+        this.chartDataLoaded = true;
+        this.globalBlockUiService.stopLoading()
         
       },
       error: (err: any)=>{
         console.error("Error fetching location data:", err);
         
-        this.isloading = false
+        this.globalBlockUiService.stopLoading()
       }
     })
   }
@@ -125,15 +142,14 @@ export class HomePageComponent {
           show: false
         },
         data: [
-          { value: 1048, name: 'Search Engine', itemStyle: { color: '#5470C6' } },
-          { value: 735, name: 'Direct', itemStyle: { color: '#91CC75' } },
-          { value: 580, name: 'Email', itemStyle: { color: '#FAC858' } },
-          { value: 484, name: 'Union Ads', itemStyle: { color: '#EE6666' } },
-          { value: 300, name: 'Video Ads', itemStyle: { color: '#73C0DE' } }
+          { value: this.StockValue, name: 'Stockable Value',itemStyle: { color: '#5470C6' } },
+          { value: this.NonStockValue, name: 'Non Stockable Value', itemStyle: { color: '#EE6666' } },
+          
         ]
       }
     ]
-  }; 
+  };
+  
 
 
 isMenuOpen = false;

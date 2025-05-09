@@ -8,6 +8,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Sidebar2Component } from "../../core/sidebar-2/sidebar-2.component";
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
+import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 @Component({
   selector: 'app-dealer-von',
   imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS, Sidebar2Component, LoaderComponent],
@@ -32,7 +33,7 @@ export class DealerVonComponent {
     status: new FormControl()
   });
   
-  constructor(private dealerVonService: DealervonserviceService) {}
+  constructor(private dealerVonService: DealervonserviceService,private globalBlockUiService:GlobalBlockUiService) {}
 
   categories: any[] = [
     { name: 'WS', key: '0' },
@@ -44,7 +45,7 @@ export class DealerVonComponent {
     localStorage.clear()
     this.dealerVonService.setLocalStorage()
     this.dealerFilterData.reset();
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.dealerstatus = [
       { name: 'Reviewd', code: '2' },
       { name: 'Unreviewd', code: '1' },
@@ -61,7 +62,7 @@ export class DealerVonComponent {
     this.fetchModel(localStorage.getItem('brandid'));
     this.fetchSeasonaData();
     this.fetchPartType();
-    this.isloading = false;
+    this.globalBlockUiService.stopLoading();
     this.dealerFilterData.patchValue({
       max: '1',  // Code set karna hoga kyunki optionValue="code" hai
       
@@ -173,45 +174,45 @@ export class DealerVonComponent {
 // fetching location from master api
   // Fetch Location Data
 fetchlocation(dealerId: any) {
-  this.isloading = true;
+  this.globalBlockUiService.startLoading();
   this.dealerVonService.getlocationMaster({ dealerid: dealerId }).subscribe({
       next: (res: any) => {
           this.locationData = res;
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
           console.error("Error fetching location data:", err);
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
       }
   });
 }
 
 // Fetch Nature Data
 fetchNature() {
-  this.isloading = true;
+  this.globalBlockUiService.startLoading();
   this.dealerVonService.getNature().subscribe({
       next: (res: any) => {
           this.natureData = res.Data;
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
           console.error("Error fetching nature data:", err);
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
       }
   });
 }
 
 // Fetch Model Data
 fetchModel(brandid: any) {
-  this.isloading = true;
+  this.globalBlockUiService.startLoading();
   this.dealerVonService.getModel({ brandid }).subscribe({
       next: (res: any) => {
           this.modelData = res.Data;
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
           console.error("Error fetching model data:", err);
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
       }
   });
 }
@@ -238,7 +239,7 @@ fetchDealerTableData(
   partnumber: any, location: any, max: any, seasonalid: any, 
   natureid: any, modelid: any, brandid: any
 ) {
-  this.isloading = true;
+  this.globalBlockUiService.startLoading();
   this.dealerVonService.getdelarTableView({
       l1, l2, dealerid, parttype, r1: from, r2: to, partnumber,
       locationid: location, flag: max, seasonalid, natureid, modelid, brandid
@@ -284,13 +285,13 @@ fetchDealerTableData(
           );
 
           this.showTable = true;
-          this.isloading = false;  // Ensure `isloading` is reset in success case
+          this.globalBlockUiService.stopLoading();  // Ensure `isloading` is reset in success case
       },
       error: (err: any) => {
           console.error("Error fetching dealer table data:", err);
           this.Result = "Failed to fetch data. Please try again.";
           this.visible = true;
-          this.isloading = false;  // Ensure `isloading` is reset in failure case
+          this.globalBlockUiService.stopLoading();  // Ensure `isloading` is reset in failure case
       }
   });
 }
@@ -323,13 +324,13 @@ fetchDealerTableData(
   }
 // submitting user remarks
 submitRow(rowData: any) {
-  this.isloading = true;
+  this.globalBlockUiService.startLoading();
 
   const validCustomRemarkRegex = /^(?![\s,@-]*$)(?!-?\d+$)[a-zA-Z0-9\s,@-]*$/;
 
   // Validate selected remark
   if (rowData.selectedRemark == null) {
-    this.isloading = false;
+    this.globalBlockUiService.stopLoading();
     this.visible = true;
     this.Result = 'Select the Remark';
     return;
@@ -337,14 +338,14 @@ submitRow(rowData: any) {
 
   // Validate quantity
   if (rowData.qty == null) {
-    this.isloading = false;
+    this.globalBlockUiService.stopLoading();
     this.visible = true;
     this.Result = 'Input the Quantity';
     return;
   }
 
   if (rowData.qty < 0) {
-    this.isloading = false;
+    this.globalBlockUiService.stopLoading();
     this.visible = true;
     this.Result = 'Invalid Qty';
     return;
@@ -354,14 +355,14 @@ submitRow(rowData: any) {
   // Adjust condition if your dropdown uses numeric ID for custom, like (rowData.selectedRemark === -1)
   if (rowData.showOtherInput) {
     if (rowData.customRemark == '') {
-      this.isloading = false;
+      this.globalBlockUiService.stopLoading();
       this.visible = true;
       this.Result = 'Input Custom Remark';
       return;
     }
 
     if (!validCustomRemarkRegex.test(rowData.customRemark.trim())) {
-      this.isloading = false;
+      this.globalBlockUiService.stopLoading();
       this.visible = true;
       this.Result = 'Invalid Custom Remark. Only numbers are not allowed. Allowed characters: letters, space, "-", and "@"';
       return;
@@ -382,12 +383,12 @@ submitRow(rowData: any) {
     })
     .subscribe(
       (res: any) => {
-        this.isloading = false;
+        this.globalBlockUiService.stopLoading();
         this.visible = true;
         this.Result = res.message;
       },
       (error: any) => {
-        this.isloading = false;
+        this.globalBlockUiService.stopLoading();
         this.visible = true;
         this.Result = error.error?.Error || 'Something went wrong.';
       }
@@ -442,7 +443,7 @@ submitRow(rowData: any) {
   
   // fetching dealer view log
   fetchDelerViewlog(brandid: any, dealerid: any, locationid: any, partid: any) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.dealerVonService
       .getDealerViewLog({
         brandid: brandid,
@@ -455,38 +456,38 @@ submitRow(rowData: any) {
         if(res.Data && res.Data.length){
           this.changelogDialog = true;
           this.dealerViewLog = res.Data;
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
         }
         else{
           this.Result = 'There is No Previous Record, Please Give new Remark for this Part'
           this.visible = true
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
         }
       });
   }
 
   // fetching parttype dropdowndata
   fetchPartType() {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.dealerVonService.getPartType().subscribe((res: any) => {
       this.partType = res.Data;
-      this.isloading = false;
+      this.globalBlockUiService.stopLoading();
     });
   }
 // fetching part family detils
   fetchFamilyPart(partnumber: any) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.dealerVonService
       .getSubstitutePart({ partnumber: partnumber })
       .subscribe((res: any) => {
         if (res.Data && res.Data.length) {
           this.familyPartDataVisible = true
           this.familyPartData = res.Data;
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
         } else {
           this.visible = true;
           this.Result = 'There is No Substitute Part Available for this Part';
-          this.isloading = false; // Set a default message or empty state
+          this.globalBlockUiService.stopLoading(); // Set a default message or empty state
 
         }
       });
@@ -513,7 +514,7 @@ submitRow(rowData: any) {
 
 
   fetchPartSale(brandid: any, dealerid: any, locationid:any, partnumber: any){
-    this.isloading = true
+    this.globalBlockUiService.startLoading()
     this.dealerVonService.getPartFamilySales({brandid:brandid,dealerid:dealerid, locationid:locationid, partnumber:partnumber}).subscribe((res: any)=>{
         
       this.partFamilySaleData = res.Data
@@ -522,7 +523,7 @@ submitRow(rowData: any) {
         this.columns = this.extractKeys(this.partFamilySaleData);
         
     })
-    this.isloading = false
+    this.globalBlockUiService.stopLoading()
   }
 
 

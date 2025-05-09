@@ -23,7 +23,7 @@ export const routes: Routes = [
     },
 
     {
-        path:'dashboard',
+        path:'dashboard-scheduler',
         loadChildren:()=> import('../app/dasboard-scheduler/dasboard-scheduler.module').then(m=>m.DasboardSchedulerModule)
     },
     {
