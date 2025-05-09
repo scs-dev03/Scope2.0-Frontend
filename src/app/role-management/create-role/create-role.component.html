@@ -1,8 +1,6 @@
-   
-    <p-toast position="top-center"></p-toast>
-<div class="h-[100vh] w-[100vw] overflow-y-auto overflow-x-hidden">
-
-    <!-- <p-blockUI [blocked]="isLoading">
+<p-toast position="top-center"></p-toast>
+<div class="h-full w-full overflow-x-hidden">
+  <!-- <p-blockUI [blocked]="isLoading">
      
         <i class='bx bx-loader-circle fa-spin custom-icon fa-spinner'></i>
     </p-blockUI>
@@ -14,19 +12,17 @@
     />
       <app-header></app-header> -->
   <!-- </div> -->
-  <div class="body d-flex">
-     
-      <!-- <div class="h-[100vh]">
+  <div class="body ml-10 flex">
+    <!-- <div class="h-[100vh]">
           
           <app-sidebar class="h-[100vh]"></app-sidebar>
       </div> -->
-      <div class="w-[100vw]">
-  
+    <div class="w-full">
       <div class="">
         <div
-          class="flex flex-row w-[100vw] md:w-[65vw] sm:w-[65vw] lg:w-[63vw]  !py-3 !px-3 justify-between"
+          class="flex flex-row w-[100vw] md:w-[65vw] sm:w-[65vw] lg:w-[63vw] !py-3 !px-3 justify-between"
         >
-          <h3 class="font-semibold text-base text-md md:text-xl ">
+          <h3 class="font-semibold text-base text-md md:text-xl">
             Role Based Access Management
           </h3>
           <!-- <button (click)="showDialog()"
@@ -36,14 +32,19 @@
           </button> -->
         </div>
       </div>
-    
-      <div class="flex " >
+
+      <div class="flex">
         <div
-          class="card  flex flex-col justify-start p-3 bg-[#FDF5E6] rounded-lg shadow-lg" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[60vw]':'w-[80vw]'"
+          class="card flex flex-col justify-start p-3 bg-[#FDF5E6] rounded-lg shadow-lg"
+          [ngClass]="
+            isSidebarVisible ? 'w-[80vw] h-auto md:w-[60vw]' : 'w-[80vw]'
+          "
         >
           <form action="" [formGroup]="roleForm" class="flex flex-col">
-            <label class="font-semibold lg:text-lg" for="rolename">Role Name</label>
-    
+            <label class="font-semibold lg:text-lg" for="rolename"
+              >Role Name</label
+            >
+
             <input
               type="text"
               id="rolename"
@@ -52,166 +53,235 @@
               placeholder="Role Name"
               pInputText
             />
-            <div *ngIf="rolename?.hasError('required') && rolename?.touched" class="text-red-500">
+            <div
+              *ngIf="rolename?.hasError('required') && rolename?.touched"
+              class="text-red-500"
+            >
               Role Name is required.
             </div>
-            <span class="my-2 font-semibold lg:text-lg">Associated Business</span>
-            <div class="flex flex-row flex-wrap gap-7" formGroupName="checkboxes">
-              <div >
-                <p-checkbox value="1" inputId="SIMS" formControlName="SIMS" binary="true" />
+            <span class="my-2 font-semibold lg:text-lg"
+              >Associated Business</span
+            >
+            <div
+              class="flex flex-row flex-wrap gap-7"
+              formGroupName="checkboxes"
+            >
+              <div>
+                <p-checkbox
+                  value="1"
+                  inputId="SIMS"
+                  formControlName="SIMS"
+                  binary="true"
+                />
                 <label for="SIMS" class="ml-2">SIMS</label>
               </div>
               <div>
-                <p-checkbox value="1" inputId="AUDIT" formControlName="AUDIT" binary="true" />
+                <p-checkbox
+                  value="1"
+                  inputId="AUDIT"
+                  formControlName="AUDIT"
+                  binary="true"
+                />
                 <label for="AUDIT" class="ml-2">AUDIT</label>
               </div>
               <div>
-                <p-checkbox value="1" inputId="GAINER" formControlName="GAINER" binary="true" />
+                <p-checkbox
+                  value="1"
+                  inputId="GAINER"
+                  formControlName="GAINER"
+                  binary="true"
+                />
                 <label for="GAINER" class="ml-2">GAINER</label>
               </div>
               <div>
-                <p-checkbox value="1" inputId="IT" formControlName="IT" binary="true" />
+                <p-checkbox
+                  value="1"
+                  inputId="IT"
+                  formControlName="IT"
+                  binary="true"
+                />
                 <label for="IT" class="ml-2">IT</label>
               </div>
               <div>
-                <p-checkbox value="1" inputId="HR" formControlName="HR" binary="true" />
+                <p-checkbox
+                  value="1"
+                  inputId="HR"
+                  formControlName="HR"
+                  binary="true"
+                />
                 <label for="HR" class="ml-2">HR</label>
               </div>
               <div>
-                <p-checkbox value="1" inputId="OTHERS" formControlName="OTHERS" binary="true" />
+                <p-checkbox
+                  value="1"
+                  inputId="OTHERS"
+                  formControlName="OTHERS"
+                  binary="true"
+                />
                 <label for="OTHERS" class="ml-2">OTHERS</label>
               </div>
             </div>
-            <div *ngIf="roleForm.get('checkboxes')?.hasError('atLeastOneRequired') && roleForm.get('checkboxes')?.touched" class="text-red-500 mt-1">
+            <div
+              *ngIf="
+                roleForm.get('checkboxes')?.hasError('atLeastOneRequired') &&
+                roleForm.get('checkboxes')?.touched
+              "
+              class="text-red-500 mt-1"
+            >
               At least one checkbox must be selected!
             </div>
-  
           </form>
-           <div class="flex justify-center w-full items-center">
-        <button (click)="getAccessSettings()" 
-          class="bg-customBlue text-white font-semibold mt-4 py-1 px-2 
-          rounded-lg  focus:outline-none focus:ring-2 
-           focus:ring-opacity-50 sm:text-base
-            md:text-lg lg:text-lg cursor-pointer btn-access-settings"
+          <div class="flex justify-center w-full items-center">
+            <button
+              (click)="getAccessSettings()"
+              class="bg-customBlue text-white font-semibold mt-4 py-1 px-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 sm:text-base md:text-lg lg:text-lg cursor-pointer btn-access-settings"
+            >
+              Get Access Settings
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex">
+        <div
+          class="flex flex-row py-3 md:px-0 justify-between align-items-center"
+          [ngClass]="isSidebarVisible ? 'w-[80vw] md:w-[60vw]' : 'w-[80vw]'"
         >
-          Get Access Settings 
-        </button>
-      </div>
-        </div>
-      </div>
-      
-      <div class="flex ">
-        <div
-          class="flex flex-row  py-3 md:px-0 justify-between align-items-center" [ngClass]="isSidebarVisible?'w-[80vw] md:w-[60vw]':'w-[80vw]'">
-        
           <!-- <h3 class="font-semibold text-base text-md md:text-xl">Access Settings</h3> -->
-  
-            <div class="mb-3">
-                <span class="font-semibold text-base text-md md:text-xl ">Access Settings</span>
-            </div>
-            <div>
-              <!-- <i class="pi pi-user cursor-pointer me-3" style="font-size: 1.5rem;font-weight:bold " ></i> -->
-              <i class='bx bx-download cursor-pointer me-3' style="font-size: 1.5rem;font-weight:bold " (click)="downloadRoleFormat()" ></i>
-              <input 
-      type="file" 
-      #fileInput 
-      (change)="onFileSelect($event)" 
-      [accept]="'.xlsx, .xls, .csv'"
-      style="display: none" 
-    />
-              <i class='bx bx-upload cursor-pointer' style="font-size: 1.5rem;font-weight:bold" (click)="triggerFileInput(fileInput)" ></i>
-              <span>    {{fileName}}</span>
-            </div>
-          
+
+          <div class="mb-3">
+            <span class="font-semibold text-base text-md md:text-xl"
+              >Access Settings</span
+            >
+          </div>
+          <div>
+            <!-- <i class="pi pi-user cursor-pointer me-3" style="font-size: 1.5rem;font-weight:bold " ></i> -->
+            <i
+              class="bx bx-download cursor-pointer me-3"
+              style="font-size: 1.5rem; font-weight: bold"
+              (click)="downloadRoleFormat()"
+            ></i>
+            <input
+              type="file"
+              #fileInput
+              (change)="onFileSelect($event)"
+              [accept]="'.xlsx, .xls, .csv'"
+              style="display: none"
+            />
+            <i
+              class="bx bx-upload cursor-pointer"
+              style="font-size: 1.5rem; font-weight: bold"
+              (click)="triggerFileInput(fileInput)"
+            ></i>
+            <span> {{ fileName }}</span>
+          </div>
         </div>
       </div>
-    
-      <div class="flex ">
+
+      <div class="flex">
         <div
-          class="card  flex flex-col justify-start p-3 bg-[#FDF5E6] rounded-lg shadow-lg" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[60vw]':'w-[80vw] h-auto'">
+          class="card flex flex-col justify-start p-3 bg-[#FDF5E6] rounded-lg shadow-lg"
+          [ngClass]="
+            isSidebarVisible ? 'w-[80vw] h-auto md:w-[60vw]' : 'w-[80vw] h-auto'
+          "
+        >
           <p-table
-          styleClass="p-datatable-striped"
+            styleClass="p-datatable-striped"
             [scrollHeight]="'280px'"
-             [scrollable]="true"
-             
+            [scrollable]="true"
             [value]="allModules"
-            class="bg-white w-full !rounded-lg border !h-[50vh]  border-gray-200 shadow-md"
+            class="bg-white w-full !rounded-lg border !h-[50vh] border-gray-200 shadow-md"
           >
             <!-- Table Header -->
-            <ng-template  pTemplate="header">
+            <ng-template pTemplate="header">
               <tr class="bg-gray-200 text-gray-700 text-sm font-semibold">
-                <th class=" text-left">Business Vertical</th>
-                <th class=" text-left">Module</th>             
-                <th class=" text-left">Sub Module</th>
-                <th class=" text-left">View</th>
-                <th class=" text-left">Edit</th>
-                <th class=" text-left">Add</th>
-                <th class=" text-left">Delete/Inactive</th>
-                <th class=" text-left">All</th>
+                <th class="text-left">Business Vertical</th>
+                <th class="text-left">Module</th>
+                <th class="text-left">Sub Module</th>
+                <th class="text-left">View</th>
+                <th class="text-left">Edit</th>
+                <th class="text-left">Add</th>
+                <th class="text-left">Delete/Inactive</th>
+                <th class="text-left">All</th>
               </tr>
             </ng-template>
-    
+
             <!-- Table Body -->
             <ng-template pTemplate="body" let-module>
-            
-              
               <!-- Submodule Rows (if any) -->
-              <tr *ngFor="let submodule of module.submodules; let i=index" class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-sm h-14">
-                <td class="!p-3 text-left">{{submodule.businessVerticalName}}</td>
-                <td>{{submodule.parentModuleName}}</td>
+              <tr
+                *ngFor="let submodule of module.submodules; let i = index"
+                class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-sm h-14"
+              >
+                <td class="!p-3 text-left">
+                  {{ submodule.businessVerticalName }}
+                </td>
+                <td>{{ submodule.parentModuleName }}</td>
                 <td class="!p-3 text-left">{{ submodule.module_name }}</td>
                 <!-- <td class="!p-3 text-left">-</td> -->
                 <td class="!p-3 text-center">
-                  <p-checkbox [(ngModel)]="submodule.view1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'view')"></p-checkbox>
+                  <p-checkbox
+                    [(ngModel)]="submodule.view1"
+                    binary="true"
+                    (onChange)="toggleAllForModule(module, $event, i, 'view')"
+                  ></p-checkbox>
                 </td>
                 <td class="!p-3 text-center">
-                  <p-checkbox [(ngModel)]="submodule.edit1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'edit')" ></p-checkbox>
+                  <p-checkbox
+                    [(ngModel)]="submodule.edit1"
+                    binary="true"
+                    (onChange)="toggleAllForModule(module, $event, i, 'edit')"
+                  ></p-checkbox>
                 </td>
                 <td class="!p-3 text-center">
-                  <p-checkbox [(ngModel)]="submodule.add1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'add')"></p-checkbox>
+                  <p-checkbox
+                    [(ngModel)]="submodule.add1"
+                    binary="true"
+                    (onChange)="toggleAllForModule(module, $event, i, 'add')"
+                  ></p-checkbox>
                 </td>
                 <td class="!p-3 text-center">
-                  <p-checkbox [(ngModel)]="submodule.delete1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'delete')"></p-checkbox>
+                  <p-checkbox
+                    [(ngModel)]="submodule.delete1"
+                    binary="true"
+                    (onChange)="toggleAllForModule(module, $event, i, 'delete')"
+                  ></p-checkbox>
                 </td>
                 <td class="!p-3 text-center">
-                  <p-checkbox [(ngModel)]="submodule.all" (onChange)="toggleAllForModule(module,$event,i,'all')" binary="true"></p-checkbox>
+                  <p-checkbox
+                    [(ngModel)]="submodule.all"
+                    (onChange)="toggleAllForModule(module, $event, i, 'all')"
+                    binary="true"
+                  ></p-checkbox>
                 </td>
               </tr>
-              
-              
             </ng-template>
-            <ng-template pTemplate="footer" >
-             
-                <tr *ngIf="allModules.length==0">
-                  <td colspan="8">
-      
-                    <div class="d-flex justify-center align-items-center">No data is Available</div>
-                  </td>
-    
-                </tr>
-              
-             
+            <ng-template pTemplate="footer">
+              <tr *ngIf="allModules.length == 0">
+                <td colspan="8">
+                  <div class="d-flex justify-center align-items-center">
+                    No data is Available
+                  </div>
+                </td>
+              </tr>
             </ng-template>
           </p-table>
-      
-      
-      
+        </div>
       </div>
-     
-      </div>
-  
-      <div class="flex justify-center  items-center" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[60vw]':'w-[80vw]'">
-        <button (click)="submit()" 
-          class="bg-customBlue text-white font-semibold mt-4 py-1 px-2 
-          rounded-lg  focus:outline-none focus:ring-2 
-           focus:ring-opacity-50 sm:text-base
-            md:text-lg lg:text-lg cursor-pointer"
+
+      <div
+        class="flex justify-center items-center"
+        [ngClass]="
+          isSidebarVisible ? 'w-[80vw] h-auto md:w-[60vw]' : 'w-[80vw]'
+        "
+      >
+        <button
+          (click)="submit()"
+          class="bg-customBlue text-white font-semibold mt-4 py-1 px-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 sm:text-base md:text-lg lg:text-lg cursor-pointer"
         >
-          Add Role 
+          Add Role
         </button>
       </div>
     </div>
   </div>
-  </div>
-  
-    
+</div>

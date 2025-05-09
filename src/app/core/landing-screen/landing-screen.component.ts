@@ -25,14 +25,10 @@ export class LandingScreenComponent {
     this.route.queryParams.subscribe(params => {
       this.usertoken = params['usertoken'];
       this.usertype = params['usertype'];
-      
-      
     });
     if(this.usertype === 'd'){
-
       localStorage.setItem('usertype', 'U' )
      // console.log(localStorage.getItem('usertype'));
-      
     }
     else if(this.usertype == 'a'){
       localStorage.setItem('usertype', 'A' )
@@ -41,6 +37,9 @@ export class LandingScreenComponent {
 
     // console.log('User Token in ngoinint :', this.usertoken);
     // console.log('User Type  in ngoinint :  ',this.usertype);
+
+    localStorage.setItem('usertoken', this.usertoken)
+    localStorage.setItem('usertype',this.usertype)
     
     this.fetchUserinfo(this.usertoken,this.usertype)
 
@@ -63,6 +62,7 @@ export class LandingScreenComponent {
           localStorage.setItem('brandid', res.Data[0].BrandID);
           localStorage.setItem('dealerid', res.Data[0].dealerid);
           localStorage.setItem('username', res.Data[0].username);
+          localStorage.setItem('def_location',res.Data[0].locationid)
         }
     
         if (usertype == 'a') {
