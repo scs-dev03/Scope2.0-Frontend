@@ -47,7 +47,7 @@ export const routes: Routes = [
         loadChildren:()=>import('../app/role-management/role-management.module').then(m=>m.RoleManagementModule)
     },
     {
-        path: '**', redirectTo:'mapping/stock-upload',
+        path: '**', redirectTo:'core/home',
         pathMatch:'full'
     },
     
