@@ -38,7 +38,7 @@
              <!-- <div class="font-semibold ms-4">
                  <span class="d-flex align-items-center text-[20px]">Lead Time Upload</span>
              </div> -->
-             <div class="flex justify-center" >
+             <div class="flex justify-start" >
                  <div
                    class="flex flex-row w-[80vw] md:w-[54vw] py-2 md:px-0 justify-between"
                  >
@@ -261,8 +261,8 @@
                          <p-button [styleClass]="'text-white'" class="" label="Download Logs File" (click)="downloadExcelFile()" />
                      </div> -->
                  </div>
-                 <div class="row  mt-4 flex justify-center"  >
-                     <div class="col-12 d-flex justify-content-center">
+                 <div class="row  mt-4 flex justify-start"  >
+                     <div class="col-12 d-flex justify-content-start">
                          <p-table
                         [value]="updatedAuditLogs" *ngIf="showTable"
                         [responsive]="true"

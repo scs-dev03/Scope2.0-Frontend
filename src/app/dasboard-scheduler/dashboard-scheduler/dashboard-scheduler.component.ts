@@ -12,7 +12,8 @@ import { LoaderComponent } from '../../shared/components/loader/loader.component
   selector: 'app-dashboard-scheduler',
   imports: [SHARED_IMPORTS,PrimengModuleModule,SharedModule,LoaderComponent],
   templateUrl: './dashboard-scheduler.component.html',
-  styleUrl: './dashboard-scheduler.component.css'
+  styleUrl: './dashboard-scheduler.component.css',
+  providers: [DatePipe]
 })
 export class DashboardSchedulerComponent {
   dashboardInputData: FormGroup = new FormGroup({

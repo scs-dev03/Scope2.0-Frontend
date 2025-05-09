@@ -26,4 +26,12 @@ private apiurlmaster: any =
     getuserinfo(data:any): Observable<any>{
       return this.http.post(`${this.apiurlmaster}userinfo`,data)
     }
+
+    getcardsdata(data: any): Observable<any>{
+      return this.http.post(`${this.apiurlmaster}home`,data)
+    } 
+    
+    getlocationMaster(data:any){
+      return this.http.post(`${this.apiurlmaster}locations`,data)
+    }
 }

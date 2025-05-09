@@ -1,84 +1,73 @@
-<div class="relative h-[100vh] w-[100vw] bg-gray-200 overflow-auto">
-    <app-loader [isloading]="isloading"></app-loader>
-  <img
-    src="background\backgroundImage.png"
-    class="hidden w-[100vw] h-[100vh] -z-10 fixed"
-    alt="Background Image"
-  />
-  <div
-    class="flex items-center justify-between h-[8vh] bg-customBlue lg:h-[10vh] px-2"
-  >
-  <p-button (click)='onClickSidebar()'  icon="pi pi-bars" />
+<div class="relative h-[100vh] w-full bg-gray-200 overflow-auto">
+  <!-- <app-loader [isloading]="isloading"></app-loader> -->
 
-    <!-- Center Text -->
-    <h1 class="select-none text-white text-center text-lg font-bold lg:text-3xl mx-auto">
-      Pending Count Of VON
-    </h1>
-
-    <!-- Logo -->
-    <img src="logo/sparecarelogo.png" class="w-16 h-10" alt="Sparecare Logo" />
-  </div>
   <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
-    
-    <div class=" bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden" >
+    <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
-  [scrollable]="true"
-  scrollHeight="600px"
-  [value]="pendingcount"
-  [paginator]="true"
-  [rows]="10"
-  [rowsPerPageOptions]="[20, 30, 40, 50, 100]"
-  [showGridlines]="true"
-  scrollDirection="both"
-  class=" !w-[90vw] "
-  sortable="true"
-  [tableStyle]="{ 'min-width': '50rem' }"
->
-  <ng-template #header>
-    <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
-      <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]">S.No </th>
-      <th pSortableColumn="Brand" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]">
-        Brand <p-sortIcon field="Brand" />
-      </th>
-      <th pSortableColumn="dealer" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]">
-        Dealer <p-sortIcon field="dealer" />
-      </th>
-      <th pSortableColumn="location" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]">
-        Location <p-sortIcon field="location" />
-      </th>
-      <th pSortableColumn="Pending" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]">
-        Pending Count <p-sortIcon field="Pending" />
-      </th>
-    </tr>
-  </ng-template>
+        [scrollable]="true"
+        scrollHeight="600px"
+        [value]="pendingcount"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[20, 30, 40, 50, 100]"
+        [showGridlines]="true"
+        scrollDirection="both"
+        class="!w-[90vw]"
+        sortable="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template #header>
+          <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
+            <th
+              class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]"
+            >
+              S.No
+            </th>
+            <th
+              pSortableColumn="Brand"
+              class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]"
+            >
+              Brand <p-sortIcon field="Brand" />
+            </th>
+            <th
+              pSortableColumn="dealer"
+              class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]"
+            >
+              Dealer <p-sortIcon field="dealer" />
+            </th>
+            <th
+              pSortableColumn="location"
+              class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]"
+            >
+              Location <p-sortIcon field="location" />
+            </th>
+            <th
+              pSortableColumn="Pending"
+              class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]"
+            >
+              Pending Count <p-sortIcon field="Pending" />
+            </th>
+          </tr>
+        </ng-template>
 
-  <ng-template #body let-rowData let-i="rowIndex">
-    <tr
-      class="border-b hover:bg-green-100 transition duration-200 cursor-pointer"
-      (click)="navigateToAvon(rowData) "
-    >
-      <td class="p-1 text-[13px] text-center">{{ i + 1 }}</td>
-      <td class="p-1 text-[13px] text-center">{{ rowData.Brand }}</td>
-      <td class="p-1 text-[13px] text-center">{{ rowData.dealer }}</td>
-      <td class="p-1 text-[13px] text-center">{{ rowData.location }}</td>
-      <td class="p-1 text-[13px] text-center">{{ rowData.Pending }}</td>
-    </tr>
-  </ng-template>
-</p-table>
-
-    </div> 
+        <ng-template #body let-rowData let-i="rowIndex">
+          <tr
+            class="border-b hover:bg-green-100 transition duration-200 cursor-pointer"
+            (click)="navigateToAvon(rowData)"
+          >
+            <td class="p-1 text-[13px] text-center">{{ i + 1 }}</td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.Brand }}</td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.dealer }}</td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.location }}</td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.Pending }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-</div>
-
-<app-sidebar-2 [sidebarvisible]="sidebarvisible" (close)="sidebarvisible = false"></app-sidebar-2
-    >
+<app-sidebar-2
+  [sidebarvisible]="sidebarvisible"
+  (close)="sidebarvisible = false"
+></app-sidebar-2>

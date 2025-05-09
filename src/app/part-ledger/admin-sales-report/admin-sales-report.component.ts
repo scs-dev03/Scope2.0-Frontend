@@ -104,7 +104,7 @@ export class AdminSalesReportComponent {
   istotal: boolean = false
   
 
-  onSubmitAdminInputData() {
+  async onSubmitAdminInputData() {
 
     this.DataTypeArray = this.AdminSalesReportInputData.value.DataType
   
@@ -126,11 +126,13 @@ export class AdminSalesReportComponent {
         
       }
       else{
-        this.fetchPartDescription(
+          this.fetchPartDescription(
           this.AdminSalesReportInputData.value.BrandID.toString(),
           this.partNumber,
           this.excel.toString()
           );
+          this.onClickShowSaleinfo()
+          this.onclicktotal()
 
       }
     }    

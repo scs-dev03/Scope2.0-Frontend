@@ -5,10 +5,11 @@ import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
 import { AdminvonserviceService } from '../../services/Von/adminvonservice.service';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Sidebar2Component } from "../../core/sidebar-2/sidebar-2.component";
+import { LoaderComponent } from "../../shared/components/loader/loader.component";
 
 @Component({
   selector: 'app-admin-remark',
-  imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS, Sidebar2Component],
+  imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS, Sidebar2Component, LoaderComponent],
   templateUrl: './admin-remark.component.html',
   styleUrl: './admin-remark.component.css'
 })
@@ -86,6 +87,7 @@ export class AdminRemarkComponent {
         this.adminRemarkInputData.value.remarkInput='';
         this.visible = true;
         this.Result = res.message;
+        this.isloading = false
         
         
       });
