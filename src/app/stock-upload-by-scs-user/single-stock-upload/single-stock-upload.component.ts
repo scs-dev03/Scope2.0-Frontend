@@ -11,9 +11,11 @@ import { MessageService } from 'primeng/api';
 import { FileUpload } from 'primeng/fileupload';
 import { StockUploadByUserService } from '../../services/stock-upload-by-user.service';
 import { Table } from 'primeng/table';
+import { SidebarService } from '../../services/sidebar.service';
 @Component({
   selector: 'app-single-stock-upload',
   imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
+  providers:[MessageService],
   templateUrl: './single-stock-upload.component.html',
   styleUrl: './single-stock-upload.component.css'
 })
@@ -44,13 +46,15 @@ export class SingleStockUploadComponent {
   isDataPresentForPartNotInMaster:boolean=false
   min:any;
   max:any;
+  visibleSidebar:boolean=false;
   @ViewChild('fu') fu:FileUpload|null=null;
   constructor(private utilitiesService:UtilitiesService,
    private fb:FormBuilder,
    private stockUploadServiceByUser:StockUploadByUserService,
    private stockUploadService:StockUploadBySpmService,
    private globalBlockUiService:GlobalBlockUiService,
-   private messageService:MessageService
+   private messageService:MessageService,
+   private sidebarService:SidebarService
   ){
  
    this.slForm=this.fb.group({
@@ -72,7 +76,9 @@ export class SingleStockUploadComponent {
    this.min = new Date();
    this.min.setMonth(this.max.getMonth() - 3);
 
-
+  this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
+    this.visibleSidebar=visible;
+  })
   }
  
   onSelect(event: any) {

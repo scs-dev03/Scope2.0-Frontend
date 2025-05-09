@@ -1,0 +1,283 @@
+<div class="h-[100vh] w-[100vw]  overflow-hidden">
+   
+    <p-toast position="top-center"></p-toast>
+    <!-- <p-blockUI [blocked]="isLoading" >
+        <i class='bx bx-loader-circle fa-spin custom-icon fa-spinner'></i>
+    </p-blockUI>
+    <div>
+      <img
+      src="Background_image.png"
+      alt="Background"
+      class=" w-full h-full object-cover -z-10 fixed"
+    />
+      <app-header></app-header>
+  </div> -->
+  <div class="body d-flex">
+   
+    <!-- <div class="h-[100vh]">
+        
+        <app-sidebar class="h-[100vh]"></app-sidebar>
+    </div> -->
+
+   
+    <div class="w-[100vw]">
+
+      <!-- <div class="d-flex justify-center align-items-center" *ngIf="userPermissions.length>0 && !userPermissions?.edit1 && !userPermissions?.add1 && !userPermissions?.view1 && !userPermissions?.delete1">
+        <h2>You do not have the access for User Management</h2>  
+    </div> -->
+    
+    <!-- flex justify-center -->
+        <div class="" >
+            <div
+        class="flex flex-row  !py-3 !px-5 justify-between" [ngClass]="isSidebarVisible?' w-[100vw] md:w-[65vw] sm:w-[65vw] lg:w-[63vw]':'w-[100vw]'"
+      >
+        <h3 class="font-semibold text-base text-md md:text-xl ">
+          View & Edit Roles
+        </h3>
+        </div>
+        </div>
+        <!-- flex justify-center -->
+        <div class=" " style="width: 100%; overflow-x: auto;">
+           <div class="card p-3    h-auto bg-[#FDF5E6] rounded-lg shadow-lg" [ngClass]="isSidebarVisible?' w-[100vw] w-[80vw]   md:w-[60vw]':'w-[85vw]'">
+
+               <p-table 
+       styleClass="p-datatable-striped"
+           [scrollHeight]="'300px'"
+            [scrollable]="true"
+            responsiveLayout="scroll"
+            [scrollable]="true"
+           [value]="roles"
+           [paginator]="true"
+           [rows]="20"
+           paginatorDropdownAppendTo="body"
+           class="view-data custom-paginator"
+           styleClass="{width:80%}"
+           [rowsPerPageOptions]="[20,40,60,80,100]"
+           class="bg-white   !rounded-lg border !h-auto  border-gray-200 shadow-md"
+      >
+       <ng-template pTemplate="header">
+           <tr>
+               <th>Role Name</th>
+               <th class="text-center">SIMS</th>
+               <th class="text-center">AUDIT</th>
+               <th class="text-center">GAINER</th>
+               <th class="text-center">IT</th>
+               <th class="text-center">HR</th>
+               <th class="text-center">OTHERS</th>
+               <th class="text-center" *ngIf="userPermissions?.edit1">Action</th>
+               <th class="text-center" *ngIf="userPermissions?.delete1">Delete</th>
+               <th class="text-center">Action</th>
+               <th class="text-center" >Delete</th>
+           </tr>
+       </ng-template>
+       <ng-template pTemplate="body" let-role let-i="rowIndex">
+           <tr [class.selected]="selectedRow === i">
+               <td>{{role.name}}</td>
+               <td class="text-center">
+                   <p-checkbox 
+                       [(ngModel)]="role.sims" 
+                       (onChange)="updateRoleState(role, 'SIMS', $event)"
+                      
+                       binary="true">
+                       <!-- [disabled]="selectedRow !== i" -->
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.audit" 
+                       (onChange)="updateRoleState(role, 'AUDIT', $event)"
+                       >
+                       <!-- [disabled]="selectedRow !== i" -->
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.gainer" 
+                       (onChange)="updateRoleState(role, 'GAINER', $event)"
+                      >
+                      <!-- [disabled]="selectedRow !== i" -->
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.it" 
+                       (onChange)="updateRoleState(role, 'IT', $event)"
+                       >
+                       <!-- [disabled]="selectedRow !== i" -->
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.hr" 
+                       (onChange)="updateRoleState(role, 'HR', $event)"
+                      >
+                      <!-- [disabled]="selectedRow !== i" -->
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.other" 
+                       (onChange)="updateRoleState(role, 'OTHERS', $event)"
+                       >
+                       <!-- [disabled]="selectedRow !== i" -->
+                   </p-checkbox>
+               </td>
+               <!-- <td class="text-center" *ngIf="userPermissions?.edit1">
+                   <i class="bx bx-edit cursor-pointer"  (click)="editRow(i,role)"></i>
+               </td>
+               
+                   <td class="p-2" *ngIf="userPermissions?.delete1"><mat-slide-toggle 
+                     
+                    [ngModel]="setToggleState(role)" 
+                    (ngModelChange)="onStatusChange(role,role.status)">
+                </mat-slide-toggle></td> -->
+                <td class="text-center" >
+                  <i class="bx bx-edit cursor-pointer"  (click)="editRow(i,role)"></i>
+              </td>
+              
+                  <td class="p-2" >
+               <p-toggleswitch  [ngModel]="setToggleState(role)" 
+               (ngModelChange)="onStatusChange(role,role.status)"> ></p-toggleswitch>
+              </td>
+            
+           </tr>
+           <tr class="text-center" *ngIf="role.showErrorMessage">
+            <td colspan="8" class="text-center">
+                <div class="text-red-500 mt-1" style="font-size: 12px;">
+                    One of the business verticals must be selected!
+                </div>
+            </td>
+           </tr>
+       </ng-template>
+   </p-table>
+           </div>
+          </div>
+  </div>
+
+  <p-dialog header="Edit Role" [modal]="true" [(visible)]="visible" [style]="{ width: '60%' }">
+    <div
+    class="card w-[70vw] h-auto md:w-[70vw] flex flex-col justify-start p-3 bg-[#FDF5E6] rounded-lg shadow-lg">
+    <p-table
+    styleClass="p-datatable-striped"
+      [scrollHeight]="'280px'"
+       [scrollable]="true"
+       [paginator]="true"
+    [rows]="25"
+      [value]="allModules"
+      class="bg-white w-full !rounded-lg border !h-[50vh]  border-gray-200 shadow-md"
+    >
+      <!-- Table Header -->
+      <ng-template  pTemplate="header">
+        <tr class="bg-gray-200 text-gray-700 text-sm font-semibold">
+          <th class="f-13 text-left">Business Vertical</th>
+          <th class="f-13 text-left">Module</th>             
+          <th class="f-13 text-left">Sub Module</th>
+          <th class="f-13 text-left">View</th>
+          <th class="f-13 text-left">Edit</th>
+          <th class="f-13 text-left">Add</th>
+          <th class="f-13 text-left">Delete</th>
+          <th class="f-13 text-left">All</th>
+        </tr>
+      </ng-template>
+
+      <!-- Table Body -->
+      <!-- <ng-template pTemplate="body" let-module>
+          
+            
+        <!-- Submodule Rows (if any) -->
+        <!-- <tr *ngFor="let submodule of module.submodules; let i=index" class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-sm h-14">
+          <td class="!p-3 text-left f-11">{{submodule.businessVerticalName}}</td>
+          <td class="!p-3 text-left f-11"> {{submodule.parentModuleName}}</td>
+          <td class="!p-3 text-left f-11">{{ submodule.module_name }}</td>
+          <td class="!p-3 text-center f-11">
+            <p-checkbox [(ngModel)]="submodule.view1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'view')"></p-checkbox>
+          </td>
+          <td class="!p-3 text-center">
+            <p-checkbox [(ngModel)]="submodule.edit1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'edit')" ></p-checkbox>
+          </td>
+          <td class="!p-3 text-center">
+            <p-checkbox [(ngModel)]="submodule.add1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'add')"></p-checkbox>
+          </td>
+          <td class="!p-3 text-center">
+            <p-checkbox [(ngModel)]="submodule.delete1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'delete')"></p-checkbox>
+          </td>
+          <td class="!p-3 text-center">
+            <p-checkbox [(ngModel)]="submodule.all" (onChange)="toggleAllForModule(module,$event,i,'all')" binary="true"></p-checkbox>
+          </td>
+        </tr>
+          
+      </ng-template> --> 
+
+      <ng-template pTemplate="body" let-module>
+        <!-- If submodules exist -->
+        <ng-container *ngIf="module.submodules?.length > 0; else noSubmodules">
+          <tr *ngFor="let submodule of module.submodules; let i = index" class="hover:bg-gray-100 transition duration-300 text-sm h-14">
+            <td class="!p-3 text-left f-11">{{ submodule.businessVerticalName }}</td>
+            <td class="!p-3 text-left f-11">{{ submodule.parentModuleName }}</td>
+            <td class="!p-3 text-left f-11">{{ submodule.module_name }}</td>
+            <td class="!p-3 text-center f-11">
+              <p-checkbox [(ngModel)]="submodule.view1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'view')"></p-checkbox>
+            </td>
+            <td class="!p-3 text-center">
+              <p-checkbox [(ngModel)]="submodule.edit1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'edit')"></p-checkbox>
+            </td>
+            <td class="!p-3 text-center">
+              <p-checkbox [(ngModel)]="submodule.add1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'add')"></p-checkbox>
+            </td>
+            <td class="!p-3 text-center">
+              <p-checkbox [(ngModel)]="submodule.delete1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'delete')"></p-checkbox>
+            </td>
+            <td class="!p-3 text-center">
+              <p-checkbox [(ngModel)]="submodule.all" (onChange)="toggleAllForModule(module,$event,i,'all')" binary="true"></p-checkbox>
+            </td>
+          </tr>
+        </ng-container>
+      
+        <!-- Else: Show parent module as row if it has no submodules -->
+        <ng-template #noSubmodules>
+          <tr class="hover:bg-gray-100 transition duration-300 text-sm h-14">
+            <td class="!p-3 text-left f-11">{{ getBusinessVerticalName(module.business_vertical_id) }}</td>
+            <td class="!p-3 text-left f-11">{{ module.module_name }}</td>
+            <td class="!p-3 text-left f-11">-</td>
+            <td class="!p-3 text-center f-11">
+              <p-checkbox [(ngModel)]="module.view1" binary="true"></p-checkbox>
+            </td>
+            <td class="!p-3 text-center">
+              <p-checkbox [(ngModel)]="module.edit1" binary="true"></p-checkbox>
+            </td>
+            <td class="!p-3 text-center">
+              <p-checkbox [(ngModel)]="module.add1" binary="true"></p-checkbox>
+            </td>
+            <td class="!p-3 text-center">
+              <p-checkbox [(ngModel)]="module.delete1" binary="true"></p-checkbox>
+            </td>
+            <td class="!p-3 text-center">
+              <p-checkbox [(ngModel)]="module.all" binary="true"></p-checkbox>
+            </td>
+          </tr>
+        </ng-template>
+      </ng-template>
+      
+     
+        
+
+    </p-table>
+
+    <div class="flex justify-center w-full items-center mt-5">
+        <button (click)="submit()" 
+          class="bg-customBlue text-white font-semibold mt-4 py-1 px-2 
+          rounded-lg  focus:outline-none focus:ring-2 
+           focus:ring-opacity-50 sm:text-base
+            md:text-lg lg:text-lg cursor-pointer update-role "
+        >
+          Update Role 
+        </button>
+      </div>
+
+</div>
+</p-dialog>

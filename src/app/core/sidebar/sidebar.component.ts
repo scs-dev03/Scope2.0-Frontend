@@ -7,6 +7,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MenuItem, MessageService } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { TieredMenu } from 'primeng/tieredmenu';
+import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -26,18 +27,19 @@ export class SidebarComponent {
   searchQuery: string = '';
   activeIndex:any;
   isVisible: boolean = true;
-  sidebarItems = [
-    {id: 1, value: "Mapping", children: [
-        {id: 2, value: "Stock Upload Mapping", route: 'mapping/stock-upload',isActive: true},
-        {id: 3, value: "Dealer Location Mapping", route: 'mapping/dealer-location',isActive: false}
-      ], isExpanded: false},
-    {id: 4, value: "Stock Upload", children: [
-      {id: 5, value: "Single Location Upload", route: 'upload/sl',isActive: false},
-      {id: 9, value: "Multi Location Upload", route: 'upload/ml',isActive: false},
-      {id: 10, value: "Single Upload", route: 'stock-upload/sl',isActive: false},
-       {id: 12, value: "Bulk Upload", route: 'stock-upload/ml',isActive: false}
-    ], isExpanded: false}
-  ];
+  sidebarItems:any=[];
+  // sidebarItems = [
+  //   {id: 1, value: "Mapping", children: [
+  //       {id: 2, value: "Stock Upload Mapping", route: 'mapping/stock-upload',isActive: true},
+  //       {id: 3, value: "Dealer Location Mapping", route: 'mapping/dealer-location',isActive: false}
+  //     ], isExpanded: false},
+  //   {id: 4, value: "Stock Upload", children: [
+  //     {id: 5, value: "Single Location Upload", route: 'upload/sl',isActive: false},
+  //     {id: 9, value: "Multi Location Upload", route: 'upload/ml',isActive: false},
+  //     {id: 10, value: "Single Upload", route: 'stock-upload/sl',isActive: false},
+  //      {id: 12, value: "Bulk Upload", route: 'stock-upload/ml',isActive: false}
+  //   ], isExpanded: false}
+  // ];
   
     filteredItems: any[] = [...this.sidebarItems]; // Initially, all items are visible
 
@@ -50,13 +52,13 @@ export class SidebarComponent {
       }
     
       // Filter items based on search query
-      this.filteredItems = this.sidebarItems.map(item => {
+      this.filteredItems = this.sidebarItems.map((item:any) => {
         // Check if the parent matches the search query
         let matchesParent = item.value.toLowerCase().includes(this.searchQuery.trim().toLowerCase());
     
         if (item.children) {
           // Filter child items that match the search query
-          const filteredChildren = item.children.filter(child =>
+          const filteredChildren = item.subchildren.filter((child:any) =>
             child.value.toLowerCase().includes(this.searchQuery.trim().toLowerCase())
           );
     
@@ -64,7 +66,7 @@ export class SidebarComponent {
           if (filteredChildren.length > 0) {
             return {
               ...item,  // Keep the parent item
-              children: filteredChildren  // Only keep the matching children
+              subchildren: filteredChildren  // Only keep the matching children
             };
           }
         }
@@ -75,7 +77,9 @@ export class SidebarComponent {
         }
     
         return null; // Exclude items that don't match
-      }).filter(item => item !== null);  // Remove null values
+      }).filter((item:any) => item !== null);  // Remove null values
+
+      
     }
     
     openSidebar() {
@@ -90,13 +94,12 @@ export class SidebarComponent {
     closeSidebar() {
       this.isVisible = false;
     }
+
     onButtonClick(event: any) {
       console.log('Button clicked');
       this.menu?.toggle(event);
     }
     
-    
-
    
    setActive(subItem: any, parentItem: any) {
 
@@ -104,7 +107,7 @@ export class SidebarComponent {
      // Reset the active state for all main menu items and submenus
      this.sidebarItems.forEach((menuItem: any) => {
        menuItem.isActive = false;  // Reset active state for all main items
-       menuItem?.children.forEach((sub: any) => {
+       menuItem?.subchildren.forEach((sub: any) => {
          sub.isActive = false;  // Reset active state for all submenus
        });
      });
@@ -133,9 +136,9 @@ export class SidebarComponent {
   // Function to set an active child item
   setActiveChild(child:any) {
     // Deactivate all children in the sidebar
-    this.sidebarItems.forEach(item => {
+    this.sidebarItems.forEach((item:any) => {
       if (item.children) {
-        item.children.forEach(childItem => {
+        item.children.forEach((childItem:any) => {
           if (childItem !== child) {
             childItem.isActive = false;  // Deactivate other children
           }
@@ -143,6 +146,7 @@ export class SidebarComponent {
       }
     });
   }
+
   ngOnInit(){
   this.items = [
     {
@@ -167,6 +171,77 @@ export class SidebarComponent {
     
   ]
   
+  this.getModules();
 }
+
+constructor(private sidebarService:SidebarService){}
    
+
+getModules(){
+  this.sidebarService.getModules().subscribe((res:any)=>{
+    this.sidebarItems=res.data;
+    this.transformData(this.sidebarItems)
+  })
+}
+transformData(data: any) {
+  const groupedData: { [key: string]: any } = {};
+  const directParents: any[] = [];
+
+  data.forEach((item: any) => {
+    const parentName = item.parentModuleName;
+
+    // ✅ Handle missing, "null", or NULL strings as direct parent
+    if (!parentName || parentName.toLowerCase?.() === 'null') {
+      directParents.push({
+        parentModuleName: item.module_name,
+        module_route: item.module_route,
+        add1: item.add1,
+        delete1: item.delete1,
+        edit1: item.edit1,
+        isActive: item.isActive,
+        view1: item.view1,
+        subchildren: [],     // still keep subchildren key to simplify UI logic
+        isOpen: false
+      });
+    } else {
+      if (!groupedData[parentName]) {
+        groupedData[parentName] = {
+          parentModuleName: parentName,
+          subchildren: [],
+          isOpen: false
+        };
+      }
+
+      groupedData[parentName].subchildren.push({
+        module_name: item.module_name,
+        module_route: item.module_route,
+        add1: item.add1,
+        delete1: item.delete1,
+        edit1: item.edit1,
+        isActive: item.isActive,
+        view1: item.view1
+      });
+    }
+  });
+
+  const combinedResult = [...Object.values(groupedData), ...directParents];
+  this.sidebarItems = combinedResult;
+  console.log("sidebar ",this.sidebarItems)
+ // this.sendDataToUser(this.sidebarItems);
+  return combinedResult;
+}
+
+
+
+toggleSubMenu(item: any) {
+  // Check if the clicked submenu is already open. If so, close it; otherwise, open it.
+  item.isOpen = !item.isOpen;
+
+  // Close other submenus
+  this.sidebarItems.forEach((subItem: any) => {
+    if (subItem !== item) {
+      subItem.isOpen = false;  // Close other submenus
+    }
+  });
+}
 }

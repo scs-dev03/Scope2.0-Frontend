@@ -35,6 +35,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .f-15{
     font-size: 15px;
   }
+  .custom-icon {
+    position: absolute;
+    font-size: 3rem;
+    color: #ccc; /* You can adjust the color */
+    animation: spin 1s infinite linear;
+}
 
   :host ::ng-deep .p-blockui-mask-document.p-blockui.p-blockui-mask.p-overlay-mask{
     display: flex !important;
@@ -139,4 +145,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   
    }
   
+   .f-12{
+    font-size:12px;
+   }
   

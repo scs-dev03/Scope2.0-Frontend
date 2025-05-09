@@ -1,1 +1,315 @@
-<p>upload works!</p>
+
+<p-toast position="top-center"></p-toast>
+<!-- <p-blockUI [blocked]="isLoading"> -->
+  <!-- <p-progressSpinner 
+    styleClass="w-4rem h-4rem" 
+    strokeWidth="8" 
+    fill="var(--surface-ground)" 
+    animationDuration=".5s" /> -->
+    <!-- <i class='bx bx-loader-circle fa-spin custom-icon fa-spinner'></i>
+</p-blockUI>
+<div>
+  <img
+  src="Background_image.png"
+  alt="Background"
+  class=" w-full h-full object-cover -z-10 fixed"
+/>
+  <app-header></app-header>
+</div> -->
+<div class="body d-flex">
+ 
+  <!-- <div class="h-[100vh]">
+      
+      <app-sidebar class="h-[100vh]"></app-sidebar>
+  </div> -->
+ 
+  <!-- <div class="d-flex justify-center align-items-center h-[80vh] w-full" *ngIf=" !userPermissions.edit1 && !userPermissions.add1 && !userPermissions.view1 && !userPermissions.delete1">
+      <h2>You do not have the access for User Management</h2>  
+  </div> -->
+  <div class="h-100" >
+      <!-- <div class="d-flex justify-content-center mt-3">
+          <span class="font-bold text-[18px]">Welcome {{userName}}</span>
+
+      </div> -->
+      <!-- *ngIf="userPermissions.length>0 || userPermissions?.edit1 ||  userPermissions?.add1 || userPermissions?.view1 || userPermissions?.delete1" -->
+     <div >
+         <!-- <i class='bx bx-collapse-alt bx-md cursor-pointer' (click)="collapseScreen()"></i> -->
+         <i [ngClass]="isScreenCollapsed?'bx bx-chevron-down bx-md':'bx bx-chevron-up bx-md'" class="cursor-pointer"  (click)="collapseScreen()"></i>
+             <!-- <div class="font-semibold ms-4">
+                 <span class="d-flex align-items-center text-[20px]">Lead Time Upload</span>
+             </div> -->
+             <div class="flex justify-center" >
+                 <div
+                   class="flex flex-row w-[80vw] md:w-[54vw] py-2 md:px-0 justify-between"
+                 >
+                   <h3 class="font-semibold text-base text-md md:text-xl">Lead Time Upload</h3>
+                 </div>
+               </div>
+                <div class="row" [ngClass]="!isLocationWiseChecked?'ms-3':'ms-3'">
+                     <div class="w-full h-full" [hidden]="isScreenCollapsed">
+                         <div class="row my-2">
+                            <div class="col-2 d-flex justify-content-end">
+                                <!-- <p-checkbox 
+                                [(ngModel)]="isLocationWiseChecked"
+                                binary="true"
+                                (onChange)="onCheckboxChange($event)"
+                                 /> -->
+                                 <p-checkbox binary="true" [(ngModel)]="isLocationWiseChecked"  (onChange)="onCheckboxChange($event)"/>
+     
+                            </div>
+                              <div class="col-10">
+                                  <label>Do you want to upload Location Wise?</label>
+     
+                              </div>
+     
+                         </div>
+                     
+                         <form class="" [formGroup]="locationFormGroup" *ngIf="!isLocationWiseChecked" >
+                             <div class="row">
+                                 <div class="col-12 d-flex flex-column gap-4">
+                                     <div class="row ">
+                                         <div class="col-2">
+                                             <label class="d-flex justify-content-end align-items-center" for="brand">Brand :</label>
+                                         </div>
+                                         <div class="col-10">
+                                    
+                                       <p-select
+                                       [styleClass]=""
+                                       [options]="brands"
+                                       (ngModelChange)="onBrandSelect($event)"
+                                       id="brand"
+                                       formControlName="brand"
+                                       optionLabel="brand"
+                                       optionValue="brand_id"
+                                       placeholder="Select Brand"/>
+                                       <div *ngIf="locationFormGroup.get('brand')?.touched && locationFormGroup.get('brand')?.invalid">
+                                         <small *ngIf="locationFormGroup.get('brand')?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small>
+                                       </div>
+                                         </div>
+                                     </div>
+                                     <div class="d-flex flex-column" *ngFor="let fileType of fileTypes;let i=index;">
+                                         <div class="row " >
+                                             <div class="col-2">
+                                                 <label class="d-flex justify-content-end align-items-center" for="fileType">File Type :</label>
+                                             </div>
+                                             <div class="col-4" >
+                                            <p>{{fileType.fileType}}</p>
+                                           <!-- <div *ngIf="locationFormGroup.get('fileType')?.touched && locationFormGroup.get('fileType')?.invalid">
+                                             <small *ngIf="locationFormGroup.get('fileType')?.hasError('required')" style="color: red; font-size: 12px;">FileType is required.</small>
+                                           </div> -->
+                                             </div>
+                                             <div class="col-2 me-2">
+         
+                                                 <p-fileUpload #fileUpload
+                                                 [name]="'fileType_' + i"
+                                                 [accept]="'.xlsx, .xls, .csv'"
+                                                 [auto]="true"
+                                                 mode="advanced"
+                                                 chooseLabel="Upload"
+                                                 
+                                                 chooseIcon="pi pi-upload"
+                                                 (onSelect)="onUpload($event, fileType, i)"
+                                                 multiple="false"
+                                         >
+                                    </p-fileUpload>
+                                    <p>{{fileNames[i]}}</p>
+                                    <!-- <div *ngIf="locationFormGroup.get('fileType' + i)?.touched && locationFormGroup.get('fileType' + i)?.invalid">
+                                     <small *ngIf="locationFormGroup.get('fileType' + i)?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small>
+                                   </div> -->
+                                             </div>
+                                         </div>
+                                         
+     
+                                     </div> 
+                                     
+                                 </div>
+                             </div>
+                    
+                         </form>
+                 </div>
+                 <div class="w-full">
+                 <form [formGroup]="uploadForm" *ngIf="isLocationWiseChecked">
+           <div class="row " [hidden]="isScreenCollapsed">
+             <div class="col-12 d-flex flex-column gap-4">
+                 <div class="row ">
+                     <div class="col-2">
+                         <label class="d-flex justify-content-end align-items-center" for="brand">Brand :</label>
+                     </div>
+                     <div class="col-10">
+                   <p-select
+                   [styleClass]=""
+                   [options]="brands"
+                   (ngModelChange)="onBrandSelect($event)"
+                   id="brand"
+                   formControlName="brand"
+                   optionLabel="brand"
+                   optionValue="brand_id"
+                   placeholder="Select Brand"
+                   (ngModelChange)="getDealers($event)"/>
+                   <div *ngIf="uploadForm.get('brand')?.touched && uploadForm.get('brand')?.invalid">
+                     <small *ngIf="uploadForm.get('brand')?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small>
+                   </div>
+                     </div>
+                 </div>
+         
+                 <div class="row ">
+                     <div class="col-2">
+                         <label class="d-flex justify-content-end align-items-center " for="dealer">Dealer :</label>
+                     </div>
+                     <div class="col-10">
+               <p-select
+               [options]="dealers"
+               optionValue="dealer_id"
+               id="dealer"
+               formControlName="dealer"
+               optionLabel="dealer_name"
+               placeholder="Select Dealer"
+               (ngModelChange)="getLocations($event)"/>
+               <div *ngIf="uploadForm.get('dealer')?.touched && uploadForm.get('dealer')?.invalid">
+                 <small *ngIf="uploadForm.get('dealer')?.hasError('required')" style="color: red; font-size: 12px;">Dealer is required.</small>
+               </div>
+                     </div>
+                 </div>
+         
+                 <div class="row ">
+                     <div class="col-2">
+                         <label class="d-flex justify-content-end align-items-center" for="location">Location :</label>
+                     </div>
+                     <div class="col-10">
+               <p-select
+               [options]="locations"
+               id="location"
+               formControlName="location"
+               optionLabel="location_name"
+               optionValue="location_id"
+               placeholder="Select Location"/>
+               <div *ngIf="uploadForm.get('location')?.touched && uploadForm.get('location')?.invalid">
+                 <small *ngIf="uploadForm.get('location')?.hasError('required')" style="color: red; font-size: 12px;">Location is required.</small>
+               </div>
+                     </div>
+                 </div>
+                 <div class="d-flex flex-column" *ngFor="let fileType of fileTypes;let i=index">
+                     <div class="row " >
+                         <div class="col-2">
+                             <label class="d-flex justify-content-end align-items-center" for="fileType">File Type :</label>
+                         </div>
+                         <div class="col-4" >
+                             
+                        <p>{{fileType.fileType}}</p>
+                         </div>
+                         <div class="col-2 me-2">
+     
+                             <p-fileUpload #fileUpload
+                             mode="advanced"
+                             multiple="true"
+                             chooseIcon="pi pi-upload"
+                             accept=".xlsx, .xls,.csv"
+                             [auto]="true"
+                            
+                             chooseLabel="Upload"
+                             [name]="'fileType_' + i"
+                             (onSelect)="onUpload($event,fileType,i)" 
+                               />
+                               <p>{{fileNames[i]}}</p>
+                               <!-- <div *ngIf="uploadForm.get('fileType' + i)?.touched && uploadForm.get('fileType' + i)?.invalid">
+                                 <small *ngIf="uploadForm.get('fileType' + i)?.hasError('required')" style="color: red; font-size: 12px;">Location is required.</small>
+                               </div> -->
+                         </div>
+                     </div>
+                     
+     
+                 </div>
+               
+             </div>
+         </div>
+             </form>
+             </div>
+                 <div class="row " [ngClass]="isLocationWiseChecked?'mt-4 ms-1 ':'mt-4'">
+                     <div class="" [ngClass]="isScreenCollapsed?'col-4 col-4-div':'col-2 col-sm-1 col-lg-2'">
+                         <!-- <span class="d-flex justify-content-end align-items-center">Upload Excel :</span> -->
+                         
+                     </div>
+                     <div class=" d-flex flex-row gap-5 div-btn" [ngClass]="isScreenCollapsed?'col-8':'col-10'">
+             
+                         <div class=" btn-search  " [ngClass]="isScreenCollapsed?'col-3':'col-3'">
+                             <p-button [styleClass]="'text-white'" label="Submit"  [disabled]="!isFileUploaded" (click)="submit()" />
+                         </div>
+                         <div class="d-flex justify-content-end ">
+                              <div class=" btn-export"  [ngClass]="isScreenCollapsed?'col-5':''">
+                                 <p-button [styleClass]="'text-white'" class="" label="Download Format" [disabled]="showDownloadFormat"  (click)="downloadExcel()" />
+                             </div>
+                             <div class=" btn-export" *ngIf="!isLocationWiseChecked " [ngClass]="isScreenCollapsed?'col-8':''">
+                                 <p-button [styleClass]="'text-white'" class="" label="Download Workshop List" [disabled]="showDownloadFormat"  (click)="downloadWorkShopList()" />
+                             </div>
+                             <!-- <div class=" btn-search" [ngClass]="isScreenCollapsed?'col-3':'col-2'">
+                                 <p-button [styleClass]="'text-white'" label="Search" [disabled]="!isSearchButton" (click)="search()" />
+                             </div> -->
+                             <!-- <div class=" btn-view" [ngClass]="isScreenCollapsed?'col-5':'col-3'">
+                                 <p-button [styleClass]="' text-white'" label="View Mapping" [disabled]="!showMapping " (click)="show()" />
+             
+                             </div> -->
+     
+                         </div>
+                     </div>
+                 </div>
+                 
+                 <div class="row d-flex justify-content-end mt-3" [hidden]="isScreenCollapsed" [ngClass]="isScreenCollapsed?'ms-5':''">
+                     <!-- <div class="col-2 btn-export" *ngIf="!isLocationWiseChecked " [ngClass]="isScreenCollapsed?'col-3':''">
+                         <p-button [styleClass]="'text-white'" class="" label="Download Format"  [disabled]="!isSearchButton" (click)="downloadExcel()" />
+                     </div> -->
+                     <!-- <div class="col-2 btn-export" *ngIf="isLocationWiseChecked ">
+                         <p-button [styleClass]="'text-white'" class="" label="Download Logs File" (click)="downloadExcelFile()" />
+                     </div> -->
+                 </div>
+                 <div class="row  mt-4 flex justify-center"  >
+                     <div class="col-12 d-flex justify-content-center">
+                         <p-table
+                        [value]="updatedAuditLogs" *ngIf="showTable"
+                        [responsive]="true"
+                        [paginator]="true" 
+                        [rows]="15"
+                        styleClass="p-datatable-gridlines" 
+                        
+                        responsiveLayout="scroll"
+                         dataKey="code"
+                         class="w-full !rounded-lg-border border-gray-200 shadow-md"  [scrollable]="true"
+                         [scrollHeight]="isScreenCollapsed ? '285px' : '285px'" >
+                             <ng-template pTemplate="header" >
+                                 <tr>
+                                     <!-- <th style="width: 4rem"><p-tableHeaderCheckbox /></th> -->
+                                     <th>Brand</th>
+                                     <th *ngIf="isLocationWiseChecked">Dealer</th>
+                                     <th *ngIf="isLocationWiseChecked">Location</th>
+                                     <th>File Type</th>
+                                     <th pSortableColumn="noOfRecords" class="text-center">No. of Records <p-sortIcon field="noOfRecords" /></th>
+                                     <th>Updated Date</th>
+                                     <th>Updated By</th>
+                                 </tr>
+                             </ng-template>
+                             <!-- <ng-template pTemplate="emptymessage" *ngIf="updatedLogs.length==0">
+                                 No Data Available
+                             </ng-template> -->
+                             <ng-template pTemplate="body" let-product let-i="rowIndex">
+                                 <tr [ngClass]="getRowClass(i)">
+                                     <!-- <td>
+                                         <p-tableCheckbox [value]="product" />
+                                     </td> -->
+                                     <td>{{brand}}</td>
+                                     <td  *ngIf="isLocationWiseChecked">{{dealer}}</td>
+                                     <td  *ngIf="isLocationWiseChecked">{{location}}</td>
+                                     <td>{{product.fileType}}</td>
+                                     <td >{{product.noOfRecords}}</td>
+                                     <td>{{product.updatedDate}}</td>
+                                     <td>{{product.updatedBy}}</td>
+                                 </tr>
+                             </ng-template>
+                     </p-table>
+                     </div>
+                 </div>
+            
+             </div>
+
+     </div>
+      </div> 
+
+</div>

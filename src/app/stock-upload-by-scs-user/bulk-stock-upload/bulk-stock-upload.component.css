@@ -57,10 +57,15 @@
     cursor: not-allowed; /* Changes the cursor to indicate it's disabled */
   }
 
-:host ::ng-deep input.p-inputtext.p-component {
-    width: 14vw !important;
+:host ::ng-deep .datepicker-collapse input.p-inputtext.p-component {
+    width: 25vw !important;
     padding: 7px !important
 }
+
+/* :host ::ng-deep {
+    width: 25vw !important;
+
+} */
 
 ::ng-deep button.p-ripple.p-paginator-page.ng-star-inserted.p-paginator-page-selected {
     background-color: #007bff7d !important; /* Change background color */
@@ -70,3 +75,11 @@
     border: none;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
+
+  .dropdown{
+    width: 15vw;
+
+}
+.dropdown-collapse{
+    width: 22vw;
+}

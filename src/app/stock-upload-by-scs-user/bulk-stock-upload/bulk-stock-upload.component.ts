@@ -12,6 +12,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { StockUploadByUserService } from '../../services/stock-upload-by-user.service';
 import { Table } from 'primeng/table';
 import { setActiveConsumer } from '@angular/core/primitives/signals';
+import { SidebarService } from '../../services/sidebar.service';
 @Component({
   selector: 'app-bulk-stock-upload',
   imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
@@ -50,13 +51,15 @@ export class BulkStockUploadComponent {
     id:1,
     name:'Kirti'
   }]
+  visibleSidebar:boolean=false;
   @ViewChild('fu') fu:FileUpload|null=null;
   constructor(private utilitiesService:UtilitiesService,
    private fb:FormBuilder,
    private stockUploadService:StockUploadBySpmService,
    private globalBlockUiService:GlobalBlockUiService,
    private messageService:MessageService,
-   private stockUploadServiceBySCSUser:StockUploadByUserService
+   private stockUploadServiceBySCSUser:StockUploadByUserService,
+   private sidebarService:SidebarService
   ){
  
    this.mlForm=this.fb.group({
@@ -77,6 +80,10 @@ export class BulkStockUploadComponent {
    this.min = new Date();
    this.min.setMonth(this.max.getMonth() - 3);
    this.userId=this.users[0].id;
+
+   this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
+    this.visibleSidebar=visible;
+   })
   }
  
   getBrands(){

@@ -34,10 +34,18 @@ export const routes: Routes = [
         path:'core',
         loadChildren:()=> import('../app/core/core.module').then(m=>m.CoreModule)
     },
-    // {
-    //     path:'login',
-    //     component:LoginComponent,
-    // },
+    {
+        path:'lead-time',
+        loadChildren:()=>import('../app/lead-time/lead-time.module').then(m=>m.LeadTimeModule)
+    },
+    {
+        path:'user',
+        loadChildren:()=>import('../app/user-management/user-management.module').then(m=>m.UserManagementModule)
+    },
+    {
+        path:'role',
+        loadChildren:()=>import('../app/role-management/role-management.module').then(m=>m.RoleManagementModule)
+    },
     {
         path: '**', redirectTo:'mapping/stock-upload',
         pathMatch:'full'

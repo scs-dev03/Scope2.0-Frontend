@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LandingScreenComponent } from './landing-screen/landing-screen.component';
 import { ScopeRedirectComponent } from './scope-redirect/scope-redirect.component';
 import { MaintenanceComponent } from './maintenance/maintenance.component';
+import { UpdatePasswordWhileCreateUserComponent } from './update-password-while-create-user/update-password-while-create-user.component';
 
 const routes: Routes = [
 
@@ -16,6 +17,11 @@ const routes: Routes = [
     component: ScopeRedirectComponent
 
   },
+  {
+    path:'update-user-password',
+    component:UpdatePasswordWhileCreateUserComponent,
+   
+},
   {
     path: '**',
     component: MaintenanceComponent,

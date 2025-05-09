@@ -8,7 +8,7 @@
                             <span class="btn-view  mb-2" [ngClass]="isDataPresentForPartNotInMaster?'cursor-pointer':'disabled'"(click)="exportToExcel()" >Part Not In Master Export</span>
                             <!-- <i  class="bx bx-export cursor-pointer font-semibold mb-2" style="font-size: 20px;" (click)="exportToExcel()"  ></i> -->
                         </div>
-                    <div class=" add-mapping-card w-[74vw] h-auto !p-3 ">
+                    <div class=" add-mapping-card  h-auto !p-3 " [ngClass]="visibleSidebar?'w-[74vw]':'w-[90vw]'">
                        <div class="!flex !flex-row !gap-6  !items-center">
 
                       
@@ -20,7 +20,8 @@
                               optionLabel="brand"
                               optionValue="brand_id"
                               placeholder="Select Brand"
-                              class="dropdown  w-56 md:w-56"
+                              class=""
+                              [ngClass]="visibleSidebar?'dropdown':'dropdown-collapse'"
                               (onChange)="onBrandChange($event)"
                               
                             />
@@ -36,7 +37,7 @@
                               optionLabel="dealer_name"
                               optionValue="dealer_id"
                               placeholder="Select Dealer"
-                              class="dropdown  w-56 md:w-56"
+                              [ngClass]="visibleSidebar?'dropdown':'dropdown-collapse'"
                               (onChange)="onDealerChange($event)"
                               
                             />
@@ -52,7 +53,7 @@
                                   optionLabel="location_name"
                                   optionValue="location_id"
                                   placeholder="Select Location"
-                                  class="dropdown  w-56 md:w-56"
+                                  [ngClass]="visibleSidebar?'dropdown':'dropdown-collapse'"
                                   (onChange)="onLocationChange($event)"
                                   
                                 />
@@ -61,7 +62,7 @@
                                 </div>
                             </div>
                             <div>
-                                <p-datepicker formControlName="date" [minDate]="min" [maxDate]="max"  placeholder="Select Date"  class="dropdown" /> 
+                                <p-datepicker formControlName="date" [minDate]="min" [maxDate]="max"  placeholder="Select Date"  [ngClass]="visibleSidebar?'dropdown':'dropdown-collapse'" /> 
                                 <div class=" d-flex mt-1" *ngIf="slForm.get('date')?.touched && slForm?.get('date')?.invalid " >
                                   <small *ngIf="slForm?.get('date')?.hasError('required')" style="color: red; font-size: 12px;">Date is required.</small> 
                               </div>

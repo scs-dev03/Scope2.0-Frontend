@@ -1,0 +1,54 @@
+:host ::ng-deep .p-checkbox-box{
+    border: 2px solid #bec1c7 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+::ng-deep .p-table{
+    overflow-x: auto !important;
+}
+::ng-deep td{
+    padding: 10px;
+    text-align: center;
+    font-size: 15px;
+} 
+
+::ng-deep th{
+    padding: 5px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 700;
+} 
+.btn-submit{
+    background-color: var(--theme-color);
+    border-radius: 4px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+:host ::ng-deep .ng-tns-c1946505645-2.p-dialog-content.ng-star-inserted{
+    display: flex;
+    justify-content: center;
+}
+
+:host ::ng-deep .update-role{
+    outline: none;
+    box-shadow: none;
+    width: 130px;
+    height: 40px;
+}
+/* :host ::ng-deep .p-datatable-wrapper{
+    max-height: 65vh !important;
+} */
+:host ::ng-deep .p-ripple{
+    z-index: auto !important;
+}
+
+.custom-paginator .p-dropdown-panel {
+    bottom: 100% !important;
+    top: auto !important;
+    transform-origin: bottom;
+  }

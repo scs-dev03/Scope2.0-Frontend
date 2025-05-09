@@ -1,0 +1,238 @@
+
+<p-toast position="top-center"></p-toast>
+<!-- <p-blockUI [blocked]="isLoading">  -->
+  <!-- <p-progress-spinner 
+    styleClass="w-4rem h-4rem" 
+    strokeWidth="8" 
+    fill="var(--surface-ground)" 
+    animationDuration=".5s" />  -->
+     <!-- <i class='bx bx-loader-circle fa-spin custom-icon fa-spinner'></i>
+</p-blockUI> -->
+ <!-- <div>
+  <img
+  src="Background_image.png"
+  alt="Background"
+  class=" w-full h-full object-cover -z-10 fixed"
+/>
+<div>
+<app-header></app-header>
+</div> -->
+
+
+<!-- </div> -->
+<div class="body d-flex ">   
+  <!-- <div>
+    <app-sidebar></app-sidebar>
+  </div> -->
+  <!-- *ngIf="userPermissions.length>0 && !userPermissions?.edit1 && userPermissions?.add1 && !userPermissions?.view1 && !userPermissions?.delete1" -->
+  <!-- <div class="d-flex justify-center h-[80vh] w-full align-items-center" >
+ <h2>You do not have the access for User Management</h2>  
+ </div>   -->
+  
+    <div class=" mx-5 overflow-hidden">
+   
+      <div class="d-flex justify-content-between ">
+        <!-- *ngIf="userPermissions?.view1" -->
+        <div class="mb-3" >
+            <span class="font-bold f-18" >View Users</span>
+        </div>
+        <div>
+            <!-- *ngIf="userPermissions?.add1" in i tag -->
+          <i class="pi pi-user cursor-pointer me-3"  style="font-size: 1.5rem !important;font-weight:bold " (click)="showDialog('Add User')"></i>
+          <!-- *ngIf="userPermissions?.view1" in i tag -->
+          <i class='bx bx-export cursor-pointer' style="font-size: 1.5rem;font-weight:bold" (click)="exportToExcel()" ></i>
+          
+        </div>
+      </div >
+      <!-- [tableStyle]="{ 'min-width': '40rem' }" -->
+      <!-- *ngIf="userPermissions?.view1" -->
+       <div class="card h-auto flex flex-col justify-start p-3 bg-[#FDF5E6] rounded-lg shadow-lg" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[60vw]':'w-[80vw]'" >
+         <p-table 
+         [value]="users" 
+         [paginator]="true"
+         [rows]="50"
+         [rowsPerPageOptions]="[100,200, 300, 400, 500, 600,700,800,900,1000]"
+         styleClass="p-datatable-gridlines" 
+          dataKey="code"
+          class="w-full !rounded-lg-border border-gray-200 shadow-md"  
+          responsiveLayout="scroll"
+          [scrollHeight]="'380px'"
+           [scrollable]="true"
+          
+         >
+             <ng-template pTemplate="header" >
+                 <tr>
+                     <th>Name</th>
+                     <th>Designation</th>
+                     <th>Role</th>
+                     <th>Associated Business</th>
+                     <th>Email</th>
+                     <th>Mobile</th>
+                     <!-- <th *ngIf="this.userPermissions?.edit1">Action</th>
+                     <th *ngIf="this.userPermissions?.delete1">Status</th> -->
+                     <th >Action</th>
+                     <th >Status</th>
+                 </tr>
+             </ng-template>
+             <ng-template pTemplate="body" let-product>
+                 <tr>
+                     <td>{{ product.name }}</td>
+                     <td>{{ product.designationName }}</td>
+                     <td>{{product.roleName}}</td>
+                     <td>{{ product.associatedBusiness }}</td>
+                     <td>{{ product.emailId }}</td>
+                     <td>{{ product.mobileNo }}</td>
+                     <!-- <td class="text-center" *ngIf="this.userPermissions?.edit1" ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td>
+                     <td class="p-2" *ngIf="this.userPermissions?.delete1"><mat-slide-toggle 
+                     
+                     [ngModel]="setToggleState(product)" 
+                     (ngModelChange)="onStatusChange(product,product.status)"> -->
+                     <td class="text-center"  ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td>
+                     <td class="p-2" >
+                      <!-- <mat-slide-toggle 
+                     
+                     [ngModel]="setToggleState(product)" 
+                     (ngModelChange)="onStatusChange(product,product.status)">
+
+                 </mat-slide-toggle> -->
+                <p-toggleswitch [ngModel]="setToggleState(product)" 
+                (ngModelChange)="onStatusChange(product,product.status)"> ></p-toggleswitch></td>
+                 </tr>
+             </ng-template>
+     </p-table>
+
+       </div>
+    </div>
+</div>
+
+
+
+<p-dialog [header]="actionName" [modal]="true" [(visible)]="visible" [style]="{ width: '80vh' }" class="header edit-add-user">
+  <form [formGroup]="editUserForm">
+    <div class="card">
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <!-- Name Field -->
+            <div class="col-6 p-2 d-flex flex-column">
+              <span class="font-semibold">First Name</span>
+              <input type="text" pInputText formControlName="name" placeholder="Enter First Name" />
+              <!-- Show error message only if the field is touched and invalid -->
+              <div *ngIf="editUserForm.get('name')?.touched && editUserForm.get('name')?.invalid">
+                <small *ngIf="editUserForm.get('name')?.hasError('required')" style="color: red; font-size: 12px;">First Name is required.</small>
+              </div>
+            </div>
+          
+
+            <div class="col-6 p-2 d-flex flex-column">
+              <span class="font-semibold">Last Name</span>
+              <input type="text" pInputText formControlName="lastName" placeholder="Enter Last Name" />
+              <!-- Show error message only if the field is touched and invalid -->
+              <div *ngIf="editUserForm.get('lastName')?.touched && editUserForm.get('lastName')?.invalid">
+                <small *ngIf="editUserForm.get('lastName')?.hasError('required')" style="color: red; font-size: 12px;">Last Name is required.</small>
+              </div>
+            </div>
+            <!-- Designation Field -->
+            <div class="col-6 p-2 d-flex flex-column">
+              <span class="font-semibold">Designation</span>
+              <p-select 
+                [options]="designations" 
+                formControlName="designation"
+                optionLabel="designation_name" 
+                optionValue="id"
+                placeholder="Enter Designation" />
+              <!-- Show error message only if the field is touched and invalid -->
+              <div *ngIf="editUserForm.get('designation')?.touched && editUserForm.get('designation')?.invalid">
+                <small *ngIf="editUserForm.get('designation')?.hasError('required')" style="color: red; font-size: 12px;">Designation is required.</small>
+              </div>
+            </div>
+          <!-- </div> -->
+          
+
+          <!-- <div class="row"> -->
+            <!-- Role Field -->
+            <div class="col-6 p-2 d-flex flex-column">
+              <span class="font-semibold">Role</span>
+              <p-select
+                [options]="roles" 
+                formControlName="role"
+                optionLabel="role_name"
+                optionValue="id" 
+                placeholder="Enter Role" />
+              <div *ngIf="editUserForm.get('role')?.touched && editUserForm.get('role')?.invalid">
+                <small *ngIf="editUserForm.get('role')?.hasError('required')" style="color: red; font-size: 12px;">Role is required.</small>
+              </div>
+            </div>
+            <!-- Email Field -->
+            <div class="col-6 p-2">
+              <span class="font-semibold">Email ID</span>
+              <input type="text" pInputText formControlName="email" placeholder="Enter Email" (input)="checkEmailAvailability()" />
+              <div *ngIf="editUserForm.get('email')?.touched && editUserForm.get('email')?.invalid">
+                <small *ngIf="editUserForm.get('email')?.hasError('required')" style="color: red; font-size: 12px;">Email is required.</small>
+                <small *ngIf="editUserForm.get('email')?.hasError('email')" style="color: red; font-size: 12px;">Email is invalid.</small>
+              </div>
+              <div>
+                <small style="color: red; font-size: 12px;">{{showErrorMessage}}</small>
+              </div>
+            </div>
+          <!-- </div> -->
+
+          <!-- <div class="row"> -->
+            <!-- Mobile Number Field -->
+            <div class="col-6 p-2 d-flex flex-column">
+              <span class="font-semibold">Mobile No</span>
+              <input type="text" pInputText formControlName="mobileNo" placeholder="Enter Mobile Number" />
+              <div *ngIf="editUserForm.get('mobileNo')?.touched && editUserForm.get('mobileNo')?.invalid">
+                <small *ngIf="editUserForm.get('mobileNo')?.hasError('required')" style="color: red; font-size: 12px;">Mobile No is required.</small>
+                <small *ngIf="editUserForm.get('mobileNo')?.hasError('pattern')" style="color: red; font-size: 12px;">Mobile No is invalid.</small>
+              </div>
+            </div>
+
+            <!-- Associated Business Field -->
+            <div class="col-6 p-2">
+              <span class="font-semibold">Associated Business</span>
+              <p-select 
+                [options]="associatedBusinesses" 
+                formControlName="associatedBusiness"
+                optionLabel="business_vertical" 
+                optionValue="id"
+                placeholder="Enter Associated Business"
+                class="businessVertical-dropdown" />
+              <div *ngIf="editUserForm.get('associatedBusiness')?.touched && editUserForm.get('associatedBusiness')?.invalid">
+                <small *ngIf="editUserForm.get('associatedBusiness')?.hasError('required')" style="color: red; font-size: 12px;">Associated Business is required.</small>
+              </div>
+            </div>
+          <!-- </div> -->
+
+          <!-- <div class="row"> -->
+            <!-- Status Field -->
+            <div class="col-6 p-2 d-flex flex-column">
+              <span class="font-semibold">Status</span>
+              <p-select 
+                [options]="statuses" 
+                formControlName="status"
+                optionLabel="name" 
+                optionValue="name"
+                placeholder="Enter Status" />
+              <div *ngIf="editUserForm.get('status')?.touched && editUserForm.get('status')?.invalid">
+                <small *ngIf="editUserForm.get('status')?.hasError('required')" style="color: red; font-size: 12px;">Status is required.</small>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    <!-- </div> -->
+
+    <div class="div-btn">
+      <p-button label="Cancel" class="btn text-white mr-5" (click)="visible = false"></p-button>
+      <p-button label="Submit" class="btn text-white" (click)="submit()"></p-button>
+    </div>
+  </form>
+</p-dialog>
+
+
+<!-- Trigger Button -->
+
+
+

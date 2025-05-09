@@ -74,4 +74,8 @@ export class UtilitiesService {
    showModal(data: any) {
     this.dataSource.next(data);
   }
+
+  getUserInfo(data:any){
+    return this.http.post(`${this.url}user/user-details`,data);
+  }
 }

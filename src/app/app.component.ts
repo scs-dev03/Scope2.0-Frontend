@@ -8,6 +8,9 @@ import { PrimengModuleModule } from './shared/primeng-module/primeng-module.modu
 import { SharedModule } from './shared/shared.module';
 import { BlockUI } from 'primeng/blockui';
 import { GlobalBlockUiService } from './services/global-block-ui.service';
+import { SidebarService } from './services/sidebar.service';
+import { HomePageService } from './services/home-page/home-page.service';
+import { UtilitiesService } from './services/utilities.service';
 
 @Component({
   selector: 'app-root',
@@ -23,9 +26,13 @@ export class AppComponent {
   isLoginPage = false;
   @ViewChild('blockUI') blockUI!: BlockUI;
   @ViewChild('sidebar') sidebar!: SidebarComponent;
+   token:any='0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7'
   constructor(private globalBlockUIService: GlobalBlockUiService,
     private router:Router, private route: ActivatedRoute,
-    private renderer: Renderer2) {}
+    private renderer: Renderer2,
+    public sidebarService: SidebarService,
+    private utilitiesService:UtilitiesService,
+  private homepageservice:HomePageService) {}
 
   ngOnInit() {
     // Set BlockUI reference in the global service
@@ -47,6 +54,7 @@ export class AppComponent {
       // Update whether the current route is the login page
       this.isLoginPage = this.router.url.includes('/login');
     });
+    this.fetchUserinfo(this.token,'d');
   }
 
   updateLoaderHeight() {
@@ -83,5 +91,49 @@ export class AppComponent {
 
   toggleSidebar() {
     this.visibleSidebar = !this.visibleSidebar;
+    this.sidebarService.toggle();
   }
+
+  fetchUserinfo(usertoken:any,usertype:any){
+    // console.log('fetch method',usertoken);
+    // console.log('fetch method',usertype);
+    
+    //this.isloading = true
+    // this.homepageservice.getuserinfo({ token: usertoken, usertype: usertype }).subscribe({
+    //   next: (res: any) => {
+    //    // console.log(res.Data);
+    //     localStorage.setItem('userId',res.Data[0].UserId)
+    //     if (usertype == 'd') {
+    //       localStorage.setItem('brandid', res.Data[0].BrandID);
+    //       localStorage.setItem('dealerid', res.Data[0].dealerid);
+    //       localStorage.setItem('username', res.Data[0].username);
+    //     }
+    
+    //     if (usertype == 'a') {
+    //       localStorage.setItem('username', res.Data[0].username);
+    //       localStorage.setItem('userid', res.Data[0].bintid_pk);
+    //       localStorage.setItem('designation', res.Data[0].designation);
+    //     }
+    
+    //  //   this.isloading = false;
+    //   //  this.goToHomePage();
+    //   },
+    //   error: (err) => {
+    //   //  console.error('Error fetching user info:', err);
+    //   //  this.isloading = false;
+    
+    //     // Optional: show user-friendly message
+    //     alert('Something went wrong while fetching user info. Please try again.');
+    
+    //     // You could also use a snackbar/toast service instead of alert
+    //   }
+    // });
+
+    this.utilitiesService.getUserInfo({token:usertoken}).subscribe((res:any)=>{
+
+      localStorage.setItem('userId',res.data[0].userId)
+    })
+    
+  }
+  
 }

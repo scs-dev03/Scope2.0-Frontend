@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 interface SidebarItem {
   id:Number;
@@ -15,6 +15,8 @@ submenu?: SidebarItem[];
 export class SidebarService {
 
  private url:any=environment.apiUrl;
+ private sidebarVisible = new BehaviorSubject<boolean>(true);
+ visibleSidebar$ = this.sidebarVisible.asObservable();
   private sidebarItems: any = [
     {
       label: 'Lead Time Calculator',
@@ -62,7 +64,16 @@ export class SidebarService {
   }
 
   getModules():Observable<any>{
-      let roleId=localStorage.getItem('roleId');
-      return this.http.post(`${this.url}sidebar/modules-based-on-roles`,{roleId:roleId})
+       let userId=localStorage.getItem('userId');
+      //let userId=1;
+      return this.http.post(`${this.url}sidebar/modules-based-on-roles`,{userId:userId})
     }
+
+  setVisible(value: boolean) {
+    this.sidebarVisible.next(value);
+  }
+
+  toggle() {
+    this.sidebarVisible.next(!this.sidebarVisible.value);
+  }
 }

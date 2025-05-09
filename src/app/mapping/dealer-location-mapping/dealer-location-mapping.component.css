@@ -12,6 +12,12 @@
 
 }
 
+:host ::ng-deep .brandDropdown-collapse{
+    border: 2px solid #00000030 !important;
+    margin-bottom: 10px !important;
+    width: 25vw;
+}
+
 :host ::ng-deep button.p-ripple.p-button.p-component.p-fileupload-choose-button.undefined{
   border: none !important;
   outline: none !important;

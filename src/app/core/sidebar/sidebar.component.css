@@ -38,6 +38,7 @@
     align-items: center;
     margin-bottom: 10px;
     margin-inline: 8px !important;
+    background: none !important;
     /* width: 80%; */
   }
   
@@ -45,9 +46,9 @@
     width: 100%;
     padding: 0rem !important;
     padding-left: 0.25rem !important;
-    background: none;
-    border: none;
-    box-shadow: none;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
 
    
   }
@@ -62,7 +63,7 @@
   
   .menu-item {
     /* padding: 10px 20px; */
-    padding: 3px 12px;
+    padding: 3px 8px;
     padding-top: 3px;
     cursor: pointer;
     display: block;
@@ -207,4 +208,17 @@ li{
     padding: 0rem !important;
     background: none !important;
   }
+
+  .pi{
+    font-size: 0.75rem !important;
+  }
+
+  /* :host ::ng-deep input.p-inputtext.p-component.sidebar-search.ng-pristine.ng-valid.ng-touched {
+    background: red;
+} */
+
+:host ::ng-deep a:hover{
+  color:black;
+  font-weight: 600 ;
+}
   

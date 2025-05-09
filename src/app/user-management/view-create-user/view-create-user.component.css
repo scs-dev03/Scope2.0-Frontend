@@ -1,0 +1,184 @@
+th{
+    /* background-color: var(--theme-color);
+    color: white !important; */
+    font-size: 12px;
+    padding: 7px;
+}
+td{
+    font-size: 12px;
+    padding: 7px;
+}
+:host ::ng-deep .p-button{
+    background: none !important;
+    border: none !important;
+    padding: 5px !important;
+    outline: none !important;
+}
+
+:host ::ng-deep .p-button :focus-visible{
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+    /* padding: none; */
+}
+:host ::ng-deep .p-button:not(:disabled):active{
+    background: none !important;
+    border: none !important;
+    /* padding: none !important; */
+    
+}
+
+:host ::ng-deep .p-button:not(:disabled):focus-visible{
+    background: none !important;
+    border: none !important;
+    border-color: none !important;
+    outline: none !important;
+    
+}
+.card{
+    /* background-color: var(--theme-color); */
+    background-color: #F5F5DC;
+    /* width: 100vh !important;
+    height: 65vh !important; */
+    padding: 15px;
+    border: none;
+}
+:host ::ng-deep /deep/ span.p-element.p-dropdown-label.p-inputtext.p-placeholder.ng-star-inserted{
+    padding: 7px !important;
+    padding-left: 6px !important;
+}
+
+:host ::ng-deep  /deep/  input.p-inputtext.p-component.p-element{
+    padding: 7px !important;
+    border-radius: 4px !important;
+    padding-left: 6px !important;
+    outline:none !important;
+    box-shadow: none !important;
+    width: 100% !important;
+}
+
+:host ::ng-deep .p-ripple{
+    z-index: auto !important;
+}
+
+:host ::ng-deep #pn_id_5{
+    transform: none !important;
+    transform-origin: none !important;
+}
+
+.btn{
+    background-color: var(--tertiary-color);
+    width: 150px;
+    height: 40px;
+ margin-top: 12px;
+    border: none;
+}
+:host ::ng-deep .p-button-text.p-button-secondary{
+    border: none !important;
+    outline: none !important;
+}
+
+.p-table {
+    overflow-x: auto; /* Enable horizontal scrolling */
+    width: 100% !important;
+  }
+:host ::ng-deep .div-btn{
+
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+
+}
+:host ::ng-deep .p-dialog-header.ng-tns-c1946505645-1.ng-star-inserted{
+    padding-block: 8px;
+}
+:host::ng-deep button.p-ripple.p-element.p-button.p-component:focus-visible{
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important
+
+}
+
+:host::ng-deep button.p-ripple.p-element.p-button.p-component:focus{
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important
+
+}
+
+
+:host ::ng-deep p-button.p-element.btn.text-white:active{
+   background-color: var(--theme-color);
+}
+
+::ng-deep .p-dropdown {
+    border-radius: 4px !important;
+    outline:none !important;
+    width: 100% !important;
+    padding: 0px !important;
+    box-shadow: none !important;
+}
+
+.p-table{
+    overflow-x: auto;
+}
+.header{
+    padding: 10px;
+    padding-left: 24px;
+    
+}
+:host ::ng-deep .p-dialog-title{
+    font-size: 16px !important;
+}
+
+:host ::ng-deep .mdc-switch:enabled:hover:not(:focus):not(:active) .mdc-switch__track::before{
+    background: red !important;
+}
+:host ::ng-deep .mdc-switch:enabled:focus:not(:active) .mdc-switch__track::before{
+    background-color: red !important;
+}
+:host ::ng-deep .mdc-switch__track::before{
+    background-color: red !important;
+}
+:host ::ng-deep .mdc-switch:enabled:hover:not(:focus):not(:active) .mdc-switch__track::after{
+    background: green !important;
+}
+:host ::ng-deep .mdc-switch__track::after{
+    background-color: green !important;
+}
+:host ::ng-deep .mdc-switch:enabled:active .mdc-switch__track::after{
+    background: green !important;
+}
+:host ::ng-deep .mdc-switch:enabled:focus:not(:active) .mdc-switch__track::after{
+    background: green !important;
+}
+
+:host ::ng-deep span.p-element.p-dropdown-label.p-inputtext{
+    padding: 8px !important;
+}
+
+/* :host ::ng-deep .p-select{
+    width: 100% !important;
+} */
+:host ::ng-deep .businessVertical-dropdown{
+    width: 100% !important;
+}
+
+:host ::ng-deep input{
+    width: 100% !important;
+}
+
+:host ::ng-deep .p-dialog-header{
+    padding-block: 5px;
+}
+
+:host ::ng-deep button.p-ripple.p-paginator-page.p-paginator-page-selected.ng-star-inserted{
+    z-index: auto !important
+}
+@media (min-width:768px) and (max-width:1024px) {
+
+    /* .p-element.ng-trigger.ng-trigger-animation.ng-tns-c1946505645-0.p-dialog.p-component.p-dialog-draggable.p-dialog-resizable.ng-star-inserted{
+        width: 40rem;
+    } */
+    
+}

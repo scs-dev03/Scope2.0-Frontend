@@ -9,7 +9,7 @@
                             <span class="btn-view  mb-2" [ngClass]="isDataPresentForPartNotInMaster?'cursor-pointer':'disabled'"(click)="exportToExcel()" >Part Not In Master Export</span>
                             <span class="btn-view  mb-2 ms-3 cursor-pointer" [hidden]="!isBrandKiaHyundai" (click)="downloadBrandFormat()" >Download Brand Format</span>
                         </div>
-                    <div class=" add-mapping-card w-[70vw] h-auto !p-3 ">
+                    <div class=" add-mapping-card  h-auto !p-3 " [ngClass]="visibleSidebar?'w-[70vw]':'w-[85vw]'">
                        <div class="!flex !flex-row !gap-6  !items-center">                      
                         <div>
 
@@ -19,7 +19,7 @@
                               optionLabel="brand"
                               optionValue="brand_id"
                               placeholder="Select Brand"
-                              class="dropdown  w-56 md:w-56"
+                              [ngClass]="visibleSidebar?'dropdown':'dropdown-collapse'"
                               (onChange)="onBrandChange($event)"
                               
                             />
@@ -35,7 +35,7 @@
                               optionLabel="dealer_name"
                               optionValue="dealer_id"
                               placeholder="Select Dealer"
-                              class="dropdown  w-56 md:w-56"
+                              [ngClass]="visibleSidebar?'dropdown':'dropdown-collapse'"
                               (onChange)="onDealerChange($event)"
                               
                             />
@@ -45,7 +45,7 @@
                         </div>
                             
                             <div>
-                                <p-datepicker formControlName="date" [minDate]="min" [maxDate]="max"  placeholder="Select Date"  class="dropdown" /> 
+                                <p-datepicker formControlName="date" [minDate]="min" [maxDate]="max"  placeholder="Select Date"  [ngClass]="visibleSidebar?'dropdown':'datepicker-collapse'"/> 
                                 <div class=" d-flex mt-1" *ngIf="mlForm.get('date')?.touched && mlForm?.get('date')?.invalid " >
                                   <small *ngIf="mlForm?.get('date')?.hasError('required')" style="color: red; font-size: 12px;">Date is required.</small> 
                               </div>

@@ -9,23 +9,30 @@
   <form [formGroup]="stMappingForm" class="">
     <div class="d-flex  mt-3 z-50 ">
       <div
-        class="w-[55vw] card  py-3"
+        class="w-[55vw] card  py-3" [ngClass]="isSidebarVisible?'w-[55vw]':'w-[80vw]'"
       >
       <div class="!flex !flex-row !gap-6 !justify-evenly !items-center">
 
+        <div>
           <p-select  
-            [options]="brands"
-            formControlName="brands"
-            optionLabel="brand"
-            optionValue="brand_id"
-            placeholder="Select Brand"
-            class="brandDropdown !mt-3 "
-            (onChange)="onBrandSelect($event)"
-          />
-          <span class="btn-view cursor-pointer" (click)="showDialog()" [ngClass]="isMappingExist?'':'disabled'"
+          [options]="brands"
+          formControlName="brands"
+          optionLabel="brand"
+          optionValue="brand_id"
+          placeholder="Select Brand"
+          class="brandDropdown !mt-3 "
+          [ngClass]="isSidebarVisible?'brandDropdown':'brandDropdown-collapse'"
+          (onChange)="onBrandSelect($event)"
+        />
+        <div class="px-2" *ngIf="stMappingForm.get('brands')?.touched && stMappingForm?.get('brands')?.invalid " >
+          <small *ngIf="stMappingForm?.get('brands')?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small> 
+         </div>
+        </div>
+         
+          <span class="cursor-pointer" (click)="showDialog()" [ngClass]="[isMappingExist?'':'disabled',isSidebarVisible?'btn-view':'btn-view-collapse']"
           >View & Edit</span
          >
-         <span class="btn-view cursor-pointer" (click)="showAddMapping()" [ngClass]="isMappingExist?'disabled':''">Add Mapping</span>
+         <span class="btn-view cursor-pointer" (click)="showAddMapping()" [ngClass]="[isMappingExist?'disabled':'',isSidebarVisible?'btn-view':'btn-add-collapse']">Add Mapping</span>
          <span class="btn-view cursor-pointer" (click)="viewAllExistingMapping()">View All Exisitng Mapping</span>
       </div>
         
@@ -35,9 +42,7 @@
           </div>
         </div> -->
         <div class="ms-2">
-             <div class="  mt-1 px-2" *ngIf="stMappingForm.get('brands')?.touched && stMappingForm?.get('brands')?.invalid " >
-        <small *ngIf="stMappingForm?.get('brands')?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small> 
-       </div>
+            
         </div>
       </div>
      
@@ -60,7 +65,7 @@
     </div>
 
     <div>
-        <div class=" add-mapping-card w-[55vw] !flex  !flex-col mt-3 !gap-6 p-3">
+        <div class=" add-mapping-card  !flex  !flex-col mt-3 !gap-6 p-3" [ngClass]="isSidebarVisible?'w-[55vw]':'w-[80vw]'">
             <span>Add Mapping for Current Days Stock Upload : </span>
             <div class="d-flex flex-row justify-between">
               <p-fileupload *ngIf="showUploader" [multiple]="false"
@@ -553,8 +558,8 @@
   <!-- <div class="flex scale-[.8]" *ngIf="showTable"> -->
     <!--  -->
     <div
-      class="card   h-auto  p-3 bg-gray-50 rounded-lg shadow-lg mb-5 w-[55vw] mt-4 "
-      *ngIf="showTable"
+      class="card   h-auto  p-3 bg-gray-50 rounded-lg shadow-lg mb-5 mt-4 " [ngClass]="isSidebarVisible?'w-[55vw]':'w-[80vw]'"
+      *ngIf="showTable"  
       >
       <div class="d-flex justify-end">
         <i class="bx bx-export font-bold mb-3 cursor-pointer" style="font-size: 18px;" (click)="exportTableData()"></i>

@@ -39,6 +39,26 @@ span{
     padding: 5px;
 
 }
+
+.btn-view-collapse{
+    border-radius: 8px;
+    background-color: rgb(221, 221, 118);
+    padding: 5px;
+    width: 140px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.btn-add-collapse{
+    border-radius: 8px;
+    background-color: rgb(221, 221, 118);
+    padding: 5px;
+    width: 140px;
+    display: flex;
+    justify-content: center;
+
+}
 :host ::ng-deep button.p-ripple.p-button.p-component.p-button-secondary{
     border: none !important;
   outline: none !important;
@@ -98,10 +118,22 @@ span{
     width: 18vw;
 }
 
+:host ::ng-deep .dropdown-collapse{
+    border: 2px solid #00000030 !important;
+    margin-bottom: 10px !important;
+    width: 22vw;
+}
+
 :host ::ng-deep .brandDropdown{
     border: 2px solid #00000030 !important;
     margin-bottom: 10px !important;
     width: 18vw;
+}
+
+:host ::ng-deep .brandDropdown-collapse{
+    border: 2px solid #00000030 !important;
+    margin-bottom: 10px !important;
+    width: 22vw;
 }
 
 ::ng-deep .ng-invalid .p-dropdown {
@@ -192,7 +224,7 @@ span{
 
 :host ::ng-deep input.p-inputtext.p-component{
     width: 230px;
-}
+} 
 
  
 

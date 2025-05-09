@@ -12,6 +12,7 @@ import { MessageService } from 'primeng/api';
 import { FileUpload } from 'primeng/fileupload';
 import { Table } from 'primeng/table';
 import { filter } from 'rxjs';
+import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
   selector: 'app-dealer-location-mapping',
@@ -52,10 +53,12 @@ export class DealerLocationMappingComponent {
  exportType:any='All';
  isViewMapping:boolean=false;
  filteredRecords:any[]=[]
+ visibleSidebar:boolean=false;
  constructor(private utilitiesService:UtilitiesService,
   private fb:FormBuilder,private dealerLocationService:DealerLocationMappingService,
   private globalUiService:GlobalBlockUiService,
-  private messageService:MessageService
+  private messageService:MessageService,
+  private sidebarService:SidebarService
  ){
 
   this.dlForm=this.fb.group({
@@ -66,7 +69,11 @@ export class DealerLocationMappingComponent {
 
  ngOnInit(){
   this.getBrands();
- 
+  this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
+   this.visibleSidebar=visible;
+  })
+
+  
  }
 
  onSelect(event:any){

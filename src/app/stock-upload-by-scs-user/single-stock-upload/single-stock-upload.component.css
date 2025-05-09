@@ -32,9 +32,17 @@
     display: flex;
     justify-content: center;
 }
+
 :host ::ng-deep p-fileupload.mt-2{
     border: none !important;
     outline: none !important;
+}
+.dropdown{
+    width: 15vw;
+
+}
+.dropdown-collapse{
+    width: 22vw;
 }
 
 .add-mapping-card{
@@ -57,10 +65,10 @@
     cursor: not-allowed; /* Changes the cursor to indicate it's disabled */
   }
 
-:host ::ng-deep input.p-inputtext.p-component {
+/* :host ::ng-deep input.p-inputtext.p-component {
     width: 14vw !important;
     padding: 7px !important
-}
+} */
 
  
 ::ng-deep button.p-ripple.p-paginator-page.ng-star-inserted.p-paginator-page-selected {

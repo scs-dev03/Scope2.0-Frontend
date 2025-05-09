@@ -19,6 +19,7 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import * as XLSX from 'xlsx';
 import { FileUpload } from 'primeng/fileupload';
 import { PaginatorState } from 'primeng/paginator';
+import { SidebarService } from '../../services/sidebar.service';
 @Component({
   selector: 'app-stock-upload-mapping',
   imports: [
@@ -80,6 +81,7 @@ export class StockUploadMappingComponent {
   stockCalculationForm:FormGroup;
   first: number = 0;
   visibleStockCalculation:boolean=false;
+  isSidebarVisible:boolean=false;
   users:any=[{
     id:1,name:'Kirti'
   }]
@@ -91,7 +93,8 @@ export class StockUploadMappingComponent {
     private utilitiesService: UtilitiesService,
     private stockUploadMappingService: StockUploadMappingService,
     private messageService: MessageService,
-    private globalBlockUIService: GlobalBlockUiService
+    private globalBlockUIService: GlobalBlockUiService,
+    private sidebarService:SidebarService
   ) {
     this.stMappingForm = this.fb.group({
       mappingForBothStock: [''],
@@ -169,7 +172,9 @@ export class StockUploadMappingComponent {
       this.checkStockQtySelection('edit older');
     });
     
-    
+    this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
+      this.isSidebarVisible=visible;
+    })
   }
 
   get operations(): FormArray {

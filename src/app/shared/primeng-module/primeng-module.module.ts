@@ -22,6 +22,8 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { PanelMenuModule } from 'primeng/panelmenu';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 const modules=[
   MultiSelectModule,
   ButtonModule,
@@ -44,7 +46,9 @@ const modules=[
     ToggleSwitchModule,
     RadioButtonModule,
     FloatLabelModule,
-    PanelMenuModule
+    PanelMenuModule,
+    CheckboxModule,
+    ProgressSpinnerModule
 
    
 ]

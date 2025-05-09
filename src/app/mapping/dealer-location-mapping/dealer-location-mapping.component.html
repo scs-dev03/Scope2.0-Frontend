@@ -16,7 +16,7 @@
   </i> -->
   <span class="btn-view mb-3 cursor-pointer"  (click)="downloadFormat()" >Download Format</span>
                         </div>
-                        <div class=" add-mapping-card w-[70vw] h-auto  flex flex-col">
+                        <div class=" add-mapping-card h-auto  flex flex-col" [ngClass]="visibleSidebar?'w-[70vw]':'w-[90vw]'">
                           <div class="  !flex !flex-row !gap-6 p-3 !items-center">
                        
                             <div>
@@ -27,7 +27,8 @@
                                   optionLabel="brand"
                                   optionValue="brand_id"
                                   placeholder="Select Brand"
-                                  class="dropdown  w-56 md:w-56"
+                                  class="  w-56 md:w-56"
+                                  [ngClass]="visibleSidebar?'dropdown':'brandDropdown-collapse'"
                                   (onChange)="onBrandSelect($event)"
                                 />
                                 <div class=" d-flex mt-1" *ngIf="dlForm.get('brand')?.touched && dlForm?.get('brand')?.invalid " >
@@ -62,8 +63,8 @@
                 </form>
                 </div>
                 <div
-                class="card   h-auto  p-3 bg-gray-50 rounded-lg shadow-lg mb-5 w-[70vw] mt-4 "
-                *ngIf="showTable"
+                class="card   h-auto  p-3 bg-gray-50 rounded-lg shadow-lg mb-5 mt-4 "
+                *ngIf="showTable" [ngClass]="visibleSidebar?'w-[70vw]':'w-[85vw]'"
                 >
                 <div class="d-flex justify-end mb-2">
                   <div class="flex flex-wrap gap-4">

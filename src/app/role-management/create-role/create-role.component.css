@@ -1,0 +1,22 @@
+:host ::ng-deep .p-datatable-table-container {
+    height: 49vh;
+}
+
+:host ::ng-deep .p-checkbox-box{
+    border: 2px solid #bec1c7 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+:host::ng-deep .p-dialog-header.ng-tns-c1946505645-1.ng-star-inserted{
+    padding-block:5px !important;
+}
+
+:host ::ng-deep .btn-access-settings:focus{
+    box-shadow: none;
+    outline: none;
+}
+
+:host ::ng-deep label{
+    margin-bottom: 0rem !important;
+}
