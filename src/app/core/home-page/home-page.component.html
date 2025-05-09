@@ -1,21 +1,21 @@
-<div class="relative h-[100vh] w-[100vw]  bg-[#c2dedb] overflow-auto">
-    <div class="h-auto flex w-full bg-white items-center justify-between px-4 py-2 relative">
+<div class="relative h-full w-full  bg-[#c2dedb] overflow-auto">
+    <div class="h-16 flex w-full bg-white items-center justify-between px-4 py-2 relative">
       <!-- Logo -->
        <div class="flex">
-        <p-button (click)='onClickSidebar()' class="mt-2"  icon="pi pi-bars" />
+        <!-- <p-button (click)='onClickSidebar()' class="mt-2"  icon="pi pi-bars" /> -->
         <img src="logo/sparecare_horizontal_logo.png" class="w-40 h-auto ml-4" alt="Logo" />
   
   
        </div>
       
       <!-- Mobile Menu Toggle Button -->
-      <button (click)="toggleMenu()" class="md:hidden text-blue-500 focus:outline-none">
-        <!-- Hamburger Icon -->
+      <!-- <button (click)="toggleMenu()" class="md:hidden text-blue-500 focus:outline-none">
+        
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
           viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 6h16M4 12h16M4 18h16" />
         </svg>
-      </button>
+      </button> -->
   
       <!-- Nav Links -->
       <ul
@@ -26,34 +26,16 @@
         <li class="text-blue-400 font-bold">Gainer</li>
         <li class="text-blue-400 font-bold">Audit</li>
       </ul>
-  </div>
+    </div>
   
   
     <div class="flex gap-4 p-4 overflow-auto sm:overflow-hidden">
-      <!-- Card -->
-      <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
-        <div class="text-2xl font-bold text-indigo-900">3450</div>
-        <div class="text-gray-500 mt-1">Stock Audit</div>
-        <div class="flex justify-between items-center mt-4">
-          <div class="text-green-500 font-semibold flex items-center">
-            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M5 10l5-5 5 5H5z"/></svg>
-            25%
-          </div>
-          <div class="bg-yellow-400 text-white p-2 rounded-md">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 12h4v8H4v-8zm6-6h4v14h-4V6zm6 4h4v10h-4V10z"/></svg>
-          </div>
-        </div>
-      </div>
-    
+          
       <!-- Card -->
       <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
         <div class="text-2xl font-bold text-indigo-900">₹35.256 lakhs</div>
         <div class="text-gray-500 mt-1">Inventory Under Management </div>
         <div class="flex justify-between items-center mt-4">
-          <div class="text-green-500 font-semibold flex items-center">
-            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M5 10l5-5 5 5H5z"/></svg>
-            15%
-          </div>
           <div class="bg-cyan-400 text-white p-2 rounded-md">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h4v16H4V4zm6 4h4v12h-4V8zm6 6h4v6h-4v-6z"/></svg>
           </div>
@@ -63,12 +45,8 @@
       <!-- Card -->
       <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
         <div class="text-2xl font-bold text-indigo-900">431</div>
-        <div class="text-gray-500 mt-1"> Stock Upload</div>
+        <div class="text-gray-500 mt-1"> PPNI Value</div>
         <div class="flex justify-between items-center mt-4">
-          <div class="text-red-500 font-semibold flex items-center">
-            <svg class="w-4 h-4 mr-1 transform rotate-180" fill="currentColor" viewBox="0 0 20 20"><path d="M5 10l5-5 5 5H5z"/></svg>
-            15%
-          </div>
           <div class="bg-green-500 text-white p-2 rounded-md">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zm1 17.93V19h-2v-.07c-1.767-.228-3.19-1.508-3.484-3.234h1.707c.26.928 1.096 1.57 2.043 1.57 1.188 0 2.156-.968 2.156-2.156 0-.838-.482-1.563-1.188-1.906L11 12.235V10.5h2v.705l1.031.516c1.088.543 1.788 1.65 1.788 2.829 0 1.826-1.375 3.356-3.094 3.896z"/></svg>
           </div>
@@ -77,13 +55,10 @@
     
       <!-- Card -->
       <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
-        <div class="text-2xl font-bold text-indigo-900">573</div>
-        <div class="text-gray-500 mt-1">PPNI</div>
+        <div class="text-2xl font-bold text-indigo-900">₹57.34 Lakhs</div>
+        <div class="text-gray-500 mt-1">Stockable Inventory</div>
+        <p class="text-gray-500 text-sm">Last Quantity</p>
         <div class="flex justify-between items-center mt-4">
-          <div class="text-green-500 font-semibold flex items-center">
-            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M5 10l5-5 5 5H5z"/></svg>
-            15%
-          </div>
           <div class="bg-cyan-400 text-white p-2 rounded-md">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h4v16H4V4zm6 4h4v12h-4V8zm6 6h4v6h-4v-6z"/></svg>
           </div>
@@ -92,12 +67,21 @@
   
       <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
         <div class="text-2xl font-bold text-indigo-900">3450</div>
-        <div class="text-gray-500 mt-1">Total Approvals</div>
+        <div class="text-gray-500 mt-1">Non Stockable Inventory</div>
+        <p class="text-gray-500 text-sm">Last Quantity</p>
         <div class="flex justify-between items-center mt-4">
-          <div class="text-green-500 font-semibold flex items-center">
-            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M5 10l5-5 5 5H5z"/></svg>
-            25%
+          <div class="bg-yellow-400 text-white p-2 rounded-md">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 12h4v8H4v-8zm6-6h4v14h-4V6zm6 4h4v10h-4V10z"/></svg>
           </div>
+        </div>
+      </div>
+
+
+      <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
+        <div class="text-2xl font-bold text-indigo-900">₹5.07 Lakhs</div>
+        <div class="text-gray-500 mt-1">Last order Recived</div>
+        <p class="text-gray-500 text-sm">Last Quantity</p>
+        <div class="flex justify-between items-center mt-4">
           <div class="bg-yellow-400 text-white p-2 rounded-md">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 12h4v8H4v-8zm6-6h4v14h-4V6zm6 4h4v10h-4V10z"/></svg>
           </div>
@@ -113,21 +97,10 @@
       <div class="flex flex-col  gap-8">
         <!-- Chart 1 -->
         <div class=" bg-white rounded-md">
-          <h3 class="text-lg ml-4 mt-4 font-semibold">Stock View</h3>
-          <div echarts [options]="chart1" class="w-[350px] h-[250px] scale-75 text-xs"></div>
+          <!-- <h3 class="text-lg ml-4 mt-4 font-semibold">Stock View</h3> -->
+          <div echarts [options]="chart1" class="w-[350px] h-[250px]  text-xs"></div>
         </div>
     
-        <!-- Chart 2 -->
-        <div class=" bg-white rounded-md">
-          <h3 class="text-lg ml-4 mt-4 font-semibold">Stock View</h3>
-          <div echarts [options]="lineGrade" class="w-[350px] h-[250px] scale-75 text-xs"></div>
-        </div>
-  
-        <!-- Chart 3 -->
-        <div class="bg-white rounded-md">
-          <h3 class="text-lg ml-4 mt-4 font-semibold">Stock View</h3>
-          <div echarts [options]="rader" class="w-[350px] h-[250px] scale-75 text-xs"></div>
-        </div>
   
       </div>
     

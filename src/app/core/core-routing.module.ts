@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LandingScreenComponent } from './landing-screen/landing-screen.component';
 import { ScopeRedirectComponent } from './scope-redirect/scope-redirect.component';
 import { MaintenanceComponent } from './maintenance/maintenance.component';
+import { HomePageComponent } from './home-page/home-page.component';
 
 const routes: Routes = [
 
@@ -15,6 +16,10 @@ const routes: Routes = [
     path: 'redirect',
     component: ScopeRedirectComponent
 
+  },
+  {
+    path: 'home',
+    component: HomePageComponent
   },
   {
     path: '**',
