@@ -87,8 +87,8 @@ export class ViewCreateUserComponent {
         let designationObj=this.designations.find((obj:any)=>{ return obj.id==rowData.designationId})
         let roleObj=this.roles.find((obj:any)=>{return obj.id==rowData.roleId})
         let verticalObj=this.associatedBusinesses.find((obj:any)=>{return obj.id==rowData.business_vertical})
-        let statusObj=this.statuses.find((obj:any)=>{return obj.name==rowData.status})
-        //console.log(roleObj,designationObj,verticalObj,statusObj)
+         let statusObj=this.statuses.find((obj:any)=>{return obj.name==rowData.status?'Active':'Inactive'})
+       // console.log(roleObj,designationObj,verticalObj,statusObj,rowData)
         this.editUserForm.patchValue({
           name: rowData.vcFirstName,
           lastName:rowData.vcLastName,

@@ -159,7 +159,7 @@ margin-left: 64px; */
 }
 
 :host ::ng-deep .p-select{
-    width: 90%;
+    width: 80%;
 }
 :host ::ng-deep span.p-element.p-dropdown-label.p-inputtext{
     padding:5px !important

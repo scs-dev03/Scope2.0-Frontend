@@ -26,7 +26,7 @@
   <!-- <div class="d-flex justify-center align-items-center h-[80vh] w-full" *ngIf=" !userPermissions.edit1 && !userPermissions.add1 && !userPermissions.view1 && !userPermissions.delete1">
       <h2>You do not have the access for User Management</h2>  
   </div> -->
-  <div class="h-100" >
+  <div class="h-100 ml-10" >
       <!-- <div class="d-flex justify-content-center mt-3">
           <span class="font-bold text-[18px]">Welcome {{userName}}</span>
 
@@ -261,7 +261,7 @@
                          <p-button [styleClass]="'text-white'" class="" label="Download Logs File" (click)="downloadExcelFile()" />
                      </div> -->
                  </div>
-                 <div class="row  mt-4 flex justify-start"  >
+                 <div class="row  mt-4 flex justify-start w-[90vw]" [ngClass]="sidebarVisible?'w-[65vw]':'w-[90vw]'"  >
                      <div class="col-12 d-flex justify-content-start">
                          <p-table
                         [value]="updatedAuditLogs" *ngIf="showTable"
@@ -272,7 +272,7 @@
                         
                         responsiveLayout="scroll"
                          dataKey="code"
-                         class="w-full !rounded-lg-border border-gray-200 shadow-md"  [scrollable]="true"
+                         class="w-full !rounded-lg-border border-gray-200 "  [scrollable]="true"
                          [scrollHeight]="isScreenCollapsed ? '285px' : '285px'" >
                              <ng-template pTemplate="header" >
                                  <tr>
@@ -281,7 +281,7 @@
                                      <th *ngIf="isLocationWiseChecked">Dealer</th>
                                      <th *ngIf="isLocationWiseChecked">Location</th>
                                      <th>File Type</th>
-                                     <th pSortableColumn="noOfRecords" class="text-center">No. of Records <p-sortIcon field="noOfRecords" /></th>
+                                     <th pSortableColumn="noOfRecords" class="">No. of Records <p-sortIcon field="noOfRecords" /></th>
                                      <th>Updated Date</th>
                                      <th>Updated By</th>
                                  </tr>

@@ -25,6 +25,9 @@
         <li class="text-blue-400 font-bold">Sims</li>
         <li class="text-blue-400 font-bold">Gainer</li>
         <li class="text-blue-400 font-bold">Audit</li>
+        <form [formGroup]="homeData" class="card flex justify-center">
+          <p-select formControlName="locationId" class="!w-16" [options]="filteredLocationData" optionLabel="location" optionValue="locationid" placeholder="Select a City" (onChange)="onclickLocation()" class="w-full md:w-56" />
+      </form>
       </ul>
     </div>
   
@@ -33,7 +36,7 @@
           
       <!-- Card -->
       <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
-        <div class="text-2xl font-bold text-indigo-900">₹35.256 lakhs</div>
+        <div class="text-2xl font-bold text-indigo-900">₹{{CardsData.StockValue[0].stockvalue}}</div>
         <div class="text-gray-500 mt-1">Inventory Under Management </div>
         <div class="flex justify-between items-center mt-4">
           <div class="bg-cyan-400 text-white p-2 rounded-md">
@@ -44,8 +47,9 @@
     
       <!-- Card -->
       <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
-        <div class="text-2xl font-bold text-indigo-900">431</div>
+        <div class="text-2xl font-bold text-indigo-900">{{CardsData.PPNIValue[0].PPNIValue}}</div>
         <div class="text-gray-500 mt-1"> PPNI Value</div>
+        <br>
         <div class="flex justify-between items-center mt-4">
           <div class="bg-green-500 text-white p-2 rounded-md">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zm1 17.93V19h-2v-.07c-1.767-.228-3.19-1.508-3.484-3.234h1.707c.26.928 1.096 1.57 2.043 1.57 1.188 0 2.156-.968 2.156-2.156 0-.838-.482-1.563-1.188-1.906L11 12.235V10.5h2v.705l1.031.516c1.088.543 1.788 1.65 1.788 2.829 0 1.826-1.375 3.356-3.094 3.896z"/></svg>
@@ -55,9 +59,9 @@
     
       <!-- Card -->
       <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
-        <div class="text-2xl font-bold text-indigo-900">₹57.34 Lakhs</div>
+        <div class="text-2xl font-bold text-indigo-900">₹{{CardsData.SNStockValue[0].StockableValue}}</div>
         <div class="text-gray-500 mt-1">Stockable Inventory</div>
-        <p class="text-gray-500 text-sm">Last Quantity</p>
+        <p class="text-gray-500 text-sm">Lastest Quantity {{CardsData.SNStockValue[0].Stockable}}</p>
         <div class="flex justify-between items-center mt-4">
           <div class="bg-cyan-400 text-white p-2 rounded-md">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h4v16H4V4zm6 4h4v12h-4V8zm6 6h4v6h-4v-6z"/></svg>
@@ -66,9 +70,9 @@
       </div>
   
       <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
-        <div class="text-2xl font-bold text-indigo-900">3450</div>
+        <div class="text-2xl font-bold text-indigo-900">₹{{CardsData.SNStockValue[0].NonStockableValue}}</div>
         <div class="text-gray-500 mt-1">Non Stockable Inventory</div>
-        <p class="text-gray-500 text-sm">Last Quantity</p>
+        <p class="text-gray-500 text-sm">Lastest Quantity {{CardsData.SNStockValue[0].NonStockable}}</p>
         <div class="flex justify-between items-center mt-4">
           <div class="bg-yellow-400 text-white p-2 rounded-md">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 12h4v8H4v-8zm6-6h4v14h-4V6zm6 4h4v10h-4V10z"/></svg>
@@ -78,9 +82,9 @@
 
 
       <div class="bg-white shadow rounded-xl p-3 w-full sm:52 border border-gray-200">
-        <div class="text-2xl font-bold text-indigo-900">₹5.07 Lakhs</div>
-        <div class="text-gray-500 mt-1">Last order Recived</div>
-        <p class="text-gray-500 text-sm">Last Quantity</p>
+        <div class="text-2xl font-bold text-indigo-900">₹{{CardsData.lastOrderDetails[0].Value}}</div>
+        <div class="text-gray-500 mt-1">Last order Recived {{CardsData.lastOrderDetails[0].addeddate }}</div>
+        <p class="text-gray-500 text-sm">Last Quantity {{CardsData.lastOrderDetails[0].QTY}}</p>
         <div class="flex justify-between items-center mt-4">
           <div class="bg-yellow-400 text-white p-2 rounded-md">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 12h4v8H4v-8zm6-6h4v14h-4V6zm6 4h4v10h-4V10z"/></svg>

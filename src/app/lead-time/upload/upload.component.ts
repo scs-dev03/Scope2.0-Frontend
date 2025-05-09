@@ -18,6 +18,7 @@ import saveAs from 'file-saver';
 import * as XLSX from 'xlsx';
 import { brandColumnObject } from '../../core/models/brandColumns';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { SidebarService } from '../../services/sidebar.service';
 @Component({
   selector: 'app-upload',
   imports: [SHARED_IMPORTS,PrimengModuleModule,SharedModule],
@@ -70,6 +71,7 @@ export class UploadComponent {
   currentRoute:any;
   dataSubscription:Subscription|null=null
   @ViewChild('fileUpload') fileUpload!: FileUpload;
+  sidebarVisible:boolean=false;
   uploadForm: FormGroup = new FormGroup({
 
     brand: new FormControl('',[Validators.required]),
@@ -92,7 +94,8 @@ export class UploadComponent {
     private datePipe: DatePipe,
     private sharedService:SharedServiceService,
     private router:Router,
-    private globalBlockUiService:GlobalBlockUiService
+    private globalBlockUiService:GlobalBlockUiService,
+    private sidebarService:SidebarService
 
   ){
     this.locationFormGroup=this.fb.group({
@@ -109,6 +112,9 @@ export class UploadComponent {
    this.getUsers();
    this.userName=localStorage.getItem('name');
    
+   this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
+    this.sidebarVisible=visible
+   })
    this.dataSubscription = this.sharedService.sidebarData.subscribe(
     (data) => {
       this.receivedData = data;
@@ -130,7 +136,7 @@ if (moduleItem) {
 }
         }
       }
-     console.log("result",this.userPermissions)
+    // console.log("result",this.userPermissions)
      
     }
   );

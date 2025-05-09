@@ -52,10 +52,11 @@ export class SidebarComponent {
         return;
       }
     
+      //console.log("sidebar items ",this.sidebarItems)
       // Filter items based on search query
       this.filteredItems = this.sidebarItems.map((item:any) => {
         // Check if the parent matches the search query
-        let matchesParent = item.value.toLowerCase().includes(this.searchQuery.trim().toLowerCase());
+        let matchesParent = item?.parentModuleName?.toLowerCase().includes(this.searchQuery.trim().toLowerCase());
     
         if (item.children) {
           // Filter child items that match the search query
@@ -80,7 +81,7 @@ export class SidebarComponent {
         return null; // Exclude items that don't match
       }).filter((item:any) => item !== null);  // Remove null values
 
-      
+       //console.log("filtereed items ",this.filteredItems)
     }
     
     openSidebar() {
