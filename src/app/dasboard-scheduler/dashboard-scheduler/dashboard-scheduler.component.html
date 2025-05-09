@@ -1,22 +1,7 @@
 <div class="relative h-full w-full overflow-auto">
-    <app-loader [isloading]="isloading"></app-loader>
+    <!-- <app-loader [isloading]="isloading"></app-loader> -->
   
-    <div class="card flex justify-center">
-      <!-- it is for error Message -->
-      <p-dialog
-        header="Message"
-        [(visible)]="visible"
-        [modal]="true"
-        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-        [style]="{ width: '30vw' }"
-        [draggable]="false"
-        [resizable]="false"
-      >
-        <p class="text-lg font-semibold">
-          {{ scheduleResult }}
-        </p>
-      </p-dialog>
-    </div>
+    
     <!-- <app-header></app-header> -->
     
     <!-- <div
@@ -30,6 +15,10 @@
       
       <img src="logo/sparecarelogo.png" class="w-16 h-10" alt="Sparecare Logo" />
     </div> -->
+
+    <div>
+      <h1 class="text-3xl ml-10 font-semibold">Dashboard Scheduler</h1>
+    </div>
   
     <div class="mt-7">
       <form action="" [formGroup]="dashboardInputData">
@@ -722,4 +711,19 @@
   </div>
   
   
-  
+  <div class="card flex justify-center">
+    <!-- it is for error Message -->
+    <p-dialog
+      header="Message"
+      [(visible)]="visible"
+      [modal]="true"
+      [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+      [style]="{ width: '30vw' }"
+      [draggable]="false"
+      [resizable]="false"
+    >
+      <p class="text-lg font-semibold">
+        {{ scheduleResult }}
+      </p>
+    </p-dialog>
+  </div>

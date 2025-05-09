@@ -6,6 +6,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
 import { Sidebar2Component } from "../../core/sidebar-2/sidebar-2.component";
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
+import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 
 @Component({
   selector: 'app-adminpendingcount',
@@ -23,7 +24,7 @@ export class AdminpendingcountComponent {
     
   }
 
-   constructor(private adminvonservice: AdminvonserviceService, private router: Router) {}
+   constructor(private adminvonservice: AdminvonserviceService, private router: Router,private globalBlockUiService:GlobalBlockUiService) {}
 
 
   pendingcount: any = []
@@ -40,10 +41,10 @@ export class AdminpendingcountComponent {
   }
 
    fetchpendingcount(){
-    this.isloading = true
+    this.globalBlockUiService.startLoading()
     this.adminvonservice.getPendingCount().subscribe((res:any)=>{
       this.pendingcount = res.Data
-      this.isloading = false
+      this.globalBlockUiService.stopLoading()
     })
    }
 

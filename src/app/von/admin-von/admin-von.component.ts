@@ -9,6 +9,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Sidebar2Component } from "../../core/sidebar-2/sidebar-2.component";
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
+import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 @Component({
   selector: 'app-admin-von',
   imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS, Sidebar2Component, LoaderComponent],
@@ -62,7 +63,7 @@ export class AdminVonComponent {
     
   }
 
-  constructor(private adminvonservice: AdminvonserviceService,private route: ActivatedRoute,private router: Router) {}
+  constructor(private adminvonservice: AdminvonserviceService,private route: ActivatedRoute,private router: Router,private globalBlockUiService:GlobalBlockUiService) {}
 
   // formgroup for filter
   adminFilterData = new FormGroup({
@@ -277,24 +278,24 @@ export class AdminVonComponent {
 
 
   submitAdminRow(rowData: any) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     const validCustomRemarkRegex = /^(?![\s,@-]*$)(?!-?\d+$)[a-zA-Z0-9\s,@-]*$/;
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     if (rowData.selectedRemark == null) {
-      this.isloading = false
+      this.globalBlockUiService.stopLoading()
       this.visible = true;
       this.Result = "Select the Remark";
-      this.isloading = false;
+      this.globalBlockUiService.stopLoading();
     } else if (rowData.qty == null) {
-      this.isloading = false
+      this.globalBlockUiService.stopLoading()
       this.visible = true;
       this.Result = 'Input the Quantity';
-      this.isloading = false;
+      this.globalBlockUiService.stopLoading();
     } else if (rowData.qty < 0) {
-      this.isloading = false
+      this.globalBlockUiService.stopLoading()
       this.visible = true;
       this.Result = 'Invalid Qty';
-      this.isloading = false;
+      this.globalBlockUiService.stopLoading();
     } else {
       if (rowData.showOtherInput) {
         // Check for empty or invalid customRemark
@@ -302,11 +303,11 @@ export class AdminVonComponent {
           !rowData.customRemark || 
           !validCustomRemarkRegex.test(rowData.customRemark.trim())
         ) {
-          this.isloading = false
+          this.globalBlockUiService.stopLoading()
           
           this.visible = true;
           this.Result = 'Invalid Custom Remark Only Number are not Allowed and  Allowed Special Character are - and @';
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
           return;
         }
   
@@ -322,17 +323,17 @@ export class AdminVonComponent {
           })
           .subscribe(
             (res: any) => {
-              this.isloading = false
+              this.globalBlockUiService.stopLoading()
               this.visible = true;
               this.Result = res.message;
-              this.isloading = false;
+              this.globalBlockUiService.stopLoading();
               rowData.status = 'Reviewed';
             },
             (error: any) => {
-              this.isloading = false
+              this.globalBlockUiService.stopLoading()
               this.Result = 'There is no dealer remark for this part, so you cannot add a remark.';
               this.visible = true;
-              this.isloading = false;
+              this.globalBlockUiService.stopLoading();
             }
           );
       } else {
@@ -348,14 +349,14 @@ export class AdminVonComponent {
           })
           .subscribe(
             (res: any) => {
-              this.isloading = false
+              this.globalBlockUiService.stopLoading()
               this.visible = true;
               this.Result = res.message;
-              this.isloading = false;
+              this.globalBlockUiService.stopLoading();
               rowData.status = 'Reviewed';
             },
             (error: any) => {
-              this.isloading = false
+              this.globalBlockUiService.stopLoading()
               this.visible = true;
               this.Result = 'Remark not submmited'
             }
@@ -369,56 +370,56 @@ export class AdminVonComponent {
 
   // fetching brands
   fetchBrandData() {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.adminvonservice.getBrandMaster().subscribe((res: any) => {
       this.brandData = res;
-      this.isloading = false;
+      this.globalBlockUiService.stopLoading();
       console.log(this.brandData);
       
     });
   }
 // Fetch Dealer Data
 fetchDealerData(brandid: any) {
-  this.isloading = true;
+  this.globalBlockUiService.startLoading();
   this.adminvonservice.getDealersMaster({ brandid }).subscribe({
       next: (res: any) => {
           this.dealerData = res;
           this.dealerData.sort((a: any, b: any) => a.dealer.localeCompare(b.dealer));
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
           console.error("Error fetching dealer data:", err);
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
       }
   });
 }
 
 // Fetch Location
 fetchlocation(dealerId: any) {
-  this.isloading = true;
+  this.globalBlockUiService.startLoading();
   this.adminvonservice.getlocationMaster({ dealerid: dealerId }).subscribe({
       next: (res: any) => {
           this.locaitonData = res;
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
           console.error("Error fetching location data:", err);
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
       }
   });
 }
 
 // Fetch Nature Data
 fetchNature() {
-  this.isloading = true;
+  this.globalBlockUiService.startLoading();
   this.adminvonservice.getNature().subscribe({
       next: (res: any) => {
           this.natureData = res.Data;
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
           console.error("Error fetching nature data:", err);
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
       }
   });
 }
@@ -460,7 +461,7 @@ formatHeader(key: string): string {
     l1: any, l2: any, parttype: any
   ): Promise<any> {
     return new Promise((resolve, reject) => { // ⬅ Promise return kiya
-      this.isloading = true;
+      this.globalBlockUiService.startLoading();
       this.adminvonservice
         .getAdminViewData({
           brandid, dealerid, r1, r2, partnumber, locationid, flag,
@@ -470,16 +471,16 @@ formatHeader(key: string): string {
           if (res.Data && res.Data.length) {
             this.tableData = res.Data;
             console.log("Fetched Data: ", this.tableData);
-            this.isloading = false;
+            this.globalBlockUiService.stopLoading();
             resolve(this.tableData); // ⬅ Resolve Promise
           } else {
             this.visible = true;
             this.Result = 'No Data Available';
-            this.isloading = false;
+            this.globalBlockUiService.stopLoading();
             reject('No Data Available'); // ⬅ Reject Promise
           }
         }, (error: any) => {
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
           this.visible = true;
           this.Result = error.error?.Error || 'Error fetching data';
           reject(error.error?.Error || 'Error fetching data'); // ⬅ Reject Promise
@@ -489,24 +490,24 @@ formatHeader(key: string): string {
   
 // fetching admin remark
 fetchAdminRemark(brandid: any, usertype: any) {
-  this.isloading = true;
+  this.globalBlockUiService.startLoading();
   this.adminvonservice.getAdminRemark({ brandid, usertype }).subscribe({
       next: (res: any) => {
           this.adminRemark = res.Data;
-          this.isloading = false;  // Success case me isloading reset
+          this.globalBlockUiService.stopLoading();  // Success case me isloading reset
       },
       error: (err: any) => {
         this.Result = 'Remarker Not Available Please Contact IT Admin'
         this.visible = true
 
-          this.isloading = false;  // API fail hone par bhi loading false ho
+          this.globalBlockUiService.stopLoading();  // API fail hone par bhi loading false ho
       }
   });
 }
 
   //fetching  adming view logs row wise
   fetchAdminViewlog(brandid: any, dealerid: any, locationid: any, partid: any) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.adminvonservice
       .getAdminViewLog({
         brandid: brandid,
@@ -519,27 +520,27 @@ fetchAdminRemark(brandid: any, usertype: any) {
         if(res.Data && res.Data.length){
           this.changelogDialog = true;
           this.Adminviewlog = res.Data;
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
         }
         else{
           this.Result = 'There is No Previous Record, Please Give new Remark for this Part'
           this.visible = true
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
         }
       });
   }
 // fetching part type
   fetchPartType(){
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.adminvonservice.getPartType().subscribe((res:any)=>{
       this.partType = res.Data
-      this.isloading = false;
+      this.globalBlockUiService.stopLoading();
 
     })
   }
    // fetching family part
    fetchFamilyPart(partnumber: any, brandid: any) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.adminvonservice.getSubstitutePart({ partnumber, brandid }).subscribe({
         next: (res: any) => {
             if (res.Data && res.Data.length) {
@@ -549,13 +550,13 @@ fetchAdminRemark(brandid: any, usertype: any) {
                 this.visible = true;
                 this.Result = 'There is No Substitute Part Available for this Part';
             }
-            this.isloading = false; // Ensure loading is reset in success case
+            this.globalBlockUiService.stopLoading(); // Ensure loading is reset in success case
         },
         error: (err: any) => {
             console.error("Error fetching family part data:", err);
             this.visible = true;
             this.Result = "Failed to fetch substitute part data. Please try again.";
-            this.isloading = false; // Ensure loading is reset in error case
+            this.globalBlockUiService.stopLoading(); // Ensure loading is reset in error case
         }
     });
 }
@@ -647,7 +648,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
 
   // part Sale Data 
   fetchPartSale(brandid: any, dealerid: any, locationid: any, partnumber: any) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.adminvonservice.getPartFamilySales({ brandid, dealerid, locationid, partnumber }).subscribe({
         next: (res: any) => {
            
@@ -664,7 +665,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
             this.columns = this.extractKeys(this.partFamilySaleData);
             console.log(this.columns);
 
-            this.isloading = false;
+            this.globalBlockUiService.stopLoading();
 
             }
               // API success hone ke baad loading false karenge
@@ -672,7 +673,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
         error: (err: any) => {
           this.Result = 'Something is not well Please Contact IT Admin'
           this.visible = true
-            this.isloading = false;  // API fail hone par bhi loading false ho
+            this.globalBlockUiService.stopLoading();  // API fail hone par bhi loading false ho
         }
     });
 }
@@ -691,7 +692,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
     l1: any,
     l2: any,
   parttype:any) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.adminvonservice.getAdminPendinview({ brandid: brandid,
         dealerid: dealerid,
         locationid: locationid,
@@ -709,7 +710,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
           if(!res.Data || res.Data.length === 0 ){
               this.Result = 'No Data Available'
               this.visible = true;    
-              this.isloading = false
+              this.globalBlockUiService.stopLoading()
           }
           else{
             this.AdminPeningView = res.Data;
@@ -717,14 +718,14 @@ fetchAdminRemark(brandid: any, usertype: any) {
                 this.adminFilterData.value.brand,
                 localStorage.getItem('usertype')
             );
-            this.isloading = false;
+            this.globalBlockUiService.stopLoading();
           }
             
         },
         error: (err: any) => {
            this.Result = 'Something is not well Please Contact IT Admin'
            this.visible = true
-            this.isloading = false;
+            this.globalBlockUiService.stopLoading();
         }
     });
 }
@@ -739,7 +740,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
   }
 
   UploadExcelDealer(){
-    this.isloading = true
+    this.globalBlockUiService.startLoading()
 
     if (!this.DealerExcel) {
       console.error("Please select a file first!");
@@ -752,7 +753,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
         
         this.Result = res.message
         this.showupload = false
-        this.isloading = false
+        this.globalBlockUiService.stopLoading()
         this.visible = true;
       },
       (error) => {
@@ -766,7 +767,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
         this.visible = true
         const partNumbers = error.error.pendingRecords.map((rec:any )=> rec.PartNumber).join(', ');
         this.Result = `${error.error.message} following are the Partnumber ${partNumbers} `;
-        this.isloading = false
+        this.globalBlockUiService.stopLoading()
         this.showupload = false
         this.selectedFileName = ""
         
@@ -776,7 +777,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
           this.visible = true
           const partNumbers = error.error.pendingRecords.map((rec:any )=> rec.PartNumber).join(', ');
           this.Result = `${error.error.message} (${partNumbers}) `;
-          this.isloading = false
+          this.globalBlockUiService.stopLoading()
           this.showupload = false
           this.selectedFileName = ""
         }
@@ -797,7 +798,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
   }
 
   UploadExcelAdmin(){
-    this.isloading = true
+    this.globalBlockUiService.startLoading()
 
     if (!this.AdminExcel) {
       console.error("Please select a file first!");
@@ -810,7 +811,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
        
         this.Result = res.message
         this.showupload = false
-        this.isloading = false
+        this.globalBlockUiService.stopLoading()
         this.visible = true;
         this.adminFileName = ""
 
@@ -819,7 +820,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
         console.error("File upload failed:", error);
         this.visible = true
         this.Result = "File upload failed"
-        this.isloading = false
+        this.globalBlockUiService.stopLoading()
         this.showupload = false
         this.adminFileName = ""
       }

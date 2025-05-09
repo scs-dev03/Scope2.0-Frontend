@@ -10,6 +10,7 @@ import { TotalsumComponent } from "../totalsum/totalsum.component";
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
 import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
 import { CommonModule } from '@angular/common';
+import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 @Component({
   selector: 'app-admin-sales-report',
   imports: [PrimengModuleModule, SharedModule,SHARED_IMPORTS,CommonModule, ProductDesctiptionTableComponent, ProductSaleInfoComponent, TotalsumComponent, LoaderComponent],
@@ -80,7 +81,7 @@ export class AdminSalesReportComponent {
   }
 
 
-  constructor(private adminSalesReportService: AdminReportServiceService) {}
+  constructor(private adminSalesReportService: AdminReportServiceService,private globalBlockUiService:GlobalBlockUiService) {}
 
 
   AdminSalesReportData: any = []
@@ -162,15 +163,15 @@ export class AdminSalesReportComponent {
       ); 
   }
   fetchBrandAdminData() {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.adminSalesReportService.getBrandData().subscribe({
       next: (res: any) => {
         this.BrandData = res;
-        this.isloading = false;
+        this.globalBlockUiService.stopLoading();
       },
       error: (err:any) => {
         console.error('Error while fetching brand data:', err);
-        this.isloading = false;
+        this.globalBlockUiService.stopLoading();
         this.visible = true
         this.Result = 'Please contact IT Admin'
         // Optionally, you can also show a user-friendly message
@@ -181,7 +182,7 @@ export class AdminSalesReportComponent {
   
   
   fetchDealerAdminData(brandid: any) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.adminSalesReportService
       .getDealerData({ brandid: brandid })
       .subscribe({
@@ -191,11 +192,11 @@ export class AdminSalesReportComponent {
           this.DealerData.sort((a: any, b: any) => {
             return a.dealer.localeCompare(b.dealer);
           });
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
         },
         error: (err:any) => {
           console.error('Error while fetching dealer data:', err);
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
            this.visible = true
         this.Result = 'Please contact IT Admin'
           // Optionally show toast or UI message
@@ -206,7 +207,7 @@ export class AdminSalesReportComponent {
   
 
   fetchLocationAdminData(dealerid: any) {
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.adminSalesReportService
       .getLocaitonData({ dealerid: dealerid })
       .subscribe({
@@ -215,11 +216,11 @@ export class AdminSalesReportComponent {
           this.LocationData.sort((a: any, b: any) =>
             a.location.localeCompare(b.location)
           );
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
         },
         error: (err:any) => {
           console.error('Error while fetching location data:', err);
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
            this.visible = true
            this.Result = 'Please contact IT Admin'
           // Optional: Show UI alert or toast
@@ -231,18 +232,18 @@ export class AdminSalesReportComponent {
 
   fetchPartDescription(brandid: any, partnumber: any, excel: any) {
     this.showMessage = false;
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     this.adminSalesReportService
       .getPartDescription({ Brandid: brandid, Partnumber: partnumber, excel: excel })
       .subscribe({
         next: (res: any) => {
           this.PartDetail = res;
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
           // console.log(this.PartDetail);
         },
         error: (err:any) => {
           console.error('Error while fetching part description:', err);
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
           this.showMessage = true; // if you want to show an error message on UI
           this.visible = true
           this.Result = "Faild to Load Part Details"
@@ -263,7 +264,7 @@ export class AdminSalesReportComponent {
   ) {
 
     this.showMessage = false;
-    this.isloading = true;
+    this.globalBlockUiService.startLoading();
     
   
     this.adminSalesReportService
@@ -281,13 +282,13 @@ export class AdminSalesReportComponent {
           this.SalesInfo = res.Data;
           this.SalesInfoVisible = true;
           this.exportVisible = false
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
         
           console.log(this.SalesInfo);
         },
         error: (err:any) => {
           console.error('Error while fetching sales info:', err);
-          this.isloading = false;
+          this.globalBlockUiService.stopLoading();
           this.showMessage = true;
           this.exportVisible = true;
           this.visible = true
@@ -414,16 +415,16 @@ export class AdminSalesReportComponent {
   selectedFileName:any
 
   onFileSelect(event: any) {
-    this.isloading = true
+    this.globalBlockUiService.startLoading()
     if (event.files && event.files.length > 0) {
       this.partsExcel = event.files[0];
       this.selectedFileName = event.files[0].name // Pehli file select karna
-      this.isloading = false
+      this.globalBlockUiService.stopLoading()
     }
   }
 
   UploadPartNumber(){
-   this.isloading = true
+   this.globalBlockUiService.startLoading()
    this.DataTypeArray = this.AdminSalesReportInputData.value.DataType
    const formData = new FormData();
    formData.append("file", this.partsExcel);
@@ -435,18 +436,18 @@ export class AdminSalesReportComponent {
    formData.append('excel', '1');   
 
     this.adminSalesReportService.getPartDescription(formData).subscribe((res:any)=>{
-      this.isloading = false
+      this.globalBlockUiService.stopLoading()
       this.PartDetail = res
       this.showupload = false
       this.partsExcel = null
     },
     (error:any) => {
       console.error("File upload failed:", error);
-      this.isloading = false
+      this.globalBlockUiService.stopLoading()
       this.showupload = false})
     this.adminSalesReportService.getSalesInfo(formData).subscribe((res:any)=>{
       this.SalesInfoVisible = true
-        this.isloading = false
+        this.globalBlockUiService.stopLoading()
         this.exportVisible = true
         this.SalesInfoVisible = true
         this.SalesInfo = res.Data
@@ -458,7 +459,7 @@ export class AdminSalesReportComponent {
         console.error("File upload failed:", error);
         this.visible = true
         this.Result =  `${error.error.message +'Part Number: '+ error.error.unmatchedParts}`
-        this.isloading = false
+        this.globalBlockUiService.stopLoading()
         this.showupload = false
 
     })
