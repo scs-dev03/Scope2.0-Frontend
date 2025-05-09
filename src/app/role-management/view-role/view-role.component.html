@@ -22,9 +22,9 @@
    
     <div class="w-[100vw]">
 
-      <!-- <div class="d-flex justify-center align-items-center" *ngIf="userPermissions.length>0 && !userPermissions?.edit1 && !userPermissions?.add1 && !userPermissions?.view1 && !userPermissions?.delete1">
+      <div class="d-flex justify-center align-items-center" *ngIf="userPermissions.length>0 && !userPermissions?.edit1 && !userPermissions?.add1 && !userPermissions?.view1 && !userPermissions?.delete1">
         <h2>You do not have the access for User Management</h2>  
-    </div> -->
+    </div>
     
     <!-- flex justify-center -->
         <div class="" >
@@ -127,7 +127,7 @@
                        <!-- [disabled]="selectedRow !== i" -->
                    </p-checkbox>
                </td>
-               <!-- <td class="text-center" *ngIf="userPermissions?.edit1">
+               <td class="text-center" *ngIf="userPermissions?.edit1">
                    <i class="bx bx-edit cursor-pointer"  (click)="editRow(i,role)"></i>
                </td>
                
@@ -135,7 +135,7 @@
                      
                     [ngModel]="setToggleState(role)" 
                     (ngModelChange)="onStatusChange(role,role.status)">
-                </mat-slide-toggle></td> -->
+                </mat-slide-toggle></td>
                 <td class="text-center" >
                   <i class="bx bx-edit cursor-pointer"  (click)="editRow(i,role)"></i>
               </td>

@@ -8,6 +8,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { TieredMenu } from 'primeng/tieredmenu';
 import { SidebarService } from '../../services/sidebar.service';
+import { SharedServiceService } from '../../services/shared-service.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -174,7 +175,7 @@ export class SidebarComponent {
   this.getModules();
 }
 
-constructor(private sidebarService:SidebarService){}
+constructor(private sidebarService:SidebarService,private sharedService:SharedServiceService){}
    
 
 getModules(){
@@ -227,10 +228,14 @@ transformData(data: any) {
   const combinedResult = [...Object.values(groupedData), ...directParents];
   this.sidebarItems = combinedResult;
   console.log("sidebar ",this.sidebarItems)
- // this.sendDataToUser(this.sidebarItems);
+  this.sendDataToUser(this.sidebarItems);
   return combinedResult;
 }
 
+sendDataToUser(data:any) {
+    
+  this.sharedService.updateSidebarData(data);
+}
 
 
 toggleSubMenu(item: any) {
