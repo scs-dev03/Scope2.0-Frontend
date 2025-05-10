@@ -60,7 +60,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     scale: 1.4;
   }
   
-  #pn_id_5 {
+  /* #pn_id_5 {
       transform: scale(0.7);
       transform-origin: top left;
     }
@@ -74,7 +74,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     #pn_id_6 {
       transform: scale(0.7);
       transform-origin: top left;
-    }
+    } */
   
     .table-Data {
       z-index: 1 !important; /* Ensure this is lower than the dropdown's z-index */

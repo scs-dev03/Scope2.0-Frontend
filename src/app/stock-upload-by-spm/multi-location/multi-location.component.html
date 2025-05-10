@@ -7,9 +7,10 @@
                         <!-- [ngClass]="showTable ? 'cursor-pointer' : 'disabled'" -->
 
                         <div class="d-flex justify-end">
-                            <span class="btn-view mb-2" [ngClass]="isDataPresentPartNotInMaster?'cursor-pointer':'disabled'"  (click)="exportToExcel()">Part Not In Master Export</span>
+                            <!-- <span class="btn-view mb-2" [ngClass]="isDataPresentPartNotInMaster?'cursor-pointer':'disabled'"  (click)="exportToExcel()">Part Not In Master Export</span> -->
+                            <i class='bx bx-export mb-2 f-20 bx-rotate-180' [ngClass]="isDataPresentPartNotInMaster?'cursor-pointer':'disabled'" pTooltip="Part Not In Master Export" (click)="exportToExcel()"></i>
                         </div>
-                        <div class="!flex !flex-row !gap-6 p-3 !items-center">
+                        <div class="!flex !flex-row !gap-6 ps-3 pb-3 !items-center">
                           <div>
                             <p-select
                             [options]="brands"
@@ -19,7 +20,8 @@
                             placeholder="Select Brand"
                             class="dropdown  w-56 md:w-56"
                             (onChange)="onBrandChange($event)"
-                            
+                            [filter]="true" 
+                          filterPlaceholder="Search Brand..."
                           />
                           </div>
                           <div>
@@ -31,7 +33,8 @@
                             placeholder="Select Dealer"
                             class="dropdown  w-56 md:w-56"
                             (onChange)="onDealerChange($event)"
-                            
+                            [filter]="true" 
+                          filterPlaceholder="Search Dealer..."
                           />
                           </div>
   
@@ -54,6 +57,8 @@
                                             placeholder="Select Location"
                                             class="dropdown w-56 md:w-56"
                                             (onChange)="onLocationChange(i)"
+                                            [filter]="true" 
+                          filterPlaceholder="Search Location..."
                                         ></p-select>
                                         <div *ngIf="locationControls.controls[i].get('location')?.touched && locationControls.controls[i].get('location')?.invalid" class="error-message">
                                             <small *ngIf="locationControls.controls[i].get('location')?.hasError('required')" style="color: red; font-size: 12px;">Location is required.</small>
@@ -63,17 +68,30 @@
                             
                                     <!-- File Upload -->
                                     <div class="!flex !justify-center !items-center !flex-col">
-                                        <p-fileupload #fu
-                                            mode="basic"
-                                            chooseLabel="Choose"
-                                            chooseIcon="pi pi-upload"
-                                            name="file"
-                                            [auto]="false"
-                                            [multiple]="false"
-                                            accept=".xlsx,.csv,.xls"
-                                            (onSelect)="onFileSelect($event, i)"
-                                        ></p-fileupload>
-                            
+                                      <p-fileUpload
+                                      #fu
+                                      chooseLabel="Upload"
+                                      chooseIcon="pi pi-upload"
+                                      name="file"
+                                      [auto]="false"
+                                      [multiple]="false"
+                                      accept=".xlsx,.csv,.xls"
+                                      [customUpload]="true"
+                                      [showUploadButton]="false"
+                                      [showCancelButton]="false"
+                                      (onSelect)="onFileSelect($event, i)"
+                                    >
+                                      <ng-template let-file pTemplate="file">
+                                        <div
+                                          class="truncate-file-name"
+                                          [title]="file.name"
+                                          style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                        >
+                                          {{ file.name.length > 30 ? (file.name | slice: 0: 30) + '...' : file.name }}
+                                        </div>
+                                      </ng-template>
+                                    </p-fileUpload>
+                                    
                                         <!-- File Validation Error -->
                                         <div *ngIf="locationControls.controls[i].get('file')?.touched && locationControls.controls[i].get('file')?.invalid" class="error-message">
                                             <small *ngIf="locationControls.controls[i].get('file')?.hasError('required')" style="color: red; font-size: 12px;">File is required.</small>
@@ -90,10 +108,14 @@
                     
                             
                         </div>
-                            <p-button label="Upload" (onClick)="onUpload()" severity="secondary" />
-                            <!-- [disabled]="!showTable" -->
-                            <p-button label="Get Uploaded Data" class="" (onClick)="exportUploadedData()" severity="secondary" class="ms-3" />
+                        <div class="d-flex">
+                          <p-button label="Submit" (onClick)="onUpload()" severity="secondary" />
+                          <!-- [disabled]="!showTable" -->
+                          <!-- <p-button label="Get Uploaded Data" class="" (onClick)="exportUploadedData()" severity="secondary" class="ms-3" /> -->
+                          <i class='bx bx-export f-20 d-flex align-items-center bx-rotate-180 ms-3' pTooltip="Get Uploaded Data"    (click)="exportUploadedData()" severity="secondary" ></i>
                         </div>
+                            
+                          </div>
                     </form>
                     
                     
@@ -103,8 +125,9 @@
             class="card   h-auto  p-3 bg-gray-50 rounded-lg shadow-lg mb-5 w-[70vw] mt-4 "
             *ngIf="showTable"
             >
-            <div class="d-flex justify-end">
-              <i class="bx bx-export font-bold mb-3 cursor-pointer" style="font-size: 18px;" (click)="exportTableData()"></i>
+            <div class="d-flex justify-between">
+              <span class="text-black text-lg ">Stock Upload History</span>
+              <i class="bx bx-export font-bold mb-3 cursor-pointer bx-rotate-180" style="font-size: 18px;" (click)="exportTableData()"></i>
             </div>
             <p-table #dataTable
               [scrollable]="true"
@@ -120,27 +143,30 @@
               [scrollable]="true"
               (onPageChange)="onPageChange($event)"
               class="bg-white  !rounded-lg border border-gray-200 shadow-md"
+              [showCurrentPageReport]="true"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                        
             >
               <ng-template #header let-item>
                 <tr>
                  
                   <th style="font-size: 13px;" >Location</th>
-                  <th style="font-size: 13px;" >
-                    Previous Records
+                  <th style="font-size: 13px;" pSortableColumn="prevStockUploadCount" >
+                    Previous Records <p-sortIcon field="prevStockUploadCount"></p-sortIcon>
                   </th>
                  
-                  <th style="font-size: 13px;" >
-                    Current Records
+                  <th style="font-size: 13px;" pSortableColumn="stockUploadCount" >
+                    Current Records <p-sortIcon field="stockUploadCount"></p-sortIcon>
                    
                   </th>
-                  <th style="font-size: 13px;">
-                   Previous Quantity Sum
+                  <th style="font-size: 13px;" pSortableColumn="prevQuantitySum">
+                   Previous Quantity Sum   <p-sortIcon field="prevQuantitySum"></p-sortIcon>
                   </th>
-                  <th style="font-size: 13px;" >Current Quantity Sum </th>
-                  <th style="font-size: 13px;">
-                     Added On
+                  <th style="font-size: 13px;" pSortableColumn="quantitySum">Current Quantity Sum <p-sortIcon field="quantitySum"></p-sortIcon> </th>
+                  <th style="font-size: 13px;" pSortableColumn="added_on">
+                     Added On <p-sortIcon field="added_on"></p-sortIcon>
                    </th>
-                   <th style="font-size: 13px;" >Added By</th>
+                   <th style="font-size: 13px;" pSortableColumn="added_by">Added By <p-sortIcon field="added_by"></p-sortIcon></th>
                   
                 </tr>
               </ng-template>
@@ -163,7 +189,7 @@
                     {{rowData.quantitySum !=null?rowData.quantitySum:0}}
                  </td>
                  <td style="font-size: 11px;">
-                    {{rowData.added_on}}
+                    {{formatDate(rowData.added_on)}}
                  </td>
                  <td style="font-size: 11px;">
                     {{rowData.added_by}}

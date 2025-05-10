@@ -35,9 +35,100 @@ body.loader {
 .f-13{
     font-size: 13px !important;
 }
+.f-8{
+    font-size: 8px !important;
+}
+
+.f-20{
+    font-size: 20px !important;
+}
 .custom-icon {
     position: absolute;
     font-size: 3rem;
     color: #ccc; /* You can adjust the color */
     animation: spin 1s infinite linear;
 }
+
+ .dropdown{
+    transform: none !important;
+    width: 10rem !important;
+    font-size: 12px !important;
+  }
+ button.p-ripple.p-button.p-component.p-button-secondary{
+    border: none !important;
+  outline: none !important;
+  background-color: rgb(12 98 182 / 69%) !important;
+  color: white !important;
+  /* background-color: rgb(0 0 255 / 34%); */
+  padding: 3px;
+  border-radius: 4px;
+  z-index: auto;
+  
+}
+
+.p-select-label{
+    padding:5px !important;
+    font-size: 12px !important;
+  }
+
+  .truncate-file-name {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 5px !important;
+  }
+
+   .p-fileupload-advanced{
+    border: none !important;
+    border-radius: none !important;
+    background: none !important;
+    display: flex!important;
+    align-items: center !important;
+  }
+
+   .p-fileupload-header{
+    border-radius: 0rem !important;
+    padding:0rem !important;
+    background: none !important;
+  }
+
+   .p-fileupload-content{
+    gap: 0rem !important;
+    padding: 0rem !important;
+  }
+
+   .p-fileupload-content .p-progressbar{
+    display: none !important;
+  }
+
+   .p-datatable{
+    transform: none !important;
+  }
+
+   .p-icon{
+    height: 11px !important;
+  }
+
+   .p-paginator-current{
+    font-size: 12px;
+    order: 2;
+    margin-left: 20px !important;
+  }
+ button.p-ripple.p-paginator-page.ng-star-inserted.p-paginator-page-selected {
+    background-color: #007bff7d !important;
+    color: white !important; /* Change text color */
+  
+    font-weight: bold !important;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    height:30px !important;
+    font-size: 12px !important;
+  }
+
+   button.p-ripple.p-button.p-component.p-fileupload-choose-button.undefined{
+    border: none !important;
+    outline: none !important;
+    padding: 3px !important;
+  }

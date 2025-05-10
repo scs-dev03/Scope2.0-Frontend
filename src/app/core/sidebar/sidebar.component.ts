@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { TieredMenu } from 'primeng/tieredmenu';
 import { SidebarService } from '../../services/sidebar.service';
 import { SharedServiceService } from '../../services/shared-service.service';
+import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -52,7 +53,6 @@ export class SidebarComponent {
         return;
       }
     
-      //console.log("sidebar items ",this.sidebarItems)
       // Filter items based on search query
       this.filteredItems = this.sidebarItems.map((item:any) => {
         // Check if the parent matches the search query
@@ -176,13 +176,19 @@ export class SidebarComponent {
   this.getModules();
 }
 
-constructor(private sidebarService:SidebarService,private sharedService:SharedServiceService){}
+constructor(private sidebarService:SidebarService,private sharedService:SharedServiceService,
+  private globalBlockUiService:GlobalBlockUiService
+){}
    
 
 getModules(){
+  this.globalBlockUiService.startLoading();
   this.sidebarService.getModules().subscribe((res:any)=>{
     this.sidebarItems=res.data;
+    this.globalBlockUiService.stopLoading();
     this.transformData(this.sidebarItems)
+  },(error:any)=>{
+    this.globalBlockUiService.stopLoading();
   })
 }
 transformData(data: any) {
@@ -228,8 +234,9 @@ transformData(data: any) {
 
   const combinedResult = [...Object.values(groupedData), ...directParents];
   this.sidebarItems = combinedResult;
-  console.log("sidebar ",this.sidebarItems)
+  //console.log("sidebar ",this.sidebarItems)
   this.sendDataToUser(this.sidebarItems);
+  this.filteredItems = [...this.sidebarItems];
   return combinedResult;
 }
 

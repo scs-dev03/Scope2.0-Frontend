@@ -67,13 +67,16 @@
     padding-top: 3px;
     cursor: pointer;
     display: block;
+    text-decoration: none !important;
     /* margin-left: 13px; */
   }
   
-  /* .menu-item:hover {
+  .menu-item:hover {
     background-color: #f1f1f1;
+    /* background-color: #3baaa742 !important; */
     width: max-content;
-  } */
+    text-decoration: none !important;
+  }
   
   /* User Profile at the bottom */
   .user-profile {
@@ -151,14 +154,16 @@ li{
 
 :host ::ng-deep li.menu-item.child{
   margin-left: 13px !important;
+  text-decoration: none !important;
 }
 
 
-.menu-item li a.active-item{
+.menu-item li i a.active-item{
     background-color: rgb(0 132 255 / 21%);
     padding-inline: 5px;
     padding-block: 7px;
     text-decoration: none !important;
+    
 }
 
 .menu-item li a:hover{
@@ -220,5 +225,14 @@ li{
 :host ::ng-deep a:hover{
   color:black;
   font-weight: 600 ;
+  text-decoration: none !important;
+}
+
+:host ::ng-deep a{
+  text-decoration: none !important;
+}
+
+:host ::ng-deep li.subsidebar.child.f-12.ms-3.menu-item a.active-item{
+  background-color: red !important;
 }
   

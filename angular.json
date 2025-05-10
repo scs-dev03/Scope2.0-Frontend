@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/stock-upload-frontend",
+            "outputPath": "dist/scope 2.0 frontend",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [

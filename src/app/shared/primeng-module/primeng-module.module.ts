@@ -24,6 +24,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TooltipModule } from 'primeng/tooltip';
 const modules=[
   MultiSelectModule,
   ButtonModule,
@@ -48,7 +49,8 @@ const modules=[
     FloatLabelModule,
     PanelMenuModule,
     CheckboxModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    TooltipModule
 
    
 ]

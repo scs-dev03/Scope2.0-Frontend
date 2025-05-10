@@ -17,6 +17,8 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 export class HomePageComponent {
 
   ngOnInit(): void {
+    
+    localStorage.setItem('dealerid',"8")
     this.globalBlockUiService.startLoading()
     // this.fetchCardsData(localStorage.get())
     localStorage.setItem('usertoken',this.token)
