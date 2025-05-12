@@ -42,7 +42,6 @@ export class DealerVonComponent {
   ];
 
   ngOnInit(): void {
-    localStorage.clear()
     //this.dealerVonService.setLocalStorage()
     this.dealerFilterData.reset();
     this.globalBlockUiService.startLoading();
