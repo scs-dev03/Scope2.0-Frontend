@@ -175,7 +175,7 @@ let password=this.updateForm.value.password
     
     this.emailArray.forEach((item: any) => {
       // Check if the email exists in the array
-      if (item.emailId === this.updateForm.value.email) {
+      if (item.vcEmail === this.updateForm.value.email) {
         this.emailMessage = '';
         this.userName=item.name
         emailExists = true; // Email found, set flag to true
@@ -199,7 +199,7 @@ let password=this.updateForm.value.password
         // this.messageService.add({severity:'success',life:300000,summary:'Invalid OTP',detail:'Try Again!!'})
          this.globalBlockUiService.stopLoading();;
         this.isOtpVerified=true;
-        this.messageService.add({severity:'success',life:30000,summary:'Your OTP has been verified succesfully!!',detail:'You can submit now!!'})
+        this.messageService.add({severity:'success',life:3000,summary:'Your OTP has been verified succesfully!!',detail:'You can submit now!!'})
               //this.router.navigate(['/dashboard']);
               // this.OTP=''
         // alert('2FA verified successfully!');
@@ -207,7 +207,7 @@ let password=this.updateForm.value.password
       (error) => {
         this.globalBlockUiService.stopLoading();;
         this.OTP=''
-        this.messageService.add({severity:'error',life:300000,summary:'Invalid OTP',detail:'Try re-scanning QR Code Again!!'})
+        this.messageService.add({severity:'error',life:30000,summary:'Invalid OTP',detail:'Try re-scanning QR Code Again!!'})
         // alert('Invalid OTP');
       })
     }
@@ -233,7 +233,7 @@ let password=this.updateForm.value.password
   submit(){
 
     if(!this.isOtpVerified && this.updateForm.valid){
-      this.messageService.add({severity:'error',life:300000,summary:'Kindly do the Authentication  !!!'})
+      this.messageService.add({severity:'error',life:30000,summary:'Kindly do the Authentication  !!!'})
       return;
     }
     if(this.updateForm.valid && this.emailMessage=='' && this.passwordMessage==''){
@@ -248,7 +248,8 @@ let password=this.updateForm.value.password
         this.globalBlockUiService.stopLoading();;
         this.messageService.add({severity:'success',life:30000,summary:'Your Password has been created succesfully!!',detail:'You can Login now!!'})
         // let link='http://103.30.72.109/login'
-        let link="http://web17.185.238.new.ocpwebserver.com/login";
+       // let link="http://web17.185.238.new.ocpwebserver.com/login";
+         let link="http://web16.185.238.new.ocpwebserver.com/login"
         this.updateForm.reset();
         window.open(link, '_blank');
           this.isSubmitted=true;
@@ -269,11 +270,12 @@ let password=this.updateForm.value.password
 
    // this.link="http://103.30.72.109/update-user-password";
     // this.link="http://localhost:4200/core/update-user-password";
-    this.link="http://web17.185.238.new.ocpwebserver.com/core/update-user-password";
+    this.link="http://web16.185.238.new.ocpwebserver.com/core/update-user-password"
+    // this.link="http://web17.185.238.new.ocpwebserver.com/core/update-user-password";
     this.userService.requestNewMail({userName:this.name,email:this.emailFromRoute,link:this.link}).subscribe((res:any)=>{
       this.messageService.add({severity:'success',summary:'Check your mail for updating the password',life:3000});
     },(error:any)=>{
-      this.messageService.add({severity:'error',summary:'Error in requesting for new link',life:300000});
+      this.messageService.add({severity:'error',summary:'Error in requesting for new link',life:30000});
     })
    
 }

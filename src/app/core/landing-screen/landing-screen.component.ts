@@ -89,7 +89,7 @@ export class LandingScreenComponent {
 
   goToHomePage(){
     
-    this.router.navigate(['/home']);
+    this.router.navigate(['core/home']);
     
   }
 }

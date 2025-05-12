@@ -17,10 +17,26 @@
         <app-sidebar class="h-[100vh]"></app-sidebar>
     </div> -->
 
-    <div class="w-full">
-      <!-- <div class="d-flex justify-center align-items-center" *ngIf="userPermissions.length>0 && !userPermissions?.edit1 && !userPermissions?.add1 && !userPermissions?.view1 && !userPermissions?.delete1">
+   
+    <div class="w-[100vw]">
+
+      <div class="d-flex justify-center align-items-center" *ngIf="userPermissions.length>0 && !userPermissions?.edit1 && !userPermissions?.add1 && !userPermissions?.view1 && !userPermissions?.delete1">
         <h2>You do not have the access for User Management</h2>  
-    </div> -->
+    </div>
+    
+    <!-- flex justify-center -->
+        <!-- <div class="" >
+            <div
+        class="flex flex-row  !py-3 !px-5 justify-between" [ngClass]="isSidebarVisible?' w-[100vw] md:w-[65vw] sm:w-[65vw] lg:w-[63vw]':'w-[100vw]'"
+      >
+        <h3 class="font-semibold text-base text-md md:text-xl ">
+          View & Edit Roles
+        </h3>
+        </div>
+        </div> -->
+        <!-- flex justify-center -->
+        <div class="w-[100vw] " style="">
+           <div class=" p-3    h-auto  rounded-lg" [ngClass]="isSidebarVisible?' w-[100vw] w-[80vw]   md:w-[60vw]':'w-[85vw]'">
 
       <!-- flex justify-center -->
       <div class="">
@@ -38,11 +54,11 @@
         </div>
       </div>
       <!-- flex justify-center -->
-      <div class=" " style="width: 100%; overflow-x: auto">
+      <div class="w-[100vw] " style=" overflow-x: auto">
         <div
-          class="card p-3 h-auto bg-[#FDF5E6] rounded-lg shadow-lg"
+          class="card p-3 h-auto bg-[#FDF5E6] rounded-lg"
           [ngClass]="
-            isSidebarVisible ? ' w-[100vw] w-[80vw]   md:w-[60vw]' : 'w-[85vw]'
+            isSidebarVisible ? ' w-[100vw] w-[80vw]   md:w-[72vw]' : 'w-[90vw]'
           "
         >
           <p-table
@@ -51,119 +67,109 @@
             [scrollable]="true"
             responsiveLayout="scroll"
             [scrollable]="true"
-            [value]="roles"
-            [paginator]="true"
-            [rows]="20"
-            paginatorDropdownAppendTo="body"
-            class="view-data custom-paginator"
-            styleClass="{width:80%}"
-            [rowsPerPageOptions]="[20, 40, 60, 80, 100]"
-            class="bg-white !rounded-lg border !h-auto border-gray-200 shadow-md"
-          >
-            <ng-template pTemplate="header">
-              <tr>
-                <th>Role Name</th>
-                <th class="text-center">SIMS</th>
-                <th class="text-center">AUDIT</th>
-                <th class="text-center">GAINER</th>
-                <th class="text-center">IT</th>
-                <th class="text-center">HR</th>
-                <th class="text-center">OTHERS</th>
-                <th class="text-center" *ngIf="userPermissions?.edit1">
-                  Action
-                </th>
-                <th class="text-center" *ngIf="userPermissions?.delete1">
-                  Delete
-                </th>
-                <th class="text-center">Action</th>
-                <th class="text-center">Delete</th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-role let-i="rowIndex">
-              <tr [class.selected]="selectedRow === i">
-                <td>{{ role.name }}</td>
-                <td class="text-center">
-                  <p-checkbox
-                    [(ngModel)]="role.sims"
-                    (onChange)="updateRoleState(role, 'SIMS', $event)"
-                    binary="true"
-                  >
-                    <!-- [disabled]="selectedRow !== i" -->
-                  </p-checkbox>
-                </td>
-                <td class="text-center">
-                  <p-checkbox
-                    binary="true"
-                    [(ngModel)]="role.audit"
-                    (onChange)="updateRoleState(role, 'AUDIT', $event)"
-                  >
-                    <!-- [disabled]="selectedRow !== i" -->
-                  </p-checkbox>
-                </td>
-                <td class="text-center">
-                  <p-checkbox
-                    binary="true"
-                    [(ngModel)]="role.gainer"
-                    (onChange)="updateRoleState(role, 'GAINER', $event)"
-                  >
-                    <!-- [disabled]="selectedRow !== i" -->
-                  </p-checkbox>
-                </td>
-                <td class="text-center">
-                  <p-checkbox
-                    binary="true"
-                    [(ngModel)]="role.it"
-                    (onChange)="updateRoleState(role, 'IT', $event)"
-                  >
-                    <!-- [disabled]="selectedRow !== i" -->
-                  </p-checkbox>
-                </td>
-                <td class="text-center">
-                  <p-checkbox
-                    binary="true"
-                    [(ngModel)]="role.hr"
-                    (onChange)="updateRoleState(role, 'HR', $event)"
-                  >
-                    <!-- [disabled]="selectedRow !== i" -->
-                  </p-checkbox>
-                </td>
-                <td class="text-center">
-                  <p-checkbox
-                    binary="true"
-                    [(ngModel)]="role.other"
-                    (onChange)="updateRoleState(role, 'OTHERS', $event)"
-                  >
-                    <!-- [disabled]="selectedRow !== i" -->
-                  </p-checkbox>
-                </td>
-                <!-- <td class="text-center" *ngIf="userPermissions?.edit1">
+           [value]="roles"
+           [paginator]="true"
+           [rows]="20"
+           paginatorDropdownAppendTo="body"
+           class="view-data custom-paginator"
+           styleClass="{width:80%}"
+           [rowsPerPageOptions]="[20,40,60,80,100]"
+           class="bg-white    border !h-auto  border-gray-200 "
+      >
+       <ng-template pTemplate="header">
+           <tr>
+               <th>Role Name</th>
+               <th class="text-center">SIMS</th>
+               <th class="text-center">AUDIT</th>
+               <th class="text-center">GAINER</th>
+               <th class="text-center">IT</th>
+               <th class="text-center">HR</th>
+               <th class="text-center">OTHERS</th>
+               <th class="text-center" *ngIf="userPermissions?.edit1">Action</th>
+               <th class="text-center" *ngIf="userPermissions?.delete1">Delete</th>
+               <!-- <th class="text-center">Action</th>
+               <th class="text-center" >Delete</th> -->
+           </tr>
+       </ng-template>
+       <ng-template pTemplate="body" let-role let-i="rowIndex">
+           <tr [class.selected]="selectedRow === i">
+               <td>{{role.name}}</td>
+               <td class="text-center">
+                   <p-checkbox 
+                       [(ngModel)]="role.sims" 
+                       (onChange)="updateRoleState(role, 'SIMS', $event)"
+                      
+                       binary="true">
+                       <!-- [disabled]="selectedRow !== i" -->
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.audit" 
+                       (onChange)="updateRoleState(role, 'AUDIT', $event)"
+                       >
+                       <!-- [disabled]="selectedRow !== i" -->
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.gainer" 
+                       (onChange)="updateRoleState(role, 'GAINER', $event)"
+                      >
+                      <!-- [disabled]="selectedRow !== i" -->
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.it" 
+                       (onChange)="updateRoleState(role, 'IT', $event)"
+                       >
+                       <!-- [disabled]="selectedRow !== i" -->
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.hr" 
+                       (onChange)="updateRoleState(role, 'HR', $event)"
+                      >
+                      <!-- [disabled]="selectedRow !== i" -->
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.other" 
+                       (onChange)="updateRoleState(role, 'OTHERS', $event)"
+                       >
+                       <!-- [disabled]="selectedRow !== i" -->
+                   </p-checkbox>
+               </td>
+               <!-- <td class="text-center" >
                    <i class="bx bx-edit cursor-pointer"  (click)="editRow(i,role)"></i>
                </td>
                
-                   <td class="p-2" *ngIf="userPermissions?.delete1"><mat-slide-toggle 
+                   <td class="p-2" ><mat-slide-toggle 
                      
                     [ngModel]="setToggleState(role)" 
                     (ngModelChange)="onStatusChange(role,role.status)">
                 </mat-slide-toggle></td> -->
-                <td class="text-center">
-                  <i
-                    class="bx bx-edit cursor-pointer"
-                    (click)="editRow(i, role)"
-                  ></i>
-                </td>
-
-                <td class="p-2">
-                  <p-toggleswitch
-                    [ngModel]="setToggleState(role)"
-                    (ngModelChange)="onStatusChange(role, role.status)"
-                  >
-                    ></p-toggleswitch
-                  >
-                </td>
-              </tr>
-              <tr class="text-center" *ngIf="role.showErrorMessage">
-                <td colspan="8" class="text-center">
-                  <div class="text-red-500 mt-1" style="font-size: 12px">
+                <td class="text-center" *ngIf="userPermissions?.edit1">
+                  <i class="bx bx-edit cursor-pointer"  (click)="editRow(i,role)"></i>
+              </td>
+              
+                  <td class="p-2 text-center" *ngIf="userPermissions?.delete1">
+               <p-toggleswitch  [ngModel]="setToggleState(role)" 
+               (ngModelChange)="onStatusChange(role,role.status)"> ></p-toggleswitch>
+              </td>
+            
+           </tr>
+           <tr class="text-center" *ngIf="role.showErrorMessage">
+            <td colspan="8" class="text-center">
+                <div class="text-red-500 mt-1" style="font-size: 12px;">
                     One of the business verticals must be selected!
                   </div>
                 </td>
@@ -178,10 +184,10 @@
       header="Edit Role"
       [modal]="true"
       [(visible)]="visible"
-      [style]="{ width: '60%' }"
+      [style]="{ width: '80%' }"
     >
       <div
-        class="card w-[70vw] h-auto md:w-[70vw] flex flex-col justify-start p-3 bg-[#FDF5E6] rounded-lg shadow-lg"
+        class="card w-[75vw] h-auto md:w-[75vw] flex flex-col justify-start p-3 bg-[#FDF5E6] "
       >
         <p-table
           styleClass="p-datatable-striped"
@@ -190,7 +196,7 @@
           [paginator]="true"
           [rows]="25"
           [value]="allModules"
-          class="bg-white w-full !rounded-lg border !h-[50vh] border-gray-200 shadow-md"
+          class="bg-white w-full  border !h-[50vh] border-gray-200 "
         >
           <!-- Table Header -->
           <ng-template pTemplate="header">

@@ -11,6 +11,7 @@ import { GlobalBlockUiService } from './services/global-block-ui.service';
 import { SidebarService } from './services/sidebar.service';
 import { HomePageService } from './services/home-page/home-page.service';
 import { UtilitiesService } from './services/utilities.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -50,9 +51,20 @@ export class AppComponent {
       this.isLoading=loading;
     })
 
-    this.router.events.subscribe(() => {
-      // Update whether the current route is the login page
-      this.isLoginPage = this.router.url.includes('/login');
+    // this.router.events.subscribe(() => {
+    //   // Update whether the current route is the login page
+    //   this.isLoginPage = this.router.url.includes('/login');
+      
+    // });
+
+    this.router.events
+    .pipe(filter((event:any) => event instanceof NavigationEnd))
+    .subscribe((event: NavigationEnd) => {
+      const url = event.urlAfterRedirects;
+
+      this.isLoginPage = 
+        url.includes('/login') ||
+        url.includes('/core/update-user-password');
     });
     this.fetchUserinfo(this.token,'d');
   }

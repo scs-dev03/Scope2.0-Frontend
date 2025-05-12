@@ -87,10 +87,11 @@ export class ViewCreateUserComponent {
         let designationObj=this.designations.find((obj:any)=>{ return obj.id==rowData.designationId})
         let roleObj=this.roles.find((obj:any)=>{return obj.id==rowData.roleId})
         let verticalObj=this.associatedBusinesses.find((obj:any)=>{return obj.id==rowData.business_vertical})
-        let statusObj=this.statuses.find((obj:any)=>{return obj.name==rowData.status})
-        //console.log(roleObj,designationObj,verticalObj,statusObj)
+         let statusObj=this.statuses.find((obj:any)=>{return obj.name==rowData.status?'Active':'Inactive'})
+       // console.log(roleObj,designationObj,verticalObj,statusObj,rowData)
         this.editUserForm.patchValue({
-          name: rowData.name,
+          name: rowData.vcFirstName,
+          lastName:rowData.vcLastName,
           email: rowData.emailId,
           designation: designationObj ? designationObj.id : null,  // Patch the ID, not the name
           role: roleObj ? roleObj.id : null,  // Patch the ID, not the name
@@ -126,7 +127,7 @@ export class ViewCreateUserComponent {
       this.authService.checkEmail({email:this.editUserForm.value.email}).subscribe(
         (response) => {
           this.emailArray=response.data;
-        //  console.log(this.emailArray)
+          console.log(this.emailArray)
         },
         (error) => {
          
@@ -154,7 +155,7 @@ export class ViewCreateUserComponent {
     }
             }
           }
-         // console.log("result",this.userPermissions)
+       //  console.log("result",this.userPermissions)
          
         }
       );
@@ -173,7 +174,7 @@ export class ViewCreateUserComponent {
   
         this.emailArray.forEach((item: any) => {
           // Check if the email exists in the array
-          if (item.emailId === this.editUserForm.value.email) {
+          if (item.vcEmail === this.editUserForm.value.email) {
             this.showErrorMessage = '';
             //this.userName=item.name
             emailExists = true; // Email found, set flag to true
@@ -198,14 +199,18 @@ export class ViewCreateUserComponent {
       }
   
       setToggleState(product: any): boolean {
-        return product.status === 'Active'; // true if 'Active', false if 'Inactive'
+        // return product.status === 'Active'; // true if 'Active', false if 'Inactive'
+       // console.log("product in set toggle state 202 ",product)
+        // return product.status ==true;
+        return product.status==true?true:false
       }
     
       onStatusChange(product: any,status:any) {
         // this.setToggleStatus(product, this.getToggleStatus(product));
         //let status=product.status === 'Active' ? 'Inactive' : 'Active'
         // This ensures that the status is updated correctly when toggling
-        product.status = product.status === 'Active' ? 'Inactive' : 'Active';
+       // console.log("product 209 ",product,status)
+        product.status = product.status == true ? false : true;
   
        // console.log(product);
         this.globalBlockUiService.startLoading();

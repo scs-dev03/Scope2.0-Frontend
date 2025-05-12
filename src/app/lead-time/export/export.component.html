@@ -15,18 +15,18 @@
   />
     <app-header></app-header>
 </div> -->
-  <div class="body d-flex ">
+  <div class="body d-flex ml-10">
    
     <!-- <div>
       <app-sidebar></app-sidebar>
     </div> -->
     <div class="row col">
-        <!-- *ngIf=" !userPermissions.edit1 && !userPermissions.add1 && !userPermissions.view1 && !userPermissions.delete1" -->
-      <!-- <div class="d-flex justify-center align-items-center" >
+        
+       <div class="d-flex justify-center align-items-center"  *ngIf=" !userPermissions.edit1 && !userPermissions.add1 && !userPermissions.view1 && !userPermissions.delete1" >
         <h2>You do not have the access for User Management</h2>  
-    </div> -->
+    </div> 
     <!-- *ngIf="userPermissions.length>0 || userPermissions?.edit1 ||  userPermissions?.add1 || userPermissions?.view1 || userPermissions?.delete1" -->
-      <form [formGroup]="exportForm" >
+      <form [formGroup]="exportForm" *ngIf="userPermissions.length>0 || userPermissions?.edit1 ||  userPermissions?.add1 || userPermissions?.view1 || userPermissions?.delete1">
         <!-- <div class="font-semibold row ms-2">
           <span class=" ms-2  d-flex align-items-center text-[20px]">Lead Time Export</span>
         </div> -->

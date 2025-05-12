@@ -18,8 +18,7 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 })
 export class AdminVonComponent {
   ngOnInit(): void {
-    localStorage.clear()
-
+    
     this.fetchBrandData();
     console.log(this.adminFilterData.value.dealer);
     
@@ -68,8 +67,8 @@ export class AdminVonComponent {
   // formgroup for filter
   adminFilterData = new FormGroup({
     brand: new FormControl<number | null>(null,[Validators.required]),
-    dealer: new FormControl('',[Validators.required]),
-    location: new FormControl('',[Validators.required]),
+    dealer: new FormControl(),
+    location: new FormControl(),
     max: new FormControl(),
     partnumber: new FormControl(),
     model: new FormControl(),

@@ -5,7 +5,7 @@
 <!-- <button (click)="closeSidebar()">Close</button> -->
 <div class="sidebar ">
   <div class="logo-section">
-    <img src="Scs-logo.png" alt="Logo" class="sidebar-logo" />
+    <img src="Scs-logo.png" alt="Logo" class="sidebar-logo" [routerLink]="['/core/home']"  />
   </div>
 
   <!-- Search Section -->
@@ -33,7 +33,7 @@
     >
       <a [routerLink]="item.route" *ngIf="!item.children">{{ item.value }}</a>
 
-      <!-- Parent item with toggle for children -->
+       Parent item with toggle for children -->
       <!-- <div
         *ngIf="item.children"
         (click)="toggleChildren(item)"
@@ -62,7 +62,7 @@
       </ul>
     </li>  -->
 
-    <li *ngFor="let item of sidebarItems" [class.active]="item.isActive" class="f-13">
+    <li *ngFor="let item of filteredItems" [class.active]="item.isActive" class="f-13">
         
       <!-- Main Menu Item -->
       <a 
@@ -79,7 +79,7 @@
       </a>
       
       <a 
-        class="menu-item submenu-title cursor-pointer text-balance line-clamp-1 full-name" 
+        class="ml-3  submenu-title cursor-pointer text-balance line-clamp-1 full-name menu-item" 
         [routerLink]="item.module_route"  *ngIf="item.subchildren.length==0"
         routerLinkActive="active" 
         (click)="toggleSubMenu(item)" 
@@ -91,8 +91,9 @@
       </a>
       <!-- Submenu -->
       <ul *ngIf="item.isOpen" class="submenu">
-        
-        <li *ngFor="let subItem of item.subchildren" class="subsidebar f-12 menu-item child ms-3">
+       
+        <li *ngFor="let subItem of item.subchildren" class="subsidebar  child  f-12 ms-3 menu-item">
+          <i class='bx bx-circle f-8'></i>
           <a 
             [routerLink]="subItem.module_route" 
             routerLinkActive="active" 

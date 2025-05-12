@@ -272,6 +272,7 @@ export class SingleLocationComponent {
 
    exportUploadedData(){
     
+    
     const modifiedData = this.uploadedData.map((item: any) => ({
      
       ['Part Number']: item.partnumber , 
@@ -303,7 +304,7 @@ export class SingleLocationComponent {
           ['Current Records']: item.stockUploadCount !=null?item.stockUploadCount:0,
           ['Previous Sum Quantity']: item.prevQuantitySum !=null ?item.prevQuantitySum:0,
           ['Current Sum Quantity']: item.quantitySum !=null ?item.quantitySum :0,
-          ['Added On ']: (item.added_on),
+          ['Added On ']: this.formatDate(item.added_on),
           ['Added By ']:'Kirti'
          
     
@@ -329,13 +330,14 @@ export class SingleLocationComponent {
       this.addedBy='Kirti'
      this.records= this.records.map((item:any)=>({
         ...item,
-        added_on: this.formatDate(item.added_on),
+         added_on: new Date(item.added_on),
+       
         added_by:this.addedBy
       }))
     })
    }
 
-   formatDate(dateString: string): string {
+   formatDate(dateString: string) {
     const date = new Date(dateString); // Parse the input string as a date
   
     // Check if the Date object is valid
@@ -353,6 +355,7 @@ export class SingleLocationComponent {
   
     // Combine and return the formatted string as 'DD-MM-YYYY HH:MM:SS'
     return `${day}-${month}-${year} ${hours}:${minutes}`;
+   
   }
 
    

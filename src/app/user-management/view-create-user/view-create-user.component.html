@@ -25,32 +25,32 @@
     <app-sidebar></app-sidebar>
   </div> -->
   <!-- *ngIf="userPermissions.length>0 && !userPermissions?.edit1 && userPermissions?.add1 && !userPermissions?.view1 && !userPermissions?.delete1" -->
-  <!-- <div class="d-flex justify-center h-[80vh] w-full align-items-center" >
+  <div class="d-flex justify-center h-[80vh] w-full align-items-center" *ngIf="userPermissions.length>0 && !userPermissions?.edit1 && userPermissions?.add1 && !userPermissions?.view1 && !userPermissions?.delete1" >
  <h2>You do not have the access for User Management</h2>  
- </div>   -->
+ </div>  
   
     <div class=" mx-5 overflow-hidden">
    
-      <div class="d-flex justify-content-between ">
+      <div class="d-flex justify-content-between " *ngIf="userPermissions?.view1">
         <!-- *ngIf="userPermissions?.view1" -->
         <div class="mb-3" >
             <span class="font-bold f-18" >View Users</span>
         </div>
         <div>
             <!-- *ngIf="userPermissions?.add1" in i tag -->
-          <i class="pi pi-user cursor-pointer me-3"  style="font-size: 1.5rem !important;font-weight:bold " (click)="showDialog('Add User')"></i>
+          <i class="pi pi-user cursor-pointer me-3"  style="font-size: 1.5rem !important;font-weight:bold " *ngIf="userPermissions?.add1" (click)="showDialog('Add User')"></i>
           <!-- *ngIf="userPermissions?.view1" in i tag -->
-          <i class='bx bx-export cursor-pointer' style="font-size: 1.5rem;font-weight:bold" (click)="exportToExcel()" ></i>
+          <i class='bx bx-export cursor-pointer' style="font-size: 1.5rem;font-weight:bold" *ngIf="userPermissions?.view1" (click)="exportToExcel()" ></i>
           
         </div>
       </div >
       <!-- [tableStyle]="{ 'min-width': '40rem' }" -->
       <!-- *ngIf="userPermissions?.view1" -->
-       <div class="card h-auto flex flex-col justify-start p-3 bg-[#FDF5E6] rounded-lg shadow-lg" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[60vw]':'w-[80vw]'" >
+       <div class="card h-auto flex flex-col justify-start p-3 bg-[#FDF5E6] rounded-lg " *ngIf="userPermissions?.view1" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[60vw]':'w-[80vw]'" >
          <p-table 
          [value]="users" 
          [paginator]="true"
-         [rows]="50"
+         [rows]="100"
          [rowsPerPageOptions]="[100,200, 300, 400, 500, 600,700,800,900,1000]"
          styleClass="p-datatable-gridlines" 
           dataKey="code"
@@ -68,10 +68,10 @@
                      <th>Associated Business</th>
                      <th>Email</th>
                      <th>Mobile</th>
-                     <!-- <th *ngIf="this.userPermissions?.edit1">Action</th>
-                     <th *ngIf="this.userPermissions?.delete1">Status</th> -->
-                     <th >Action</th>
-                     <th >Status</th>
+                     <th *ngIf="this.userPermissions?.edit1">Action</th>
+                     <th *ngIf="this.userPermissions?.delete1">Status</th>
+                     <!-- <th >Action</th>
+                     <th >Status</th> -->
                  </tr>
              </ng-template>
              <ng-template pTemplate="body" let-product>
@@ -82,22 +82,16 @@
                      <td>{{ product.associatedBusiness }}</td>
                      <td>{{ product.emailId }}</td>
                      <td>{{ product.mobileNo }}</td>
-                     <!-- <td class="text-center" *ngIf="this.userPermissions?.edit1" ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td>
-                     <td class="p-2" *ngIf="this.userPermissions?.delete1"><mat-slide-toggle 
+                     <td class="text-center" *ngIf="this.userPermissions?.edit1" ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td>
+                     <td class="p-2" *ngIf="this.userPermissions?.delete1"><p-toggleswitch [ngModel]="setToggleState(product)" 
+                      (ngModelChange)="onStatusChange(product,product.status)"> ></p-toggleswitch></td>
+                       </tr>
+                     <!-- <td class="text-center"  ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td> -->
+                     <!-- <td class="p-2" > -->
                      
-                     [ngModel]="setToggleState(product)" 
-                     (ngModelChange)="onStatusChange(product,product.status)"> -->
-                     <td class="text-center"  ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td>
-                     <td class="p-2" >
-                      <!-- <mat-slide-toggle 
-                     
-                     [ngModel]="setToggleState(product)" 
-                     (ngModelChange)="onStatusChange(product,product.status)">
-
-                 </mat-slide-toggle> -->
-                <p-toggleswitch [ngModel]="setToggleState(product)" 
+                <!-- <p-toggleswitch [ngModel]="setToggleState(product)" 
                 (ngModelChange)="onStatusChange(product,product.status)"> ></p-toggleswitch></td>
-                 </tr>
+                 </tr> -->
              </ng-template>
      </p-table>
 

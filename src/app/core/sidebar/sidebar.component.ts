@@ -8,6 +8,8 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { TieredMenu } from 'primeng/tieredmenu';
 import { SidebarService } from '../../services/sidebar.service';
+import { SharedServiceService } from '../../services/shared-service.service';
+import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -54,7 +56,7 @@ export class SidebarComponent {
       // Filter items based on search query
       this.filteredItems = this.sidebarItems.map((item:any) => {
         // Check if the parent matches the search query
-        let matchesParent = item.value.toLowerCase().includes(this.searchQuery.trim().toLowerCase());
+        let matchesParent = item?.parentModuleName?.toLowerCase().includes(this.searchQuery.trim().toLowerCase());
     
         if (item.children) {
           // Filter child items that match the search query
@@ -79,7 +81,7 @@ export class SidebarComponent {
         return null; // Exclude items that don't match
       }).filter((item:any) => item !== null);  // Remove null values
 
-      
+       //console.log("filtereed items ",this.filteredItems)
     }
     
     openSidebar() {
@@ -174,20 +176,26 @@ export class SidebarComponent {
   this.getModules();
 }
 
-constructor(private sidebarService:SidebarService){}
+constructor(private sidebarService:SidebarService,private sharedService:SharedServiceService,
+  private globalBlockUiService:GlobalBlockUiService
+){}
    
 
 getModules(){
+  this.globalBlockUiService.startLoading();
   this.sidebarService.getModules().subscribe((res:any)=>{
     this.sidebarItems=res.data;
+    this.globalBlockUiService.stopLoading();
     this.transformData(this.sidebarItems)
+  },(error:any)=>{
+    this.globalBlockUiService.stopLoading();
   })
 }
 transformData(data: any) {
   const groupedData: { [key: string]: any } = {};
   const directParents: any[] = [];
 
-  data.forEach((item: any) => {
+  data?.forEach((item: any) => {
     const parentName = item.parentModuleName;
 
     // ✅ Handle missing, "null", or NULL strings as direct parent
@@ -226,11 +234,16 @@ transformData(data: any) {
 
   const combinedResult = [...Object.values(groupedData), ...directParents];
   this.sidebarItems = combinedResult;
-  console.log("sidebar ",this.sidebarItems)
- // this.sendDataToUser(this.sidebarItems);
+  //console.log("sidebar ",this.sidebarItems)
+  this.sendDataToUser(this.sidebarItems);
+  this.filteredItems = [...this.sidebarItems];
   return combinedResult;
 }
 
+sendDataToUser(data:any) {
+    
+  this.sharedService.updateSidebarData(data);
+}
 
 
 toggleSubMenu(item: any) {

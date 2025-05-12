@@ -1,9 +1,14 @@
+body{
+  transform: none !important;
+}
 .card{
     /* box-shadow:  10px 10px 40px #bebebe38,
     -40px -40px 40px #FFFFFF;   */
     /* top: 20vh;  */
     border:none;
     background-color: var(--primary-color);
+    margin-left: 2.5rem !important;
+    transform:none !important
 }
 .btn-view{
     border-radius: 8px;
@@ -15,14 +20,16 @@
 :host ::ng-deep button.p-ripple.p-button.p-component.p-fileupload-choose-button.undefined{
   border: none !important;
   outline: none !important;
+  padding: 3px !important;
 }
 
 :host ::ng-deep button.p-ripple.p-button.p-component.p-button-secondary{
     border: none !important;
   outline: none !important;
-  /* background-color: rgba(0, 0, 255, 0.164); */
-  background-color: rgb(0 0 255 / 34%);
-  padding: 8px;
+  background-color: rgb(12 98 182 / 69%) !important;
+  color: white !important;
+  /* background-color: rgb(0 0 255 / 34%); */
+  padding: 3px;
   border-radius: 4px;
   z-index: auto;
   
@@ -42,26 +49,91 @@
     /* background-color: antiquewhite; */
     background-color: var(--primary-color);
     border-radius: 6px;
+    display: flex !important;
 }
 
 :host ::ng-deep .p-select-list-container{
     max-height: 260px !important;
-    width: 225px !important;
+    width: 160px !important;
     overflow-x:hidden;
 }
 
 :host ::ng-deep .disabled {
-    pointer-events: none; /* Prevents clicking on the element */
-    color: white; /* Optional: Change color to indicate it's disabled */
-    background-color: darkred;
+    /* pointer-events: none;  */
+    color: red; /* Optional: Change color to indicate it's disabled */
+   /* background-color: darkred; */
     cursor: not-allowed; /* Changes the cursor to indicate it's disabled */
   }
 
   ::ng-deep button.p-ripple.p-paginator-page.ng-star-inserted.p-paginator-page-selected {
-    background-color: #007bff7d !important; /* Change background color */
+    background-color: #007bff7d !important;
     color: white !important; /* Change text color */
+  
     font-weight: bold !important;
     border-radius: 5px;
     border: none;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    height:30px !important;
+    font-size: 12px !important;
   }
+
+  :host ::ng-deep .dropdown{
+    transform: none !important;
+    width: 10rem !important;
+    font-size: 12px !important;
+  }
+
+  :host ::ng-deep .p-select-label.p-placeholder{
+    padding: 5px !important;
+  }
+
+  :host ::ng-deep .p-select-label{
+    padding:5px !important;
+    font-size: 12px !important;
+  }
+
+  .truncate-file-name {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 5px !important;
+  }
+
+  :host ::ng-deep .p-fileupload-advanced{
+    border: none !important;
+    border-radius: none !important;
+    background: none !important;
+    display: flex!important;
+    align-items: center !important;
+  }
+
+  :host ::ng-deep .p-fileupload-header{
+    border-radius: 0rem !important;
+    padding:0rem !important;
+    background: none !important;
+  }
+
+  :host ::ng-deep .p-fileupload-content{
+    gap: 0rem !important;
+    padding: 0rem !important;
+  }
+
+  :host ::ng-deep .p-fileupload-content .p-progressbar{
+    display: none !important;
+  }
+
+  :host ::ng-deep .p-datatable{
+    transform: none !important;
+  }
+
+  :host ::ng-deep .p-icon{
+    height: 11px !important;
+  }
+
+  :host ::ng-deep .p-paginator-current{
+    font-size: 12px;
+    order: 2;
+    margin-left: 20px !important;
+  }
+  

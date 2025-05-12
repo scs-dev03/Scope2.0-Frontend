@@ -362,7 +362,7 @@ response:any=[];
         // Return the updated item with formatted date, locationName, and added_by
         return {
           ...item,
-          added_on: this.formatDate(item.added_on),  // Format the added_on date
+          added_on: (item.added_on),  // Format the added_on date
           locationName: locObj?.location_name || '',  // Default locationName if not found
           added_by: this.addedBy || ''  // Ensure added_by is always set, defaulting to empty string if undefined
         };
@@ -423,7 +423,7 @@ response:any=[];
                 ['Current Records']: item.stockUploadCount !=null?item.stockUploadCount :0,
                 ['Previous Sum Quantity']: item.prevQuantitySum !=null ?item.prevQuantitySum:0,
                 ['Current Sum Quantity']: item.quantitySum  !=null ?item.quantitySum:0,
-                ['Added On ']: item.added_on,
+                ['Added On ']: this.formatDate(item.added_on),
                 ['Added By ']:'Kirti'
                
           
