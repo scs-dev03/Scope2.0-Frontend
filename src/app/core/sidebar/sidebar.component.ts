@@ -186,6 +186,7 @@ logOut(){
   localStorage.clear();
   window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx';
 }
+
 getModules(){
   this.globalBlockUiService.startLoading();
   this.sidebarService.getModules().subscribe((res:any)=>{
@@ -196,10 +197,14 @@ getModules(){
     this.globalBlockUiService.stopLoading();
   })
 }
+
+ngAfterViewInit(){
+  this.getModules();
+}
 transformData(data: any) {
   const groupedData: { [key: string]: any } = {};
   const directParents: any[] = [];
-
+console.log("type of ",typeof data,data)
   data?.forEach((item: any) => {
     const parentName = item.parentModuleName;
 

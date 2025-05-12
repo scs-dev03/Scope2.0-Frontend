@@ -66,6 +66,7 @@ export class AppComponent {
         url.includes('/login') ||
         url.includes('/core/update-user-password');
     });
+    this.token=localStorage.getItem('usertoken')
     this.fetchUserinfo(this.token,'d');
   }
 

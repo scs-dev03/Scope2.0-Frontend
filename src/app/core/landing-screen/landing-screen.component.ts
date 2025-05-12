@@ -24,7 +24,6 @@ export class LandingScreenComponent {
 
   ngOnInit() {
 
-    localStorage.clear()
     this.route.queryParams.subscribe(params => {
       this.usertoken = params['usertoken'];
       this.usertype = params['usertype'];
@@ -47,17 +46,14 @@ export class LandingScreenComponent {
     this.fetchUserinfo(this.usertoken,this.usertype)
 
    
-    
-    
-   
-     
-
+    this.getUserId();
+  
     
   }
 
   getUserId(){
-    let userToken=localStorage.getItem('usertoken');
-    this.utilitiesService.getUserInfo({token:userToken}).subscribe((res:any)=>{
+   
+    this.utilitiesService.getUserInfo({token:this.usertoken}).subscribe((res:any)=>{
 
       localStorage.setItem('userId',res?.data[0]?.userId);
     })
