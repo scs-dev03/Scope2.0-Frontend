@@ -54,21 +54,7 @@ body.loader {
     width: 10rem !important;
     font-size: 12px !important;
   }
-<<<<<<< HEAD
- /* button.p-ripple.p-button.p-component.p-button-secondary{
-    border: none !important;
-  outline: none !important;
-  background-color: rgb(12 98 182 / 69%) !important;
-  color: white !important;
-  padding: 3px;
-  border-radius: 4px;
-  z-index: auto;
-  
-} */
-=======
  
->>>>>>> fb90367900e76234080f8ee1bd726594fc4bbfd6
-
 .p-select-label{
     padding:5px !important;
     font-size: 12px !important;
