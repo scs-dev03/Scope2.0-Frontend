@@ -58,7 +58,7 @@
         <div
           class="card p-3 h-auto bg-[#FDF5E6] rounded-lg"
           [ngClass]="
-            isSidebarVisible ? ' w-[100vw] w-[80vw]   md:w-[60vw]' : 'w-[85vw]'
+            isSidebarVisible ? ' w-[100vw] w-[80vw]   md:w-[72vw]' : 'w-[90vw]'
           "
         >
           <p-table
@@ -161,7 +161,7 @@
                   <i class="bx bx-edit cursor-pointer"  (click)="editRow(i,role)"></i>
               </td>
               
-                  <td class="p-2" *ngIf="userPermissions?.delete1">
+                  <td class="p-2 text-center" *ngIf="userPermissions?.delete1">
                <p-toggleswitch  [ngModel]="setToggleState(role)" 
                (ngModelChange)="onStatusChange(role,role.status)"> ></p-toggleswitch>
               </td>
