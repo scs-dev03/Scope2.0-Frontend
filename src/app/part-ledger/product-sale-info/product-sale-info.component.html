@@ -123,7 +123,7 @@
       [rows]="10"
       [rowsPerPageOptions]="[20, 30, 40, 50, 100]"
       [showGridlines]="true"
-      scrollDirection="both"
+      [scrollDirection]="'both'"
       ngClass=" !w-[90vw] "
       sortable="true"
       [tableStyle]="{ 'min-width': '50rem' }"
@@ -135,56 +135,20 @@
           <th pSortableColumn="Location" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Location<p-sortIcon field="Location" /></th>
           <th pSortableColumn="Months" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Month<p-sortIcon field="Months" /></th>
           <th pSortableColumn="ClosingStocks" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Closing Stocks <p-sortIcon field="ClosingStocks" /></th>
-          <th *ngFor="let col of DataTypeArray" pSortableColumn="col" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">{{ col }}
+          <th *ngFor="let col of DataTypeArray" [pSortableColumn]="col" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">{{ col }}
             <p-sortIcon [field]="col"/>
           </th>
-          <!-- <th pSortableColumn="WorkshopSale" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Workshop Sale <p-sortIcon field="WorkshopSale" /></th>
-          <th pSortableColumn="Counter" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Counter <p-sortIcon field="Counter" /></th>
-          <th pSortableColumn="StockTransferOut" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Stock Transfer Out <p-sortIcon field="StockTransferOut" /></th>
-          <th pSortableColumn="AdjustmentOut" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Adjustment Out <p-sortIcon field="AdjustmentOut" /></th>
-          <th pSortableColumn="PaidSale" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Paid Sale <p-sortIcon field="PaidSale" /></th>
-          <th pSortableColumn="WarrantySale" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Warranty Sale <p-sortIcon field="WarrantySale" /></th>
-          <th pSortableColumn="FOCSales" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">FOC Sales <p-sortIcon field="FOCSales" /></th>
-          <th pSortableColumn="GoodwillSale" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Goodwill Sale <p-sortIcon field="GoodwillSale" /></th>
-          <th pSortableColumn="NormalPurchase" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Normal Purchase <p-sortIcon field="NormalPurchase" /></th>
-          <th pSortableColumn="StockTransferIn" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Stock Transfer In <p-sortIcon field="StockTransferIn" /></th>
-          <th pSortableColumn="JobcardReturnValue" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Jobcard Return Value <p-sortIcon field="JobcardReturnValue" /></th>
-          <th pSortableColumn="CounterSaleReturn" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Counter Sale Return <p-sortIcon field="CounterSaleReturn" /> </th>
-          <th pSortableColumn="EmergencyPurchase" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Emergency Purchase <p-sortIcon field="EmergencyPurchase" /></th>
-          <th pSortableColumn="VORPurchase" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">VOR Purchase <p-sortIcon field="VORPurchase" /></th>
-          <th pSortableColumn="CoDlrPurchase" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Co Dealer Purchase <p-sortIcon field="CoDlrPurchase" />  </th>
-          <th pSortableColumn="OEMPurchase" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">OEM Purchase <p-sortIcon field="OEMPurchase" /></th>
-          <th pSortableColumn="idk" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">IDK <p-sortIcon field="idk" /></th>
-          <th pSortableColumn="Others" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Others <p-sortIcon field="Others" /></th>
-        </tr> -->
+        </tr> 
       </ng-template>
       <ng-template #body let-sale let-i="rowIndex">
-        <tr pSortableColumn=""class="!border-b hover:!shadow-xl !hover:!border-2	 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0">
+        <tr class="!border-b hover:!shadow-xl !hover:!border-2	 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0">
           <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.Partnumber}}</td>
           <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.Location}}</td>
           <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.Months }}</td>
-        <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.ClosingStocks }}</td>
+          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.ClosingStocks }}</td>
           <td *ngFor="let col of DataTypeArray" class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale[col] }}</td>
          
-          <!--<td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.WorkshopSale }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.Counter }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.StockTransferOut }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.AdjustmentOut }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.PaidSale }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.WarrantySale }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.FOCSales }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.GoodwillSale }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.NormalPurchase }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.StockTransferIn }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.JobcardReturnValue }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.CounterSaleReturn }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.EmergencyPurchase }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.VORPurchase }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.CoDlrPurchase }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.OEMPurchase }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.idk }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.Others }}</td>
-        </tr> -->
+          </tr> 
       </ng-template>  
     </p-table>
     </div>

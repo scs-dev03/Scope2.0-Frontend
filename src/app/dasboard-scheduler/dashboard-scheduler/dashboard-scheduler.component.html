@@ -365,7 +365,7 @@
                   class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
                 >
                   DashBoard Name
-                  <p-columnFilter type="text" field="Dashboard" display="menu" />
+                  <p-columnFilter class="filter" type="text" field="Dashboard" display="menu" />
                 </th>
                 <th
                   class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
@@ -515,37 +515,40 @@
                 <td
                   class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
                 >
+                <!-- <p-button icon="pi pi-check" [rounded]="true" [text]="true" /> -->
                 <p-button
-                    class="m-1"
+                   
                     icon="pi pi-pen-to-square"
-                    [raised]="true"
+                    [text]="true"
                     [rounded]="true"
                     severity="info"
-                    aria-label="Edit"
+                     [size]="'large'"
+                  
                     (click)="showDialog(rowData)"
-                  ></p-button>
+                  />
     
                   @if (rowData.StatusName != 'Scheduled') {
                     <p-button
-                      class="m-1"
-                      icon="pi pi-trash"
-                      [raised]="true"
-                      severity="danger"
-                      [disabled]="true"
-                      [rounded]="true"
-                      aria-label="Delete"
-                      (click)="showDeleteDialog(rowData)"
-                    ></p-button>
+                   
+                    icon="pi pi-trash"
+                    [text]="true"
+                    [rounded]="true"
+                    severity="danger"
+                    [size]="'large'"
+                  
+                    (click)="showDeleteDialog(rowData)"
+                  />
                   } @else {
                     <p-button
-                      class="m-1"
-                      icon="pi pi-trash"
-                      [raised]="true"
-                      severity="danger"
-                      [rounded]="true"
-                      aria-label="Delete"
-                      (click)="showDeleteDialog(rowData)"
-                    ></p-button>
+                   
+                    icon="pi pi-trash"
+                    [text]="true"
+                    [rounded]="true"
+                    severity="danger"
+                     [size]="'large'"
+                  
+                    (click)="showDeleteDialog(rowData)"
+                  />
                   }
                 </td>
                 

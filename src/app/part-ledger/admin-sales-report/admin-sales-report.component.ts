@@ -304,6 +304,7 @@ export class AdminSalesReportComponent {
   exportToExcel() {
     const flatData = [...this.SalesInfo[0], ...this.SalesInfo[1]];
     const reorderedData = flatData.map(item => ({
+      Partnumber: item.Partnumber,
       LocationName: item.Location,
       Month: item.Months,
       ClosingStocks: item.ClosingStocks,
@@ -329,7 +330,19 @@ export class AdminSalesReportComponent {
     }));
     // Convert JSON to worksheet
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(reorderedData);
-    const partDetailsWorksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.PartDetail);
+    const partDetailsData = this.PartDetail.map((item: { partnumber: any; LatestPartno: any; partdesc: any; moq: any; category: any; landedcost: any; mrp: any; dateadded: any; }) => ({
+      PartNumber: item.partnumber,
+      Latest_Part_Number: item.LatestPartno,
+      partdesc: item.partdesc,
+      moq: item.moq,
+      category: item.category,
+      landedcost: item.landedcost,
+      mrp: item.mrp
+    }));
+    console.log("this is part details",partDetailsData);
+    
+
+    const partDetailsWorksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(partDetailsData);
 
     // Create a workbook
     const workbook: XLSX.WorkBook = {

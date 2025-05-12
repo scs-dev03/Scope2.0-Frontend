@@ -1,4 +1,8 @@
 <div class="relative h-[100vh] w-full bg-[#f6f6f6] ">
+
+    <div>
+      <h1 class="text-3xl ml-10 font-semibold">Dealer Norms Management</h1>
+    </div>
      
       <div class="flex w-auto flex-col gap-1 h-[100vh] ">
         <!-- filter form -->
@@ -307,7 +311,7 @@
                 <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
                   <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">S.No</th>
                   <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Location</th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Part Number <p-columnFilter type="text" field="partnumber" display="menu" /></th>
+                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Part Number <p-columnFilter type="text" field="partnumber" Class="my-custom-filter" display="menu" /></th>
                   <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Order Part Number</th>
                   <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Part Desc <p-columnFilter type="text" field="partdesc" display="menu" /></th>
                   <th pSortableColumn="landedconst" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Landed Cost <p-sortIcon field="landedcost" /></th>
@@ -341,7 +345,7 @@
                   <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.partnumber }}</td>
                   <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.orderpartnumber }}</td>
                   <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.partdesc }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.landedcost }}</td>
+                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.landedcost | number:'1.0-0' }}</td>
                   <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.Maxvalue }}</td>
                   <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.Avg3MSale }}</td>
                   <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.N1 }}</td>
