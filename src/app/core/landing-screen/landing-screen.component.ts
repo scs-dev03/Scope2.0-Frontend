@@ -45,7 +45,11 @@ export class LandingScreenComponent {
     localStorage.setItem('usertype',this.usertype)
     
     this.fetchUserinfo(this.usertoken,this.usertype)
-    this.getUserId();
+
+   
+    
+    
+   
      
 
     
@@ -82,6 +86,7 @@ export class LandingScreenComponent {
         }
     
         this.isloading = false;
+        this.getUserId();
         this.goToHomePage();
       },
       error: (err) => {

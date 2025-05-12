@@ -97,7 +97,7 @@ export class AppComponent {
     this.updateLoaderHeight();
     window.addEventListener('resize', () => this.updateLoaderHeight());
   }
-
+  
   ngAfterContentChecked() {
     this.updateLoaderHeight(); // Adjust height when content updates
   }
@@ -142,10 +142,10 @@ export class AppComponent {
     //   }
     // });
 
-    // this.utilitiesService.getUserInfo({token:usertoken}).subscribe((res:any)=>{
+    this.utilitiesService.getUserInfo({token:usertoken}).subscribe((res:any)=>{
 
-    //   localStorage.setItem('userId',res.data[0].userId);
-    // })
+      localStorage.setItem('userId',res.data[0].userId);
+    })
     
 
   }
