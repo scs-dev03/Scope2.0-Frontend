@@ -14,7 +14,8 @@
      class="bx bx-export cursor-pointer font-semibold mb-2 disabled"
      style="font-size: 20px;">
   </i> -->
-  <span class="btn-view mb-3 cursor-pointer"  (click)="downloadFormat()" >Download Format</span>
+  <!-- <span class="btn-view mb-3 cursor-pointer"  (click)="downloadFormat()" >Download Format</span> -->
+  <i class='bx bx-export  f-20 bx-rotate-180 btn-view mb-3 cursor-pointer'  pTooltip="Download Format" (click)="downloadFormat()"></i>
                         </div>
                         <div class=" add-mapping-card h-auto  flex flex-col" [ngClass]="visibleSidebar?'w-[70vw]':'w-[90vw]'">
                           <div class="  !flex !flex-row !gap-6 p-3 !items-center">
@@ -38,16 +39,37 @@
                             
                       <div>
                         
-                        <p-fileupload [multiple]="false" #fu1 class=" !line-clamp-3" mode="basic" chooseLabel="Choose"  chooseIcon="pi pi-upload" name="demo[]"
-                        [auto]="false" accept=".xlsx,.csv,.xls"  [multiple]="false" (onSelect)="onSelect($event)"  />
+                        <!-- <p-fileupload [multiple]="false" #fu1 class=" !line-clamp-3" mode="basic" chooseLabel="Choose"  chooseIcon="pi pi-upload" name="demo[]"
+                        [auto]="false" accept=".xlsx,.csv,.xls"  [multiple]="false" (onSelect)="onSelect($event)"  /> -->
                         <!-- <span>{{addFileName}}</span> -->
+                        <p-fileUpload
+                        #fu
+                        [customUpload]="true"
+                        [auto]="false"
+                        [showUploadButton]="false"
+                        [showCancelButton]="false"
+                        chooseLabel="Upload"
+                        chooseIcon="pi pi-upload"
+                        name="demo[]"
+                        accept=".xlsx,.csv,.xls"
+                        [multiple]="false"
+                        (onSelect)="onSelect($event)"
+                        
+                      >
+                        <!-- Truncated file name with tooltip -->
+                        <ng-template let-file pTemplate="file">
+                          <div class="truncate-file-name" [title]="file.name">
+                            {{ file.name.length > 10 ? (file.name | slice: 0: 10) + '...' : file.name }}
+                          </div>
+                        </ng-template>
+                      </p-fileUpload>
                         <div class=" d-flex mt-1" *ngIf="dlForm.get('file')?.touched && dlForm?.get('file')?.invalid " >
                           <small *ngIf="dlForm?.get('file')?.hasError('required')" style="color: red; font-size: 12px;">File is required.</small> 
                       </div>
                       </div>
                     
                        
-                        <p-button label="Upload" class="" (onClick)="onUpload()" severity="secondary" [disabled]="isDataPresent" />
+                        <p-button label="Submit" class="" (onClick)="onUpload()" severity="secondary" [disabled]="isDataPresent" />
                       
                         <p-button label="Edit" class="" (onClick)="showEditPopup()" severity="secondary" [disabled]="!isDataPresent" />
                         <!-- <p-button label="View" [ngClass]="isViewMapping?'cursor-pointer':''" [disabled]="!isViewMapping" (onClick)="viewMapping()" severity="secondary"  />  -->
@@ -64,7 +86,7 @@
                 </div>
                 <div
                 class="card   h-auto  p-3 bg-gray-50 rounded-lg shadow-lg mb-5 mt-4 "
-                *ngIf="showTable" [ngClass]="visibleSidebar?'w-[70vw]':'w-[85vw]'"
+                *ngIf="showTable" [ngClass]="visibleSidebar?'w-[70vw]':'w-[90vw]'"
                 >
                 <div class="d-flex justify-end mb-2">
                   <div class="flex flex-wrap gap-4">
@@ -191,6 +213,8 @@
                     <p-fileupload [multiple]="false" #fu class=" !line-clamp-3" mode="basic" chooseLabel="Choose"  chooseIcon="pi pi-upload" name="demo[]"
                     [auto]="false" accept=".xlsx,.csv,.xls" [multiple]="false" (onSelect)="onSelect($event)"   />
                     <!-- <span>{{fileName}}</span> -->
+
+                    
                     <p-button label="Upload" class="" (onClick)="onEdit()" severity="secondary"  />
                   
                    

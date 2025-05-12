@@ -5,10 +5,11 @@
                 <div class="d-flex">
                     <form [formGroup]="slForm">
                         <div class="d-flex justify-end">
-                            <span class="btn-view  mb-2" [ngClass]="isDataPresentForPartNotInMaster?'cursor-pointer':'disabled'"(click)="exportToExcel()" >Part Not In Master Export</span>
+                          <i class='bx bx-export mb-2 f-20 bx-rotate-180' [ngClass]="isDataPresentForPartNotInMaster?'cursor-pointer':'disabled'" pTooltip="Part Not In Master Export" (click)="exportToExcel()"></i>
+                            <!-- <span class="btn-view  mb-2" [ngClass]="isDataPresentForPartNotInMaster?'cursor-pointer':'disabled'"(click)="exportToExcel()" >Part Not In Master Export</span> -->
                             <!-- <i  class="bx bx-export cursor-pointer font-semibold mb-2" style="font-size: 20px;" (click)="exportToExcel()"  ></i> -->
                         </div>
-                    <div class=" add-mapping-card  h-auto !p-3 " [ngClass]="visibleSidebar?'w-[74vw]':'w-[90vw]'">
+                    <div class=" add-mapping-card   h-auto !p-3 d-flex" [ngClass]="visibleSidebar?'w-[74vw] ':'w-[90vw]'">
                        <div class="!flex !flex-row !gap-6  !items-center">
 
                       
@@ -69,32 +70,45 @@
                               </div>
                         </div>
 
-                            <div class="!flex  !flex-row gap-6 mt-4 !items-center ">
+                            <div class="!flex  !flex-row gap-6 !items-center ms-5" [ngClass]="visibleSidebar?'':''">
                                
                                 <div>
-                                    <p-fileupload #fu class=" !line-clamp-3" mode="basic" chooseLabel="Choose"  chooseIcon="pi pi-upload" name="demo[]"
-                                    [auto]="false" accept=".xlsx,.csv,.xls" (onSelect)="onSelect($event)"  [multiple]="false" />
+                                    <p-fileupload #fu [customUpload]="true"  [showUploadButton]="false"
+                                    [showCancelButton]="false" class=" !line-clamp-3"  chooseLabel="Upload"  chooseIcon="pi pi-upload" name="demo[]"
+                                    [auto]="false" accept=".xlsx,.csv,.xls" (onSelect)="onSelect($event)"  [multiple]="false" >
           
+                                    <!-- Truncated file name with tooltip -->
+                        <ng-template let-file pTemplate="file">
+                          <div class="truncate-file-name" [title]="file.name">
+                            {{ file.name.length > 10 ? (file.name | slice: 0: 10) + '...' : file.name }}
+                          </div>
+                        </ng-template>
+                        </p-fileupload>
                                     <div class=" d-flex mt-1" *ngIf="slForm.get('file')?.touched && slForm?.get('file')?.invalid " >
                                       <small *ngIf="slForm?.get('file')?.hasError('required')" style="color: red; font-size: 12px;">File is required.</small> 
                                   </div>
                                 </div>
                               
                                  
-                                  <p-button label="Upload" class="" (onClick)="onUpload()" severity="secondary" class="" />
-                                  <p-button label="Get Uploaded Data" class="" [disabled]="!isDataPresent" (onClick)="exportUploadedData()" severity="secondary" class="" />
-                            </div>
+                                  <p-button label="Submit" class="" (onClick)="onUpload()" severity="secondary" class="" />
+                                  <!-- <p-button label="Get Uploaded Data" class="" [disabled]="!isDataPresent" (onClick)="exportUploadedData()" severity="secondary" class="" /> -->
+                                  <i class='bx bx-export f-20 d-flex align-items-center bx-rotate-180 ms-3' [ngClass]="isDataPresent?'':'disabled'" pTooltip="Get Uploaded Data"    (click)="exportUploadedData()" severity="secondary" ></i>
+                                </div>
                      
                     </div>
                 </form>
                 </div>
             </div>
             <div
-            class="card   h-auto  p-3 bg-gray-50 rounded-lg shadow-lg mb-5 w-[74vw] mt-4 "
+            class="card   h-auto  p-3 bg-gray-50 rounded-lg shadow-lg mb-5  mt-4 " [ngClass]="visibleSidebar?'w-[74vw]':'w-[90vw]'"
             *ngIf="showTable"
             >
-            <div class="d-flex justify-end">
+            <!-- <div class="d-flex justify-end">
               <i class="bx bx-export font-bold mb-3 cursor-pointer" style="font-size: 18px;" (click)="exportTableData()"></i>
+            </div> -->
+            <div class="d-flex justify-between">
+              <span class="text-black text-lg ">Stock Upload History</span>
+              <i class="bx bx-export font-bold mb-3 cursor-pointer bx-rotate-180" style="font-size: 18px;" (click)="exportTableData()"></i>
             </div>
             <p-table #dataTable
               [scrollable]="true"
@@ -108,28 +122,30 @@
               [scrollHeight]="'400px'"
               [scrollable]="true"
               class="bg-white  !rounded-lg border border-gray-200 shadow-md"
+              [showCurrentPageReport]="true"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             >
               <ng-template #header let-item>
                 <tr>
-                  <th style="font-size: 13px;">Brand</th>
+                  <th style="font-size: 13px;" >Brand </th>
                   <th style="font-size: 13px;">Dealer</th>
                   <th style="font-size: 13px;" >Location</th>
-                  <th style="font-size: 13px;" >
-                    Previous Records
+                  <th style="font-size: 13px;" pSortableColumn="prevStockUploadCount">
+                    Previous Records <p-sortIcon field="prevStockUploadCount"></p-sortIcon>
                   </th>
                  
-                  <th style="font-size: 13px;" >
-                    Current Records
+                  <th style="font-size: 13px;" pSortableColumn="stockUploadCount">
+                    Current Records <p-sortIcon field="stockUploadCount"></p-sortIcon>
                    
                   </th>
-                  <th style="font-size: 13px;">
-                   Previous Quantity Sum
+                  <th style="font-size: 13px;" pSortableColumn="prevQuantitySum">
+                   Previous Quantity Sum  <p-sortIcon field="prevQuantitySum"></p-sortIcon>
                   </th>
-                  <th style="font-size: 13px;" >Current Quantity Sum </th>
-                  <th style="font-size: 13px;">
-                     Added On
+                  <th style="font-size: 13px;" pSortableColumn="quantitySum">Current Quantity Sum <p-sortIcon field="quantitySum"></p-sortIcon></th>
+                  <th style="font-size: 13px;" pSortableColumn="added_on"> 
+                     Added On <p-sortIcon field="added_on"></p-sortIcon>
                    </th>
-                   <th style="font-size: 13px;" >Added By</th>
+                   <th style="font-size: 13px;" pSortableColumn="addedBy">Added By <p-sortIcon field="addedBy"></p-sortIcon></th>
                   
                 </tr>
               </ng-template>
@@ -156,7 +172,7 @@
                     {{rowData.quantitySum !=null ?rowData.quantitySum:0}}
                  </td>
                  <td style="font-size: 11px;">
-                    {{rowData.added_on}}
+                    {{formatDate(rowData.added_on)}}
                  </td>
                  <td style="font-size: 11px;">
                     {{addedBy}}

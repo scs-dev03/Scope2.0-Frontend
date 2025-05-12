@@ -54,6 +54,7 @@ body.loader {
     width: 10rem !important;
     font-size: 12px !important;
   }
+<<<<<<< HEAD
  /* button.p-ripple.p-button.p-component.p-button-secondary{
     border: none !important;
   outline: none !important;
@@ -64,6 +65,9 @@ body.loader {
   z-index: auto;
   
 } */
+=======
+ 
+>>>>>>> fb90367900e76234080f8ee1bd726594fc4bbfd6
 
 .p-select-label{
     padding:5px !important;

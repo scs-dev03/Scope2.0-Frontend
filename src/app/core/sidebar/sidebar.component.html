@@ -5,7 +5,11 @@
 <!-- <button (click)="closeSidebar()">Close</button> -->
 <div class="sidebar ">
   <div class="logo-section">
+<<<<<<< HEAD
     <img src="Scs-logo.png" alt="Logo" class="sidebar-logo" [routerLink]="['/core/home']"  />
+=======
+    <img src="Scs-logo.png" alt="Logo" class="sidebar-logo" [routerLink]="['/core/home']" />
+>>>>>>> fb90367900e76234080f8ee1bd726594fc4bbfd6
   </div>
 
   <!-- Search Section -->
@@ -115,10 +119,10 @@
     
     <div
    
-    class="cursor-pointer pi pi-ellipsis-v mt-1"
+    class="cursor-pointer pi pi-ellipsis-v mt-2"
     (click)="onButtonClick($event)"
   ></div>
-</div>
+
 <div class="flex h-full p-1  align-items-center me-4  ">
   <!-- <button
     icon="pi pi-ellipsis-v"
@@ -126,6 +130,7 @@
     (onClick)="onButtonClick($event)"
   ></button> -->
   <p-tieredmenu #menu [model]="items" [appendTo]="'body'" [popup]="true" />
+</div>
 </div>
 </div>
 <!-- </p-sidebar> -->

@@ -46,7 +46,7 @@
       </div >
       <!-- [tableStyle]="{ 'min-width': '40rem' }" -->
       <!-- *ngIf="userPermissions?.view1" -->
-       <div class="card h-auto flex flex-col justify-start p-3 bg-[#FDF5E6] rounded-lg " *ngIf="userPermissions?.view1" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[60vw]':'w-[80vw]'" >
+       <div class="card h-auto flex flex-col justify-start p-3 bg-[#FDF5E6] rounded-lg " *ngIf="userPermissions?.view1" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[72vw]':'w-[90vw]'" >
          <p-table 
          [value]="users" 
          [paginator]="true"
@@ -58,6 +58,8 @@
           responsiveLayout="scroll"
           [scrollHeight]="'380px'"
            [scrollable]="true"
+           [showCurrentPageReport]="true"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
           
          >
              <ng-template pTemplate="header" >
@@ -101,7 +103,7 @@
 
 
 
-<p-dialog [header]="actionName" [modal]="true" [(visible)]="visible" [style]="{ width: '80vh' }" class="header edit-add-user">
+<p-dialog [header]="actionName" [modal]="true" [(visible)]="visible" [style]="{ width: '100vh' }" class="header edit-add-user">
   <form [formGroup]="editUserForm">
     <div class="card">
       <div class="row">

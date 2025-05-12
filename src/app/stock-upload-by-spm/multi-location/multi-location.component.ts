@@ -319,28 +319,24 @@ response:any=[];
     }
    
     clearFileUploads() {
-      // Iterate through each location control in the FormArray
       if (this.fu && this.fu.toArray().length > 0 && this.locationControls.controls.length > 0) {
         this.locationControls.controls.forEach((locationControl, index) => {
-          // Clear the file form control
           const fileControl = locationControl.get('file');
           if (fileControl) {
-            fileControl.setValue(null);  // Set file to null
+            fileControl.setValue(null);
             fileControl.markAsPristine();
             fileControl.markAsUntouched();
           }
-      
-          // Access the file upload component and clear the files
+    
           const fileUpload = this.fu?.toArray()[index];
           if (fileUpload) {
-            fileUpload.clear();  // Clear the file upload component
+            fileUpload.clear();       // Clear internal state
+            fileUpload.files = [];    // Ensure files array is cleared
           }
         });
       }
-      
-      
-    
     }
+    
     getRecords(){
       this.userId=1;
       const locations = this.mlForm.get('locations')?.value;

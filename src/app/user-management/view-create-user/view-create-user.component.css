@@ -166,6 +166,8 @@ td{
 
 :host ::ng-deep input{
     width: 100% !important;
+    padding: 5px !important;
+    font-size: 12px !important;
 }
 
 :host ::ng-deep .p-dialog-header{

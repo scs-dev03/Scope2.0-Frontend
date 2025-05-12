@@ -95,6 +95,16 @@
     border: none;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
-
+ :host ::ng-deep  button.p-ripple.p-button.p-component.p-button-secondary{
+    border: none !important;
+  outline: none !important;
+  background-color: rgb(12 98 182 / 69%) !important;
+  color: white !important;
+  /* background-color: rgb(0 0 255 / 34%); */
+  padding: 3px !important;
+  border-radius: 4px !important;
+  z-index: auto !important;
+  
+}
   
   
