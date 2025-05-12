@@ -124,7 +124,7 @@
       [rowsPerPageOptions]="[20, 30, 40, 50, 100]"
       [showGridlines]="true"
       scrollDirection="both"
-      ngClass=" !w-[90vw] "
+      ngClass=" "
       sortable="true"
       [tableStyle]="{ 'min-width': '50rem' }"
      
@@ -135,7 +135,7 @@
         <th pSortableColumn="Location" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Location<p-sortIcon field="Location" /></th>
         <th pSortableColumn="Months" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Month<p-sortIcon field="Months" /></th>
         <th pSortableColumn="ClosingStocks" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Closing Stocks <p-sortIcon field="ClosingStocks" /></th>
-        <th *ngFor="let col of DataTypeArray" pSortableColumn="col" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">{{ col }}
+        <th *ngFor="let col of DataTypeArray" [pSortableColumn]="col" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">{{ col }}
           <p-sortIcon [field]="col"/>
         </th>
         <!-- <th pSortableColumn="WorkshopSale" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Workshop Sale <p-sortIcon field="WorkshopSale" /></th>
