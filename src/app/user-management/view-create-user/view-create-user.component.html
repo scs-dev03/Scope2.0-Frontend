@@ -45,8 +45,8 @@
         </div>
       </div >
       <!-- [tableStyle]="{ 'min-width': '40rem' }" -->
-      <!-- *ngIf="userPermissions?.view1" -->
-       <div class="card h-auto flex flex-col justify-start p-3 bg-[#FDF5E6] rounded-lg " *ngIf="userPermissions?.view1" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[72vw]':'w-[90vw]'" >
+      <!-- *ngIf="userPermissions?.view1"  bg-[#FDF5E6] -->
+       <div class="card h-auto flex flex-col justify-start  rounded-lg " *ngIf="userPermissions?.view1" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[72vw]':'w-[90vw]'" >
          <p-table 
          [value]="users" 
          [paginator]="true"

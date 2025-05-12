@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { MenuItem, MessageService } from 'primeng/api';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TieredMenu } from 'primeng/tieredmenu';
 import { SidebarService } from '../../services/sidebar.service';
 import { SharedServiceService } from '../../services/shared-service.service';
@@ -177,12 +177,14 @@ export class SidebarComponent {
 }
 
 constructor(private sidebarService:SidebarService,private sharedService:SharedServiceService,
-  private globalBlockUiService:GlobalBlockUiService
+  private globalBlockUiService:GlobalBlockUiService,
+  private router :Router
 ){}
    
 
 logOut(){
   localStorage.clear();
+  window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx';
 }
 getModules(){
   this.globalBlockUiService.startLoading();
