@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HomePageService } from '../../services/home-page/home-page.service';
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
+import { UtilitiesService } from '../../services/utilities.service';
 
 @Component({
   selector: 'app-landing-screen',
@@ -10,7 +11,9 @@ import { LoaderComponent } from "../../shared/components/loader/loader.component
   styleUrl: './landing-screen.component.css'
 })
 export class LandingScreenComponent {
-  constructor(private route: ActivatedRoute,private router: Router,  private homepageservice: HomePageService) {}
+  constructor(private route: ActivatedRoute,
+    private router: Router,  private homepageservice: HomePageService,
+  private utilitiesService:UtilitiesService) {}
 
   
   usertoken:any 
@@ -42,12 +45,19 @@ export class LandingScreenComponent {
     localStorage.setItem('usertype',this.usertype)
     
     this.fetchUserinfo(this.usertoken,this.usertype)
-
+    this.getUserId();
      
 
     
   }
 
+  getUserId(){
+    let userToken=localStorage.getItem('usertoken');
+    this.utilitiesService.getUserInfo({token:userToken}).subscribe((res:any)=>{
+
+      localStorage.setItem('userId',res?.data[0]?.userId);
+    })
+  }
 
   fetchUserinfo(usertoken:any,usertype:any){
     // console.log('fetch method',usertoken);

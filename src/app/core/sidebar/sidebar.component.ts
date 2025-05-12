@@ -151,20 +151,20 @@ export class SidebarComponent {
 
   ngOnInit(){
   this.items = [
-    {
-      label: 'Update Profile',
-      icon: 'pi pi-user',
+  //   {
+  //     label: 'Update Profile',
+  //     icon: 'pi pi-user',
     
-  },
-  {
-    label: 'Settings',
-    icon: ' pi pi-cog',
+  // },
+  // {
+  //   label: 'Settings',
+  //   icon: ' pi pi-cog',
   
-  },   
+  // },   
     {
         label: 'Log Out',
         icon: 'pi pi-sign-out',
-      
+        command:()=>this.logOut()
     },
     {
         separator: true
@@ -181,6 +181,9 @@ constructor(private sidebarService:SidebarService,private sharedService:SharedSe
 ){}
    
 
+logOut(){
+  localStorage.clear();
+}
 getModules(){
   this.globalBlockUiService.startLoading();
   this.sidebarService.getModules().subscribe((res:any)=>{
@@ -195,7 +198,7 @@ transformData(data: any) {
   const groupedData: { [key: string]: any } = {};
   const directParents: any[] = [];
 
-  data.forEach((item: any) => {
+  data?.forEach((item: any) => {
     const parentName = item.parentModuleName;
 
     // ✅ Handle missing, "null", or NULL strings as direct parent

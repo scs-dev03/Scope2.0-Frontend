@@ -345,7 +345,7 @@ export class SingleStockUploadComponent {
           ['Current Records']: item.stockUploadCount !=null ?item.stockUploadCount:0,
           ['Previous Sum Quantity']: item.prevQuantitySum !=null ?item.prevQuantitySum :0,
           ['Current Sum Quantity']: item.quantitySum !=null ?item.quantitySum:0 ,
-          ['Added On ']: item.added_on,
+          ['Added On ']: this.formatDate(item.added_on),
           ['Added By ']:'Kirti'
          
     
@@ -376,7 +376,7 @@ export class SingleStockUploadComponent {
         ...item,
         brandName:brandObj?.brand,
         dealerName:dealerObj?.dealer_name,
-        added_on: this.formatDate(item.added_on)
+        added_on: (item.added_on)
       }))
     })
    }

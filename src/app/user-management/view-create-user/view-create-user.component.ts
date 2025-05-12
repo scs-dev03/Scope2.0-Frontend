@@ -127,7 +127,7 @@ export class ViewCreateUserComponent {
       this.authService.checkEmail({email:this.editUserForm.value.email}).subscribe(
         (response) => {
           this.emailArray=response.data;
-          console.log(this.emailArray)
+          //console.log(this.emailArray)
         },
         (error) => {
          

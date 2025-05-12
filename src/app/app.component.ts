@@ -27,7 +27,7 @@ export class AppComponent {
   isLoginPage = false;
   @ViewChild('blockUI') blockUI!: BlockUI;
   @ViewChild('sidebar') sidebar!: SidebarComponent;
-   token:any='0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7'
+   token:any;
   constructor(private globalBlockUIService: GlobalBlockUiService,
     private router:Router, private route: ActivatedRoute,
     private renderer: Renderer2,
@@ -97,6 +97,7 @@ export class AppComponent {
     this.updateLoaderHeight();
     window.addEventListener('resize', () => this.updateLoaderHeight());
   }
+
   ngAfterContentChecked() {
     this.updateLoaderHeight(); // Adjust height when content updates
   }
@@ -141,11 +142,13 @@ export class AppComponent {
     //   }
     // });
 
-    this.utilitiesService.getUserInfo({token:usertoken}).subscribe((res:any)=>{
+    // this.utilitiesService.getUserInfo({token:usertoken}).subscribe((res:any)=>{
 
-      localStorage.setItem('userId',res.data[0].userId)
-    })
+    //   localStorage.setItem('userId',res.data[0].userId);
+    // })
     
+
   }
+  
   
 }

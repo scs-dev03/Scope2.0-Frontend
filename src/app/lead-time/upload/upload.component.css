@@ -56,7 +56,8 @@ margin-left: 64px; */
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 115px !important;
+    /* width: 115px !important; */
+    width: 80px !important;
     height: 40px !important;
 
 }
@@ -89,7 +90,7 @@ margin-left: 64px; */
     align-items: center;
     padding: 10px;
     height: 40px !important;
-    width: 215px !important;
+    width: 225px !important;
 }
 
 :host ::ng-deep th.p-element.p-sortable-column{

@@ -46,9 +46,9 @@
                  </div>
                </div>
                 <div class="row" [ngClass]="!isLocationWiseChecked?'ms-3':'ms-3'">
-                     <div class="w-full h-full" [hidden]="isScreenCollapsed">
+                     <div class="w-[85vw] " [hidden]="isScreenCollapsed">
                          <div class="row my-2">
-                            <div class="col-2 d-flex justify-content-end">
+                            <div class="col d-flex justify-content-end">
                                 <!-- <p-checkbox 
                                 [(ngModel)]="isLocationWiseChecked"
                                 binary="true"
@@ -57,7 +57,7 @@
                                  <p-checkbox binary="true" [(ngModel)]="isLocationWiseChecked"  (onChange)="onCheckboxChange($event)"/>
      
                             </div>
-                              <div class="col-10">
+                              <div class="col-11">
                                   <label>Do you want to upload Location Wise?</label>
      
                               </div>
@@ -65,13 +65,13 @@
                          </div>
                      
                          <form class="" [formGroup]="locationFormGroup" *ngIf="!isLocationWiseChecked" >
-                             <div class="row">
+                             <div class="row h-[32vh]">
                                  <div class="col-12 d-flex flex-column gap-4">
                                      <div class="row ">
-                                         <div class="col-2">
+                                         <div class="col">
                                              <label class="d-flex justify-content-end align-items-center" for="brand">Brand :</label>
                                          </div>
-                                         <div class="col-10">
+                                         <div class="col-11">
                                     
                                        <p-select
                                        [styleClass]=""
@@ -89,7 +89,7 @@
                                      </div>
                                      <div class="d-flex flex-column" *ngFor="let fileType of fileTypes;let i=index;">
                                          <div class="row " >
-                                             <div class="col-2">
+                                             <div class="col-1">
                                                  <label class="d-flex justify-content-end align-items-center" for="fileType">File Type :</label>
                                              </div>
                                              <div class="col-4" >
@@ -127,15 +127,15 @@
                     
                          </form>
                  </div>
-                 <div class="w-full">
-                 <form [formGroup]="uploadForm" *ngIf="isLocationWiseChecked">
-           <div class="row " [hidden]="isScreenCollapsed">
+                 <div class="w-[85vw]" *ngIf="isLocationWiseChecked">
+                 <form [formGroup]="uploadForm" >
+           <div class="row h-[32vh]" [hidden]="isScreenCollapsed">
              <div class="col-12 d-flex flex-column gap-4">
                  <div class="row ">
-                     <div class="col-2">
+                     <div class="col">
                          <label class="d-flex justify-content-end align-items-center" for="brand">Brand :</label>
                      </div>
-                     <div class="col-10">
+                     <div class="col-11">
                    <p-select
                    [styleClass]=""
                    [options]="brands"
@@ -153,10 +153,10 @@
                  </div>
          
                  <div class="row ">
-                     <div class="col-2">
+                     <div class="col">
                          <label class="d-flex justify-content-end align-items-center " for="dealer">Dealer :</label>
                      </div>
-                     <div class="col-10">
+                     <div class="col-11">
                <p-select
                [options]="dealers"
                optionValue="dealer_id"
@@ -172,10 +172,10 @@
                  </div>
          
                  <div class="row ">
-                     <div class="col-2">
+                     <div class="col">
                          <label class="d-flex justify-content-end align-items-center" for="location">Location :</label>
                      </div>
-                     <div class="col-10">
+                     <div class="col-11">
                <p-select
                [options]="locations"
                id="location"
@@ -190,14 +190,14 @@
                  </div>
                  <div class="d-flex flex-column" *ngFor="let fileType of fileTypes;let i=index">
                      <div class="row " >
-                         <div class="col-2">
+                         <div class="col-1">
                              <label class="d-flex justify-content-end align-items-center" for="fileType">File Type :</label>
                          </div>
                          <div class="col-4" >
                              
                         <p>{{fileType.fileType}}</p>
                          </div>
-                         <div class="col-2 me-2">
+                         <div class="col-1 me-2">
      
                              <p-fileUpload #fileUpload
                              mode="advanced"
@@ -224,21 +224,21 @@
          </div>
              </form>
              </div>
-                 <div class="row " [ngClass]="isLocationWiseChecked?'mt-4 ms-1 ':'mt-4'">
-                     <div class="" [ngClass]="isScreenCollapsed?'col-4 col-4-div':'col-2 col-sm-1 col-lg-2'">
+                 <div class=" " [ngClass]="isLocationWiseChecked?'mt-4 ms-1 w-[72vw] ':'mt-4 w-[70vw]'">
+                     <div class="" [ngClass]="isScreenCollapsed?'':''">
                          <!-- <span class="d-flex justify-content-end align-items-center">Upload Excel :</span> -->
                          
                      </div>
-                     <div class=" d-flex flex-row gap-5 div-btn" [ngClass]="isScreenCollapsed?'col-8':'col-10'">
+                     <div class=" d-flex justify-content-end" [ngClass]="isScreenCollapsed?'':''">
              
-                         <div class=" btn-search  " [ngClass]="isScreenCollapsed?'col-3':'col-3'">
+                         <div class=" btn-search  " [ngClass]="isScreenCollapsed?'':''">
                              <p-button [styleClass]="'text-white'" label="Submit"  [disabled]="!isFileUploaded" (click)="submit()" />
                          </div>
-                         <div class="d-flex justify-content-end ">
-                              <div class=" btn-export"  [ngClass]="isScreenCollapsed?'col-5':''">
+                         <div class="d-flex ">
+                              <div class=" btn-export"  [ngClass]="isScreenCollapsed?'':''">
                                  <p-button [styleClass]="'text-white'" class="" label="Download Format" [disabled]="showDownloadFormat"  (click)="downloadExcel()" />
                              </div>
-                             <div class=" btn-export" *ngIf="!isLocationWiseChecked " [ngClass]="isScreenCollapsed?'col-8':''">
+                             <div class=" btn-export " *ngIf="!isLocationWiseChecked " [ngClass]="isScreenCollapsed?'':''">
                                  <p-button [styleClass]="'text-white'" class="" label="Download Workshop List" [disabled]="showDownloadFormat"  (click)="downloadWorkShopList()" />
                              </div>
                              <!-- <div class=" btn-search" [ngClass]="isScreenCollapsed?'col-3':'col-2'">
@@ -261,7 +261,7 @@
                          <p-button [styleClass]="'text-white'" class="" label="Download Logs File" (click)="downloadExcelFile()" />
                      </div> -->
                  </div>
-                 <div class="row  mt-4 flex justify-start w-[90vw]" [ngClass]="sidebarVisible?'w-[65vw]':'w-[90vw]'"  >
+                 <div class="row  mt-4 flex justify-start " [ngClass]="sidebarVisible?'w-[65vw]':'w-[90vw]'"  >
                      <div class="col-12 d-flex justify-content-start">
                          <p-table
                         [value]="updatedAuditLogs" *ngIf="showTable"

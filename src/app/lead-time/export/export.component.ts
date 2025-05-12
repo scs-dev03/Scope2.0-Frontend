@@ -10,6 +10,7 @@ import { MessageService } from 'primeng/api';
 import { SharedServiceService } from '../../services/shared-service.service';
 import { Router } from '@angular/router';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
   selector: 'app-export',
@@ -37,6 +38,7 @@ export class ExportComponent {
    receivedData:any=[];
     userPermissions:any=[];
     currentRoute:any;
+    sidebarVisible:boolean=false;
     dataSubscription:Subscription|null=null
   exportForm: FormGroup = new FormGroup({
     brand: new FormControl('',[Validators.required]),
@@ -52,6 +54,7 @@ export class ExportComponent {
   private messageService:MessageService,
 private sharedService:SharedServiceService,
 private globalBlockUiService:GlobalBlockUiService,
+private sidebarService:SidebarService,
 private router:Router){
 
   this.currentRoute=router.url;
@@ -268,6 +271,10 @@ const now = new Date();
        
       }
     );
+    
+    this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
+      this.sidebarService=visible;
+    })
   }
 
    formatDate(date:any) {
