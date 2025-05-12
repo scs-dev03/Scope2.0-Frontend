@@ -3,7 +3,6 @@ import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
 import { SharedModule } from '../../shared/shared.module';
 import { PrimengModuleModule } from '../../shared/primeng-module/primeng-module.module';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { Sidebar2Component } from '../sidebar-2/sidebar-2.component';
 import { HomePageService } from '../../services/home-page/home-page.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IndianCurrencyPipe } from '../../shared/Indian-currency/indian-currency.pipe';
@@ -15,7 +14,6 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
     SharedModule,
     PrimengModuleModule,
     NgxEchartsModule,
-    Sidebar2Component,
     IndianCurrencyPipe,
   ],
   templateUrl: './home-page.component.html',
@@ -26,9 +24,13 @@ export class HomePageComponent {
     localStorage.setItem('dealerid', '8');
     this.globalBlockUiService.startLoading();
     // this.fetchCardsData(localStorage.get())
-    localStorage.setItem('usertoken', this.token);
 
-    this.fetchUserinfo(this.token, 'd');
+     this.homeData.patchValue({
+      locationId: localStorage.getItem('def_location')
+    });
+   
+
+    this.fetchUserinfo(localStorage.getItem('usertoken'), localStorage.getItem('usertype'));
     this.fetchCardsData(
       localStorage.getItem('def_location'),
       localStorage.getItem('dealerid')
@@ -40,8 +42,6 @@ export class HomePageComponent {
     private globalBlockUiService: GlobalBlockUiService
   ) {}
 
-  token: any =
-    '0x02000000D1B3C7E7D011498C812162DDAFB9D30E887E185EF7F1D27ED92D60F85858FCBF';
 
   locationData: any = [];
   isloading: boolean = false;
