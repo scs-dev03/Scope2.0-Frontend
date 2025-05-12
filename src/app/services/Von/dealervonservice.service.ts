@@ -17,16 +17,16 @@ private apiurlmaster: any =
 // private apiurlmaster: any =
 //   'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/master/';
 
-dealerId: any = 8
-brandID: any = 9
-locationid: any = 14
-usertype: any = "U"
-setLocalStorage(){
-  localStorage.setItem('dealerid',this.dealerId);
-  localStorage.setItem('brandid',this.brandID)
-  localStorage.setItem('usertype',this.usertype)
-  localStorage.setItem('locationid',this.locationid)
-}
+// dealerId: any = 8
+// brandID: any = 9
+// locationid: any = 14
+// usertype: any = "U"
+// setLocalStorage(){
+//   localStorage.setItem('dealerid',this.dealerId);
+//   localStorage.setItem('brandid',this.brandID)
+//   localStorage.setItem('usertype',this.usertype)
+//   localStorage.setItem('locationid',this.locationid)
+// }
 constructor(private http: HttpClient) { }
 
 getlocationMaster(data:any){
