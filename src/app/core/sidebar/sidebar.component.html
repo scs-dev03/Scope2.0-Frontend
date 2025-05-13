@@ -99,7 +99,7 @@
             routerLinkActive="active" 
             (click)="setActive(subItem, item)" 
             [ngClass]="subItem.isActive ? 'active-item' : ''">
-            {{ subItem.module_name }}
+            {{ subItem?.module_name}}
           </a>
         </li>
       </ul>

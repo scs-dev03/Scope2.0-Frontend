@@ -13,6 +13,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { Table } from 'primeng/table';
 import { filter } from 'rxjs';
 import { SidebarService } from '../../services/sidebar.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-dealer-location-mapping',
@@ -26,10 +27,7 @@ export class DealerLocationMappingComponent {
  @ViewChild('fu') fu: FileUpload|null =null;
  @ViewChild('fu1') fu1: FileUpload|null =null;
   @ViewChild('dataTable') dataTable: Table | undefined;
-  users:any[]=[{
-    id:1,
-    name:'Kirti'
-  }]
+  users:any[]=[]
   records:any=[]
  selectedFile:any;
  isLoading:boolean=false;
@@ -43,7 +41,7 @@ export class DealerLocationMappingComponent {
  showTable:boolean=false;
  isDataExist:boolean=false;
  isDataPresent:boolean=false;
- userId=1;
+ userId:any;
  formData=new FormData();
  multipleDealerAndLocationData:any[]=[];
  showEditPopUp:boolean=false;
@@ -58,7 +56,8 @@ export class DealerLocationMappingComponent {
   private fb:FormBuilder,private dealerLocationService:DealerLocationMappingService,
   private globalUiService:GlobalBlockUiService,
   private messageService:MessageService,
-  private sidebarService:SidebarService
+  private sidebarService:SidebarService,
+  private userService:UserService
  ){
 
   this.dlForm=this.fb.group({
@@ -73,7 +72,12 @@ export class DealerLocationMappingComponent {
    this.visibleSidebar=visible;
   })
 
-  
+  this.userId=localStorage.getItem('userId');
+
+  this.userService.allUserData$.subscribe((users:any)=>{
+    this.users=users;
+   // console.log("users ",this.users)
+  })
  }
 
  onSelect(event:any){
@@ -200,7 +204,7 @@ export class DealerLocationMappingComponent {
 
   viewMapping(){
     this.globalUiService.startLoading();
-    this.dealerLocationService.viewDealerLocationMapping({user_id:1,brand_id:this.dlForm.value.brand}).subscribe((res:any)=>{
+    this.dealerLocationService.viewDealerLocationMapping({brand_id:this.dlForm.value.brand}).subscribe((res:any)=>{
        this.globalUiService.stopLoading();
       if(res.error){
         return this.messageService.add({severity:'error',life:4000,detail:'Error in getting View Mapping'})
@@ -217,16 +221,16 @@ export class DealerLocationMappingComponent {
           this.showTable=false;
         }
       
-        //console.log("records ",this.records)
+       // console.log("records ",this.records)
         let brandObj=this.brands.find((obj:any)=>obj?.brand_id==this.dlForm.value.brand);
-        let userObj=this.users.find((obj:any)=>obj?.id==1)
+       
        this.records= this.records.map((item:any)=>{
-
+        let userObj=this.users.find((obj:any)=>obj?.userId==item.added_by)
           return{
             ...item,
             brandName:brandObj.brand,
             addedOn:this.formatDate(item.added_on),
-            addedBy:userObj.name,
+            addedBy:userObj?.vcFirstName+' '+userObj?.vcLastName,
             statusBoolean: item.status === 'active'
           }
         })

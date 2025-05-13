@@ -10,6 +10,7 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { MessageService } from 'primeng/api';
 import { FileUpload } from 'primeng/fileupload';
 import { Table } from 'primeng/table';
+import { UserService } from '../../services/user.service';
 @Component({
   selector: 'app-single-location',
   imports: [PrimengModuleModule,SharedModule,FormsModule,ReactiveFormsModule,CommonModule],
@@ -42,13 +43,15 @@ export class SingleLocationComponent {
   partNotInMasterRecords:any;
   dealers:any;
   brands:any;
+  users:any=[];
   isDataPresentPartNotInMaster:boolean=false;
   @ViewChild('fu') fu:FileUpload|null=null;
   constructor(private utilitiesService:UtilitiesService,
    private fb:FormBuilder,
    private stockUploadService:StockUploadBySpmService,
    private globalBlockUiService:GlobalBlockUiService,
-   private messageService:MessageService
+   private messageService:MessageService,
+   private userService:UserService
   ){
  
    this.slForm=this.fb.group({
@@ -62,6 +65,9 @@ export class SingleLocationComponent {
   ngOnInit(){
   //  this.getLocations();
    this.getBrands();  
+   this.userService.allUserData$.subscribe((res:any)=>{
+    this.users=res;
+   })
   }
  
   onSelect(event: any) {
@@ -327,13 +333,20 @@ export class SingleLocationComponent {
       this.records=res.data;
       this.locationName=locObj.location_name;
       this.addedOn=res.data.added_on;
-      this.addedBy='Kirti'
-     this.records= this.records.map((item:any)=>({
+     
+      // this.addedBy='Kirti'
+     this.records= this.records.map((item:any)=>{
+      let userObj=this.users.find((obj:any)=>obj.userId==item.userId)
+     return {
         ...item,
+       
          added_on: new Date(item.added_on),
        
-        added_by:this.addedBy
-      }))
+        added_by:userObj?.vcFirstName+' '+userObj.vcLastName
+
+      }
+        
+      })
     })
    }
 

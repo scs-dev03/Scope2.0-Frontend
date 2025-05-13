@@ -35,6 +35,9 @@ export class HomePageComponent {
       localStorage.getItem('def_location'),
       localStorage.getItem('dealerid')
     );
+    this.homeData.patchValue({
+      locationId: localStorage.getItem('def_location')
+    });
   }
 
   constructor(
