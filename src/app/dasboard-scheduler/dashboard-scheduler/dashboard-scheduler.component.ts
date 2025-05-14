@@ -18,7 +18,7 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 })
 export class DashboardSchedulerComponent {
   dashboardInputData: FormGroup = new FormGroup({
-    bdmID: new FormControl('', Validators.required),
+    bdmID: new FormControl(),
     dashboardID: new FormControl('', Validators.required),
     brandID: new FormControl('', Validators.required),
     dealerID: new FormControl('', Validators.required),
@@ -47,9 +47,16 @@ export class DashboardSchedulerComponent {
     this.dashboardInputData.controls['dealerID'].disable();
     this.dashboardInputData.controls['date'].disable();
     this.dashboardInputData.controls['time'].disable();
+    this.dashboardInputData.patchValue({
+    bdmID:  localStorage.getItem('userid')
+    });
 
-    this.getDashboardService.setLocalStorage();
-    this.fetchDashboardSchedule();
+    
+    
+    this.onClickBDM()
+
+    //this.getDashboardService.setLocalStorage();
+    this.fetchDashboardSchedule(this.dashboardInputData.value.bdmID);
   }
 
   visible: boolean = false;
@@ -111,6 +118,8 @@ export class DashboardSchedulerComponent {
   }
   // submit funtion for scheduling dashboard
   onSubmitDashboardRequest() {
+    console.log(this.dashboardInputData.value);
+    
     this.newdate = this.formatDate(this.dashboardInputData.value.date);
     this.newtime = this.formatTime(this.dashboardInputData.value.time);
     this.convertToSQLDateTime(this.newdate, this.newtime);
@@ -130,13 +139,13 @@ export class DashboardSchedulerComponent {
         this.formatedDate,
         this.dashboardInputData.value.bdmID
       );
-      this.fetchDashboardSchedule();
-      this.dashboardInputData.reset();
-      this.dashboardInputData.controls['dashboardID'].disable();
-      this.dashboardInputData.controls['brandID'].disable();
-      this.dashboardInputData.controls['dealerID'].disable();
-      this.dashboardInputData.controls['date'].disable();
-      this.dashboardInputData.controls['time'].disable();
+      this.fetchDashboardSchedule(this.dashboardInputData.value.bdmID);
+      
+      this.dashboardInputData.controls['dashboardID'].reset();
+      this.dashboardInputData.controls['brandID'].reset();
+      this.dashboardInputData.controls['dealerID'].reset();
+      this.dashboardInputData.controls['date'].reset();
+      this.dashboardInputData.controls['time'].reset();
     }
   }
   // fixing minues in the time dropdown
@@ -361,7 +370,7 @@ export class DashboardSchedulerComponent {
       .subscribe(
         (res: any) => {
           this.scheduleResult = res.message;
-          this.fetchDashboardSchedule();
+          this.fetchDashboardSchedule(this.dashboardInputData.value.bdmID);
           this.globalBlockUiService.stopLoading();
           this.showDialogforResult();
         },
@@ -391,9 +400,9 @@ export class DashboardSchedulerComponent {
   updatedData: any;
   // fetch table data 
 
-  fetchDashboardSchedule() {
+  fetchDashboardSchedule(userid:any) {
     this.globalBlockUiService.startLoading();
-    this.getDashboardService.getDashboardSchedule().subscribe(
+    this.getDashboardService.getDashboardSchedule({userid:userid}).subscribe(
       (res: any) => {
         // console.log(res.Request);
         this.dashboardScheduleData = res;
@@ -432,7 +441,7 @@ export class DashboardSchedulerComponent {
           this.dashboardScheduleData = res.Requests;
           this.scheduleResult = res.message;
           console.log(this.scheduleResult);
-          this.fetchDashboardSchedule();
+          this.fetchDashboardSchedule(this.dashboardInputData.value.bdmID);
           this.showDialogforResult();
           this.globalBlockUiService.stopLoading();
           this.visibleEdit = false;
@@ -454,7 +463,7 @@ export class DashboardSchedulerComponent {
       .subscribe(
         (res: any) => {
           this.scheduleResult = res.message;
-          this.fetchDashboardSchedule();
+          this.fetchDashboardSchedule(this.dashboardInputData.value.bdmID);
           this.showDialogforResult();
           this.globalBlockUiService.stopLoading();
           this.visibleDelete = false;

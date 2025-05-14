@@ -16,12 +16,12 @@ export class LandingScreenComponent {
   private utilitiesService:UtilitiesService) {}
 
   
-  usertoken:any 
+  usertoken:any
   usertype:any 
   isloading:boolean = false
 
 
-
+  
   ngOnInit() {
 
     localStorage.clear()
@@ -42,7 +42,8 @@ export class LandingScreenComponent {
     // console.log('User Type  in ngoinint :  ',this.usertype);
 
     localStorage.setItem('usertoken', this.usertoken)
-    localStorage.setItem('usertype',this.usertype)
+    localStorage.setItem('userType',this.usertype)
+    console.log(this.usertoken);
     
     this.fetchUserinfo(this.usertoken,this.usertype)
     this.getUserId();
@@ -58,6 +59,7 @@ export class LandingScreenComponent {
       localStorage.setItem('userId',res?.data[0]?.userId);
     })
   }
+
 
   fetchUserinfo(usertoken:any,usertype:any){
     // console.log('fetch method',usertoken);

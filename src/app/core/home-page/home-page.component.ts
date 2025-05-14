@@ -25,9 +25,7 @@ export class HomePageComponent {
     this.globalBlockUiService.startLoading();
     // this.fetchCardsData(localStorage.get())
 
-     this.homeData.patchValue({
-      locationId: localStorage.getItem('def_location')
-    });
+    
    
 
     this.fetchUserinfo(localStorage.getItem('usertoken'), localStorage.getItem('usertype'));
@@ -35,6 +33,11 @@ export class HomePageComponent {
       localStorage.getItem('def_location'),
       localStorage.getItem('dealerid')
     );
+
+
+     this.homeData.patchValue({
+      locationId: localStorage.getItem('def_location')
+    });
   }
 
   constructor(
@@ -127,7 +130,10 @@ export class HomePageComponent {
             }, 
             legend: {
               top: '1%',
-              left: 'center',
+              left: 'start',
+              textStyle: {
+              fontSize: 8, 
+            },
             },
             series: [
               {
@@ -152,13 +158,13 @@ export class HomePageComponent {
                 },
                 data: [
                   {
-                    value: this.StockValue,
-                    name: 'Stockable Value',
+                    value: this.StockValue ,
+                    name: 'Stockable ',
                     itemStyle: { color: '#91cc75' },
                   },
                   {
                     value: this.NonStockValue,
-                    name: 'Non Stockable Value',
+                    name: 'Non Stockable ',
                     itemStyle: { color: '#ee6666' },
                   },
                 ],
@@ -203,10 +209,18 @@ export class HomePageComponent {
     }
   },
   legend: {
-    data: ['WS Sale', 'CS Sale', 'Purchase']
+    top: '1%',
+    left: 'start',
+    data: ['WS Sale', 'CS Sale', 'Purchase'],
+    textStyle: {
+    fontSize: 10, 
+    },
   },
   xAxis: [
     {
+    textStyle: {
+      fontSize: 4, 
+    },
       type: 'category',
       data: ['Nov_24', 'Dec_24', 'Jan_25', 'Feb_25', 'Mar_25', 'Apr-25'],
       axisPointer: {
@@ -216,23 +230,29 @@ export class HomePageComponent {
   ],
   yAxis: [
     {
+    textStyle: {
+      fontSize: 10, 
+    },
       type: 'value',
       name: 'Sale',
       min: 0,
       max: 250,
       interval: 50,
       axisLabel: {
-        formatter: '{value} L'
+        formatter: '{value}'
       }
     },
     {
+    textStyle: {
+      fontSize: 10, 
+    },
       type: 'value',
       name: 'Purchase',
       min: 0,
       max: 250,
       interval: 50,
       axisLabel: {
-        formatter: '{value} L'
+        formatter: '{value} '
       }
     }
   ],
