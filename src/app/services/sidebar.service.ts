@@ -64,10 +64,10 @@ export class SidebarService {
   }
 
   getModules():Observable<any>{
-     //  let userId=localStorage.getItem('userId');
+       let userId=localStorage.getItem('userId');
       //  console.log("user id in sidebar ",userId)
-      let userId='293';
-      localStorage.setItem('userId',userId)
+     // let userId='293';
+      // localStorage.setItem('userId',userId)
       return this.http.post(`${this.url}sidebar/modules-based-on-roles`,{userId:userId})
     }
 

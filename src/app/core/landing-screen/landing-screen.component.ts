@@ -77,11 +77,13 @@ export class LandingScreenComponent {
           localStorage.setItem('dealerid', res.Data[0].dealerid);
           localStorage.setItem('username', res.Data[0].username);
           localStorage.setItem('def_location',res.Data[0].locationid)
+          
         }
     
         if (usertype == 'a') {
           localStorage.setItem('username', res.Data[0].username);
           localStorage.setItem('userid', res.Data[0].bintid_pk);
+          localStorage.setItem('userId', res.Data[0].bintid_pk);
           localStorage.setItem('designation', res.Data[0].designation);
         }
         

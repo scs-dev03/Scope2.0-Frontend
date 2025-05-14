@@ -48,44 +48,39 @@ export class SidebarComponent {
     filteredItems: any[] = [...this.sidebarItems]; // Initially, all items are visible
 
     // Function to filter items based on the search query
-    filterItems() {
-      // If search query is empty or contains only spaces, reset to show all items
-      if (!this.searchQuery || this.searchQuery.trim() === '') {
-        this.filteredItems = [...this.sidebarItems]; // Show all items
-        return;
-      }
-    
-      // Filter items based on search query
-      this.filteredItems = this.sidebarItems.map((item:any) => {
-        // Check if the parent matches the search query
-        let matchesParent = item?.parentModuleName?.toLowerCase().includes(this.searchQuery.trim().toLowerCase());
-    
-        if (item.children) {
-          // Filter child items that match the search query
-          const filteredChildren = item.subchildren.filter((child:any) =>
-            child.value.toLowerCase().includes(this.searchQuery.trim().toLowerCase())
-          );
-    
-          // If any child matches, include the parent and the filtered children
-          if (filteredChildren.length > 0) {
-            return {
-              ...item,  // Keep the parent item
-              subchildren: filteredChildren  // Only keep the matching children
-            };
-          }
-        }
-    
-        // Include the parent item if it matches the search query
-        if (matchesParent) {
-          return item;
-        }
-    
-        return null; // Exclude items that don't match
-      }).filter((item:any) => item !== null);  // Remove null values
+filterItems() {
+  const query = this.searchQuery?.trim().toLowerCase();
 
-       //console.log("filtereed items ",this.filteredItems)
-    }
-    
+  if (!query) {
+    // Reset all items and collapse
+    this.filteredItems = this.sidebarItems.map((item: any) => ({
+      ...item,
+      isOpen: false
+    }));
+    return;
+  }
+
+  this.filteredItems = this.sidebarItems
+    .map((item: any) => {
+      const matchesParent = item?.parentModuleName?.toLowerCase().includes(query);
+
+      const filteredChildren = item.subchildren?.filter((child: any) =>
+        child.module_name?.toLowerCase().includes(query)
+      ) || [];
+
+      if (matchesParent || filteredChildren.length > 0) {
+        return {
+          ...item,
+          isOpen: true,  // 👈 Expand this item
+          subchildren: filteredChildren.length > 0 ? filteredChildren : item.subchildren
+        };
+      }
+
+      return null;
+    })
+    .filter((item: any) => item !== null);
+}
+ 
     openSidebar() {
       this.isVisible = true;
     }

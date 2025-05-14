@@ -76,7 +76,10 @@ export class AppComponent {
     });
 
     this.userService.loadDataOnce();
-   
+    let userToken=localStorage.getItem('token');
+    // this.utilitiesService.getUserInfo({token:userToken}).subscribe((res:any)=>{
+    //   localStorage.setItem('userId',res.data[0].userId)
+    // })
   }
 
   updateLoaderHeight() {

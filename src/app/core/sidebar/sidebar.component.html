@@ -92,8 +92,8 @@
       <!-- Submenu -->
       <ul *ngIf="item.isOpen" class="submenu">
        
-        <li *ngFor="let subItem of item.subchildren" class="subsidebar  child  f-12 ms-3 menu-item">
-          <i class='bx bx-circle f-8'></i>
+        <li *ngFor="let subItem of item.subchildren" class="subsidebar  child  f-12 ms-7 menu-item">
+          <!-- <i class='bx bx-circle f-8'></i> -->
           <a 
             [routerLink]="subItem.module_route" 
             routerLinkActive="active" 
@@ -110,7 +110,7 @@
   <div class="user-profile d-flex flex-row justify-between me-5 pe-3">
     <div class="flex flex-row mt-2" >
       <img src="man_4140048.png" height="40px" width="40px" class="me-3" />
-      <p class="user-name">{{userName|| 'Prateek'}}</p>
+      <p class="user-name f-12">{{userName|| 'Prateek'}}</p>
     </div>
     
     <div
