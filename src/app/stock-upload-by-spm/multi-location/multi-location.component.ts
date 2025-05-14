@@ -10,6 +10,8 @@ import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import * as XLSX from 'xlsx';
 import { Table } from 'primeng/table';
+import { UserService } from '../../services/user.service';
+import { SidebarService } from '../../services/sidebar.service';
 @Component({
   selector: 'app-multi-location',
   imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
@@ -37,6 +39,8 @@ export class MultiLocationComponent {
  locationAdd=1;
  visible:boolean=false;
 response:any=[];
+users:any=[];
+visibleSidebar:boolean=false;
  isDataPresentPartNotInMaster:boolean=false;
         locationSelected: Set<number> = new Set(); // To track selected locations
         @ViewChildren('fu') fu: QueryList<FileUpload> | undefined;
@@ -44,7 +48,9 @@ response:any=[];
      private fb:FormBuilder,
      private stockUploadService:StockUploadBySpmService,
      private globalBlockUiService:GlobalBlockUiService,
-     private messageService:MessageService
+     private messageService:MessageService,
+     private userService:UserService,
+     private sidebarService:SidebarService
     ){
 
      
@@ -64,7 +70,14 @@ response:any=[];
     ngOnInit(){
       // this.getLocations();
       this.getBrands();
+      this.userService.allUserData$.subscribe((users:any)=>{
+        this.users=users;
+      })
       
+       this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
+    this.visibleSidebar=visible;
+   })
+      this.userId=localStorage.getItem('userId');
     }
     get locationControls() {
       return (this.mlForm.get('locations') as FormArray);
@@ -103,8 +116,7 @@ response:any=[];
         })
       );
     }
-  
-  
+
   
     // Remove location entry
     removeLocation(index: number) {
@@ -184,7 +196,7 @@ response:any=[];
   
     // Handle the submit (upload)
     onUpload() {
-      let userId=1;
+     
     
       // let dealerId=20295;
       if (this.mlForm.valid) {
@@ -201,7 +213,7 @@ response:any=[];
         if (location.location) {
           this.formData.append('location_id', location.location); // Append location ID
         }
-        this.formData.append('user_id', userId.toString());
+        this.formData.append('user_id', this.userId.toString());
         
         this.formData.append('dealer_id', this.mlForm.value.dealer.toString());
       });
@@ -338,29 +350,30 @@ response:any=[];
     }
     
     getRecords(){
-      this.userId=1;
+    
       const locations = this.mlForm.get('locations')?.value;
       
       this.globalBlockUiService.startLoading();
-      this.stockUploadService.getRecordsMultiLocation({locations:locations,added_by:this.userId}).subscribe((res:any)=>{
+      this.stockUploadService.getRecordsMultiLocation({locations:locations}).subscribe((res:any)=>{
         this.records=res.data;
         this.globalBlockUiService.stopLoading();
        
       this.addedOn=res.data.added_on;
-      this.addedBy='Kirti'
+      
       // this.records=this.records[0]
       // console.log('this.records:', this.records); // Log the structure of records to check
 
       this.records = this.records.flat().map((item: any) => {
         // Find the location object based on location_id
         let locObj = this.locations.find((obj: any) => obj.location_id == item.location_id);
-      
+        let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
         // Return the updated item with formatted date, locationName, and added_by
         return {
           ...item,
           added_on: (item.added_on),  // Format the added_on date
           locationName: locObj?.location_name || '',  // Default locationName if not found
-          added_by: this.addedBy || ''  // Ensure added_by is always set, defaulting to empty string if undefined
+          added_by:  userObj?.vcFirstName +' '+userObj?.vcLastName  // Ensure added_by is always set, defaulting to empty string if undefined
+       
         };
       });
   
@@ -420,7 +433,7 @@ response:any=[];
                 ['Previous Sum Quantity']: item.prevQuantitySum !=null ?item.prevQuantitySum:0,
                 ['Current Sum Quantity']: item.quantitySum  !=null ?item.quantitySum:0,
                 ['Added On ']: this.formatDate(item.added_on),
-                ['Added By ']:'Kirti'
+                ['Added By ']:item.added_by
                
           
               }));

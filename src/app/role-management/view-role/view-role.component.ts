@@ -48,7 +48,7 @@ export class ViewRoleComponent {
     private sidebarService:SidebarService
   ){
     this.viewRole();
-    this.token=localStorage.getItem('authToken');
+    this.token=localStorage.getItem('token');
     this.userId=localStorage.getItem('userId');
     this.currentRoute=router.url;
   }
@@ -74,7 +74,7 @@ export class ViewRoleComponent {
 
     //console.log(product);
     this.globalBlockUiService.startLoading();
-    this.roleService.deleteRole({...product,token:this.token,loginUserId:this.userId}).subscribe((res:any)=>{
+    this.roleService.deleteRole({...product,loginUserId:this.userId}).subscribe((res:any)=>{
       this.globalBlockUiService.stopLoading();
       this.viewRole();
     },(error:any)=>{
@@ -350,7 +350,7 @@ for (let item of this.allModules) {
   }
 }
 
-console.log("Filtered modules to send", filteredModules);
+//console.log("Filtered modules to send", filteredModules);
 
 this.roleService.editRole({
   modules: filteredModules,

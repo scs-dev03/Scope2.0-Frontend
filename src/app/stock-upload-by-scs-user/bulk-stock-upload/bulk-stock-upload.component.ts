@@ -84,9 +84,10 @@ export class BulkStockUploadComponent {
    this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible;
    })
-
-  
    
+   this.userService.allUserData$.subscribe((users:any)=>{
+    this.users=users;
+   })
   }
  
   getBrands(){
@@ -393,7 +394,7 @@ export class BulkStockUploadComponent {
           ['Current Records']: item.stockUploadCount !=null ?item.stockUploadCount:0,
           ['Previous Sum Quantity']: item.prevQuantitySum !=null? item.prevQuantitySum:0,
           ['Current Sum Quantity']: item.quantitySum !=null? item.quantitySum:0,
-          ['Added On ']: (item.added_on),
+          ['Added On ']: this.formatDate(item.added_on),
           ['Added By ']:item.added_by
         
         }));
@@ -420,7 +421,7 @@ export class BulkStockUploadComponent {
     //  console.log("loc obj ",locationObj)
       return{
         ...item,
-        added_on: this.formatDate(item.added_on),
+        added_on: (item.added_on),
         locationName:locationObj?.location_name,
         added_by:userObj?.vcFirstName+' '+userObj.vcLastName
       }

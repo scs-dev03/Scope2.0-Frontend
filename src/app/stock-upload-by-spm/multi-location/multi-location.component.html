@@ -40,11 +40,9 @@
   
                       </div>
                     
-                        <div class="add-mapping-card w-[70vw] h-auto  !gap-6 p-3">
+                        <div class="add-mapping-card w-[70vw] h-auto  !gap-6 p-3" [ngClass]="visibleSidebar?'w-[70vw]':'w-[90vw]'">
                             <div formArrayName="locations" *ngFor="let locationControl of locationControls.controls; let i = index">
-                               
-
-                               
+                                  
                               <div [formGroupName]="i" class="location-container">
                                 <div class="!flex !flex-row gap-6 my-4">
                                     <!-- Location Selection -->
@@ -58,7 +56,7 @@
                                             class="dropdown w-56 md:w-56"
                                             (onChange)="onLocationChange(i)"
                                             [filter]="true" 
-                          filterPlaceholder="Search Location..."
+                                            filterPlaceholder="Search Location..."
                                         ></p-select>
                                         <div *ngIf="locationControls.controls[i].get('location')?.touched && locationControls.controls[i].get('location')?.invalid" class="error-message">
                                             <small *ngIf="locationControls.controls[i].get('location')?.hasError('required')" style="color: red; font-size: 12px;">Location is required.</small>
@@ -122,8 +120,8 @@
                 </div>
             </div>
             <div
-            class="card   h-auto  p-3 bg-gray-50 rounded-lg shadow-lg mb-5 w-[70vw] mt-4 "
-            *ngIf="showTable"
+            class="card   h-auto  p-3 bg-gray-50 rounded-lg shadow-lg mb-5  mt-4 "
+            *ngIf="showTable" [ngClass]="visibleSidebar?'w-[70vw]':'w-[90vw]'"
             >
             <div class="d-flex justify-between">
               <span class="text-black text-lg ">Stock Upload History</span>

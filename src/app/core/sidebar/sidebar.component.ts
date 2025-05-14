@@ -31,6 +31,7 @@ export class SidebarComponent {
   activeIndex:any;
   isVisible: boolean = true;
   sidebarItems:any=[];
+  userName:any;
   // sidebarItems = [
   //   {id: 1, value: "Mapping", children: [
   //       {id: 2, value: "Stock Upload Mapping", route: 'mapping/stock-upload',isActive: true},
@@ -184,14 +185,14 @@ export class SidebarComponent {
  
    
   ]
-  
+  this.userName=localStorage.getItem('username');
   
   this.sharedService.sidebarData
   .pipe(take(2))// ensure it only runs once
   .subscribe((res: any) => {
-    console.log('Received from shared service:', res);
+  //  console.log('Received from shared service:', res);
     if (res && res.loaded) {
-      console.log("shared service ",res.loaded)
+     // console.log("shared service ",res.loaded)
       this.sidebarItems = Array.from(res.items);
      this.transformData(this.sidebarItems);
      
@@ -224,7 +225,7 @@ logOut(){
 getModulesOnTrigger(){
   this.globalBlockUiService.startLoading();
   this.sidebarService.getModules().subscribe((res:any)=>{
-   
+   this.userName=localStorage.getItem('username');
 // const cleaned = this.transformSidebarData(data);  // this will be dense, clean
 this.sidebarItems = res.data;
  //console.log("modules api in sidebar ",this.sidebarItems)
