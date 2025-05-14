@@ -12,6 +12,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { StockUploadByUserService } from '../../services/stock-upload-by-user.service';
 import { Table } from 'primeng/table';
 import { SidebarService } from '../../services/sidebar.service';
+import { UserService } from '../../services/user.service';
 @Component({
   selector: 'app-single-stock-upload',
   imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
@@ -41,6 +42,7 @@ export class SingleStockUploadComponent {
   brands:any=[];
   dealers:any=[];
   userId:any;
+  users:any=[];
   @ViewChild('dataTable') dataTable: Table | undefined;
   isDataPresent:boolean=false;
   isDataPresentForPartNotInMaster:boolean=false
@@ -54,7 +56,8 @@ export class SingleStockUploadComponent {
    private stockUploadService:StockUploadBySpmService,
    private globalBlockUiService:GlobalBlockUiService,
    private messageService:MessageService,
-   private sidebarService:SidebarService
+   private sidebarService:SidebarService,
+   private userService:UserService
   ){
  
    this.slForm=this.fb.group({
@@ -78,6 +81,11 @@ export class SingleStockUploadComponent {
 
   this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible;
+  });
+
+  this.userId=localStorage.getItem('userId');
+  this.userService.allUserData$.subscribe((users:any)=>{
+    this.users=users;
   })
   }
  
@@ -158,12 +166,12 @@ export class SingleStockUploadComponent {
        }
 
      let locationId=this.slForm.value.location;
-     this.userId=1;
+     this.userId=localStorage.getItem('userId');
      
        let formData = new FormData();
        formData.append('excelFile', this.file, this.fileName);
        formData.append('location_id', locationId.toString());
-       formData.append('user_id', this.userId.toString());
+       formData.append('user_id', this.userId?.toString());
        formData.append('dealer_id', this.slForm.value.dealer.toString());
        formData.append('brand_id', this.slForm.value.brand.toString());
        formData.append('date',this.slForm.value.date.toString())
@@ -334,10 +342,12 @@ export class SingleStockUploadComponent {
  
    exportTableData(){
  
-    // console.log("records",this.records)
+    console.log("records",this.records)
     let brandObj=this.brands.find((obj:any)=> obj.brand_id==this.slForm.value.brand)
     let dealerObj=this.dealers.find((obj:any)=>obj.dealer_id==this.slForm.value.dealer)
-      const modifiedData = this.records.map((item: any) => ({
+      const modifiedData = this.records.map((item: any) => {
+      
+        return{
           ['Brand']:brandObj?.brand,
           ['Dealer']:dealerObj?.dealer_name,
           ['Location']: this.locationName,
@@ -346,10 +356,10 @@ export class SingleStockUploadComponent {
           ['Previous Sum Quantity']: item.prevQuantitySum !=null ?item.prevQuantitySum :0,
           ['Current Sum Quantity']: item.quantitySum !=null ?item.quantitySum:0 ,
           ['Added On ']: this.formatDate(item.added_on),
-          ['Added By ']:'Kirti'
+          ['Added By ']:item.addedBy
          
-    
-        }));
+        }
+        });
         const ws = XLSX.utils.json_to_sheet(modifiedData);
     
         // Create a workbook and append the worksheet
@@ -362,22 +372,26 @@ export class SingleStockUploadComponent {
 
    getAllRecords(){
 
-    this.userId=1;
     let locObj=this.locations.find((obj:any)=> obj.location_id==this.slForm.value.location)
-    this.stockUploadServiceByUser.getAllRecords({location_id:this.slForm.value.location,added_by:this.userId,dealer_id:this.slForm.value.dealer,brand_id:this.slForm.value.brand}).subscribe((res:any)=>{
+    this.stockUploadServiceByUser.getAllRecords({location_id:this.slForm.value.location,dealer_id:this.slForm.value.dealer,brand_id:this.slForm.value.brand}).subscribe((res:any)=>{
       this.records=res.data;
       let brandObj=this.brands.find((obj:any)=> obj.brand_id==this.slForm.value.brand)
       let dealerObj=this.dealers.find((obj:any)=>obj.dealer_id==this.slForm.value.dealer)
       this.locationName=locObj?.location_name;
       this.addedOn=res.data.added_on;
       //console.log("brands ",brandObj,this.brands)
-      this.addedBy='Kirti'
-     this.records= this.records.map((item:any)=>({
-        ...item,
+      
+     this.records= this.records.map((item:any)=>{
+      let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
+      this.addedBy=userObj?.vcFirstName+' '+userObj?.vcLastName
+        return{
+          ...item,
         brandName:brandObj?.brand,
         dealerName:dealerObj?.dealer_name,
-        added_on: (item.added_on)
-      }))
+        added_on: (item.added_on),
+        addedBy:this.addedBy
+        }
+      })
     })
    }
 

@@ -13,6 +13,7 @@ import { StockUploadByUserService } from '../../services/stock-upload-by-user.se
 import { Table } from 'primeng/table';
 import { setActiveConsumer } from '@angular/core/primitives/signals';
 import { SidebarService } from '../../services/sidebar.service';
+import {UserService } from '../../services/user.service'
 @Component({
   selector: 'app-bulk-stock-upload',
   imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
@@ -47,10 +48,7 @@ export class BulkStockUploadComponent {
   isDataPresentForPartNotInMaster:boolean=false;
   isDataPresentForPreviousUpload:boolean=false;
   userId:any;
-  users:any=[{
-    id:1,
-    name:'Kirti'
-  }]
+  users:any=[]
   visibleSidebar:boolean=false;
   @ViewChild('fu') fu:FileUpload|null=null;
   constructor(private utilitiesService:UtilitiesService,
@@ -59,7 +57,8 @@ export class BulkStockUploadComponent {
    private globalBlockUiService:GlobalBlockUiService,
    private messageService:MessageService,
    private stockUploadServiceBySCSUser:StockUploadByUserService,
-   private sidebarService:SidebarService
+   private sidebarService:SidebarService,
+   private userService: UserService
   ){
  
    this.mlForm=this.fb.group({
@@ -79,11 +78,15 @@ export class BulkStockUploadComponent {
    // Set min date to three months ago
    this.min = new Date();
    this.min.setMonth(this.max.getMonth() - 3);
-   this.userId=this.users[0].id;
+  //  this.userId=this.users[0].id;
+  this.userId=localStorage.getItem('userId');
 
    this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible;
    })
+
+  
+   
   }
  
   getBrands(){
@@ -391,7 +394,7 @@ export class BulkStockUploadComponent {
           ['Previous Sum Quantity']: item.prevQuantitySum !=null? item.prevQuantitySum:0,
           ['Current Sum Quantity']: item.quantitySum !=null? item.quantitySum:0,
           ['Added On ']: (item.added_on),
-          ['Added By ']:'Kirti'
+          ['Added By ']:item.added_by
         
         }));
         const ws = XLSX.utils.json_to_sheet(modifiedData);
@@ -410,14 +413,16 @@ export class BulkStockUploadComponent {
       this.records=res.data;
       // console.log("locations ",this.locations)
       this.addedOn=res.data.added_on;
-      this.addedBy='Kirti'
+    
      this.records= this.records.map((item:any)=>{
       let locationObj=this.locations.find((obj:any)=>obj.location_id==parseInt(item.location_id));
+      let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
     //  console.log("loc obj ",locationObj)
       return{
         ...item,
         added_on: this.formatDate(item.added_on),
-        locationName:locationObj?.location_name
+        locationName:locationObj?.location_name,
+        added_by:userObj?.vcFirstName+' '+userObj.vcLastName
       }
        
        
