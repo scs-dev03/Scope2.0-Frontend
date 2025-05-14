@@ -12,6 +12,8 @@ import { SidebarService } from './services/sidebar.service';
 import { HomePageService } from './services/home-page/home-page.service';
 import { UtilitiesService } from './services/utilities.service';
 import { filter } from 'rxjs';
+import { SharedServiceService } from './services/shared-service.service';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -28,25 +30,18 @@ export class AppComponent {
   @ViewChild('blockUI') blockUI!: BlockUI;
   @ViewChild('sidebar') sidebar!: SidebarComponent;
    token:any;
+   sidebarItems:any=[];
+   usertype:any;
   constructor(private globalBlockUIService: GlobalBlockUiService,
     private router:Router, private route: ActivatedRoute,
     private renderer: Renderer2,
     public sidebarService: SidebarService,
     private utilitiesService:UtilitiesService,
-  private homepageservice:HomePageService) {}
+    private sharedService:SharedServiceService,
+  private userService:UserService) {}
 
   ngOnInit() {
-    // Set BlockUI reference in the global service
-    // this.router.events.subscribe((event) => {
-    //   if (event instanceof NavigationEnd) {
-       
-    //     if (event.urlAfterRedirects.includes('stock-upload')) {
-    //       this.isLoading=true;  // Start loading for stock-upload route
-    //     } else {
-    //       this.isLoading=false;   // Stop loading for other routes
-    //     }
-    //   }
-    // });
+   
     this.globalBlockUIService.loading$.subscribe((loading:any)=>{
       this.isLoading=loading;
     })
@@ -66,7 +61,25 @@ export class AppComponent {
         url.includes('/login') ||
         url.includes('/core/update-user-password');
     });
-    this.fetchUserinfo(this.token,'d');
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd && event.urlAfterRedirects === '/core/home') {
+        this.sharedService.triggerSidebarReset();
+      }
+    });
+
+    
+   
+    
+    this.route.queryParams.subscribe(params => {
+      const token = params['token'];
+      // console.log('Received token:', token);
+    });
+
+    this.userService.loadDataOnce();
+    let userToken=localStorage.getItem('token');
+    // this.utilitiesService.getUserInfo({token:userToken}).subscribe((res:any)=>{
+    //   localStorage.setItem('userId',res.data[0].userId)
+    // })
   }
 
   updateLoaderHeight() {
@@ -97,7 +110,7 @@ export class AppComponent {
     this.updateLoaderHeight();
     window.addEventListener('resize', () => this.updateLoaderHeight());
   }
-
+  
   ngAfterContentChecked() {
     this.updateLoaderHeight(); // Adjust height when content updates
   }
@@ -107,47 +120,18 @@ export class AppComponent {
     this.sidebarService.toggle();
   }
 
-  fetchUserinfo(usertoken:any,usertype:any){
-    // console.log('fetch method',usertoken);
-    // console.log('fetch method',usertype);
-    
-    //this.isloading = true
-    // this.homepageservice.getuserinfo({ token: usertoken, usertype: usertype }).subscribe({
-    //   next: (res: any) => {
-    //    // console.log(res.Data);
-    //     localStorage.setItem('userId',res.Data[0].UserId)
-    //     if (usertype == 'd') {
-    //       localStorage.setItem('brandid', res.Data[0].BrandID);
-    //       localStorage.setItem('dealerid', res.Data[0].dealerid);
-    //       localStorage.setItem('username', res.Data[0].username);
-    //     }
-    
-    //     if (usertype == 'a') {
-    //       localStorage.setItem('username', res.Data[0].username);
-    //       localStorage.setItem('userid', res.Data[0].bintid_pk);
-    //       localStorage.setItem('designation', res.Data[0].designation);
-    //     }
-    
-    //  //   this.isloading = false;
-    //   //  this.goToHomePage();
-    //   },
-    //   error: (err) => {
-    //   //  console.error('Error fetching user info:', err);
-    //   //  this.isloading = false;
-    
-    //     // Optional: show user-friendly message
-    //     alert('Something went wrong while fetching user info. Please try again.');
-    
-    //     // You could also use a snackbar/toast service instead of alert
-    //   }
-    // });
-
-    // this.utilitiesService.getUserInfo({token:usertoken}).subscribe((res:any)=>{
-
-    //   localStorage.setItem('userId',res.data[0].userId);
-    // })
-    
-
+  getModules(){
+    this.isLoading=true;
+    this.sidebarService.getModules().subscribe((res:any)=>{
+      this.sidebarItems=res.data;
+    //  console.log(res.data);
+     this.isLoading=false;
+      // this.transformData(this.sidebarItems)
+      // this.sharedService.updateSidebarData(this.sidebarItems);
+    },(error:any)=>{
+      // this.globalBlockUiService.stopLoading();
+      this.isLoading=false;
+    })
   }
   
   

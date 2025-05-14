@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 
@@ -9,6 +9,9 @@ import { HttpClient } from '@angular/common/http';
 export class UserService {
 
 private url:any=environment.apiUrl;
+private allUserDataSubject=new BehaviorSubject<any>(null);
+allUserData$=this.allUserDataSubject.asObservable();
+
   constructor(private http:HttpClient) { }
 
   getUsers():Observable<any>{
@@ -33,5 +36,11 @@ private url:any=environment.apiUrl;
 
   requestNewMail(data:any):Observable<any>{
     return this.http.post(`${this.url}user/request-new-mail`,data)
+  }
+
+  loadDataOnce() {
+    this.http.get(`${this.url}user/get-user`).subscribe((res:any) => {
+      this.allUserDataSubject.next(res.data);
+    });
   }
 }

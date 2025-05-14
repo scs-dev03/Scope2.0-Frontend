@@ -9,7 +9,7 @@
                             <!-- <span class="btn-view  mb-2" [ngClass]="isDataPresentPartNotInMaster?'cursor-pointer':'disabled'"(click)="exportToExcel()" >Part Not In Master Export</span> -->
                             <!-- <i  class="bx bx-export cursor-pointer font-semibold mb-2" style="font-size: 20px;" (click)="exportToExcel()"  ></i> -->
                         </div>
-                    <div class=" add-mapping-card w-[72vw] h-auto  ">
+                    <div class=" add-mapping-card  h-auto  " [ngClass]="visibleSidebar?'w-[70vw]':'w-[90vw]'">
                        <div class="!flex !flex-row !gap-6 p-3 !items-center">
                         <div>
                           <p-select
@@ -101,8 +101,8 @@
                 </div>
             </div>
             <div
-            class="card   h-auto  p-3 bg-gray-50 rounded-lg shadow-lg mb-5 w-[72vw] mt-4 "
-            *ngIf="showTable"
+            class="card   h-auto  p-3 bg-gray-50 rounded-lg shadow-lg mb-5  mt-4 "
+            *ngIf="showTable" [ngClass]="visibleSidebar?'w-[70vw]':'w-[90vw]'"
             >
             <div class="d-flex justify-between">
               <span class="text-black text-lg ">Stock Upload History</span>  

@@ -22,6 +22,8 @@
                               optionValue="brand_id"
                               placeholder="Select Brand"
                               class=""
+                              [filter]="true" 
+                          filterPlaceholder="Search Brand..."
                               [ngClass]="visibleSidebar?'dropdown':'dropdown-collapse'"
                               (onChange)="onBrandChange($event)"
                               
@@ -38,6 +40,8 @@
                               optionLabel="dealer_name"
                               optionValue="dealer_id"
                               placeholder="Select Dealer"
+                              [filter]="true" 
+                          filterPlaceholder="Search Dealer..."
                               [ngClass]="visibleSidebar?'dropdown':'dropdown-collapse'"
                               (onChange)="onDealerChange($event)"
                               
@@ -55,6 +59,8 @@
                                   optionValue="location_id"
                                   placeholder="Select Location"
                                   [ngClass]="visibleSidebar?'dropdown':'dropdown-collapse'"
+                                  [filter]="true" 
+                          filterPlaceholder="Search Location..."
                                   (onChange)="onLocationChange($event)"
                                   
                                 />
@@ -175,7 +181,7 @@
                     {{formatDate(rowData.added_on)}}
                  </td>
                  <td style="font-size: 11px;">
-                    {{addedBy}}
+                    {{rowData.addedBy}}
                  </td>
                  
                 </tr>

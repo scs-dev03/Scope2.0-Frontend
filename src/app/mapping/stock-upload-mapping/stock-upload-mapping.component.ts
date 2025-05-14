@@ -20,6 +20,7 @@ import * as XLSX from 'xlsx';
 import { FileUpload } from 'primeng/fileupload';
 import { PaginatorState } from 'primeng/paginator';
 import { SidebarService } from '../../services/sidebar.service';
+import { UserService } from '../../services/user.service';
 @Component({
   selector: 'app-stock-upload-mapping',
   imports: [
@@ -82,10 +83,12 @@ export class StockUploadMappingComponent {
   first: number = 0;
   visibleStockCalculation:boolean=false;
   isSidebarVisible:boolean=false;
-  users:any=[{
-    id:1,name:'Kirti'
-  }]
+  userId:any;
+  // users:any=[{
+  //   id:1,name:'Kirti'
+  // }]
   stockType:any;
+  users:any=[];
   calculativeFormula:any=''
   rows: number = 10;
   constructor(
@@ -94,7 +97,8 @@ export class StockUploadMappingComponent {
     private stockUploadMappingService: StockUploadMappingService,
     private messageService: MessageService,
     private globalBlockUIService: GlobalBlockUiService,
-    private sidebarService:SidebarService
+    private sidebarService:SidebarService,
+    private userService:UserService
   ) {
     this.stMappingForm = this.fb.group({
       mappingForBothStock: [''],
@@ -152,6 +156,7 @@ export class StockUploadMappingComponent {
 
   ngOnInit() {
     // Disable the fields after initialization
+    this.userId=localStorage.getItem('userId');
     this.editOlderDaysStockForm.get('partNumber')?.disable();
     this.editOlderDaysStockForm.get('stockQty')?.disable();
     this.editOlderDaysStockForm.get('location')?.disable();
@@ -174,6 +179,11 @@ export class StockUploadMappingComponent {
     
     this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
       this.isSidebarVisible=visible;
+    })
+
+    this.userService.allUserData$.subscribe((res:any)=>{
+      this.users=res;
+      console.log("users ",this.users)
     })
   }
 
@@ -418,12 +428,12 @@ export class StockUploadMappingComponent {
           let obj = this.brands.find((obj: any) => {
             return obj.brand_id == item.brand_id;
           });
-          let currentAddedByObj=this.users.find((obj:any)=>obj.id==item.added_by)
+          let currentAddedByObj=this.users.find((obj:any)=>obj.userId==item.added_by)
           // let olderAddedByObj=this.users.find((obj:any)=>obj.id==item.older_added_by)
           return {
             ...item,
             brandName: obj.brand,
-            currentAddedBy:currentAddedByObj?.name,
+            currentAddedBy:currentAddedByObj?.vcFirstName+" "+currentAddedByObj?.vcLastName,
 
           };
         });
@@ -619,7 +629,7 @@ export class StockUploadMappingComponent {
           stockQty: rowData.current_stock_qty.split(','),
           calculativeField:rowData.current_calculativeField
         });
-         console.log("show current ",this.editCurrentDayStockForm.value)
+      //   console.log("show current ",this.editCurrentDayStockForm.value)
       } else {
         this.showforAddCurrentData = true;
         this.showforEditOlderData = false;
@@ -682,7 +692,7 @@ export class StockUploadMappingComponent {
             values: this.editCurrentDayStockForm.value,
             brandColumns: this.showCurrentStockColumnsInTable,
             calculativeField:formula,
-            userId: 1,
+            userId: this.userId,
             stockType: 'current',
             id: this.rowData.current_id,
           })
@@ -739,7 +749,7 @@ export class StockUploadMappingComponent {
             values: this.editOlderDaysStockForm.value,
             brandColumns: this.showOlderStockColumnsInTable,
             calculativeField:formula,
-            userId: 1,
+            userId: this.userId,
             stockType: 'older',
             id: this.rowData.older_id,
           })
@@ -829,7 +839,7 @@ export class StockUploadMappingComponent {
             values: this.currentStockForm.value,
             brandColumns: this.currentStockColumns,
             calculativeField:formula,
-            userId: 1,
+            userId: this.userId,
             stockType: 'current',
         }).subscribe((res:any)=>{
           this.globalBlockUIService.stopLoading();
@@ -869,7 +879,7 @@ export class StockUploadMappingComponent {
             values: this.olderStockForm.value,
             brandColumns: this.olderStockColumns,
             calculativeField:formula,
-            userId: 1,
+            userId: this.userId,
             stockType: 'older',
         }).subscribe((res:any)=>{
           this.globalBlockUIService.stopLoading();
@@ -1110,7 +1120,7 @@ export class StockUploadMappingComponent {
               values: this.editCurrentDayStockForm.value,
               brandColumns: this.editCurrentStockColumns,
               calculativeField:formula,
-              userId: 1,
+              userId: this.userId,
               stockType: 'current',
               id: this.viewMappedData[i].id,
             })
@@ -1163,7 +1173,7 @@ export class StockUploadMappingComponent {
               brandId: this.stMappingForm.value.brands,
               values: this.editOlderDaysStockForm.value,
               brandColumns: this.editOlderStockColumns,
-              userId: 1,
+              userId: this.userId,
               stockType: 'older',
               calculativeField:formula,
               id: this.viewMappedData[i].id,
@@ -1757,7 +1767,7 @@ patchStockCalculation(formula: string) {
               values: this.currentStockForm.value,
               brandColumns: this.currentStockColumns,
               calculativeField:this.calculativeFormula,
-              userId: 1,
+              userId: this.userId,
               stockType: 'current',
             })
             .subscribe(
@@ -1810,7 +1820,7 @@ patchStockCalculation(formula: string) {
             brandId: this.stMappingForm.value.brands,
             values: this.olderStockForm.value,
             brandColumns: this.olderStockColumns,
-            userId: 1,
+            userId: this.userId,
             stockType: 'older',
             calculativeField:this.calculativeFormula,
           })
@@ -1869,7 +1879,7 @@ patchStockCalculation(formula: string) {
             brandId: brandId,
             values: this.currentStockForm.value,
             brandColumns: this.currentStockColumns,
-            userId: 1,
+            userId: this.userId,
             calculativeField:this.calculativeFormula,
             stockType: 'current',
           })
@@ -1880,7 +1890,7 @@ patchStockCalculation(formula: string) {
                 brandId: brandId,
                 values: this.currentStockForm.value,
                 brandColumns: this.currentStockColumns,
-                userId: 1,
+                userId: this.userId,
                 calculativeField:this.calculativeFormula,
                 stockType: 'older',
               }).subscribe((res1:any)=>{

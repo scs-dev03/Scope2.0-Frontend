@@ -41,6 +41,7 @@ export class ViewCreateUserComponent {
     userId:any;
     showErrorMessage:any;
     emailArray:any=[];
+    sidebarItems:any=[];
      dataSubscription: Subscription|null=null;
      currentRoute:any;
     receivedData: any=[];
@@ -123,7 +124,7 @@ export class ViewCreateUserComponent {
         this.getRoles();
     
       this.userId=localStorage.getItem('userId');
-      this.token=localStorage.getItem('authToken');
+      this.token=localStorage.getItem('usertoken');
       this.authService.checkEmail({email:this.editUserForm.value.email}).subscribe(
         (response) => {
           this.emailArray=response.data;
@@ -136,8 +137,16 @@ export class ViewCreateUserComponent {
   
       this.dataSubscription = this.sharedService.sidebarData.subscribe(
         (data) => {
-          this.receivedData = data;
-         // console.log('Data received in User:', this.receivedData);
+       //  console.log("data in view user 139",data?.items)
+          this.receivedData = data?.items;
+          const alreadyTransformed = this.receivedData?.some(
+            (item: any) => Array.isArray(item.subchildren)
+          );
+        
+          if (!alreadyTransformed) {
+            this.receivedData = this.transformData(this.receivedData);
+          }
+          //console.log('Data received in User:', this.receivedData);
           if(this.receivedData!=null){
   
             for(let item of this.receivedData){
@@ -155,7 +164,7 @@ export class ViewCreateUserComponent {
     }
             }
           }
-       //  console.log("result",this.userPermissions)
+         console.log("result",this.userPermissions)
          
         }
       );
@@ -165,6 +174,65 @@ export class ViewCreateUserComponent {
       })
       }
   
+      transformData(data: any)
+ {
+  const groupedData: { [key: string]: any } = {};
+  const directParents: any[] = [];
+// console.log("type of ",typeof data,data)
+  data?.forEach((item: any) => {
+    const parentName = item.parentModuleName;
+
+    // ✅ Handle missing, "null", or NULL strings as direct parent
+    if (!parentName || parentName.toLowerCase?.() === 'null') {
+      directParents.push({
+        parentModuleName: item.module_name,
+        module_route: item.module_route,
+        add1: item.add1,
+        delete1: item.delete1,
+        edit1: item.edit1,
+        isActive: item.isActive,
+        view1: item.view1,
+        subchildren: [],     // still keep subchildren key to simplify UI logic
+        isOpen: false
+      });
+    } else {
+      if (!groupedData[parentName]) {
+        groupedData[parentName] = {
+          parentModuleName: parentName,
+          subchildren: [],
+          isOpen: false
+        };
+      }
+   
+      groupedData[parentName].subchildren.push({
+        module_name: item.module_name,
+        module_route: item.module_route,
+        add1: item.add1,
+        delete1: item.delete1,
+        edit1: item.edit1,
+        isActive: item.isActive,
+        view1: item.view1
+      });
+    }
+   // console.log("grouped data in view create user ",groupedData[parentName]?.subchildren,item)
+  });
+
+  const combinedResult = [...Object.values(groupedData), ...directParents];
+  // const cleanedGroupedData = Object.values(groupedData).filter(item => item && typeof item === 'object');
+  // const cleanedDirectParents = directParents.filter(item => item && typeof item === 'object');
+  
+  // const combinedResult = [...cleanedGroupedData, ...cleanedDirectParents];
+  
+  console.log("combined result ",groupedData)
+  //console.log("combined Result ",combinedResult)
+  this.sidebarItems = combinedResult;
+  //console.log("sidebar ",this.sidebarItems)
+  //this.sendDataToUser(this.sidebarItems);
+  // this.filteredItems = [...this.sidebarItems];
+  // console.log("filtered items ",this.filteredItems)
+  return combinedResult;
+}
+
       checkEmailAvailability() {
         this.showErrorMessage = '';
     

@@ -10,6 +10,7 @@ import { TieredMenu } from 'primeng/tieredmenu';
 import { SidebarService } from '../../services/sidebar.service';
 import { SharedServiceService } from '../../services/shared-service.service';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -30,6 +31,7 @@ export class SidebarComponent {
   activeIndex:any;
   isVisible: boolean = true;
   sidebarItems:any=[];
+  userName:any;
   // sidebarItems = [
   //   {id: 1, value: "Mapping", children: [
   //       {id: 2, value: "Stock Upload Mapping", route: 'mapping/stock-upload',isActive: true},
@@ -46,44 +48,39 @@ export class SidebarComponent {
     filteredItems: any[] = [...this.sidebarItems]; // Initially, all items are visible
 
     // Function to filter items based on the search query
-    filterItems() {
-      // If search query is empty or contains only spaces, reset to show all items
-      if (!this.searchQuery || this.searchQuery.trim() === '') {
-        this.filteredItems = [...this.sidebarItems]; // Show all items
-        return;
-      }
-    
-      // Filter items based on search query
-      this.filteredItems = this.sidebarItems.map((item:any) => {
-        // Check if the parent matches the search query
-        let matchesParent = item?.parentModuleName?.toLowerCase().includes(this.searchQuery.trim().toLowerCase());
-    
-        if (item.children) {
-          // Filter child items that match the search query
-          const filteredChildren = item.subchildren.filter((child:any) =>
-            child.value.toLowerCase().includes(this.searchQuery.trim().toLowerCase())
-          );
-    
-          // If any child matches, include the parent and the filtered children
-          if (filteredChildren.length > 0) {
-            return {
-              ...item,  // Keep the parent item
-              subchildren: filteredChildren  // Only keep the matching children
-            };
-          }
-        }
-    
-        // Include the parent item if it matches the search query
-        if (matchesParent) {
-          return item;
-        }
-    
-        return null; // Exclude items that don't match
-      }).filter((item:any) => item !== null);  // Remove null values
+filterItems() {
+  const query = this.searchQuery?.trim().toLowerCase();
 
-       //console.log("filtereed items ",this.filteredItems)
-    }
-    
+  if (!query) {
+    // Reset all items and collapse
+    this.filteredItems = this.sidebarItems.map((item: any) => ({
+      ...item,
+      isOpen: false
+    }));
+    return;
+  }
+
+  this.filteredItems = this.sidebarItems
+    .map((item: any) => {
+      const matchesParent = item?.parentModuleName?.toLowerCase().includes(query);
+
+      const filteredChildren = item.subchildren?.filter((child: any) =>
+        child.module_name?.toLowerCase().includes(query)
+      ) || [];
+
+      if (matchesParent || filteredChildren.length > 0) {
+        return {
+          ...item,
+          isOpen: true,  // 👈 Expand this item
+          subchildren: filteredChildren.length > 0 ? filteredChildren : item.subchildren
+        };
+      }
+
+      return null;
+    })
+    .filter((item: any) => item !== null);
+}
+ 
     openSidebar() {
       this.isVisible = true;
     }
@@ -103,26 +100,37 @@ export class SidebarComponent {
     }
     
    
-   setActive(subItem: any, parentItem: any) {
+  //  setActive(subItem: any, parentItem: any) {
 
-    // console.log(subItem);
-     // Reset the active state for all main menu items and submenus
-     this.sidebarItems.forEach((menuItem: any) => {
-       menuItem.isActive = false;  // Reset active state for all main items
-       menuItem?.subchildren.forEach((sub: any) => {
-         sub.isActive = false;  // Reset active state for all submenus
-       });
-     });
+  //   // console.log(subItem);
+  //    // Reset the active state for all main menu items and submenus
+  //    this.sidebarItems.forEach((menuItem: any) => {
+  //      menuItem.isActive = false;  // Reset active state for all main items
+  //      menuItem?.subchildren.forEach((sub: any) => {
+  //        sub.isActive = false;  // Reset active state for all submenus
+  //      });
+  //    });
    
-     // Set the clicked submenu item as active
-     subItem.isActive = true;
+  //    // Set the clicked submenu item as active
+  //    subItem.isActive = true;
    
-     // Also set the parent main menu item as active
-     parentItem.isActive = true;
+  //    // Also set the parent main menu item as active
+  //    parentItem.isActive = true;
    
-     // Ensure that the parent submenu is opened
-     parentItem.isOpen = true;
-   }
+  //    // Ensure that the parent submenu is opened
+  //    parentItem.isOpen = true;
+  //  }
+
+  setActive(subItem: any, parentItem: any) {
+    this.filteredItems.forEach(item => {
+      item.isActive = false;
+      item.subchildren?.forEach((sub:any) => sub.isActive = false);
+    });
+  
+    parentItem.isActive = true;
+    subItem.isActive = true;
+  }
+  
 
  
 
@@ -170,36 +178,83 @@ export class SidebarComponent {
         separator: true
     },
  
-    
+   
   ]
+  this.userName=localStorage.getItem('username');
   
+  this.sharedService.sidebarData
+  .pipe(take(2))// ensure it only runs once
+  .subscribe((res: any) => {
+  //  console.log('Received from shared service:', res);
+    if (res && res.loaded) {
+     // console.log("shared service ",res.loaded)
+      this.sidebarItems = Array.from(res.items);
+     this.transformData(this.sidebarItems);
+     
+   // console.log("sidebar items ",this.sidebarItems)
+    } else {
+      console.warn('Sidebar data not loaded');
+    }
+  });
+    
   this.getModules();
+     this.sharedService.sidebarResetTrigger.subscribe(() => {
+      this.resetSidebarState(); // Custom function to reset UI (NOT API)
+    });
 }
 
 constructor(private sidebarService:SidebarService,private sharedService:SharedServiceService,
   private globalBlockUiService:GlobalBlockUiService,
+ 
   private router :Router
 ){}
    
-
+resetSidebarState(){
+  this.getModulesOnTrigger();
+}
 logOut(){
   localStorage.clear();
   window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx';
 }
-getModules(){
+
+getModulesOnTrigger(){
   this.globalBlockUiService.startLoading();
   this.sidebarService.getModules().subscribe((res:any)=>{
-    this.sidebarItems=res.data;
-    this.globalBlockUiService.stopLoading();
-    this.transformData(this.sidebarItems)
+   this.userName=localStorage.getItem('username');
+// const cleaned = this.transformSidebarData(data);  // this will be dense, clean
+this.sidebarItems = res.data;
+ //console.log("modules api in sidebar ",this.sidebarItems)
+//  this.sidebarItems=this.transformData(this.sidebarItems)
+// this.filteredItems=this.transformData(this.sidebarItems);
+  this.sharedService.updateSidebarData(this.sidebarItems)
+  this.transformData(this.sidebarItems)
+   this.globalBlockUiService.stopLoading();
   },(error:any)=>{
-    this.globalBlockUiService.stopLoading();
+     this.globalBlockUiService.stopLoading();
   })
 }
-transformData(data: any) {
+getModules(){
+   
+  this.globalBlockUiService.startLoading();
+  this.sidebarService.getModules().subscribe((res:any)=>{
+   
+// const cleaned = this.transformSidebarData(data);  // this will be dense, clean
+this.sidebarItems = res.data;
+// console.log("modules api in sidebar ",this.sidebarItems)
+//  this.sidebarItems=this.transformData(this.sidebarItems)
+// this.filteredItems=this.transformData(this.sidebarItems);
+  this.sharedService.updateSidebarData(this.sidebarItems)
+   this.globalBlockUiService.stopLoading();
+  },(error:any)=>{
+     this.globalBlockUiService.stopLoading();
+  })
+}
+
+transformData(data: any)
+ {
   const groupedData: { [key: string]: any } = {};
   const directParents: any[] = [];
-
+  //console.log("type of sidebar ",typeof data,data)
   data?.forEach((item: any) => {
     const parentName = item.parentModuleName;
 
@@ -238,12 +293,22 @@ transformData(data: any) {
   });
 
   const combinedResult = [...Object.values(groupedData), ...directParents];
+  // const cleanedGroupedData = Object.values(groupedData).filter(item => item && typeof item === 'object');
+  // const cleanedDirectParents = directParents.filter(item => item && typeof item === 'object');
+  
+  // const combinedResult = [...cleanedGroupedData, ...cleanedDirectParents];
+  
+  //console.log("combined result in sidebar",groupedData)
+  //console.log("combined Result ",combinedResult)
   this.sidebarItems = combinedResult;
   //console.log("sidebar ",this.sidebarItems)
-  this.sendDataToUser(this.sidebarItems);
+  //this.sendDataToUser(this.sidebarItems);
   this.filteredItems = [...this.sidebarItems];
+ // console.log("filtered items in sidebar",this.filteredItems)
   return combinedResult;
 }
+
+
 
 sendDataToUser(data:any) {
     

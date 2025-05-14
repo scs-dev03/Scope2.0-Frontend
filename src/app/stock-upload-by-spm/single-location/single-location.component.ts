@@ -10,6 +10,8 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { MessageService } from 'primeng/api';
 import { FileUpload } from 'primeng/fileupload';
 import { Table } from 'primeng/table';
+import { UserService } from '../../services/user.service';
+import { SidebarService } from '../../services/sidebar.service';
 @Component({
   selector: 'app-single-location',
   imports: [PrimengModuleModule,SharedModule,FormsModule,ReactiveFormsModule,CommonModule],
@@ -42,13 +44,17 @@ export class SingleLocationComponent {
   partNotInMasterRecords:any;
   dealers:any;
   brands:any;
+  users:any=[];
+  visibleSidebar:boolean=false
   isDataPresentPartNotInMaster:boolean=false;
   @ViewChild('fu') fu:FileUpload|null=null;
   constructor(private utilitiesService:UtilitiesService,
    private fb:FormBuilder,
    private stockUploadService:StockUploadBySpmService,
    private globalBlockUiService:GlobalBlockUiService,
-   private messageService:MessageService
+   private messageService:MessageService,
+   private userService:UserService,
+   private sidebarService:SidebarService
   ){
  
    this.slForm=this.fb.group({
@@ -62,6 +68,14 @@ export class SingleLocationComponent {
   ngOnInit(){
   //  this.getLocations();
    this.getBrands();  
+   this.userService.allUserData$.subscribe((res:any)=>{
+    this.users=res;
+   })
+
+   this.userId=localStorage.getItem('userId');
+   this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
+    this.visibleSidebar=visible
+   })
   }
  
   onSelect(event: any) {
@@ -105,7 +119,7 @@ export class SingleLocationComponent {
        return this.messageService.add({severity:'error',summary:'Select the File!!',life:4000});
        }
      let locationId=this.slForm.value.location;
-    this.userId=1;
+   // this.userId=1;
        const formData = new FormData();
        formData.append('excelFile', this.file, this.fileName);
        formData.append('location_id', locationId.toString());
@@ -305,7 +319,7 @@ export class SingleLocationComponent {
           ['Previous Sum Quantity']: item.prevQuantitySum !=null ?item.prevQuantitySum:0,
           ['Current Sum Quantity']: item.quantitySum !=null ?item.quantitySum :0,
           ['Added On ']: this.formatDate(item.added_on),
-          ['Added By ']:'Kirti'
+          ['Added By ']:item.added_by
          
     
         }));
@@ -321,19 +335,26 @@ export class SingleLocationComponent {
 
    getAllRecords(){
 
-    this.userId=1;
+   // this.userId=1;
     let locObj=this.locations.find((obj:any)=> obj.location_id==this.slForm.value.location)
     this.stockUploadService.getAllRecords({location_id:this.slForm.value.location,added_by:this.userId}).subscribe((res:any)=>{
       this.records=res.data;
       this.locationName=locObj.location_name;
       this.addedOn=res.data.added_on;
-      this.addedBy='Kirti'
-     this.records= this.records.map((item:any)=>({
+     
+      // this.addedBy='Kirti'
+     this.records= this.records.map((item:any)=>{
+      let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
+     return {
         ...item,
+       
          added_on: new Date(item.added_on),
        
-        added_by:this.addedBy
-      }))
+        added_by:userObj?.vcFirstName+' '+userObj.vcLastName
+
+      }
+        
+      })
     })
    }
 
