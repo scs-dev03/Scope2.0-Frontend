@@ -21,6 +21,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { PaginatorState } from 'primeng/paginator';
 import { SidebarService } from '../../services/sidebar.service';
 import { UserService } from '../../services/user.service';
+import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-stock-upload-mapping',
   imports: [
@@ -98,7 +99,8 @@ export class StockUploadMappingComponent {
     private messageService: MessageService,
     private globalBlockUIService: GlobalBlockUiService,
     private sidebarService:SidebarService,
-    private userService:UserService
+    private userService:UserService,
+    private sharedService:SharedServiceService
   ) {
     this.stMappingForm = this.fb.group({
       mappingForBothStock: [''],
@@ -156,6 +158,7 @@ export class StockUploadMappingComponent {
 
   ngOnInit() {
     // Disable the fields after initialization
+     this.sharedService.updateModuleName('Stock Upload Mapping')
     this.userId=localStorage.getItem('userId');
     this.editOlderDaysStockForm.get('partNumber')?.disable();
     this.editOlderDaysStockForm.get('stockQty')?.disable();

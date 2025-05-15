@@ -169,6 +169,8 @@ export class ViewCreateUserComponent {
         }
       );
 
+       this.sharedService.updateModuleName('View Users')
+
       this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
         this.isSidebarVisible=visible
       })

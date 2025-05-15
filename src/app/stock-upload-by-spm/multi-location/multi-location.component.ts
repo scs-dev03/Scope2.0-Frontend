@@ -12,6 +12,7 @@ import * as XLSX from 'xlsx';
 import { Table } from 'primeng/table';
 import { UserService } from '../../services/user.service';
 import { SidebarService } from '../../services/sidebar.service';
+import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-multi-location',
   imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
@@ -50,7 +51,8 @@ visibleSidebar:boolean=false;
      private globalBlockUiService:GlobalBlockUiService,
      private messageService:MessageService,
      private userService:UserService,
-     private sidebarService:SidebarService
+     private sidebarService:SidebarService,
+     private sharedService:SharedServiceService
     ){
 
      
@@ -60,7 +62,7 @@ visibleSidebar:boolean=false;
           dealer:['']
         });
         // this.addLocation(); // Initially add one location entry
-      
+       this.sharedService.updateModuleName('Multi Location Stock Upload')
       
     }
 

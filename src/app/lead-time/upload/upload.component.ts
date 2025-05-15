@@ -108,6 +108,7 @@ export class UploadComponent {
   }
 
   ngOnInit(){
+     this.sharedService.updateModuleName('Lead Time Upload')
    this.getBrands(); 
    this.getUsers();
    this.userName=localStorage.getItem('name');

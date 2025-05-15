@@ -8,6 +8,7 @@ import { PrimengModuleModule } from '../../shared/primeng-module/primeng-module.
 import { SharedModule } from '../../shared/shared.module';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { SharedServiceService } from '../../services/shared-service.service';
 
 @Component({
   selector: 'app-dashboard-scheduler',
@@ -40,6 +41,7 @@ export class DashboardSchedulerComponent {
     ToDate: new FormControl('',Validators.required)
   })
   ngOnInit(): void {
+     this.sharedService.updateModuleName('Dashboard Scheduler')
     this.fetchBdm();
     this.fetchBrandData();
     this.dashboardInputData.controls['dashboardID'].disable();
@@ -68,7 +70,8 @@ export class DashboardSchedulerComponent {
   constructor(
     private getDashboardService: DashboardSchedulerService,
     private messageService: MessageService,
-    private datepipe: DatePipe,private globalBlockUiService:GlobalBlockUiService
+    private datepipe: DatePipe,private globalBlockUiService:GlobalBlockUiService,
+    private sharedService:SharedServiceService
   ) {}
 
   Severity: any;

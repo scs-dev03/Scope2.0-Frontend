@@ -11,13 +11,15 @@ import { GlobalBlockUiService } from './services/global-block-ui.service';
 import { SidebarService } from './services/sidebar.service';
 import { HomePageService } from './services/home-page/home-page.service';
 import { UtilitiesService } from './services/utilities.service';
-import { filter } from 'rxjs';
+import { filter, take } from 'rxjs';
 import { SharedServiceService } from './services/shared-service.service';
 import { UserService } from './services/user.service';
+import { SHARED_IMPORTS } from './shared/shared-imports/shared-module';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CoreModule, SidebarComponent, HeaderComponent,CommonModule,SharedModule,PrimengModuleModule],
+  imports: [RouterOutlet, CoreModule, SidebarComponent, HeaderComponent,CommonModule,SharedModule,PrimengModuleModule,SHARED_IMPORTS,ReactiveFormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -32,25 +34,35 @@ export class AppComponent {
    token:any;
    sidebarItems:any=[];
    usertype:any;
+   moduleName:any;
+    filteredLocationData: any = [];
+    locationId:any;
+    homeData:FormGroup;
+    isHomePage:boolean=false;
   constructor(private globalBlockUIService: GlobalBlockUiService,
     private router:Router, private route: ActivatedRoute,
     private renderer: Renderer2,
     public sidebarService: SidebarService,
     private utilitiesService:UtilitiesService,
     private sharedService:SharedServiceService,
-  private userService:UserService) {}
+  private userService:UserService) {
+    this.homeData = new FormGroup({
+    locationId: new FormControl(),
+  })}
 
   ngOnInit() {
    
+    
+  localStorage.clear();
     this.globalBlockUIService.loading$.subscribe((loading:any)=>{
       this.isLoading=loading;
     })
-
-    // this.router.events.subscribe(() => {
-    //   // Update whether the current route is the login page
-    //   this.isLoginPage = this.router.url.includes('/login');
-      
-    // });
+   
+   
+   this.homeData.patchValue({
+    locationId:localStorage.getItem('def_location')
+   })
+  
 
     this.router.events
     .pipe(filter((event:any) => event instanceof NavigationEnd))
@@ -60,6 +72,8 @@ export class AppComponent {
       this.isLoginPage = 
         url.includes('/login') ||
         url.includes('/core/update-user-password');
+
+    this.isHomePage=url.includes('/core/home')
     });
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd && event.urlAfterRedirects === '/core/home') {
@@ -68,7 +82,11 @@ export class AppComponent {
     });
 
     
-   
+    this.sharedService.homePageData.pipe(take(2)).subscribe((filteredLocationData:any)=>{
+      this.filteredLocationData=filteredLocationData
+
+    //  console.log("filteredLocationData",filteredLocationData)
+    })
     
     this.route.queryParams.subscribe(params => {
       const token = params['token'];
@@ -76,10 +94,21 @@ export class AppComponent {
     });
 
     this.userService.loadDataOnce();
+    localStorage.setItem('brandid','9');
+    localStorage.setItem('def_location','14')
+    localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
     let userToken=localStorage.getItem('token');
+
     this.utilitiesService.getUserInfo({token:userToken}).subscribe((res:any)=>{
-      localStorage.setItem('userId',res.data[0].userId)
+      localStorage.setItem('userId',res.data[0]?.userId)
     })
+
+    this.sharedService.moduleName.subscribe((header:any)=>{
+      //console.log("header ",header)
+      this.moduleName=header;
+    })
+   
+
   }
 
   updateLoaderHeight() {
@@ -134,5 +163,8 @@ export class AppComponent {
     })
   }
   
-  
+  onClickLocation(){
+  // console.log("location id in app component ",this.homeData,this.homeData.value.locationId)
+    this.sharedService.updateLocationIdForHomePageData(this.homeData.value.locationId);
+  }
 }

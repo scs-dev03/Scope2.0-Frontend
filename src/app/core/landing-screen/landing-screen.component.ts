@@ -67,8 +67,10 @@ export class LandingScreenComponent {
     // console.log('fetch method',usertype);
     
     this.isloading = true;
-   
-    this.homepageservice.getuserinfo({ token: usertoken, usertype: usertype }).subscribe({
+    //localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
+    let usertoken1='0x0200000046E3737AED5FE0B13F2E6D0710BC96ABB705BA29736DDB3ADE3CBC2F7260C908'
+    let usertype1='U'
+    this.homepageservice.getuserinfo({ token: usertoken1, usertype: 'U' }).subscribe({
       next: (res: any) => {
       //  console.log(res.Data);
            localStorage.setItem('userId',res.Data[0].userId);
