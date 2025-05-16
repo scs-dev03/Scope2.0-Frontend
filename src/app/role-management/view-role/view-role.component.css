@@ -52,3 +52,6 @@
     top: auto !important;
     transform-origin: bottom;
   }
+:host ::ng-deep .p-radiobutton{
+    margin-bottom: 2px !important;
+}

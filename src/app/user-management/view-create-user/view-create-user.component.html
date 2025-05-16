@@ -31,11 +31,23 @@
   
     <div class=" mx-5 overflow-hidden">
    
-      <div class="d-flex justify-end " *ngIf="userPermissions?.view1">
+      <div class="d-flex justify-between " *ngIf="userPermissions?.view1">
         <!-- *ngIf="userPermissions?.view1" -->
         <!-- <div class="mb-3" >
             <span class="font-bold f-18" >View Users</span>
+
         </div> -->
+        <div class="mb-3 flex flex-wrap gap-4">
+    <div class="flex items-center ">
+        <p-radiobutton name="Admin" value="a" [(ngModel)]="userType" (ngModelChange)="viewUser($event)" inputId="admin" />
+        <label for="admin" class="ml-2 f-12 d-flex align-items-center mb-0">Admin</label>
+    </div>
+
+    <div class="flex items-center">
+        <p-radiobutton name="User" value="d" [(ngModel)]="userType" inputId="dealer" (ngModelChange)="viewUser($event)" />
+        <label for="dealer" class="ml-2 f-12 d-flex align-items-center mb-0">User</label>
+    </div>
+        </div>
         <div>
             <!-- *ngIf="userPermissions?.add1" in i tag -->
           <i class="pi pi-user cursor-pointer me-3"  style="font-size: 1.5rem !important;font-weight:bold " *ngIf="userPermissions?.add1" (click)="showDialog('Add User')"></i>

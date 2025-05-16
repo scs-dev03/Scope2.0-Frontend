@@ -41,7 +41,9 @@
           "
         >
           <form action="" [formGroup]="roleForm" class="flex flex-col">
-            <label class="font-semibold lg:text-lg" for="rolename"
+            <div class="d-flex">
+              <div>
+        <label class="font-semibold lg:text-lg d-flex align-items-center" for="rolename"
               >Role Name</label
             >
 
@@ -59,6 +61,32 @@
             >
               Role Name is required.
             </div>
+              </div>
+           <div class="ml-3">
+  <label class="font-semibold lg:text-lg d-flex align-items-center" for="rolename"
+              >Role Type</label
+            >
+
+             <div class="mb-3 flex flex-wrap gap-4 align-items-center">
+            <div class="flex items-center ">
+                <p-radiobutton name="roleType" value="a" formControlName="roleType"  inputId="admin" />
+                <label for="admin" class="ml-2 f-12 d-flex align-items-center mb-0">Admin</label>
+            </div>
+
+    <div class="flex align-items-center my-2 ">
+        <p-radiobutton name="roleType" value="d" formControlName="roleType" inputId="dealer"  />
+        <label for="dealer" class="ml-2 f-12 d-flex align-items-center mb-0">User</label>
+    </div>
+        </div>
+            <div
+              *ngIf="roleType?.hasError('required') && roleType?.touched"
+              class="text-red-500"
+            >
+              Role Type is required.
+            </div>
+           </div>
+          
+             </div>
             <span class="my-2 font-semibold lg:text-lg"
               >Associated Business</span
             >

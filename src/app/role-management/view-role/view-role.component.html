@@ -35,8 +35,8 @@
         </div>
         </div> -->
         <!-- flex justify-center -->
-        <div class="w-[100vw] " style="">
-           <div class=" p-3    h-auto  rounded-lg" [ngClass]="isSidebarVisible?' w-[100vw] w-[80vw]   md:w-[60vw]':'w-[85vw]'">
+        <div class="w-[100vw] " >
+           <div class=" p-3    h-auto  rounded-lg" [ngClass]="isSidebarVisible?' w-[80vw]   md:w-[60vw]':'w-[85vw]'">
 
       <!-- flex justify-center -->
       <div class="">
@@ -58,12 +58,12 @@
         <div
           class="card p-3 h-auto bg-[#FDF5E6] rounded-lg"
           [ngClass]="
-            isSidebarVisible ? ' w-[100vw] w-[80vw]   md:w-[72vw]' : 'w-[90vw]'
+            isSidebarVisible ? '  w-[80vw]   md:w-[72vw]' : 'w-[90vw]'
           "
         >
           <p-table
             styleClass="p-datatable-striped"
-            [scrollHeight]="'300px'"
+            [scrollHeight]="'450px'"
             [scrollable]="true"
             responsiveLayout="scroll"
             [scrollable]="true"
@@ -191,6 +191,24 @@
       <div
         class="card w-[75vw] h-auto md:w-[75vw] flex flex-col justify-start p-3 bg-[#FDF5E6] "
       >
+       <!-- <div class=" d-flex">
+  <label class="font-semibold lg:text-lg d-flex align-items-center" for="rolename"
+              >Role Type</label
+            >
+
+             <div class="mb-2 ml-4 flex flex-wrap gap-4 align-items-center">
+            <div class="flex items-center ">
+                <p-radiobutton name="roleType" value="a" [(ngModel)]="roleType"  inputId="admin" />
+                <label for="admin" class="ml-2 f-12 d-flex align-items-center mb-0">Admin</label>
+            </div>
+
+    <div class="flex align-items-center my-2 ">
+        <p-radiobutton name="roleType" value="d" [(ngModel)]="roleType" inputId="dealer"  />
+        <label for="dealer" class="ml-2 f-12 d-flex align-items-center mb-0">User</label>
+    </div>
+        </div>
+           
+           </div> -->
         <p-table
           styleClass="p-datatable-striped"
           [scrollHeight]="'280px'"
@@ -198,12 +216,18 @@
           [paginator]="true"
           [rows]="25"
           [value]="allModules"
+          [rows]="10"
+          [rowsPerPageOptions]="[10,20,30,40,50,60,70]"
+          [showCurrentPageReport]="true"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          
           class="bg-white w-full  border !h-[50vh] border-gray-200 "
         >
           <!-- Table Header -->
           <ng-template pTemplate="header">
             <tr class="bg-gray-200 text-gray-700 text-sm font-semibold">
               <th class="f-13 text-left">Business Vertical</th>
+               <th class="f-13 text-left">Module Type</th>
               <th class="f-13 text-left">Module</th>
               <th class="f-13 text-left">Sub Module</th>
               <th class="f-13 text-left">View</th>
@@ -253,6 +277,9 @@
               >
                 <td class="!p-3 text-left f-11">
                   {{ submodule.businessVerticalName }}
+                </td>
+                 <td class="!p-3 text-left f-11">
+                  {{ submodule.module_type=='a'?'Admin':'User' }}
                 </td>
                 <td class="!p-3 text-left f-11">
                   {{ submodule.parentModuleName }}
@@ -304,6 +331,7 @@
                 <td class="!p-3 text-left f-11">
                   {{ getBusinessVerticalName(module.business_vertical_id) }}
                 </td>
+                 <td class="!p-3 text-left f-11">{{ module.module_type=='a'?'Admin':'User'  }}</td>
                 <td class="!p-3 text-left f-11">{{ module.module_name }}</td>
                 <td class="!p-3 text-left f-11">-</td>
                 <td class="!p-3 text-center f-11">

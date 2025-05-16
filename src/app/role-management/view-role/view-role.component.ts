@@ -41,6 +41,7 @@ export class ViewRoleComponent {
   sidebarItems:any=[];
   dataSubscription:Subscription|null=null;
   isSidebarVisible:boolean=false;
+  roleType:any='a'
   constructor(private roleService:RoleBasedService,private messageService:MessageService,
     private utilitiesService:UtilitiesService,private sharedService:SharedServiceService,
     private router:Router,
@@ -210,27 +211,32 @@ export class ViewRoleComponent {
       }
       
     }
-    this.roleService.getEditModulesBasedOnBVID({vertical_ids:selectedIds,roleId:rowData.id}).subscribe((res:any)=>{
+   // console.log("role Type ",this.roleType)
+    this.roleService.getEditModulesBasedOnBVID({vertical_ids:selectedIds,roleId:rowData.id,moduleType:this.roleType}).subscribe((res:any)=>{
        this.modules=res.data;
+       
       this.globalBlockUiService.stopLoading();
       this.organizeModules();
-      console.log("allModules ",this.allModules)
+      //console.log("allModules ",this.allModules)
       this.globalBlockUiService.stopLoading();
     },(error:any)=>{
       this.globalBlockUiService.stopLoading();
     })
   }
 
+  
   organizeModules() {
+
   this.mainModules = this.modules.filter((module: any) => module?.parentId === 0);
   this.subModules = this.modules.filter((module: any) => module?.parentId !== 0);
-  console.log("main and sub", this.mainModules, this.subModules);
+  //console.log("main and sub", this.mainModules, this.subModules);
 
   this.mainModules.forEach((mainModule: any) => {
     mainModule.view1 = false;
     mainModule.edit1 = false;
     mainModule.delete1 = false;
     mainModule.add1 = false;
+   
 
     const submodulesForMainModule = this.subModules.filter(
       (submodule: any) => submodule.parentId === mainModule.id
@@ -253,13 +259,15 @@ export class ViewRoleComponent {
       } else {
         console.warn(`Business vertical not found for submodule with id: ${submodule.id}`);
       }
+      submodule.all = (submodule.view1 && submodule.edit1 && submodule.delete1 && submodule.add1);
     });
 
     mainModule.submodules = submodulesForMainModule;
+   
   });
 
   this.allModules = this.mainModules;
-  console.log("all modules ", this.allModules);
+  //console.log("all modules ", this.allModules);
 }
 
 
@@ -310,7 +318,7 @@ export class ViewRoleComponent {
  toggleAllForModule(module: any,event:any,index:any,eventString:string): void {
   
   module.submodules.forEach((submodule: any,i:any) => {
-
+   
     if(index==i){
       if(eventString=='all'){
         submodule.all = event.checked;
@@ -322,6 +330,7 @@ export class ViewRoleComponent {
       else{
         submodule.all=false;
       }
+       console.log("eventString ",eventString,submodule)
     //   if(eventString=='view' && eventString=='add' && eventString=='delete' && eventString=='edit'){
     // submodule.all=true;        
     //   }

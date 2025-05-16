@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
 import { PrimengModuleModule } from '../../shared/primeng-module/primeng-module.module';
 import { SharedModule } from '../../shared/shared.module';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { UtilitiesService } from '../../services/utilities.service';
@@ -45,12 +45,14 @@ export class ViewCreateUserComponent {
      dataSubscription: Subscription|null=null;
      currentRoute:any;
     receivedData: any=[];
+     userType:any='d';
     userPermissions:any=[];
       statuses:any=[
         { name:'Active',id:1},
      
          {name:'Inactive',id:0}
        ]
+      
       constructor(private router:Router,private utilitiesService:UtilitiesService,
         private fb:FormBuilder,private cdr:ChangeDetectorRef,
         private userService:UserService,private messageService:MessageService,
@@ -372,9 +374,11 @@ export class ViewCreateUserComponent {
         });
       }
     
-      viewUser(){
+      viewUser(event?:any){
          this.globalBlockUiService.startLoading();
-        this.userService.viewUser().subscribe((res:any)=>{
+        //  localStorage.setItem('usertype','d');
+        console.log('user Type ',this.userType)
+        this.userService.viewUser({userType:this.userType}).subscribe((res:any)=>{
            this.globalBlockUiService.stopLoading();
            let userArray=[];
           for(let item of res?.data){

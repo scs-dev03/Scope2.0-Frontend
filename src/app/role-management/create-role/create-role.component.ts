@@ -159,7 +159,7 @@ export class CreateRoleComponent {
   ){
     this.roleForm = this.fb.group({
       rolename: ['', Validators.required],
-     
+      roleType:['a',Validators.required],
       checkboxes: this.fb.group(
         {
           SIMS: [0],    // default is 0 (unchecked)
@@ -297,6 +297,9 @@ export class CreateRoleComponent {
     return this.roleForm.get('rolename');
   }
 
+  get roleType(){
+    return this.roleForm.get('roleType');
+  }
   showDialog(){
     this.visible=true;
   }
@@ -371,6 +374,7 @@ export class CreateRoleComponent {
 
 
   getAccessSettings(){
+   // console.log("role form ",this.roleForm.value)
     if(this.roleForm.valid){
 
       let formValues = this.roleForm.value;
@@ -399,6 +403,7 @@ export class CreateRoleComponent {
     }
     else{
       
+      this.globalBlockUiService.stopLoading();
       Object.keys(this.roleForm.controls).forEach(controlName => {
         const control = this.roleForm.get(controlName);
   

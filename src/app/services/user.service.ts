@@ -22,8 +22,8 @@ allUserData$=this.allUserDataSubject.asObservable();
     return this.http.post(`${this.url}user/create-user`,data)
   }
 
-  viewUser():Observable<any>{
-    return this.http.get(`${this.url}user/view-user`);
+  viewUser(data:any):Observable<any>{
+    return this.http.post(`${this.url}user/view-user`,data);
   }
 
   deleteUser(data:any):Observable<any>{
