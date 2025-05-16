@@ -79,6 +79,7 @@ export class LandingScreenComponent {
           localStorage.setItem('dealerid', res.Data[0].dealerid);
           localStorage.setItem('username', res.Data[0].username);
           localStorage.setItem('def_location',res.Data[0].locationid)
+          localStorage.setItem('userid',res?.Data[0]?.userId);
           
         }
     

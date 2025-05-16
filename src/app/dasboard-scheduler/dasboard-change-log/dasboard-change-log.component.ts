@@ -103,13 +103,13 @@ export class DasboardChangeLogComponent {
     );
   }
 
-  fetchBrands() {
-    this.isloading = true
-    this.getDashboardService.getBrandMaster().subscribe((res: any) => {
-      this.brandData = res;
-      this.isloading = false
-    });
-  }
+  // fetchBrands() {
+  //   this.isloading = true
+  //   this.getDashboardService.getBrandMaster().subscribe((res: any) => {
+  //     this.brandData = res;
+  //     this.isloading = false
+  //   });
+  // }
   fetchDashboardChange() {
     this.isloading = true
 
@@ -187,7 +187,7 @@ export class DasboardChangeLogComponent {
   callallfunction() {
     this.fetchDashboardChange();
     this.fetchWorkspace();
-    this.fetchBrands();
+    //this.fetchBrands();
     this.fetchRequestBy();
     this.fetchChangeLogView();
   }

@@ -41,7 +41,7 @@ export class DashboardSchedulerComponent {
   })
   ngOnInit(): void {
     this.fetchBdm();
-    this.fetchBrandData();
+    
     this.dashboardInputData.controls['dashboardID'].disable();
     this.dashboardInputData.controls['brandID'].disable();
     this.dashboardInputData.controls['dealerID'].disable();
@@ -50,6 +50,8 @@ export class DashboardSchedulerComponent {
     this.dashboardInputData.patchValue({
     bdmID:  localStorage.getItem('userid')
     });
+    this.fetchBrandData(this.dashboardInputData.value.bdmID);
+
 
     
     
@@ -237,7 +239,7 @@ export class DashboardSchedulerComponent {
   }
 
   onClickBrand() {
-    this.fetchDealerData(this.dashboardInputData.value.brandID);
+    this.fetchDealerData(this.dashboardInputData.value.brandID,this.dashboardInputData.value.bdmID);
   }
   onDeleteDashboard() {
     this.deleteDashboardSchedule(this.req_id, this.dashboardInputData.value.bdmID);
@@ -311,11 +313,11 @@ export class DashboardSchedulerComponent {
     );
   }
    // fetch brand form master
-  fetchBrandData() {
+  fetchBrandData(userid:any) {
     this.globalBlockUiService.startLoading();
-    this.getDashboardService.getBrandMaster().subscribe(
+    this.getDashboardService.getBrandMaster({userid : userid}).subscribe(
       (res: any) => {
-        this.brandData = res;
+        this.brandData = res.Data;
         this.globalBlockUiService.stopLoading();
       },
       (error: any) => {
@@ -327,11 +329,11 @@ export class DashboardSchedulerComponent {
     );
   }
    // fetch dealer from master
-  fetchDealerData(brandid: any) {
+  fetchDealerData(brandid: any,userid: any) {
     this.globalBlockUiService.startLoading();
-    this.getDashboardService.getDealersMaster({ brandid: brandid }).subscribe(
+    this.getDashboardService.getDealersMaster({ brandid: brandid, userid: userid }).subscribe(
       (res: any) => {
-        this.dealerData = res;
+        this.dealerData = res.Data;
         this.dealerData.sort((a: any, b: any) => {
           return a.dealer.localeCompare(b.dealer);
         });

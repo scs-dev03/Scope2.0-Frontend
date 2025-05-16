@@ -6,19 +6,19 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DashboardSchedulerService {
-//   private apiurl: any =
-//   'http://web10.185.238.new.ocpwebserver.com/api/v1/dashboardscheduler/';
+  private apiurl: any =
+  'http://web10.185.238.new.ocpwebserver.com/api/v1/dashboardscheduler/';
 
-// private apiurlmaster: any =
-//   'http://web10.185.238.new.ocpwebserver.com/api/v1/';
+private apiurlmaster: any =
+  'http://web10.185.238.new.ocpwebserver.com/api/v1/';
 
   
 
- private apiurl: any =
-  'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/dashboardscheduler/';
+//  private apiurl: any =
+//   'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/dashboardscheduler/';
 
-private apiurlmaster: any =
-  'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/';
+// private apiurlmaster: any =
+//   'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/';
 
 
 constructor(private http: HttpClient) {}
@@ -35,7 +35,7 @@ getDashboard(data: any): Observable<any> {
   );
 }
 getDealersMaster(data: any): Observable<any> {
-  return this.http.post(`${this.apiurlmaster}Master/dealers`, data);
+  return this.http.post(`${this.apiurl}getdealers`, data);
 }
 setDashboardSchedule(data: any): Observable<any> {
   return this.http.post(`${this.apiurl}setschedule`, data);
@@ -49,8 +49,8 @@ getEditDashboard(data: any): Observable<any> {
 getDeletDashboard(data: any): Observable<any> {
   return this.http.post(`${this.apiurl}delrequest`, data);
 }
-getBrandMaster(): Observable<any> {
-  return this.http.get(`${this.apiurlmaster}Master/brands`);
+getBrandMaster(data: any): Observable<any> {
+  return this.http.post(`${this.apiurl}getbrands`,data);
 }
 getDashboardRequest(data: any): Observable<any> {
   return this.http.post(`${this.apiurl}getnewdashboard`, data);

@@ -16,7 +16,7 @@ export class DashboardRequestComponent {
   isloading: boolean = false;
 
   ngOnInit(): void {
-    this.fetchBrands();
+    //this.fetchBrands(t);
     this.fetchDashboardViewData()
   }
 
@@ -206,14 +206,14 @@ export class DashboardRequestComponent {
     );
   }
 
-  fetchBrands() {
-    this.isloading = true;
-    this.getDashboardService.getBrandMaster().subscribe((res: any) => {
-      this.brandData = res;
-      this.isloading = false;
+  // fetchBrands() {
+  //   this.isloading = true;
+  //   this.getDashboardService.getBrandMaster().subscribe((res: any) => {
+  //     this.brandData = res;
+  //     this.isloading = false;
 
-    });
-  }
+  //   });
+  // }
   fetchDashboardRequest(dealerid: any) {
     this.isloading = true;
     this.getDashboardService
