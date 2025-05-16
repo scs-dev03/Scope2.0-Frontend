@@ -1,3 +1,6 @@
+body{
+  overflow:  hidden !important;
+}
 .container {
     display: flex;
   }
@@ -64,6 +67,10 @@ box-shadow:  20px 20px 60px #BEBEBE,
   top: 0 !important;
   left: 0 !important;
   } */
+
+  button{
+    height: 30px !important;
+  }
 
 
 

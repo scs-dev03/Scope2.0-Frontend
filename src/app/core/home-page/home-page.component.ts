@@ -7,6 +7,8 @@ import { HomePageService } from '../../services/home-page/home-page.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IndianCurrencyPipe } from '../../shared/Indian-currency/indian-currency.pipe';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { SharedServiceService } from '../../services/shared-service.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-home-page',
   imports: [
@@ -20,29 +22,42 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
   styleUrl: './home-page.component.css',
 })
 export class HomePageComponent {
+
+  private subscription!: Subscription;
   ngOnInit(): void {
     localStorage.setItem('dealerid', '8');
     this.globalBlockUiService.startLoading();
-    // this.fetchCardsData(localStorage.get())
-
-    
-   
 
     this.fetchUserinfo(localStorage.getItem('usertoken'), localStorage.getItem('usertype'));
+    
     this.fetchCardsData(
       localStorage.getItem('def_location'),
       localStorage.getItem('dealerid')
     );
+    // this.homeData.patchValue({
+    //   locationId: localStorage.getItem('def_location')
+    // });
 
-
+    //console.log("init called ");
+      this.subscription=this.sharedService.locationIdForHomePage.subscribe((locationId:any)=>{
+    //  console.log("location id in home page ",locationId)
+      this.locationId=locationId;
+      this.fetchCardsData(
+      this.locationId,
+      localStorage.getItem('dealerid')
+    );
+    })
+    this.locationId=localStorage.getItem('def_location');
+    console.log("locationis ",this.locationId)
      this.homeData.patchValue({
-      locationId: localStorage.getItem('def_location')
+      locationId: this.locationId
     });
   }
 
   constructor(
     private homepageservice: HomePageService,
-    private globalBlockUiService: GlobalBlockUiService
+    private globalBlockUiService: GlobalBlockUiService,
+    private sharedService:SharedServiceService
   ) {}
 
 
@@ -58,19 +73,23 @@ export class HomePageComponent {
   chart1: any
   rawData: any
   months: string[] = [];
-
+  locationId:any;
   homeData = new FormGroup({
     locationId: new FormControl(),
   });
 
+ 
   async fetchUserinfo(usertoken: any, usertype: any) {
     this.globalBlockUiService.startLoading();
     // console.log('fetch method',usertoken);
     // console.log('fetch method',usertype);
-
+ localStorage.setItem('brandid','9');
+    localStorage.setItem('locationid','14');
+     localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
     this.globalBlockUiService.startLoading();
+     usertoken='0x0200000046E3737AED5FE0B13F2E6D0710BC96ABB705BA29736DDB3ADE3CBC2F7260C908'
     await this.homepageservice
-      .getuserinfo({ token: usertoken, usertype: usertype })
+      .getuserinfo({ token: usertoken, usertype: 'U' })
       .subscribe({
         next: (res: any) => {
           this.userInfo = res.Data;
@@ -80,7 +99,12 @@ export class HomePageComponent {
             locationid: item.locationid,
             location: item.location,
           }));
+         
+          this.sharedService.updateModuleName('Home Page')
+          this.sharedService.updateHomePageData(this.filteredLocationData)
 
+           this.locationId=localStorage.getItem('def_location')
+           console.log("location is imn 98 ",this.locationId) 
           //console.log(this.filteredLocationData);
           this.globalBlockUiService.stopLoading();
         },
@@ -98,12 +122,24 @@ export class HomePageComponent {
       });
   }
 
+  
   onclickLocation() {
-    this.fetchCardsData(
-      this.homeData.value.locationId,
-      localStorage.getItem('dealerid')
-    );
+   
+    console.log("locationId ",this.locationId)
+
+    // this.fetchCardsData(
+    //   this.homeData.value.locationId,
+    //   localStorage.getItem('dealerid')
+    // );
+    //  this.fetchCardsData(
+    //   this.locationId,
+    //   localStorage.getItem('dealerid')
+    // );
   }
+
+  ngOnDestroy() {
+  if (this.subscription) this.subscription.unsubscribe();
+}
 
   fetchCardsData(locationId: any, dealerid: any) {
     this.globalBlockUiService.startLoading();

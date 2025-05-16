@@ -219,6 +219,7 @@ private router:Router){
 
 
   ngOnInit() {
+     this.sharedService.updateModuleName('Lead Time Export')
     let today = new Date();
     this.maxDate = new Date(today);
 this.maxDate.setMonth(today.getMonth() + 1);

@@ -7,6 +7,7 @@ import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
 import { Sidebar2Component } from "../../core/sidebar-2/sidebar-2.component";
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { SharedServiceService } from '../../services/shared-service.service';
 
 @Component({
   selector: 'app-adminpendingcount',
@@ -20,11 +21,15 @@ export class AdminpendingcountComponent {
     localStorage.clear()
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.fetchpendingcount()
+    this.fetchpendingcount();
+     this.sharedService.updateModuleName('Admin Pending Count')
     
   }
 
-   constructor(private adminvonservice: AdminvonserviceService, private router: Router,private globalBlockUiService:GlobalBlockUiService) {}
+   constructor(private adminvonservice: AdminvonserviceService, 
+    private router: Router,private globalBlockUiService:GlobalBlockUiService,
+    private sharedService:SharedServiceService
+  ) {}
 
 
   pendingcount: any = []

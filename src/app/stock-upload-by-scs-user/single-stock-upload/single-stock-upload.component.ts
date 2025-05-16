@@ -13,6 +13,7 @@ import { StockUploadByUserService } from '../../services/stock-upload-by-user.se
 import { Table } from 'primeng/table';
 import { SidebarService } from '../../services/sidebar.service';
 import { UserService } from '../../services/user.service';
+import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-single-stock-upload',
   imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
@@ -57,7 +58,8 @@ export class SingleStockUploadComponent {
    private globalBlockUiService:GlobalBlockUiService,
    private messageService:MessageService,
    private sidebarService:SidebarService,
-   private userService:UserService
+   private userService:UserService,
+   private sharedService:SharedServiceService
   ){
  
    this.slForm=this.fb.group({
@@ -87,6 +89,8 @@ export class SingleStockUploadComponent {
   this.userService.allUserData$.subscribe((users:any)=>{
     this.users=users;
   })
+
+   this.sharedService.updateModuleName('Single Stock Upload')
   }
  
   onSelect(event: any) {

@@ -9,6 +9,7 @@ import { saveAs } from 'file-saver';
 import { Sidebar2Component } from "../../core/sidebar-2/sidebar-2.component";
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-dealer-von',
   imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS, Sidebar2Component, LoaderComponent],
@@ -33,7 +34,9 @@ export class DealerVonComponent {
     status: new FormControl()
   });
   
-  constructor(private dealerVonService: DealervonserviceService,private globalBlockUiService:GlobalBlockUiService) {}
+  constructor(private dealerVonService: DealervonserviceService,
+    private globalBlockUiService:GlobalBlockUiService,
+  private sharedService:SharedServiceService) {}
 
   categories: any[] = [
     { name: 'WS', key: '0' },
@@ -66,6 +69,8 @@ export class DealerVonComponent {
       max: '1',  // Code set karna hoga kyunki optionValue="code" hai
       
     });
+
+     this.sharedService.updateModuleName('Dealer Norms Management')
   }
 
 

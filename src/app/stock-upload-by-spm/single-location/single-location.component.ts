@@ -12,6 +12,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { Table } from 'primeng/table';
 import { UserService } from '../../services/user.service';
 import { SidebarService } from '../../services/sidebar.service';
+import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-single-location',
   imports: [PrimengModuleModule,SharedModule,FormsModule,ReactiveFormsModule,CommonModule],
@@ -54,7 +55,8 @@ export class SingleLocationComponent {
    private globalBlockUiService:GlobalBlockUiService,
    private messageService:MessageService,
    private userService:UserService,
-   private sidebarService:SidebarService
+   private sidebarService:SidebarService,
+   private sharedService:SharedServiceService
   ){
  
    this.slForm=this.fb.group({
@@ -76,6 +78,8 @@ export class SingleLocationComponent {
    this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible
    })
+
+    this.sharedService.updateModuleName('Single Location Stock Upload')
   }
  
   onSelect(event: any) {

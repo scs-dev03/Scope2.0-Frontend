@@ -10,6 +10,7 @@ import { atLeastOneCheckedValidator } from '../../shared/validators/atleastOneCh
 import * as XLSX from 'xlsx';
 import { SidebarService } from '../../services/sidebar.service';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-create-role',
   imports: [PrimengModuleModule,SharedModule,SHARED_IMPORTS],
@@ -153,7 +154,8 @@ export class CreateRoleComponent {
     private fb:FormBuilder,private messageService:MessageService,
     private utilitiesService:UtilitiesService,
     public sidebarService: SidebarService,
-    private globalBlockUiService:GlobalBlockUiService
+    private globalBlockUiService:GlobalBlockUiService,
+    private sharedService:SharedServiceService
   ){
     this.roleForm = this.fb.group({
       rolename: ['', Validators.required],
@@ -177,7 +179,7 @@ export class CreateRoleComponent {
   
     this.userId=localStorage.getItem('userId');
     this.token=localStorage.getItem('token');
-    
+    this.sharedService.updateModuleName('Create Role')
   }
 
   triggerFileInput(fileInput: HTMLInputElement): void {

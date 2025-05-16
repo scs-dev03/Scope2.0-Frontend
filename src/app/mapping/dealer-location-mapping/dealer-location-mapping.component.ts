@@ -14,6 +14,7 @@ import { Table } from 'primeng/table';
 import { filter } from 'rxjs';
 import { SidebarService } from '../../services/sidebar.service';
 import { UserService } from '../../services/user.service';
+import { SharedServiceService } from '../../services/shared-service.service';
 
 @Component({
   selector: 'app-dealer-location-mapping',
@@ -57,7 +58,8 @@ export class DealerLocationMappingComponent {
   private globalUiService:GlobalBlockUiService,
   private messageService:MessageService,
   private sidebarService:SidebarService,
-  private userService:UserService
+  private userService:UserService,
+  private sharedService:SharedServiceService
  ){
 
   this.dlForm=this.fb.group({
@@ -68,6 +70,7 @@ export class DealerLocationMappingComponent {
 
  ngOnInit(){
   this.getBrands();
+   this.sharedService.updateModuleName('Dealer Location Mapping')
   this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
    this.visibleSidebar=visible;
   })

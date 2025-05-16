@@ -45,12 +45,14 @@ export class ViewRoleComponent {
     private utilitiesService:UtilitiesService,private sharedService:SharedServiceService,
     private router:Router,
     private globalBlockUiService:GlobalBlockUiService,
-    private sidebarService:SidebarService
+    private sidebarService:SidebarService,
+    
   ){
     this.viewRole();
     this.token=localStorage.getItem('token');
     this.userId=localStorage.getItem('userId');
     this.currentRoute=router.url;
+    this.sharedService.updateModuleName('View & Edit Roles')
   }
 
   showDialog(){
@@ -194,6 +196,7 @@ export class ViewRoleComponent {
     this.roleStatus=rowData.status
    // console.log("rowData ",rowData)
     // Loop through the form values
+    let rawModules=[];
     for (let key in rowData) {
       
       //console.log(key)
@@ -208,10 +211,10 @@ export class ViewRoleComponent {
       
     }
     this.roleService.getEditModulesBasedOnBVID({vertical_ids:selectedIds,roleId:rowData.id}).subscribe((res:any)=>{
-      this.modules=res.data;
+       this.modules=res.data;
       this.globalBlockUiService.stopLoading();
       this.organizeModules();
-      //console.log("allModules ",this.modules)
+      console.log("allModules ",this.allModules)
       this.globalBlockUiService.stopLoading();
     },(error:any)=>{
       this.globalBlockUiService.stopLoading();
@@ -219,43 +222,85 @@ export class ViewRoleComponent {
   }
 
   organizeModules() {
-    
-    this.mainModules = this.modules.filter((module:any) => module?.parentId === 0);
-    this.subModules = this.modules.filter((module:any) => module?.parentId !== 0);
-   // console.log("main and sub",this.mainModules,this.subModules)
-   this.mainModules.forEach((mainModule: any) => {
-    mainModule.view1=false;
-    mainModule.edit1=false;
-    mainModule.delete1=false;
-    mainModule.add1=false;
-    const submodulesForMainModule = this.subModules.filter((submodule: any) => submodule.parentId === mainModule.id);
-  
-    // Step 4: Add parent module's name to each submodule
+  this.mainModules = this.modules.filter((module: any) => module?.parentId === 0);
+  this.subModules = this.modules.filter((module: any) => module?.parentId !== 0);
+  console.log("main and sub", this.mainModules, this.subModules);
+
+  this.mainModules.forEach((mainModule: any) => {
+    mainModule.view1 = false;
+    mainModule.edit1 = false;
+    mainModule.delete1 = false;
+    mainModule.add1 = false;
+
+    const submodulesForMainModule = this.subModules.filter(
+      (submodule: any) => submodule.parentId === mainModule.id
+    );
+
+    if (submodulesForMainModule.length === 0) {
+      // ✅ Set parentModuleName = module_name when no submodules exist
+      mainModule.parentModuleName = mainModule.module_name;
+    }
+
     submodulesForMainModule.forEach((submodule: any) => {
-      submodule.parentModuleName = mainModule.module_name; // Add parent module name to submodule
-  
-      // Find the business vertical by matching the business_vertical_id with the id in associatedBusinesses
-      const businessVertical = this.associatedBusinesses.find((obj: any) => submodule.business_vertical_id
-      == obj.id);
-  
-      // Check if businessVertical is found, and if so, add the business_vertical name to the submodule
+      submodule.parentModuleName = mainModule.module_name;
+
+      const businessVertical = this.associatedBusinesses.find(
+        (obj: any) => submodule.business_vertical_id === obj.id
+      );
+
       if (businessVertical) {
         submodule.businessVerticalName = businessVertical.business_vertical;
       } else {
-        // Handle the case when no matching business vertical is found
         console.warn(`Business vertical not found for submodule with id: ${submodule.id}`);
       }
     });
-  
-    // Attach the submodules to the main module
+
     mainModule.submodules = submodulesForMainModule;
   });
+
+  this.allModules = this.mainModules;
+  console.log("all modules ", this.allModules);
+}
+
+
+  // organizeModules() {
+    
+  //   this.mainModules = this.modules.filter((module:any) => module?.parentId === 0);
+  //   this.subModules = this.modules.filter((module:any) => module?.parentId !== 0);
+  //   console.log("main and sub",this.mainModules,this.subModules)
+  //  this.mainModules.forEach((mainModule: any) => {
+  //   mainModule.view1=false;
+  //   mainModule.edit1=false;
+  //   mainModule.delete1=false;
+  //   mainModule.add1=false;
+  //   const submodulesForMainModule = this.subModules.filter((submodule: any) => submodule.parentId === mainModule.id);
+  
+  //   // Step 4: Add parent module's name to each submodule
+  //   submodulesForMainModule.forEach((submodule: any) => {
+  //     submodule.parentModuleName = mainModule.module_name; // Add parent module name to submodule
+  
+  //     // Find the business vertical by matching the business_vertical_id with the id in associatedBusinesses
+  //     const businessVertical = this.associatedBusinesses.find((obj: any) => submodule.business_vertical_id
+  //     == obj.id);
+  
+  //     // Check if businessVertical is found, and if so, add the business_vertical name to the submodule
+  //     if (businessVertical) {
+  //       submodule.businessVerticalName = businessVertical.business_vertical;
+  //     } else {
+  //       // Handle the case when no matching business vertical is found
+  //       console.warn(`Business vertical not found for submodule with id: ${submodule.id}`);
+  //     }
+  //   });
+  
+  //   // Attach the submodules to the main module
+  //   mainModule.submodules = submodulesForMainModule;
+  // });
   
    
-    // Step 3: Combine main modules and their submodules into a single array
-    this.allModules = this.mainModules;
-     console.log("all modules ",this.allModules)
-  }
+  //   // Step 3: Combine main modules and their submodules into a single array
+  //   this.allModules = this.mainModules;
+  //    console.log("all modules ",this.allModules)
+  // }
 
   getBusinessVerticalName(id: number): string {
     const match = this.associatedBusinesses.find((b:any)=> b.id === id);

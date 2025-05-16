@@ -10,6 +10,7 @@ import { saveAs } from 'file-saver';
 import { Sidebar2Component } from "../../core/sidebar-2/sidebar-2.component";
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-admin-von',
   imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS, Sidebar2Component, LoaderComponent],
@@ -21,7 +22,7 @@ export class AdminVonComponent {
     
     this.fetchBrandData();
     console.log(this.adminFilterData.value.dealer);
-    
+     this.sharedService.updateModuleName('Admin Norms Management')
     
     this.route.queryParams.subscribe((params:any) => {
       this.brandid = params['brandid'];
@@ -62,7 +63,9 @@ export class AdminVonComponent {
     
   }
 
-  constructor(private adminvonservice: AdminvonserviceService,private route: ActivatedRoute,private router: Router,private globalBlockUiService:GlobalBlockUiService) {}
+  constructor(private adminvonservice: AdminvonserviceService,
+    private route: ActivatedRoute,private router: Router,
+    private globalBlockUiService:GlobalBlockUiService,private sharedService:SharedServiceService) {}
 
   // formgroup for filter
   adminFilterData = new FormGroup({

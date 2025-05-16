@@ -6,6 +6,7 @@ import { AdminvonserviceService } from '../../services/Von/adminvonservice.servi
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Sidebar2Component } from "../../core/sidebar-2/sidebar-2.component";
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
+import { SharedServiceService } from '../../services/shared-service.service';
 
 @Component({
   selector: 'app-admin-remark',
@@ -22,10 +23,13 @@ export class AdminRemarkComponent {
       { name: 'User', code: 'U' },
     ];
     this.fetchBrandData();
+     this.sharedService.updateModuleName('Remark Creation')
     
   }
 
-  constructor(private adminvonservice: AdminvonserviceService) {}
+  constructor(private adminvonservice: AdminvonserviceService,
+    private sharedService:SharedServiceService
+  ) {}
 
   adminRemarkInputData = new FormGroup({
     type: new FormControl(),

@@ -14,6 +14,7 @@ import { Table } from 'primeng/table';
 import { setActiveConsumer } from '@angular/core/primitives/signals';
 import { SidebarService } from '../../services/sidebar.service';
 import {UserService } from '../../services/user.service'
+import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-bulk-stock-upload',
   imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
@@ -58,7 +59,8 @@ export class BulkStockUploadComponent {
    private messageService:MessageService,
    private stockUploadServiceBySCSUser:StockUploadByUserService,
    private sidebarService:SidebarService,
-   private userService: UserService
+   private userService: UserService,
+   private sharedService:SharedServiceService
   ){
  
    this.mlForm=this.fb.group({
@@ -88,6 +90,8 @@ export class BulkStockUploadComponent {
    this.userService.allUserData$.subscribe((users:any)=>{
     this.users=users;
    })
+
+    this.sharedService.updateModuleName('Bulk Stock Upload')
   }
  
   getBrands(){

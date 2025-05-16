@@ -11,6 +11,7 @@ import { LoaderComponent } from "../../shared/components/loader/loader.component
 import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
 import { CommonModule } from '@angular/common';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-admin-sales-report',
   imports: [PrimengModuleModule, SharedModule,SHARED_IMPORTS,CommonModule, ProductDesctiptionTableComponent, ProductSaleInfoComponent, TotalsumComponent, LoaderComponent],
@@ -44,7 +45,7 @@ export class AdminSalesReportComponent {
     ]
     this.fetchBrandAdminData();
     
-    
+     this.sharedService.updateModuleName('Parts Ledger')
     
     this.minDate = new Date(2023, 4, 1); // Month is zero-based (4 = May)
 
@@ -81,7 +82,9 @@ export class AdminSalesReportComponent {
   }
 
 
-  constructor(private adminSalesReportService: AdminReportServiceService,private globalBlockUiService:GlobalBlockUiService) {}
+  constructor(private adminSalesReportService: AdminReportServiceService,
+    private globalBlockUiService:GlobalBlockUiService,
+  private sharedService:SharedServiceService) {}
 
 
   AdminSalesReportData: any = []
