@@ -103,4 +103,7 @@ export class AuthService {
   updatePasswordWhileCreatingUser(data:any):Observable<any>{
     return this.http.post(`${this.apiUrl}auth-user/update-user`,data)
   }
+   updatePasswordWhileCreatingDealerUser(data:any):Observable<any>{
+    return this.http.post(`${this.apiUrl}auth-user/update-dealer-user`,data)
+  }
 }

@@ -1,28 +1,28 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { PrimengModuleModule } from '../../shared/primeng-module/primeng-module.module';
+import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
 import { SharedModule } from '../../shared/shared.module';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { UtilitiesService } from '../../services/utilities.service';
-import { MessageService } from 'primeng/api';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { SharedServiceService } from '../../services/shared-service.service';
-import * as XLSX from 'xlsx';
 import { SidebarService } from '../../services/sidebar.service';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { MessageService } from 'primeng/api';
+import * as XLSX from 'xlsx';
+import { DealerUserServiceService } from '../../services/dealer-user-service.service';
 @Component({
-  selector: 'app-view-create-user',
-  imports: [SHARED_IMPORTS,PrimengModuleModule,SharedModule],
-  providers:[MessageService],
-  templateUrl: './view-create-user.component.html',
-  styleUrl: './view-create-user.component.css'
+  selector: 'app-dealer-view-create-user',
+  imports: [PrimengModuleModule,SHARED_IMPORTS,SharedModule,],
+  templateUrl: './dealer-view-create-user.component.html',
+  styleUrl: './dealer-view-create-user.component.css'
 })
-export class ViewCreateUserComponent {
+export class DealerViewCreateUserComponent {
 
-  users:any = [
+   users:any = [
   ]
       visible: boolean = false;
       associatedBusinesses:any=[
@@ -47,25 +47,18 @@ export class ViewCreateUserComponent {
     receivedData: any=[];
      userType:any='d';
     userPermissions:any=[];
-    @ViewChild('dt') dt: any;
+    brands:any=[];
+    dealers:any=[];
+    locations:any=[];
       statuses:any=[
         { name:'Active',id:1},
      
          {name:'Inactive',id:0}
        ]
-    userTypes:any=[
-      {
-        name:'Admin',value:'A'
-      },
-      {
-        name:'User',value:'D'
-      },
-
-    ]
       
       constructor(private router:Router,private utilitiesService:UtilitiesService,
         private fb:FormBuilder,private cdr:ChangeDetectorRef,
-        private userService:UserService,private messageService:MessageService,
+        private userService:DealerUserServiceService,private messageService:MessageService,
         private authService:AuthService,
         private sharedService:SharedServiceService,
         private sidebarService:SidebarService,
@@ -82,15 +75,62 @@ export class ViewCreateUserComponent {
       mobileNo: ['', Validators.compose([Validators.required, Validators.pattern('^[0-9]{10}$')])],
       associatedBusiness: ['', Validators.required],
       status: ['', Validators.required],
-      userType:['',Validators.required]
+      brand:['',Validators.compose([Validators.required])],
+      dealer:['',Validators.required],
+      location:['',Validators.required]
     });
     this.currentRoute=router.url;
    // console.log(this.currentRoute)
   }
     
   
+  onBrandChange(event:any){
+    this.utilitiesService.getDealers({brand_id:this.editUserForm.value.brand}).subscribe((res:any)=>{
+     
+      if(res?.data?.error){
+        this.globalBlockUiService.stopLoading();
+        return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Dealers!'})
+      }
+      else{
+        this.dealers=res.data;
+      }
+    },(error:any)=>{
+      this.globalBlockUiService.stopLoading();
+    })
+   }
+
+   getBrands(){
+    this.globalBlockUiService.startLoading();
+    this.utilitiesService.getBrands().subscribe((res:any)=>{
+     
+      this.globalBlockUiService.stopLoading();
+      if(res?.data?.error){
+        this.globalBlockUiService.stopLoading();
+        return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Brands!'})
+      }
+      this.brands=res.data;
+    },(error:any)=>{
+      this.globalBlockUiService.stopLoading();
+    })
+  }
+   onDealerChange(event:any){
+    // console.log(this.slForm.value)
+    // this.globalBlockUiService.startLoading();
+    this.utilitiesService.getLocations({dealer_id:this.editUserForm.value.dealer}).subscribe((res:any)=>{
+      this.locations=res.data;
+      this.globalBlockUiService.stopLoading();
+      // console.log(this.brands)
+      if(res?.data?.error){
+        this.globalBlockUiService.stopLoading();
+        return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Locations!'})
+      }
+    },(error:any)=>{
+      this.globalBlockUiService.stopLoading();
+    })
+   }
     showDialog(action:any,rowData?:any) {
-     console.log(rowData)
+   //  console.log(rowData)
+   this.getBrands();
       this.actionName=action;
       if(this.actionName=='Add User'){
         this.viewUser();
@@ -112,8 +152,7 @@ export class ViewCreateUserComponent {
           associatedBusiness: verticalObj ? verticalObj.id : null,  // Patch the ID, not the name
           mobileNo: rowData.mobileNo,
           userId: rowData.userId,
-          status: statusObj?statusObj?.name:null,
-          userType:rowData.type
+          status: statusObj?statusObj?.name:null
         });
   
         Object.keys(this.editUserForm.controls).forEach((controleName:any)=>{
@@ -139,15 +178,15 @@ export class ViewCreateUserComponent {
     
       this.userId=localStorage.getItem('userid');
       this.token=localStorage.getItem('usertoken');
-      this.authService.checkEmail({email:this.editUserForm.value.email}).subscribe(
-        (response) => {
-         // this.emailArray=response.data;
-          //console.log(this.emailArray)
-        },
-        (error) => {
+      // this.authService.checkEmail({email:this.editUserForm.value.email}).subscribe(
+      //   (response) => {
+      //     this.emailArray=response.data;
+      //     //console.log(this.emailArray)
+      //   },
+      //   (error) => {
          
-        }
-      );
+      //   }
+      // );
   
       this.dataSubscription = this.sharedService.sidebarData.subscribe(
         (data) => {
@@ -256,7 +295,7 @@ export class ViewCreateUserComponent {
         let emailExists = false;
        // console.log("email exists ",this.emailArray);
   
-        this.emailArray?.forEach((item: any) => {
+        this.emailArray.forEach((item: any) => {
           // Check if the email exists in the array
           if (item.vcEmail === this.editUserForm.value.email) {
             this.showErrorMessage = '';
@@ -360,12 +399,16 @@ export class ViewCreateUserComponent {
         let data:any=[];
         this.users.forEach((item:any)=>{
           data.push({
+            Brand:item.brand,
+            Dealer:item.dealer,
+            Location:item.location,
             Name:item.name,
           Role:item.roleName,
           Designation:item.designationName,
           'Email Id':item.emailId,
           'Mobile No':item.mobileNo,
-          'Business Vertical':item.associatedBusiness
+          'Business Vertical':item.associatedBusiness,
+          Status:item.status?'Active':'Inactive'
           })
           
         })
@@ -389,11 +432,11 @@ export class ViewCreateUserComponent {
       viewUser(event?:any){
          this.globalBlockUiService.startLoading();
         //  localStorage.setItem('usertype','d');
-        console.log('user Type ',this.userType)
+      //  console.log('user Type ',this.userType)
         this.userService.viewUser({userType:this.userType}).subscribe((res:any)=>{
            this.globalBlockUiService.stopLoading();
            let userArray=[];
-
+         //  console.log("resdata ",res?.data)
           for(let item of res?.data){
             //console.log(this.roles,this.associatedBusinesses,this.designations)
             let designationObj=this.designations.find((obj:any)=> {return item.designationId==obj.id})
@@ -403,9 +446,8 @@ export class ViewCreateUserComponent {
             let businessVerticalObj=this.associatedBusinesses.find((obj:any)=>  { return item.business_vertical==obj.id})
             // console.log("designation ",businessVerticalObj);
             this.businessVertical=businessVerticalObj?.business_vertical
-  
             let roleObj=this.roles.find((obj:any)=>  {return item.roleId==obj.id})
-            //console.log("designation ",roleObj);
+            
             this.roleName=roleObj?.role_name
   
             userArray.push({
@@ -416,10 +458,10 @@ export class ViewCreateUserComponent {
             
           })
           
+          
         }
         this.users=userArray;
-        this.dt.clear()
-       // console.log("users ",this.users)
+      // console.log("users ",this.users)
          
         },(error:any)=>{
           this.globalBlockUiService.stopLoading();

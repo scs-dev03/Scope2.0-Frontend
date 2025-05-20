@@ -41,7 +41,6 @@ td{
     /* width: 100vh !important;
     height: 65vh !important; */
     padding: 15px;
-    padding-top: 0px !important;
     border: none;
 }
 :host ::ng-deep /deep/ span.p-element.p-dropdown-label.p-inputtext.p-placeholder.ng-star-inserted{

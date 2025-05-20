@@ -291,7 +291,7 @@ async uploadFile(data:any){
   let fileTypeObj: { fileType: any; fileTypeId: any; };
 this.globalBlockUiService.startLoading();
 
-  this.userId=localStorage.getItem('userId');
+  this.userId=localStorage.getItem('userid');
   let logs;
   let responses:any=[];
   

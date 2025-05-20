@@ -1,25 +1,5 @@
 
 <p-toast position="top-center"></p-toast>
-<!-- <p-blockUI [blocked]="isLoading">  -->
-  <!-- <p-progress-spinner 
-    styleClass="w-4rem h-4rem" 
-    strokeWidth="8" 
-    fill="var(--surface-ground)" 
-    animationDuration=".5s" />  -->
-     <!-- <i class='bx bx-loader-circle fa-spin custom-icon fa-spinner'></i>
-</p-blockUI> -->
- <!-- <div>
-  <img
-  src="Background_image.png"
-  alt="Background"
-  class=" w-full h-full object-cover -z-10 fixed"
-/>
-<div>
-<app-header></app-header>
-</div> -->
-
-
-<!-- </div> -->
 <div class="body d-flex ">   
   <!-- <div>
     <app-sidebar></app-sidebar>
@@ -31,13 +11,13 @@
   
     <div class=" mx-5 overflow-hidden">
    
-      <div class="d-flex justify-between " *ngIf="userPermissions?.view1">
+      <div class="d-flex justify-end " >
         <!-- *ngIf="userPermissions?.view1" -->
         <!-- <div class="mb-3" >
             <span class="font-bold f-18" >View Users</span>
 
         </div> -->
-        <div class="mb-3 flex flex-wrap gap-4">
+        <!-- <div class="mb-3 flex flex-wrap gap-4">
     <div class="flex items-center ">
         <p-radiobutton name="Admin" value="a" [(ngModel)]="userType" (ngModelChange)="viewUser($event)" inputId="admin" />
         <label for="admin" class="ml-2 f-12 d-flex align-items-center mb-0">Admin</label>
@@ -47,19 +27,19 @@
         <p-radiobutton name="User" value="d" [(ngModel)]="userType" inputId="dealer" (ngModelChange)="viewUser($event)" />
         <label for="dealer" class="ml-2 f-12 d-flex align-items-center mb-0">User</label>
     </div>
-        </div>
+        </div> -->
         <div>
             <!-- *ngIf="userPermissions?.add1" in i tag -->
-          <i class="pi pi-user cursor-pointer me-3"  style="font-size: 1.5rem !important;font-weight:bold " *ngIf="userPermissions?.add1" (click)="showDialog('Add User')"></i>
+          <i class="pi pi-user cursor-pointer me-3"  style="font-size: 1.5rem !important;font-weight:bold "  (click)="showDialog('Add User')"></i>
           <!-- *ngIf="userPermissions?.view1" in i tag -->
-          <i class='bx bx-export cursor-pointer' style="font-size: 1.5rem;font-weight:bold" *ngIf="userPermissions?.view1" (click)="exportToExcel()" ></i>
+          <i class='bx bx-export cursor-pointer' style="font-size: 1.5rem;font-weight:bold"  (click)="exportToExcel()" ></i>
           
         </div>
       </div >
       <!-- [tableStyle]="{ 'min-width': '40rem' }" -->
       <!-- *ngIf="userPermissions?.view1"  bg-[#FDF5E6] -->
-       <div class="card h-auto flex flex-col justify-start  rounded-lg " *ngIf="userPermissions?.view1" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[72vw]':'w-[90vw]'" >
-         <p-table #dt
+       <div class="card h-auto flex flex-col justify-start  rounded-lg "  [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[72vw]':'w-[90vw]'" >
+         <p-table 
          [value]="users" 
          [paginator]="true"
          [rows]="100"
@@ -76,7 +56,22 @@
          >
              <ng-template pTemplate="header" >
                  <tr>
-                     <th>Name <p-columnFilter
+                    <th class="min-w-8rem">Brand <p-columnFilter
+                    class="table-input"
+                    field="brand"
+                    display="menu"
+                  ></p-columnFilter></th>
+                  <th class="min-w-8rem">Dealer <p-columnFilter
+                    class="table-input"
+                    field="dealer"
+                    display="menu"
+                  ></p-columnFilter></th>
+                  <th class="min-w-8rem">Location <p-columnFilter
+                    class="table-input"
+                    field="location"
+                    display="menu"
+                  ></p-columnFilter></th>
+                     <th class="min-w-8rem">Name <p-columnFilter
                     class="table-input"
                     field="name"
                     display="menu"
@@ -101,27 +96,34 @@
                     field="emailId"
                    display="menu"
                   ></p-columnFilter></th>
-                     <th>Mobile  <p-columnFilter
+                     <th class="min-w-8rem">Mobile  <p-columnFilter
                     class="table-input"
                     field="mobileNo"
                    display="menu"
                   ></p-columnFilter></th>
-                     <th *ngIf="this.userPermissions?.edit1">Action</th>
-                     <th *ngIf="this.userPermissions?.delete1">Status</th>
-                     <!-- <th >Action</th>
-                     <th >Status</th> -->
+                     <!-- <th *ngIf="this.userPermissions?.edit1">Action</th>
+                     <th *ngIf="this.userPermissions?.delete1">Status</th> -->
+                     <th >Action</th>
+                     <th >Status</th>
                  </tr>
              </ng-template>
              <ng-template pTemplate="body" let-product>
                  <tr>
+                    <td class="break-words whitespace-normal max-w-10rem">{{ product.brand }}</td>
+                    <td class="break-words whitespace-normal max-w-10rem">{{ product.dealer }}</td>
+                    <td class="break-words whitespace-normal max-w-10rem">{{ product.location }}</td>
                      <td class="break-words whitespace-normal max-w-10rem">{{ product.name }}</td>
                      <td class="break-words whitespace-normal max-w-10rem">{{ product.designationName }}</td>
                      <td class="break-words whitespace-normal max-w-10rem">{{product.roleName}}</td>
                      <td class="break-words whitespace-normal max-w-10rem">{{ product.associatedBusiness }}</td>
                      <td class="break-words whitespace-normal max-w-10rem">{{ product.emailId }}</td>
                      <td>{{ product.mobileNo }}</td>
-                     <td class="text-center" *ngIf="this.userPermissions?.edit1" ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td>
+                     <!-- <td class="text-center" *ngIf="this.userPermissions?.edit1" ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td>
                      <td class="p-2" *ngIf="this.userPermissions?.delete1"><p-toggleswitch [ngModel]="setToggleState(product)" 
+                      (ngModelChange)="onStatusChange(product,product.status)"> ></p-toggleswitch></td> -->
+
+                      <td class="text-center"  ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td>
+                     <td class="p-2" ><p-toggleswitch [ngModel]="setToggleState(product)" 
                       (ngModelChange)="onStatusChange(product,product.status)"> ></p-toggleswitch></td>
                        </tr>
                      <!-- <td class="text-center"  ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td> -->
@@ -145,6 +147,55 @@
       <div class="row">
         <div class="col-12">
           <div class="row">
+           
+             <div class="col-6 p-2 d-flex flex-column">
+              <span class="font-semibold">Brand</span>
+               <p-select 
+                [options]="brands" 
+                formControlName="brand"
+                optionLabel="brand" 
+                optionValue="brand_id"
+                [filter]="true"
+                filterPlaceholder="Select Brand.."
+                 (onChange)="onBrandChange($event)"
+
+                placeholder="Select Brand" />
+              <!-- Show error message only if the field is touched and invalid -->
+              <div *ngIf="editUserForm.get('brand')?.touched && editUserForm.get('brand')?.invalid">
+                <small *ngIf="editUserForm.get('brand')?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small>
+              </div>
+            </div>
+             <div class="col-6 p-2 d-flex flex-column">
+              <span class="font-semibold">Dealer</span>
+               <p-select 
+                [options]="dealers" 
+                formControlName="dealer"
+                optionLabel="dealer_name" 
+                optionValue="dealer_id"
+                [filter]="true"
+                filterPlaceholder="Select Dealer"
+                (onChange)="onDealerChange($event)"
+                placeholder="Select Dealer" />
+              <!-- Show error message only if the field is touched and invalid -->
+              <div *ngIf="editUserForm.get('dealer')?.touched && editUserForm.get('dealer')?.invalid">
+                <small *ngIf="editUserForm.get('dealer')?.hasError('required')" style="color: red; font-size: 12px;">Dealer is required.</small>
+              </div>
+            </div>
+
+             <div class="col-6 p-2 d-flex flex-column">
+              <span class="font-semibold">Location</span>
+               <p-select 
+                [options]="locations" 
+                formControlName="location"
+                optionLabel="location_name" 
+                optionValue="location_id"
+               
+                placeholder="Select Location" />
+              <!-- Show error message only if the field is touched and invalid -->
+              <div *ngIf="editUserForm.get('location')?.touched && editUserForm.get('location')?.invalid">
+                <small *ngIf="editUserForm.get('location')?.hasError('required')" style="color: red; font-size: 12px;">Location is required.</small>
+              </div>
+            </div>
             <!-- Name Field -->
             <div class="col-6 p-2 d-flex flex-column">
               <span class="font-semibold">First Name</span>
@@ -248,19 +299,6 @@
                 placeholder="Enter Status" />
               <div *ngIf="editUserForm.get('status')?.touched && editUserForm.get('status')?.invalid">
                 <small *ngIf="editUserForm.get('status')?.hasError('required')" style="color: red; font-size: 12px;">Status is required.</small>
-              </div>
-            </div>
-
-            <div class="col-6 p-2 d-flex flex-column">
-              <span class="font-semibold">User Type</span>
-              <p-select 
-                [options]="userTypes" 
-                formControlName="userType"
-                optionLabel="name" 
-                optionValue="value"
-                placeholder="Select User Type" />
-              <div *ngIf="editUserForm.get('userType')?.touched && editUserForm.get('userType')?.invalid">
-                <small *ngIf="editUserForm.get('userType')?.hasError('required')" style="color: red; font-size: 12px;">User Type is required.</small>
               </div>
             </div>
           </div>

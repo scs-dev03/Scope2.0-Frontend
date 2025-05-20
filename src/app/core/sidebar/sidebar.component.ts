@@ -213,8 +213,17 @@ resetSidebarState(){
   this.getModulesOnTrigger();
 }
 logOut(){
-  localStorage.clear();
-  window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx';
+ 
+ // localStorage.setItem('usertype','d')
+ //console.log(localStorage.getItem('usertype')=='A')
+  if(localStorage.getItem('usertype')=='A')
+  {
+window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uad_sc_wac/Login.aspx';
+  }else{
+    
+    window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx';
+  }
+   localStorage.clear();
 }
 
 getModulesOnTrigger(){

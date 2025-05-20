@@ -79,7 +79,7 @@ visibleSidebar:boolean=false;
        this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible;
    })
-      this.userId=localStorage.getItem('userId');
+      this.userId=localStorage.getItem('userid');
     }
     get locationControls() {
       return (this.mlForm.get('locations') as FormArray);

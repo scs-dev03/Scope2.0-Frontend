@@ -74,7 +74,7 @@ export class SingleLocationComponent {
     this.users=res;
    })
 
-   this.userId=localStorage.getItem('userId');
+   this.userId=localStorage.getItem('userid');
    this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible
    })

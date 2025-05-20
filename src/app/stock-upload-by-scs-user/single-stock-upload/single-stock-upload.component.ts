@@ -85,7 +85,7 @@ export class SingleStockUploadComponent {
     this.visibleSidebar=visible;
   });
 
-  this.userId=localStorage.getItem('userId');
+  this.userId=localStorage.getItem('userid');
   this.userService.allUserData$.subscribe((users:any)=>{
     this.users=users;
   })
@@ -170,7 +170,7 @@ export class SingleStockUploadComponent {
        }
 
      let locationId=this.slForm.value.location;
-     this.userId=localStorage.getItem('userId');
+     this.userId=localStorage.getItem('userid');
      
        let formData = new FormData();
        formData.append('excelFile', this.file, this.fileName);

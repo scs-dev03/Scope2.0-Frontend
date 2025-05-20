@@ -25,7 +25,7 @@ export class HomePageComponent {
 
   private subscription!: Subscription;
   ngOnInit(): void {
-    localStorage.setItem('dealerid', '8');
+    //localStorage.setItem('dealerid', '8');
     this.globalBlockUiService.startLoading();
 
     this.fetchUserinfo(localStorage.getItem('usertoken'), localStorage.getItem('usertype'));
@@ -83,17 +83,18 @@ export class HomePageComponent {
     this.globalBlockUiService.startLoading();
     // console.log('fetch method',usertoken);
     // console.log('fetch method',usertype);
- localStorage.setItem('brandid','9');
-    localStorage.setItem('locationid','14');
-     localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
+ //localStorage.setItem('brandid','9');
+   // localStorage.setItem('locationid','14');
+   //  localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
     this.globalBlockUiService.startLoading();
-     usertoken='0x0200000046E3737AED5FE0B13F2E6D0710BC96ABB705BA29736DDB3ADE3CBC2F7260C908'
+  //   usertoken='0x0200000046E3737AED5FE0B13F2E6D0710BC96ABB705BA29736DDB3ADE3CBC2F7260C908'
     await this.homepageservice
       .getuserinfo({ token: usertoken, usertype: 'U' })
       .subscribe({
         next: (res: any) => {
           this.userInfo = res.Data;
           localStorage.setItem('def_location', res.Data[0]?.locationid);
+          
           //console.log(this.userInfo);
           this.filteredLocationData = this.userInfo.map((item: any) => ({
             locationid: item.locationid,
@@ -104,7 +105,7 @@ export class HomePageComponent {
           this.sharedService.updateHomePageData(this.filteredLocationData)
 
            this.locationId=localStorage.getItem('def_location')
-           console.log("location is imn 98 ",this.locationId) 
+          // console.log("location is imn 98 ",this.locationId) 
           //console.log(this.filteredLocationData);
           this.globalBlockUiService.stopLoading();
         },

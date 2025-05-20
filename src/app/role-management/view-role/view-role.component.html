@@ -269,7 +269,7 @@
           <ng-template pTemplate="body" let-module>
             <!-- If submodules exist -->
             <ng-container
-              *ngIf="module.submodules?.length > 0; else noSubmodules"
+              *ngIf="module.submodules?.length > 0; else noSubmodules" 
             >
               <tr
                 *ngFor="let submodule of module.submodules; let i = index"
@@ -338,29 +338,34 @@
                   <p-checkbox
                     [(ngModel)]="module.view1"
                     binary="true"
+                    (onChange)="toggleAllForModule(module, $event, null, 'view')"
                   ></p-checkbox>
                 </td>
                 <td class="!p-3 text-center">
                   <p-checkbox
                     [(ngModel)]="module.edit1"
                     binary="true"
+                    (onChange)="toggleAllForModule(module, $event, null, 'edit')"
                   ></p-checkbox>
                 </td>
                 <td class="!p-3 text-center">
                   <p-checkbox
                     [(ngModel)]="module.add1"
                     binary="true"
+                    (onChange)="toggleAllForModule(module, $event, null, 'add')"
                   ></p-checkbox>
                 </td>
                 <td class="!p-3 text-center">
                   <p-checkbox
                     [(ngModel)]="module.delete1"
+                     (onChange)="toggleAllForModule(module, $event, null, 'delete')"
                     binary="true"
                   ></p-checkbox>
                 </td>
                 <td class="!p-3 text-center">
                   <p-checkbox
                     [(ngModel)]="module.all"
+                    (onChange)="toggleAllForModule(module, $event, null, 'all')"
                     binary="true"
                   ></p-checkbox>
                 </td>

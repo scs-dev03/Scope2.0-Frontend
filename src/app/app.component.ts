@@ -52,8 +52,6 @@ export class AppComponent {
 
   ngOnInit() {
    
-    
-  localStorage.clear();
     this.globalBlockUIService.loading$.subscribe((loading:any)=>{
       this.isLoading=loading;
     })
@@ -74,6 +72,7 @@ export class AppComponent {
         url.includes('/core/update-user-password');
 
     this.isHomePage=url.includes('/core/home')
+    
     });
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd && event.urlAfterRedirects === '/core/home') {
@@ -94,13 +93,14 @@ export class AppComponent {
     });
 
     this.userService.loadDataOnce();
-    localStorage.setItem('brandid','9');
-    localStorage.setItem('def_location','14')
-    localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
-    let userToken=localStorage.getItem('token');
+    // localStorage.setItem('brandid','9');
+    // localStorage.setItem('def_location','14')
+     //localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
+    let userToken=localStorage.getItem('usertoken');
 
     this.utilitiesService.getUserInfo({token:userToken}).subscribe((res:any)=>{
-      localStorage.setItem('userId',res.data[0]?.userId)
+      localStorage.setItem('userid',res.data[0]?.userId)
+      localStorage.setItem('username',res.data[0]?.username)
     })
 
     this.sharedService.moduleName.subscribe((header:any)=>{

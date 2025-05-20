@@ -40,6 +40,8 @@ export class UpdatePasswordWhileCreateUserComponent {
   timer: any;
   minutes: number = 5;
   seconds: number = 0;
+  userType:any;
+  loggedInUser:any;
   constructor(private authService:AuthService,private messageService:MessageService,private router:Router,
     private fb:FormBuilder,private activatedRoute:ActivatedRoute,
   private userService:UserService,
@@ -58,6 +60,8 @@ private globalBlockUiService:GlobalBlockUiService){
     this.activatedRoute.queryParams.subscribe(params => {
       let expiryParam=params['expiry']
       this.expiryTime = parseInt(params['expiry'], 10);
+      this.userType=params['userType'];
+      this.loggedInUser=params['type'];
       this.checkLinkValidity();
       this.startTimer();
       if(expiryParam){
@@ -72,6 +76,15 @@ private globalBlockUiService:GlobalBlockUiService){
           if (userNameMatch && userNameMatch[1]) {
             this.name = userNameMatch[1];
           }
+         
+    const userTypeMatch = decodedExpiryParam.match(/userType=([^\?&]+)/);
+    if (userTypeMatch && userTypeMatch[1]) {
+          this.userType = userTypeMatch[1].replace(/['"]+/g, ''); // remove quotes
+        }
+         const typeMatch = decodedExpiryParam.match(/type=([^\?&]+)/);
+         if (typeMatch && typeMatch[1]) {
+          this.loggedInUser = typeMatch[1].replace(/['"]+/g, ''); // remove quotes
+        }
         }
       //  console.log("email ",this.emailFromRoute,this.name)
       
@@ -207,7 +220,7 @@ let password=this.updateForm.value.password
       (error) => {
         this.globalBlockUiService.stopLoading();;
         this.OTP=''
-        this.messageService.add({severity:'error',life:30000,summary:'Invalid OTP',detail:'Try re-scanning QR Code Again!!'})
+        this.messageService.add({severity:'error',life:3000,summary:'Invalid OTP',detail:'Try re-scanning QR Code Again!!'})
         // alert('Invalid OTP');
       })
     }
@@ -226,30 +239,59 @@ let password=this.updateForm.value.password
       this.secretKey=res.secret;
       this.globalBlockUiService.stopLoading();;
     },(error:any)=>{
-      this.messageService.add({severity:'error',life:100000,summary:'Error in processing for Google Authenticator'})
+      this.messageService.add({severity:'error',life:3000,summary:'Error in processing for Google Authenticator'})
     })
   }
 
   submit(){
 
     if(!this.isOtpVerified && this.updateForm.valid){
-      this.messageService.add({severity:'error',life:30000,summary:'Kindly do the Authentication  !!!'})
+      this.messageService.add({severity:'error',life:3000,summary:'Kindly do the Authentication  !!!'})
       return;
     }
     if(this.updateForm.valid && this.emailMessage=='' && this.passwordMessage==''){
-      this.globalBlockUiService.startLoading();;
+     
       let data={
         email:this.updateForm.value.email,
         password:this.updateForm.value.password,
         secretKey:this.secretKey,
       }
     //  console.log("submit ",data)
+   // console.log("user Type",this.userType,this.loggedInUser )
+    if(this.userType=='user'){
+ this.globalBlockUiService.startLoading();
       this.authService.updatePasswordWhileCreatingUser(data).subscribe((res:any)=>{
         this.globalBlockUiService.stopLoading();;
-        this.messageService.add({severity:'success',life:30000,summary:'Your Password has been created succesfully!!',detail:'You can Login now!!'})
+        this.messageService.add({severity:'success',life:3000,summary:'Your Password has been created succesfully!!',detail:'You can Login now!!'})
         // let link='http://103.30.72.109/login'
        // let link="http://web17.185.238.new.ocpwebserver.com/login";
-         let link="http://web16.185.238.new.ocpwebserver.com/login"
+       let link=""
+       if(this.loggedInUser=='a'){
+        link='http://web13.185.238.new.ocpwebserver.com/uad_sc_wac/Login.aspx'
+       }
+       else{
+        link='http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx'
+       }
+         
+        this.updateForm.reset();
+        window.open(link, '_blank');
+          this.isSubmitted=true;
+      },(error:any)=>{
+        this.globalBlockUiService.stopLoading();;
+        this.updateForm.reset();
+        
+      
+      })
+    }
+
+    if(this.userType=='dealer'){
+       this.globalBlockUiService.startLoading();
+      this.authService.updatePasswordWhileCreatingDealerUser(data).subscribe((res:any)=>{
+        this.globalBlockUiService.stopLoading();
+        this.messageService.add({severity:'success',life:3000,summary:'Your Password has been created succesfully!!',detail:'You can Login now!!'})
+        // let link='http://103.30.72.109/login'
+       // let link="http://web17.185.238.new.ocpwebserver.com/login";
+         let link="http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx"
         this.updateForm.reset();
         window.open(link, '_blank');
           this.isSubmitted=true;
@@ -258,6 +300,9 @@ let password=this.updateForm.value.password
         this.updateForm.reset();
         
       })
+    }
+
+
     }
     else{
       Object.keys(this.updateForm.controls).forEach((controlName)=>{
@@ -272,7 +317,7 @@ let password=this.updateForm.value.password
     // this.link="http://localhost:4200/core/update-user-password";
     this.link="http://web16.185.238.new.ocpwebserver.com/core/update-user-password"
     // this.link="http://web17.185.238.new.ocpwebserver.com/core/update-user-password";
-    this.userService.requestNewMail({userName:this.name,email:this.emailFromRoute,link:this.link}).subscribe((res:any)=>{
+    this.userService.requestNewMail({userName:this.name,email:this.emailFromRoute,link:this.link,userType:this.userType,type:this.loggedInUser}).subscribe((res:any)=>{
       this.messageService.add({severity:'success',summary:'Check your mail for updating the password',life:3000});
     },(error:any)=>{
       this.messageService.add({severity:'error',summary:'Error in requesting for new link',life:30000});

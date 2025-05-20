@@ -125,3 +125,18 @@ body.loader {
   .f-16{
     font-size: 16px !important;
   }
+
+  .max-w-10rem{
+    max-width: 10rem;
+  }
+
+  .min-w-8rem{
+    min-width: 8rem!important;
+  }
+
+  .min-w-10rem{
+    min-width: 10rem!important;
+  }
+  .min-w-13rem{
+    min-width: 13rem !important;
+  }

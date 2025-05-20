@@ -51,7 +51,7 @@ export class ViewRoleComponent {
   ){
     this.viewRole();
     this.token=localStorage.getItem('token');
-    this.userId=localStorage.getItem('userId');
+    this.userId=localStorage.getItem('userid');
     this.currentRoute=router.url;
     this.sharedService.updateModuleName('View & Edit Roles')
   }
@@ -214,10 +214,10 @@ export class ViewRoleComponent {
    // console.log("role Type ",this.roleType)
     this.roleService.getEditModulesBasedOnBVID({vertical_ids:selectedIds,roleId:rowData.id,moduleType:this.roleType}).subscribe((res:any)=>{
        this.modules=res.data;
+      // console.log("allModules ",res.data)
        
       this.globalBlockUiService.stopLoading();
-      this.organizeModules();
-      //console.log("allModules ",this.allModules)
+       this.organizeModules();
       this.globalBlockUiService.stopLoading();
     },(error:any)=>{
       this.globalBlockUiService.stopLoading();
@@ -229,13 +229,14 @@ export class ViewRoleComponent {
 
   this.mainModules = this.modules.filter((module: any) => module?.parentId === 0);
   this.subModules = this.modules.filter((module: any) => module?.parentId !== 0);
-  //console.log("main and sub", this.mainModules, this.subModules);
+  console.log("main and sub", this.mainModules, this.subModules);
 
   this.mainModules.forEach((mainModule: any) => {
-    mainModule.view1 = false;
-    mainModule.edit1 = false;
-    mainModule.delete1 = false;
-    mainModule.add1 = false;
+    mainModule.view1 = mainModule.view1;
+    mainModule.edit1 = mainModule.edit1;
+    mainModule.delete1 = mainModule.delete1;
+    mainModule.add1 = mainModule.add1;
+    mainModule.all= (mainModule.view1 && mainModule.edit1&& mainModule.delete1 &&mainModule.add1 )
    
 
     const submodulesForMainModule = this.subModules.filter(
@@ -267,7 +268,7 @@ export class ViewRoleComponent {
   });
 
   this.allModules = this.mainModules;
-  //console.log("all modules ", this.allModules);
+  console.log("all modules ", this.allModules);
 }
 
 
@@ -314,31 +315,71 @@ export class ViewRoleComponent {
     const match = this.associatedBusinesses.find((b:any)=> b.id === id);
     return match ? match.business_vertical : 'Unknown';
   }
-   // Toggle the "All" checkbox for all submodules
- toggleAllForModule(module: any,event:any,index:any,eventString:string): void {
-  
-  module.submodules.forEach((submodule: any,i:any) => {
-   
-    if(index==i){
-      if(eventString=='all'){
-        submodule.all = event.checked;
-        submodule.view1 = event.checked;
-        submodule.edit1 = event.checked;
-        submodule.add1 = event.checked;
-        submodule.delete1 = event.checked;
-      }
-      else{
-        submodule.all=false;
-      }
-       console.log("eventString ",eventString,submodule)
-    //   if(eventString=='view' && eventString=='add' && eventString=='delete' && eventString=='edit'){
-    // submodule.all=true;        
-    //   }
+
+  toggleAllForModule(
+  module: any,
+  event: any,
+  index: number | null,
+  eventString: string
+): void {
+  const checked = event.checked;
+
+ // console.log("module",module)
+  if (index === null) {
+    if (eventString === 'all') {
+      module.view1 = checked;
+      module.edit1 = checked;
+      module.add1 = checked;
+      module.delete1 = checked;
+      module.all = checked;
+    } else {
+      module[eventString + '1'] = checked;
+      module.all = false;
     }
-    
-  });
-  //console.log("submodules ",event,module.submodules)
+  } else {
+    const submodule = module.submodules[index];
+    if (eventString === 'all') {
+      submodule.view1 = checked;
+      submodule.edit1 = checked;
+      submodule.add1 = checked;
+      submodule.delete1 = checked;
+      submodule.all = checked;
+    } else {
+      submodule[eventString + '1'] = checked;
+      submodule.all = false;
+    }
+  }
+
+  // this.cdr.detectChanges();
 }
+
+   // Toggle the "All" checkbox for all submodules
+//  toggleAllForModule(module: any,event:any,index:any |null,eventString:string): void {
+  
+//   module.submodules.forEach((submodule: any,i:any) => {
+   
+//     if(index==i){
+//       if(eventString=='all'){
+//         submodule.all = event.checked;
+//         submodule.view1 = event.checked;
+//         submodule.edit1 = event.checked;
+//         submodule.add1 = event.checked;
+//         submodule.delete1 = event.checked;
+//       }
+//       else{
+//         submodule.all=false;
+//       }
+//        console.log("eventString ",eventString,submodule)
+//     //   if(eventString=='view' && eventString=='add' && eventString=='delete' && eventString=='edit'){
+//     // submodule.all=true;        
+//     //   }
+//     }
+    
+//   });
+//   //console.log("submodules ",event,module.submodules)
+// }
+
+
  
   getBusinessVerticals(){
     this.utilitiesService.getBusinessVertical().subscribe((res:any)=>{
@@ -419,13 +460,13 @@ this.roleService.editRole({
     this.viewRole();
     this.visible = false;
     if (res.error?.code) {
-      return this.messageService.add({ severity: 'error', summary: 'Error in creating Role', life: 300000 });
+      return this.messageService.add({ severity: 'error', summary: 'Internal Server Error', life: 300000 });
     }
     this.messageService.add({ severity: 'success', summary: 'Role updated successfully', life: 10000 });
   },
   (error: any) => {
     this.globalBlockUiService.stopLoading();
-    this.messageService.add({ summary: 'Error in Updating Role!!', life: 3300000, severity: 'error' });
+    this.messageService.add({ summary: 'Internal Server Error!!', life: 3300000, severity: 'error' });
     this.visible = false;
   }
 );
