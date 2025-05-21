@@ -178,7 +178,8 @@ export class CreateRoleComponent {
       ?.valueChanges.subscribe(() => this.checkAtLeastOneChecked());
   
     this.userId=localStorage.getItem('userid');
-    this.token=localStorage.getItem('token');
+    localStorage.setItem('userid',"293");
+    this.token=localStorage.getItem('usertoken');
     this.sharedService.updateModuleName('Create Role')
   }
 
@@ -333,14 +334,14 @@ export class CreateRoleComponent {
         this.allModules=[];
        // console.log("res.err ",res.error.code)
         if(res.error?.code){
-          return  this.messageService.add({severity:'error' ,summary:'Error in creating Role',life:300000})
+          return  this.messageService.add({severity:'error' ,summary:'Error in creating Role',life:3000})
         }
         this.messageService.add({severity:'success' ,summary:'Role has created Successfully',life:10000})
       },(error:any)=>{
         this.globalBlockUiService.stopLoading();
         this.roleForm.reset();
         this.allModules=[];
-        this.messageService.add({severity:'error',detail:'There is some error in creating role..',life:3000000000});
+        this.messageService.add({severity:'error',detail:'There is some error in creating role..',life:3000});
       })
     }
     else{
@@ -489,7 +490,15 @@ export class CreateRoleComponent {
       this.selectedFile='';
       this.fileName='';
       if(res.isWrongFile){
-        this.messageService.add({severity:'error',life:3000000,summary:'You have selected a wrong file'})
+        if(res?.isWrongFile?.empty)
+        {
+          return this.messageService.add({severity:'error',life:3000,summary:'Fields cannot be Blank'});
+        }
+        else{
+          return this.messageService.add({severity:'error',life:3000,summary:'You have selected Wrong file.'});
+        }
+        
+
       }
       else{
 
@@ -504,7 +513,7 @@ export class CreateRoleComponent {
       this.formData=new FormData();
       this.selectedFile='';
       this.fileName=''
-      this.messageService.add({severity:'error',life:3000000,summary:'Error in creating role!!!'})
+      this.messageService.add({severity:'error',life:3000,summary:'Internal Server Error!'})
     })
   }
 }

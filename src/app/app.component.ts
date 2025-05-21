@@ -95,7 +95,7 @@ export class AppComponent {
     this.userService.loadDataOnce();
     // localStorage.setItem('brandid','9');
     // localStorage.setItem('def_location','14')
-     //localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
+     localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
     let userToken=localStorage.getItem('usertoken');
 
     this.utilitiesService.getUserInfo({token:userToken}).subscribe((res:any)=>{

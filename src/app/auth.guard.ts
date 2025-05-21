@@ -5,8 +5,6 @@ import { inject } from '@angular/core';
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);  // Access the AuthService
   const router = inject(Router);  // Access the Router
-  
-  
 
   console.log('AuthGuard triggered');
 
@@ -14,12 +12,16 @@ export const authGuard: CanActivateFn = (route, state) => {
     console.log('User is authenticated');
     return true;
   } else {
+    
     console.log('User NOT authenticated. Redirecting...');
-    setTimeout(() => {
-      // window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx';
-    }, 0);
+   // Redirect to external login URL
+   localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx';
+
     return false;
   }
 
-  return true;
+  
+
 };

@@ -224,6 +224,7 @@ window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uad_sc_wac/Log
     window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx';
   }
    localStorage.clear();
+   sessionStorage.clear();
 }
 
 getModulesOnTrigger(){

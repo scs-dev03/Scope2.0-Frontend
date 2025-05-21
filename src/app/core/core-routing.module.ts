@@ -5,6 +5,7 @@ import { ScopeRedirectComponent } from './scope-redirect/scope-redirect.componen
 import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { UpdatePasswordWhileCreateUserComponent } from './update-password-while-create-user/update-password-while-create-user.component';
 import { HomePageComponent } from './home-page/home-page.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 
 const routes: Routes = [
@@ -28,9 +29,13 @@ const routes: Routes = [
     path: 'home',
     component: HomePageComponent
   },
+  // {
+  //   path: '**',
+  //   component: MaintenanceComponent,
+  // }
   {
-    path: '**',
-    component: MaintenanceComponent,
+    path:'**',
+    component:PageNotFoundComponent
   }
 ];
 

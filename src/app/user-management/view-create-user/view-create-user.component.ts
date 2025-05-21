@@ -71,7 +71,7 @@ export class ViewCreateUserComponent {
         private sidebarService:SidebarService,
         private globalBlockUiService:GlobalBlockUiService
       ){
-       
+      //  ^[0-9]{10}$
    this.editUserForm= this.fb.group({
       // Define each form control with validators combined using Validator.compose
       name: ['', Validators.compose([Validators.required])],
@@ -79,7 +79,7 @@ export class ViewCreateUserComponent {
       designation: ['', Validators.required],
       role: ['', Validators.required],
       email: ['', Validators.compose([Validators.required, Validators.email])],
-      mobileNo: ['', Validators.compose([Validators.required, Validators.pattern('^[0-9]{10}$')])],
+      mobileNo: ['', Validators.compose([Validators.required, Validators.pattern('^[1-9][0-9]{9}$')])],
       associatedBusiness: ['', Validators.required],
       status: ['', Validators.required],
       userType:['',Validators.required]

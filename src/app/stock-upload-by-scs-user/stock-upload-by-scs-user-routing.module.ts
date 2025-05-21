@@ -2,14 +2,16 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SingleStockUploadComponent } from './single-stock-upload/single-stock-upload.component';
 import { BulkStockUploadComponent } from './bulk-stock-upload/bulk-stock-upload.component';
-
+import {authGuard} from '../auth.guard'
 const routes: Routes = [
 
   {
-    path:'sl',component:SingleStockUploadComponent
+    path:'sl',component:SingleStockUploadComponent,
+    canActivate:[authGuard]
   },
   {
-    path:'ml',component:BulkStockUploadComponent
+    path:'ml',component:BulkStockUploadComponent,
+    canActivate:[authGuard]
   },
 
 ];
