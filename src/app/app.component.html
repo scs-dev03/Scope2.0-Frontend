@@ -283,12 +283,13 @@
       'w-0 overflow-hidden': !visibleSidebar
     }"
     class="transition-all duration-300 h-full bg-gray-50 shadow flex-shrink-0"
+    
   >
     <app-sidebar></app-sidebar>
   </div>
 
   <!-- Main Content -->
-  <div class="flex-1 transition-all duration-300 overflow-y-auto overflow-x-hidden relative bg-gray-100">
+  <div class="flex-1 transition-all duration-300 overflow-y-auto overflow-x-hidden relative" [ngClass]="{ 'bg-white': is404Page, 'bg-gray-100': !is404Page }">
     <!-- Overlay Button -->
     <!-- <button *ngIf="!isLoginPage"
       (click)="toggleSidebar()"

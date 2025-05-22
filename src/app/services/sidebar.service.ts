@@ -17,39 +17,40 @@ export class SidebarService {
  private url:any=environment.apiUrl;
  private sidebarVisible = new BehaviorSubject<boolean>(true);
  visibleSidebar$ = this.sidebarVisible.asObservable();
-  private sidebarItems: any = [
-    {
-      label: 'Lead Time Calculator',
-      roles: ['admin', 'user'],
-      route: '/dashboard',
-      isActive: true,
-      submenu: [
-        { id: 2, label: 'LT Upload', route: '/app-upload', roles: ['admin', 'user'], isActive: false },
-        { id: 3, label: 'LT Export', route: '/app-export', roles: ['admin', 'user'], isActive: false }
-      ]
-    },
-    {
-      id: 4,
-      label: 'User Management',
-      route: '',
-      roles: ['admin', 'user'],
-      isActive: true,
-      submenu: [
-        { id: 5, label: 'View User', route: '/view-user', roles: ['admin', 'user'], isActive: false }
-      ]
-    },
-    {
-      id: 7,
-      label: 'Role Based Access Management',
-      route: '',
-      roles: ['admin', 'user'],
-      isActive: true,
-      submenu: [
-        { id: 5, label: 'Create Role', route: '/create-role', roles: ['admin', 'user'], isActive: false },
-        { id: 8, label: 'View & Edit Role', route: '/view-role', roles: ['admin', 'user'], isActive: false }
-      ]
-    }
-  ];
+  private sidebarItems: any 
+  // = [
+  //   {
+  //     label: 'Lead Time Calculator',
+  //     roles: ['admin', 'user'],
+  //     route: '/dashboard',
+  //     isActive: true,
+  //     submenu: [
+  //       { id: 2, label: 'LT Upload', route: '/app-upload', roles: ['admin', 'user'], isActive: false },
+  //       { id: 3, label: 'LT Export', route: '/app-export', roles: ['admin', 'user'], isActive: false }
+  //     ]
+  //   },
+  //   {
+  //     id: 4,
+  //     label: 'User Management',
+  //     route: '',
+  //     roles: ['admin', 'user'],
+  //     isActive: true,
+  //     submenu: [
+  //       { id: 5, label: 'View User', route: '/view-user', roles: ['admin', 'user'], isActive: false }
+  //     ]
+  //   },
+  //   {
+  //     id: 7,
+  //     label: 'Role Based Access Management',
+  //     route: '',
+  //     roles: ['admin', 'user'],
+  //     isActive: true,
+  //     submenu: [
+  //       { id: 5, label: 'Create Role', route: '/create-role', roles: ['admin', 'user'], isActive: false },
+  //       { id: 8, label: 'View & Edit Role', route: '/view-role', roles: ['admin', 'user'], isActive: false }
+  //     ]
+  //   }
+  // ];
 
   // Simulate getting current user roles (could be fetched from a backend service)
   private currentUserRoles = ['user']; // This would be dynamic in a real app
@@ -64,7 +65,7 @@ export class SidebarService {
   }
 
   getModules():Observable<any>{
-    //localStorage.setItem('userid',"293")
+   // localStorage.setItem('userid',"36")
      let userId=localStorage.getItem('userid');
       //  console.log("user id in sidebar ",userId)
     // let userId='293';

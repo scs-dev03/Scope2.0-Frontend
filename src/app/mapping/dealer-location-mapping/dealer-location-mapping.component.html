@@ -29,6 +29,8 @@
                                   optionValue="brand_id"
                                   placeholder="Select Brand"
                                   class="  w-56 md:w-56"
+                                  [filter]="true" 
+                                  filterPlaceholder="Search Brand..."
                                   [ngClass]="visibleSidebar?'dropdown':'brandDropdown-collapse'"
                                   (onChange)="onBrandSelect($event)"
                                 />
@@ -118,6 +120,8 @@
   [showGridlines]="true"
   [scrollHeight]="'400px'"
   [scrollable]="true"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
   class="bg-white  !rounded-lg border border-gray-200 shadow-md"
 >
   <ng-template #header let-item>

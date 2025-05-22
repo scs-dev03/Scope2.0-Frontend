@@ -254,6 +254,7 @@ this.sidebarItems = res.data;
 //  this.sidebarItems=this.transformData(this.sidebarItems)
 // this.filteredItems=this.transformData(this.sidebarItems);
   this.sharedService.updateSidebarData(this.sidebarItems)
+  //console.log("sidebar items ",this.sidebarItems)
    this.globalBlockUiService.stopLoading();
   },(error:any)=>{
      this.globalBlockUiService.stopLoading();

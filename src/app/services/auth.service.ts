@@ -85,7 +85,7 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     // You can check for a token in local storage or session
-    return !!localStorage.getItem('token'); 
+    return !!localStorage.getItem('usertoken'); 
   }
 
   twoFactorAuthentication(data:any):Observable<any>{

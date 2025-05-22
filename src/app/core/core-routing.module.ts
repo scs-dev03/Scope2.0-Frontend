@@ -6,6 +6,7 @@ import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { UpdatePasswordWhileCreateUserComponent } from './update-password-while-create-user/update-password-while-create-user.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { authGuard } from '../auth.guard';
 
 
 const routes: Routes = [
@@ -17,17 +18,20 @@ const routes: Routes = [
 
   {
     path: 'redirect',
-    component: ScopeRedirectComponent
+    component: ScopeRedirectComponent,
+    canActivate:[authGuard]
 
   },
   {
     path:'update-user-password',
     component:UpdatePasswordWhileCreateUserComponent,
    
+    canActivate:[authGuard]
 },
 {
     path: 'home',
-    component: HomePageComponent
+    component: HomePageComponent,
+    canActivate:[authGuard]
   },
   // {
   //   path: '**',
@@ -35,7 +39,8 @@ const routes: Routes = [
   // }
   {
     path:'**',
-    component:PageNotFoundComponent
+    component:PageNotFoundComponent,
+    canActivate:[authGuard]
   }
 ];
 

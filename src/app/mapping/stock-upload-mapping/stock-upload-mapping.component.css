@@ -169,7 +169,8 @@ span{
     max-height: 260px !important;
     /* width: 225px !important;
     overflow-x:hidden; */
-    width: 18vw !important;
+    /* width: 18vw !important; */
+    width: 160px !important;
     overflow-x: hidden !important;
 }
 

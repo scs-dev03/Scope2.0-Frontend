@@ -46,7 +46,7 @@ export class LandingScreenComponent {
 
     localStorage.setItem('usertoken', this.usertoken)
     localStorage.setItem('userType',this.usertype)
-    console.log("token is ",this.usertoken);
+  //  console.log("token is ",this.usertoken);
     
     this.fetchUserinfo(this.usertype)
     // this.getUserId();

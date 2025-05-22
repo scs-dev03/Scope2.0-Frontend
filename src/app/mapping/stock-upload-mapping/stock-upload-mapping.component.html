@@ -21,6 +21,8 @@
           optionValue="brand_id"
           placeholder="Select Brand"
           class="brandDropdown !mt-3 "
+          [filter]="true" 
+          filterPlaceholder="Search Brand..."
           [ngClass]="isSidebarVisible?'brandDropdown':'brandDropdown-collapse'"
           (onChange)="onBrandSelect($event)"
         />
@@ -65,7 +67,7 @@
     </div>
 
     <div>
-        <div class=" add-mapping-card  !flex  !flex-col mt-3 !gap-6 p-3" [ngClass]="isSidebarVisible?'w-[55vw]':'w-[80vw]'">
+        <div class=" add-mapping-card  !flex  !flex-col mt-3 !gap-6 p-3" [ngClass]="isSidebarVisible?'w-[70vw]':'w-[80vw]'">
             <span>Add Mapping for Current Days Stock Upload : </span>
             <div class="d-flex flex-row justify-between">
               <p-fileupload *ngIf="showUploader" [multiple]="false"

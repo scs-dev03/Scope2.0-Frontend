@@ -19,49 +19,52 @@ import { SharedServiceService } from '../../services/shared-service.service';
 })
 export class AdminVonComponent {
   ngOnInit(): void {
-    
-    this.fetchBrandData();
-    console.log(this.adminFilterData.value.dealer);
-     this.sharedService.updateModuleName('Admin Norms Management')
-    
-    this.route.queryParams.subscribe((params:any) => {
-      this.brandid = params['brandid'];
-      this.dealerid = params['dealerid'];
-      this.locationid = params['locationid'];
-      localStorage.setItem('brandid',this.brandid)
-      localStorage.setItem('dealerid',this.dealerid)
-      localStorage.setItem('locationid',this.locationid)
-    });   
-   
-    //this.adminFilterData.reset()
-   
-    this.fetchDealerData(localStorage.getItem('brandid'))
-    this.fetchlocation(localStorage.getItem('dealerid'))
-    this.fetchNature();
-    this.fetchPartType()
-    this.fetchSeasonaData();
-    this.adminvonservice.setLocalStorage();
-    this.maxData = [
-      { name: 'Planned', code: '1' },
-      { name: 'Unplanned', code: '0' },
-    ];
-    this.adminstatus = [
-      { name: 'Reviewd', code: '1' },
-      { name: 'Unreviewd', code: '0' },
-    ];
-    this.adminFilterData.patchValue({
-      max: '1',
-      status: '0',
-      brand: Number(this.brandid),
-      dealer: this.dealerid,
-      location: this.locationid,
-    })
-    console.log(this.brandid+" "+this.dealerid+" "+ this.locationid);
-    console.log(this.adminFilterData.value);
+  this.fetchBrandData();
+  this.sharedService.updateModuleName('Admin Norms Management');
 
-    this.onClickSubmitfilterData()
-    
-  }
+  this.route.queryParams.subscribe((params: any) => {
+    this.brandid = params['brandid'];
+    this.dealerid = params['dealerid'];
+    this.locationid = params['locationid'];
+
+    if (this.brandid && this.dealerid && this.locationid) {
+      localStorage.setItem('brandid', this.brandid);
+      localStorage.setItem('dealerid', this.dealerid);
+      localStorage.setItem('locationid', this.locationid);
+
+      this.fetchDealerData(this.brandid);
+      this.fetchlocation(this.dealerid);
+
+      this.adminFilterData.patchValue({
+        brand: Number(this.brandid),
+        dealer: this.dealerid,
+        location: this.locationid,
+      });
+
+      this.onClickSubmitfilterData();
+    }
+  });
+
+  this.fetchNature();
+  this.fetchPartType();
+  this.fetchSeasonaData();
+  this.adminvonservice.setLocalStorage();
+
+  this.maxData = [
+    { name: 'Planned', code: '1' },
+    { name: 'Unplanned', code: '0' },
+  ];
+  this.adminstatus = [
+    { name: 'Reviewd', code: '1' },
+    { name: 'Unreviewd', code: '0' },
+  ];
+
+  this.adminFilterData.patchValue({
+    max: '1',
+    status: '0',
+  });
+}
+
 
   constructor(private adminvonservice: AdminvonserviceService,
     private route: ActivatedRoute,private router: Router,

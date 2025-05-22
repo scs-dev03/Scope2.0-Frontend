@@ -110,7 +110,7 @@ export class DashboardSchedulerComponent {
 // adding brand name in submit 
   addBrandName() {
     this.brandname = this.brandData.find(
-      (item: any) => item.bigid === this.dashboardInputData.value.brandID
+      (item: any) => item.BrandID === this.dashboardInputData.value.brandID
     );
     console.log(this.brandname);
   }
@@ -138,7 +138,7 @@ export class DashboardSchedulerComponent {
       this.sendScheduleData(
         this.dashboardInputData.value.dashboardID,
         this.dashboardInputData.value.brandID,
-        this.brandname.vcbrand,
+        this.brandname.Brand,
         this.dealername.dealerid,
         this.dealername.dealer,
         this.formatedDate,

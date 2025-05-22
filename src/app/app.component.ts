@@ -16,6 +16,8 @@ import { SharedServiceService } from './services/shared-service.service';
 import { UserService } from './services/user.service';
 import { SHARED_IMPORTS } from './shared/shared-imports/shared-module';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { PageStateService } from './services/page-state.service';
+import { PageNotFoundComponent } from './core/page-not-found/page-not-found.component';
 
 @Component({
   selector: 'app-root',
@@ -39,19 +41,22 @@ export class AppComponent {
     locationId:any;
     homeData:FormGroup;
     isHomePage:boolean=false;
+    is404Page:boolean=false;
   constructor(private globalBlockUIService: GlobalBlockUiService,
     private router:Router, private route: ActivatedRoute,
     private renderer: Renderer2,
     public sidebarService: SidebarService,
     private utilitiesService:UtilitiesService,
     private sharedService:SharedServiceService,
+    private pageStateService:PageStateService,
   private userService:UserService) {
     this.homeData = new FormGroup({
     locationId: new FormControl(),
   })}
 
   ngOnInit() {
-   
+    this.is404Page=this.pageStateService.is404;
+    console.log(this.is404Page)
     this.globalBlockUIService.loading$.subscribe((loading:any)=>{
       this.isLoading=loading;
     })
@@ -66,13 +71,15 @@ export class AppComponent {
     .pipe(filter((event:any) => event instanceof NavigationEnd))
     .subscribe((event: NavigationEnd) => {
       const url = event.urlAfterRedirects;
-
       this.isLoginPage = 
         url.includes('/login') ||
         url.includes('/core/update-user-password');
 
     this.isHomePage=url.includes('/core/home')
-    
+    const currentComponent = this.getCurrentComponent(this.route);
+        this.is404Page  = currentComponent === PageNotFoundComponent;
+       // console.log("isPage ",this.is404Page,currentComponent)
+        
     });
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd && event.urlAfterRedirects === '/core/home') {
@@ -95,7 +102,7 @@ export class AppComponent {
     this.userService.loadDataOnce();
     // localStorage.setItem('brandid','9');
     // localStorage.setItem('def_location','14')
-     localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
+   //  localStorage.setItem('usertoken','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
     let userToken=localStorage.getItem('usertoken');
 
     this.utilitiesService.getUserInfo({token:userToken}).subscribe((res:any)=>{
@@ -109,6 +116,14 @@ export class AppComponent {
     })
    
 
+  }
+
+  private getCurrentComponent(route: ActivatedRoute): any {
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+    return route.snapshot.routeConfig?.component;
+  
   }
 
   updateLoaderHeight() {
