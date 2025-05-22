@@ -110,18 +110,20 @@
   </p-table>
 </div> -->
 
-
-
-<div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2" style="zoom: 0.70;"  >
-    
-    <div class=" bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
-      <p-table
+<div
+  class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+  style="zoom: 0.7"
+>
+  <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+    <p-table
       [scrollable]="true"
       scrollHeight="600px"
       [value]="SalesInfo"
       [paginator]="true"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
       [rows]="10"
-      [rowsPerPageOptions]="[20, 30, 40, 50, 100]"
+      [rowsPerPageOptions]="[10, 20, 40, 50, 100]"
       [showGridlines]="true"
       [scrollDirection]="'both'"
       ngClass=" !w-[90vw] "
@@ -131,28 +133,72 @@
     >
       <ng-template #header>
         <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
-          <th pSortableColumn="Partnumber" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Part Number<p-sortIcon field="Partnumber" /></th>
-          <th pSortableColumn="Location" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Location<p-sortIcon field="Location" /></th>
-          <th pSortableColumn="Months" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Month<p-sortIcon field="Months" /></th>
-          <th pSortableColumn="ClosingStocks" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Closing Stocks <p-sortIcon field="ClosingStocks" /></th>
-          <th *ngFor="let col of DataTypeArray" [pSortableColumn]="col" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">{{ col }}
-            <p-sortIcon [field]="col"/>
+          <th
+            pSortableColumn="Partnumber"
+            class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+          >
+            Part Number<p-sortIcon field="Partnumber" />
           </th>
-        </tr> 
+          <th
+            pSortableColumn="Location"
+            class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+          >
+            Location<p-sortIcon field="Location" />
+          </th>
+          <th
+            pSortableColumn="Months"
+            class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+          >
+            Month<p-sortIcon field="Months" />
+          </th>
+          <th
+            pSortableColumn="ClosingStocks"
+            class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+          >
+            Closing Stocks <p-sortIcon field="ClosingStocks" />
+          </th>
+          <th
+            *ngFor="let col of DataTypeArray"
+            [pSortableColumn]="col"
+            class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+          >
+            {{ col }}
+            <p-sortIcon [field]="col" />
+          </th>
+        </tr>
       </ng-template>
       <ng-template #body let-sale let-i="rowIndex">
-        <tr class="!border-b hover:!shadow-xl !hover:!border-2	 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0">
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.Partnumber}}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.Location}}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.Months }}</td>
-          <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale.ClosingStocks }}</td>
-          <td *ngFor="let col of DataTypeArray" class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ sale[col] }}</td>
-         
-          </tr> 
-      </ng-template>  
+        <tr
+          class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+        >
+          <td
+            class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+          >
+            {{ sale.Partnumber }}
+          </td>
+          <td
+            class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+          >
+            {{ sale.Location }}
+          </td>
+          <td
+            class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+          >
+            {{ sale.Months }}
+          </td>
+          <td
+            class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+          >
+            {{ sale.ClosingStocks }}
+          </td>
+          <td
+            *ngFor="let col of DataTypeArray"
+            class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+          >
+            {{ sale[col] }}
+          </td>
+        </tr>
+      </ng-template>
     </p-table>
-    </div>
-  
-  
   </div>
-  
+</div>

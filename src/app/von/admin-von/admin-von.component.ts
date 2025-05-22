@@ -48,7 +48,7 @@ export class AdminVonComponent {
   this.fetchNature();
   this.fetchPartType();
   this.fetchSeasonaData();
-  this.adminvonservice.setLocalStorage();
+  //this.adminvonservice.setLocalStorage();
 
   this.maxData = [
     { name: 'Planned', code: '1' },
@@ -766,6 +766,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
           this.visible = true
           this.Result = "File Upload Failed"
           this.selectedFileName = ""
+          this.globalBlockUiService.stopLoading()
         }
         else if(error.error.message && error.error.pendingRecords){
           console.error("File upload failed:", error);

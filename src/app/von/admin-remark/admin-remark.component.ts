@@ -17,7 +17,7 @@ import { SharedServiceService } from '../../services/shared-service.service';
 export class AdminRemarkComponent {
 
   ngOnInit(): void {
-    this.adminvonservice.setLocalStorage()
+    //this.adminvonservice.setLocalStorage()
     this.typeData = [
       { name: 'Admin', code: 'A' },
       { name: 'User', code: 'U' },
@@ -84,7 +84,7 @@ export class AdminRemarkComponent {
       .newRemarkCreation({
         remark: remark,
         brandid: brandid,
-        addedby: addedby,
+        addedby: localStorage.getItem('userid'),
         usertype: usertype,
       })
       .subscribe((res: any) => {

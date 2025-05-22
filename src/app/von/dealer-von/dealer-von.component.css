@@ -2,3 +2,8 @@
   height: 24px;
   font-size: 12px;
 }
+
+    :host ::ng-deep timesicon.p-component.p-iconwrapper.p-select-clear-icon.ng-star-inserted {
+    top: 60%;
+    left: 60%
+}

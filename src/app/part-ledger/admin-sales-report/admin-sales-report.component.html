@@ -18,8 +18,10 @@
           <p-select
             inputId="BrandID"
             formControlName="BrandID"
+            [showClear]="true"
             [options]="BrandData"
             optionValue="bigid"
+            [filter]="true"
             optionLabel="vcbrand"
             scrollHeight="150px"
             (onChange)="onSelectionChangeBrandData()"
@@ -38,6 +40,7 @@
           <p-select
             inputId="DealerID"
             formControlName="DealerID"
+            [showClear]="true"
             [options]="DealerData"
             optionValue="dealerid"
             optionLabel="dealer"
@@ -61,6 +64,7 @@
             formControlName="LocationID"
             [options]="LocationData"
             optionValue="locationid"
+            [showClear]="true"
             optionLabel="location"
             scrollHeight="150px"
             appendTo="body"
@@ -114,6 +118,7 @@
               inputId="datatype"
               formControlName="DataType"
               optionValue="name"
+              
               optionLabel="name"
               scrollHeight="150px"
               filterBy="name"
@@ -142,6 +147,7 @@
   
         <p-button label="Submit" severity="success" size="small" (onClick)="onSubmitAdminInputData()" />
         <p-button size="small" (onClick)="onClickShowUpload()" label="Upload Excel" />
+        <p-button size="small" (onClick)="exportPartNumberExcel()" label="Sample Upload" />
   
         
   

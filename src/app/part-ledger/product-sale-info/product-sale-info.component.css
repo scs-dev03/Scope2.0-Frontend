@@ -35,3 +35,7 @@
     :host ::ng-deep svg.p-icon.p-sortable-column-icon {
       scale: 0.75;
   }
+
+  :host ::ng-deep button.p-ripple.p-paginator-page.p-paginator-page-selected.ng-star-inserted{
+    z-index: auto !important
+}
