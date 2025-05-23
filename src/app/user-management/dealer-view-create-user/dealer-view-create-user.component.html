@@ -9,9 +9,9 @@
  <h2>You do not have the access for User Management</h2>  
  </div>  
   
-    <div class=" mx-5 overflow-hidden">
+    <div class=" mx-5 overflow-hidden" *ngIf="userPermissions?.view1">
    
-      <div class="d-flex justify-end " >
+      <div class="d-flex justify-end "  >
         <!-- *ngIf="userPermissions?.view1" -->
         <!-- <div class="mb-3" >
             <span class="font-bold f-18" >View Users</span>
@@ -30,19 +30,20 @@
         </div> -->
         <div>
             <!-- *ngIf="userPermissions?.add1" in i tag -->
-          <i class="pi pi-user cursor-pointer me-3"  style="font-size: 1.5rem !important;font-weight:bold "  (click)="showDialog('Add User')"></i>
+          <i class="pi pi-user cursor-pointer me-3"  style="font-size: 1.5rem !important;font-weight:bold " *ngIf="userPermissions?.add1"  (click)="showDialog('Add User')"></i>
           <!-- *ngIf="userPermissions?.view1" in i tag -->
-          <i class='bx bx-export cursor-pointer' style="font-size: 1.5rem;font-weight:bold"  (click)="exportToExcel()" ></i>
+          <i class='bx bx-export cursor-pointer' style="font-size: 1.5rem;font-weight:bold" *ngIf="userPermissions?.view1"  (click)="exportToExcel()" ></i>
           
         </div>
       </div >
       <!-- [tableStyle]="{ 'min-width': '40rem' }" -->
       <!-- *ngIf="userPermissions?.view1"  bg-[#FDF5E6] -->
-       <div class="card h-auto flex flex-col justify-start  rounded-lg "  [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[72vw]':'w-[90vw]'" >
+       <div class="card h-auto flex flex-col justify-start  rounded-lg " *ngIf="userPermissions?.view1"  [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[72vw]':'w-[90vw]'" >
          <p-table 
          [value]="users" 
          [paginator]="true"
          [rows]="100"
+         paginatorDropdownAppendTo="body"
          [rowsPerPageOptions]="[100,200, 300, 400, 500, 600,700,800,900,1000]"
          styleClass="p-datatable-gridlines" 
           dataKey="code"
@@ -150,7 +151,7 @@
            
              <div class="col-6 p-2 d-flex flex-column">
               <span class="font-semibold">Brand</span>
-               <p-select 
+               <p-select  
                 [options]="brands" 
                 formControlName="brand"
                 optionLabel="brand" 
@@ -160,6 +161,7 @@
                  (onChange)="onBrandChange($event)"
 
                 placeholder="Select Brand" />
+                <!-- <input type="text" pInputText formControlName="brand" *ngIf="actionName!='Add User'"  /> -->
               <!-- Show error message only if the field is touched and invalid -->
               <div *ngIf="editUserForm.get('brand')?.touched && editUserForm.get('brand')?.invalid">
                 <small *ngIf="editUserForm.get('brand')?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small>
@@ -177,6 +179,7 @@
                 (onChange)="onDealerChange($event)"
                 placeholder="Select Dealer" />
               <!-- Show error message only if the field is touched and invalid -->
+                <!-- <input type="text" pInputText formControlName="dealer" *ngIf="actionName!='Add User'"  /> -->
               <div *ngIf="editUserForm.get('dealer')?.touched && editUserForm.get('dealer')?.invalid">
                 <small *ngIf="editUserForm.get('dealer')?.hasError('required')" style="color: red; font-size: 12px;">Dealer is required.</small>
               </div>
@@ -191,6 +194,7 @@
                 optionValue="location_id"
                
                 placeholder="Select Location" />
+                 <!-- <input type="text" pInputText formControlName="location" *ngIf="actionName!='Add User'"  /> -->
               <!-- Show error message only if the field is touched and invalid -->
               <div *ngIf="editUserForm.get('location')?.touched && editUserForm.get('location')?.invalid">
                 <small *ngIf="editUserForm.get('location')?.hasError('required')" style="color: red; font-size: 12px;">Location is required.</small>

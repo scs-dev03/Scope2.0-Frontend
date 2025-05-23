@@ -56,7 +56,7 @@ export class AppComponent {
 
   ngOnInit() {
     this.is404Page=this.pageStateService.is404;
-    console.log(this.is404Page)
+   // console.log(this.is404Page)
     this.globalBlockUIService.loading$.subscribe((loading:any)=>{
       this.isLoading=loading;
     })

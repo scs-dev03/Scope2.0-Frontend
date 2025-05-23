@@ -11,6 +11,7 @@ import * as XLSX from 'xlsx';
 import { SidebarService } from '../../services/sidebar.service';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { SharedServiceService } from '../../services/shared-service.service';
+import { noWhitespaceValidator } from '../../shared/validators/noWhiteSpaceValidators';
 @Component({
   selector: 'app-create-role',
   imports: [PrimengModuleModule,SharedModule,SHARED_IMPORTS],
@@ -158,8 +159,8 @@ export class CreateRoleComponent {
     private sharedService:SharedServiceService
   ){
     this.roleForm = this.fb.group({
-      rolename: ['', Validators.required],
-      roleType:['a',Validators.required],
+      rolename: ['', [noWhitespaceValidator]],
+      roleType:['',Validators.required],
       checkboxes: this.fb.group(
         {
           SIMS: [0],    // default is 0 (unchecked)
@@ -178,7 +179,7 @@ export class CreateRoleComponent {
       ?.valueChanges.subscribe(() => this.checkAtLeastOneChecked());
   
     this.userId=localStorage.getItem('userid');
-    localStorage.setItem('userid',"293");
+   // localStorage.setItem('userid',"293");
     this.token=localStorage.getItem('usertoken');
     this.sharedService.updateModuleName('Create Role')
   }
@@ -213,39 +214,84 @@ export class CreateRoleComponent {
     this.fileName=this.selectedFile.name;
    // console.log("this.selectedFile ",this.selectedFile)
   }
- // Toggle the "All" checkbox for all submodules
- toggleAllForModule(module: any,event:any,index:any,eventString:string): void {
-  
-  module.submodules.forEach((submodule: any,i:any) => {
 
-    if(index==i){
-      if(eventString=='all'){
-        submodule.all = event.checked;
-        submodule.view1 = event.checked;
-        submodule.edit1 = event.checked;
-        submodule.add1 = event.checked;
-        submodule.delete1 = event.checked;
-      }
-      else{
-        submodule.all=false;
-      }
+   toggleAllForModule(
+  module: any,
+  event: any,
+  index: number | null,
+  eventString: string
+): void {
+  const checked = event.checked;
+
+ // console.log("module",module)
+  if (index === null) {
+    if (eventString === 'all') {
+      module.view1 = checked;
+      module.edit1 = checked;
+      module.add1 = checked;
+      module.delete1 = checked;
+      module.all = checked;
+    } else {
+      module[eventString + '1'] = checked;
+      module.all = false;
     }
-    
-  });
-  //console.log("submodules ",event,module.submodules)
+  } else {
+    const submodule = module.submodules[index];
+    if (eventString === 'all') {
+      submodule.view1 = checked;
+      submodule.edit1 = checked;
+      submodule.add1 = checked;
+      submodule.delete1 = checked;
+      submodule.all = checked;
+    } else {
+      submodule[eventString + '1'] = checked;
+      submodule.all = false;
+    }
+  }
+
+  // this.cdr.detectChanges();
 }
+ // Toggle the "All" checkbox for all submodules
+//  toggleAllForModule(module: any,event:any,index:any,eventString:string): void {
+  
+//   module.submodules.forEach((submodule: any,i:any) => {
+
+//     if(index==i){
+//       if(eventString=='all'){
+//         submodule.all = event.checked;
+//         submodule.view1 = event.checked;
+//         submodule.edit1 = event.checked;
+//         submodule.add1 = event.checked;
+//         submodule.delete1 = event.checked;
+//       }
+//       else{
+//         submodule.all=false;
+//       }
+//     }
+    
+//   });
+//   //console.log("submodules ",event,module.submodules)
+// }
 
 
   organizeModules() {
     
     this.mainModules = this.modules.filter((module:any) => module?.parentId === 0);
     this.subModules = this.modules.filter((module:any) => module?.parentId !== 0);
-   // console.log("main and sub",this.mainModules,this.subModules)
+    console.log("main and sub",this.mainModules,this.subModules)
    this.mainModules.forEach((mainModule: any) => {
     mainModule.view1=false;
     mainModule.edit1=false;
     mainModule.delete1=false;
     mainModule.add1=false;
+
+     const businessVertical = this.associatedBusinesses.find((obj: any) => mainModule.business_vertical_id
+      == obj.id);
+  
+      // Check if businessVertical is found, and if so, add the business_vertical name to the submodule
+      if (businessVertical) {
+        mainModule.businessVerticalName = businessVertical.business_vertical;
+      }
     const submodulesForMainModule = this.subModules.filter((submodule: any) => submodule.parentId === mainModule.id);
   
     // Step 4: Add parent module's name to each submodule
@@ -279,6 +325,7 @@ export class CreateRoleComponent {
     // console.log("all modules ",this.allModules)
   }
 
+  
 
   checkAtLeastOneChecked() {
     const checkboxes = this.roleForm.get('checkboxes')?.value;
@@ -431,8 +478,6 @@ export class CreateRoleComponent {
     let data=[];
     let data1:any[]=[];
     if(this.allModules.length>0){
-
-    
     
     for(let item1 of this.allModules){
        data.push(item1.submodules);

@@ -63,7 +63,7 @@
         >
           <p-table
             styleClass="p-datatable-striped"
-            [scrollHeight]="'450px'"
+            [scrollHeight]="'400px'"
             [scrollable]="true"
             responsiveLayout="scroll"
             [scrollable]="true"
@@ -80,7 +80,11 @@
       >
        <ng-template pTemplate="header">
            <tr>
-               <th>Role Name</th>
+               <th>Role Name<p-columnFilter
+                    class="table-input"
+                    field="name"
+                    display="menu"
+                  ></p-columnFilter></th>
                <th class="text-center">SIMS</th>
                <th class="text-center">AUDIT</th>
                <th class="text-center">GAINER</th>
@@ -88,7 +92,7 @@
                <th class="text-center">HR</th>
                <th class="text-center">OTHERS</th>
                <th class="text-center" *ngIf="userPermissions?.edit1">Action</th>
-               <th class="text-center" *ngIf="userPermissions?.delete1">Delete</th>
+               <th class="text-center" *ngIf="userPermissions?.delete1">Active/Inactive</th>
                <!-- <th class="text-center">Action</th>
                <th class="text-center" >Delete</th> -->
            </tr>
@@ -226,10 +230,26 @@
           <!-- Table Header -->
           <ng-template pTemplate="header">
             <tr class="bg-gray-200 text-gray-700 text-sm font-semibold">
-              <th class="f-13 text-left">Business Vertical</th>
-               <th class="f-13 text-left">Module Type</th>
-              <th class="f-13 text-left">Module</th>
-              <th class="f-13 text-left">Sub Module</th>
+              <th class="f-13 text-left min-w-12rem">Business Vertical <p-columnFilter
+                    class="table-input"
+                    field="businessVerticalName"
+                    display="menu"
+                  ></p-columnFilter></th>
+               <th class="f-13 text-left min-w-10rem">Module Type <p-columnFilter
+                    class="table-input"
+                    field="module_type"
+                    display="menu"
+                  ></p-columnFilter></th>
+              <th class="f-13 text-left min-w-10rem">Module <p-columnFilter
+                    class="table-input"
+                    field="parentModuleName"
+                    display="menu"
+                  ></p-columnFilter></th>
+              <th class="f-13 text-left min-w-10rem">Sub Module <p-columnFilter
+                    class="table-input"
+                    field="module_name"
+                    display="menu"
+                  ></p-columnFilter></th>
               <th class="f-13 text-left">View</th>
               <th class="f-13 text-left">Edit</th>
               <th class="f-13 text-left">Add</th>

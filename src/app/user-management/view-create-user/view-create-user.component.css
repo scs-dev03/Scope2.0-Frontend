@@ -43,6 +43,13 @@ td{
     padding: 15px;
     padding-top: 0px !important;
     border: none;
+    height:80vh !important;
+}
+.card1{
+     padding: 15px;
+    padding-top: 0px !important;
+    border: none;
+    height:60vh !important;
 }
 :host ::ng-deep /deep/ span.p-element.p-dropdown-label.p-inputtext.p-placeholder.ng-star-inserted{
     padding: 7px !important;

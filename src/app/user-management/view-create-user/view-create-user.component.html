@@ -29,9 +29,9 @@
  <h2>You do not have the access for User Management</h2>  
  </div>  
   
-    <div class=" mx-5 overflow-hidden">
+    <div class=" mx-5 overflow-hidden" *ngIf="userPermissions?.view1">
    
-      <div class="d-flex justify-between " *ngIf="userPermissions?.view1">
+      <div class="d-flex justify-between " >
         <!-- *ngIf="userPermissions?.view1" -->
         <!-- <div class="mb-3" >
             <span class="font-bold f-18" >View Users</span>
@@ -39,12 +39,12 @@
         </div> -->
         <div class="mb-3 flex flex-wrap gap-4">
     <div class="flex items-center ">
-        <p-radiobutton name="Admin" value="a" [(ngModel)]="userType" (ngModelChange)="viewUser($event)" inputId="admin" />
+        <p-radiobutton name="Admin" value="A" [(ngModel)]="userType" (ngModelChange)="viewUser($event)" inputId="admin" />
         <label for="admin" class="ml-2 f-12 d-flex align-items-center mb-0">Admin</label>
     </div>
 
     <div class="flex items-center">
-        <p-radiobutton name="User" value="d" [(ngModel)]="userType" inputId="dealer" (ngModelChange)="viewUser($event)" />
+        <p-radiobutton name="User" value="D" [(ngModel)]="userType" inputId="dealer" (ngModelChange)="viewUser($event)" />
         <label for="dealer" class="ml-2 f-12 d-flex align-items-center mb-0">User</label>
     </div>
         </div>
@@ -59,14 +59,14 @@
       <!-- [tableStyle]="{ 'min-width': '40rem' }" -->
       <!-- *ngIf="userPermissions?.view1"  bg-[#FDF5E6] -->
        <div class="card h-auto flex flex-col justify-start  rounded-lg " *ngIf="userPermissions?.view1" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[72vw]':'w-[90vw]'" >
-         <p-table #dt
+         <p-table 
          [value]="users" 
          [paginator]="true"
          [rows]="100"
          [rowsPerPageOptions]="[100,200, 300, 400, 500, 600,700,800,900,1000]"
          styleClass="p-datatable-gridlines" 
           dataKey="code"
-          class="w-full !rounded-lg-border border-gray-200 shadow-md"  
+          class="w-full !rounded-lg-border border-gray-200 shadow-md h-[75vh]"  
           responsiveLayout="scroll"
           [scrollHeight]="'380px'"
            [scrollable]="true"
@@ -141,7 +141,7 @@
 
 <p-dialog [header]="actionName" [modal]="true" [(visible)]="visible" [style]="{ width: '100vh' }" class="header edit-add-user">
   <form [formGroup]="editUserForm">
-    <div class="card">
+    <div class="card1">
       <div class="row">
         <div class="col-12">
           <div class="row">
@@ -153,7 +153,11 @@
               <div *ngIf="editUserForm.get('name')?.touched && editUserForm.get('name')?.invalid">
                 <small *ngIf="editUserForm.get('name')?.hasError('required')" style="color: red; font-size: 12px;">First Name is required.</small>
               </div>
+               <small *ngIf="editUserForm.get('name')?.hasError('whitespace') && editUserForm.get('name')?.touched" class="text-red-500">
+  First Name cannot be empty or just spaces
+               </small>
             </div>
+            
           
 
             <div class="col-6 p-2 d-flex flex-column">
@@ -163,6 +167,9 @@
               <div *ngIf="editUserForm.get('lastName')?.touched && editUserForm.get('lastName')?.invalid">
                 <small *ngIf="editUserForm.get('lastName')?.hasError('required')" style="color: red; font-size: 12px;">Last Name is required.</small>
               </div>
+                <small *ngIf="editUserForm.get('lastName')?.hasError('whitespace') && editUserForm.get('lastName')?.touched" class="text-red-500">
+  Last Name cannot be empty or just spaces
+               </small>
             </div>
             <!-- Designation Field -->
             <div class="col-6 p-2 d-flex flex-column">
@@ -194,6 +201,7 @@
               <div *ngIf="editUserForm.get('role')?.touched && editUserForm.get('role')?.invalid">
                 <small *ngIf="editUserForm.get('role')?.hasError('required')" style="color: red; font-size: 12px;">Role is required.</small>
               </div>
+              
             </div>
             <!-- Email Field -->
             <div class="col-6 p-2">
@@ -264,6 +272,7 @@
               </div>
             </div>
           </div>
+          
           </div>
         </div>
       </div>
