@@ -80,7 +80,18 @@ export class DealerViewCreateUserComponent {
       location:['',Validators.required]
     });
     this.currentRoute=router.url;
-   // console.log(this.currentRoute)
+    
+//     if (this.actionName != 'Add User') {
+//   this.editUserForm.get('brand')?.disable();
+//   this.editUserForm.get('dealer')?.disable();
+//   this.editUserForm.get('location')?.disable();
+// }
+// else{
+//   this.editUserForm.get('brand')?.enable();
+//   this.editUserForm.get('dealer')?.enable();
+//   this.editUserForm.get('location')?.enable();
+// }
+//    // console.log(this.currentRoute)
   }
     
   
@@ -129,21 +140,44 @@ export class DealerViewCreateUserComponent {
     })
    }
     showDialog(action:any,rowData?:any) {
-   //  console.log(rowData)
+    console.log(rowData)
    this.getBrands();
       this.actionName=action;
+//           if (this.actionName != 'Add User') {
+//   this.editUserForm.get('brand')?.disable();
+//   this.editUserForm.get('dealer')?.disable();
+//   this.editUserForm.get('location')?.disable();
+// }
+// else{
+//   this.editUserForm.get('brand')?.enable();
+//   this.editUserForm.get('dealer')?.enable();
+//   this.editUserForm.get('location')?.enable();
+// }
       if(this.actionName=='Add User'){
         this.viewUser();
         this.editUserForm.reset();
         
       }else{
         this.rowId=rowData.userId;
+        
+        this.utilitiesService.getDealers({brand_id:rowData.brandId}).subscribe((res:any)=>{
+            this.dealers=res.data;  
+             this.utilitiesService.getLocations({dealer_id:rowData.dealerId}).subscribe((res:any)=>{
+            this.locations=res.data; 
+            let brandObj=this.brands.find((obj:any)=> {return obj.brand_id=rowData.brandId});
+             let dealerObj=this.dealers.find((obj:any)=> {return obj.dealer_id=rowData.dealerId});
+         let locationObj=this.locations.find((obj:any)=> {return obj.location_id=rowData.locationId});
         let designationObj=this.designations.find((obj:any)=>{ return obj.id==rowData.designationId})
         let roleObj=this.roles.find((obj:any)=>{return obj.id==rowData.roleId})
         let verticalObj=this.associatedBusinesses.find((obj:any)=>{return obj.id==rowData.business_vertical})
          let statusObj=this.statuses.find((obj:any)=>{return obj.name==rowData.status?'Active':'Inactive'})
-       // console.log(roleObj,designationObj,verticalObj,statusObj,rowData)
+       //console.log(brandObj,dealerObj,locationObj)
+
         this.editUserForm.patchValue({
+          brand:brandObj?.brand_id,
+          dealer:dealerObj?.dealer_id,
+
+          location:locationObj?.location_id,
           name: rowData.vcFirstName,
           lastName:rowData.vcLastName,
           email: rowData.emailId,
@@ -154,6 +188,12 @@ export class DealerViewCreateUserComponent {
           userId: rowData.userId,
           status: statusObj?statusObj?.name:null
         });
+        }
+        )     
+        }
+        )
+        
+       
   
         Object.keys(this.editUserForm.controls).forEach((controleName:any)=>{
           this.editUserForm.get(controleName)?.markAsUntouched();
@@ -175,18 +215,18 @@ export class DealerViewCreateUserComponent {
        ngOnInit(){
       
         this.getRoles();
-    
+   
       this.userId=localStorage.getItem('userid');
       this.token=localStorage.getItem('usertoken');
-      // this.authService.checkEmail({email:this.editUserForm.value.email}).subscribe(
-      //   (response) => {
-      //     this.emailArray=response.data;
-      //     //console.log(this.emailArray)
-      //   },
-      //   (error) => {
+      this.authService.checkDealerEmail({email:this.editUserForm.value.email}).subscribe(
+        (response) => {
+          this.emailArray=response.data;
+          //console.log(this.emailArray)
+        },
+        (error) => {
          
-      //   }
-      // );
+        }
+      );
   
       this.dataSubscription = this.sharedService.sidebarData.subscribe(
         (data) => {
@@ -199,9 +239,9 @@ export class DealerViewCreateUserComponent {
           if (!alreadyTransformed) {
             this.receivedData = this.transformData(this.receivedData);
           }
-          //console.log('Data received in User:', this.receivedData);
+         // console.log('Data received in User:', this.receivedData);
           if(this.receivedData!=null){
-  
+         // console.log("curretn ",this.currentRoute)
             for(let item of this.receivedData){
               const moduleItem = item.subchildren.find((child:any) => child.module_route === this.currentRoute);
     
@@ -217,7 +257,7 @@ export class DealerViewCreateUserComponent {
     }
             }
           }
-         console.log("result",this.userPermissions)
+       //  console.log("result",this.userPermissions)
          
         }
       );
@@ -273,18 +313,9 @@ export class DealerViewCreateUserComponent {
   });
 
   const combinedResult = [...Object.values(groupedData), ...directParents];
-  // const cleanedGroupedData = Object.values(groupedData).filter(item => item && typeof item === 'object');
-  // const cleanedDirectParents = directParents.filter(item => item && typeof item === 'object');
-  
-  // const combinedResult = [...cleanedGroupedData, ...cleanedDirectParents];
-  
-  console.log("combined result ",groupedData)
-  //console.log("combined Result ",combinedResult)
+ 
   this.sidebarItems = combinedResult;
-  //console.log("sidebar ",this.sidebarItems)
-  //this.sendDataToUser(this.sidebarItems);
-  // this.filteredItems = [...this.sidebarItems];
-  // console.log("filtered items ",this.filteredItems)
+
   return combinedResult;
 }
 
@@ -472,9 +503,9 @@ export class DealerViewCreateUserComponent {
   
         if(this.editUserForm.valid){
        //   console.log(this.editUserForm.value)
-           let link="http://localhost:4200/core/update-user-password";
+         //  let link="http://localhost:4200/core/update-user-password";
         //let link="http://103.30.72.109/core/update-user-password";
-       // let link="http://web17.185.238.new.ocpwebserver.com/core/update-user-password";
+        let link="http://web16.185.238.new.ocpwebserver.com/core/update-user-password";
   
           if(this.actionName=='Add User'){
             
@@ -496,6 +527,7 @@ export class DealerViewCreateUserComponent {
           }
           else{
             this.globalBlockUiService.startLoading();
+            console.log("edit user ",this.editUserForm.value)
             this.userService.editUser({...this.editUserForm.value,userId:this.rowId,updatedBy:this.userId,token:this.token}).subscribe((res:any)=>{
               this.globalBlockUiService.stopLoading();
               this.viewUser();

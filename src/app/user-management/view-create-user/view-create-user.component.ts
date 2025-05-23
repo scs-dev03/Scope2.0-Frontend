@@ -13,6 +13,7 @@ import { SharedServiceService } from '../../services/shared-service.service';
 import * as XLSX from 'xlsx';
 import { SidebarService } from '../../services/sidebar.service';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { noWhitespaceValidator } from '../../shared/validators/noWhiteSpaceValidators';
 @Component({
   selector: 'app-view-create-user',
   imports: [SHARED_IMPORTS,PrimengModuleModule,SharedModule],
@@ -45,7 +46,7 @@ export class ViewCreateUserComponent {
      dataSubscription: Subscription|null=null;
      currentRoute:any;
     receivedData: any=[];
-     userType:any='d';
+     userType:any=localStorage.getItem('usertype');
     userPermissions:any=[];
     @ViewChild('dt') dt: any;
       statuses:any=[
@@ -74,8 +75,8 @@ export class ViewCreateUserComponent {
       //  ^[0-9]{10}$
    this.editUserForm= this.fb.group({
       // Define each form control with validators combined using Validator.compose
-      name: ['', Validators.compose([Validators.required])],
-      lastName:['',Validators.compose([Validators.required])],
+      name: ['', Validators.compose([Validators.required,noWhitespaceValidator])],
+      lastName:['',Validators.compose([Validators.required,noWhitespaceValidator])],
       designation: ['', Validators.required],
       role: ['', Validators.required],
       email: ['', Validators.compose([Validators.required, Validators.email])],
@@ -90,7 +91,7 @@ export class ViewCreateUserComponent {
     
   
     showDialog(action:any,rowData?:any) {
-     console.log(rowData)
+    // console.log(rowData)
       this.actionName=action;
       if(this.actionName=='Add User'){
         this.viewUser();
@@ -141,7 +142,7 @@ export class ViewCreateUserComponent {
       this.token=localStorage.getItem('usertoken');
       this.authService.checkEmail({email:this.editUserForm.value.email}).subscribe(
         (response) => {
-         // this.emailArray=response.data;
+          this.emailArray=response.data;
           //console.log(this.emailArray)
         },
         (error) => {
@@ -178,7 +179,7 @@ export class ViewCreateUserComponent {
     }
             }
           }
-         console.log("result",this.userPermissions)
+        // console.log("result",this.userPermissions)
          
         }
       );
@@ -239,7 +240,7 @@ export class ViewCreateUserComponent {
   
   // const combinedResult = [...cleanedGroupedData, ...cleanedDirectParents];
   
-  console.log("combined result ",groupedData)
+//  console.log("combined result ",groupedData)
   //console.log("combined Result ",combinedResult)
   this.sidebarItems = combinedResult;
   //console.log("sidebar ",this.sidebarItems)
@@ -358,17 +359,34 @@ export class ViewCreateUserComponent {
       exportToExcel(): void {
   
         let data:any=[];
-        this.users.forEach((item:any)=>{
-          data.push({
-            Name:item.name,
-          Role:item.roleName,
-          Designation:item.designationName,
-          'Email Id':item.emailId,
-          'Mobile No':item.mobileNo,
-          'Business Vertical':item.associatedBusiness
-          })
+        // this.users.forEach((item:any)=>{
+        //   data.push({
+        //     Name:item.name,
+        //   Role:item.roleName,
+        //   Designation:item.designationName,
+        //   'Email Id':item.emailId,
+        //   'Mobile No':item.mobileNo,
+        //   'Business Vertical':item.associatedBusiness
+        //   })
           
-        })
+        // })
+
+       // console.log("userType ",this.users,this.userType)
+           const filteredUsers = this.users.filter((item: any) =>        
+  item.type == this.userType
+);
+
+filteredUsers.forEach((item: any) => {
+  data.push({
+    Name: item.name,
+    Role: item.roleName,
+    Designation: item.designationName,
+    'Email Id': item.emailId,
+    'Mobile No': item.mobileNo,
+    'Business Vertical': item.associatedBusiness,
+    'User Type':item.type=='A'?'Admin':'User'
+  })})
+ // console.log("data ",data)
         const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data); // Convert JSON data to worksheet
         const wb: XLSX.WorkBook = XLSX.utils.book_new(); // Create a new workbook
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet1'); // Append worksheet to workbook
@@ -389,7 +407,7 @@ export class ViewCreateUserComponent {
       viewUser(event?:any){
          this.globalBlockUiService.startLoading();
         //  localStorage.setItem('usertype','d');
-        console.log('user Type ',this.userType)
+       // console.log('user Type ',this.userType)
         this.userService.viewUser({userType:this.userType}).subscribe((res:any)=>{
            this.globalBlockUiService.stopLoading();
            let userArray=[];
@@ -418,7 +436,7 @@ export class ViewCreateUserComponent {
           
         }
         this.users=userArray;
-        this.dt.clear()
+        this.dt?.clear()
        // console.log("users ",this.users)
          
         },(error:any)=>{
@@ -430,9 +448,9 @@ export class ViewCreateUserComponent {
   
         if(this.editUserForm.valid){
        //   console.log(this.editUserForm.value)
-           let link="http://localhost:4200/core/update-user-password";
+           //let link="http://localhost:4200/core/update-user-password";
         //let link="http://103.30.72.109/core/update-user-password";
-       // let link="http://web17.185.238.new.ocpwebserver.com/core/update-user-password";
+       let link="http://web16.185.238.new.ocpwebserver.com/core/update-user-password";
   
           if(this.actionName=='Add User'){
             

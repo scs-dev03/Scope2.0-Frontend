@@ -65,10 +65,10 @@
                          </div>
                      
                          <form class="" [formGroup]="locationFormGroup" *ngIf="!isLocationWiseChecked" >
-                             <div class="row h-[32vh]">
+                             <div class="row h-[42vh]">
                                  <div class="col-12 d-flex flex-column gap-4">
                                      <div class="row ">
-                                         <div class="col">
+                                         <div class="col mt-1">
                                              <label class="d-flex justify-content-end align-items-center" for="brand">Brand :</label>
                                          </div>
                                          <div class="col-11">
@@ -93,7 +93,7 @@
                                                  <label class="d-flex justify-content-end align-items-center" for="fileType">File Type :</label>
                                              </div>
                                              <div class="col-4" >
-                                            <p>{{fileType.fileType}}</p>
+                                            <p class="f-11">{{fileType.fileType}}</p>
                                            <!-- <div *ngIf="locationFormGroup.get('fileType')?.touched && locationFormGroup.get('fileType')?.invalid">
                                              <small *ngIf="locationFormGroup.get('fileType')?.hasError('required')" style="color: red; font-size: 12px;">FileType is required.</small>
                                            </div> -->
@@ -112,7 +112,7 @@
                                                  multiple="false"
                                          >
                                     </p-fileUpload>
-                                    <p>{{fileNames[i]}}</p>
+                                    <label class="f-11">{{fileNames[i]}}</label>
                                     <!-- <div *ngIf="locationFormGroup.get('fileType' + i)?.touched && locationFormGroup.get('fileType' + i)?.invalid">
                                      <small *ngIf="locationFormGroup.get('fileType' + i)?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small>
                                    </div> -->
@@ -129,10 +129,10 @@
                  </div>
                  <div class="w-[85vw]" *ngIf="isLocationWiseChecked">
                  <form [formGroup]="uploadForm" >
-           <div class="row h-[32vh]" [hidden]="isScreenCollapsed">
+           <div class="row h-[42vh]" [hidden]="isScreenCollapsed">
              <div class="col-12 d-flex flex-column gap-4">
                  <div class="row ">
-                     <div class="col">
+                     <div class="col mt-1">
                          <label class="d-flex justify-content-end align-items-center" for="brand">Brand :</label>
                      </div>
                      <div class="col-11">
@@ -153,7 +153,7 @@
                  </div>
          
                  <div class="row ">
-                     <div class="col">
+                     <div class="col mt-1">
                          <label class="d-flex justify-content-end align-items-center " for="dealer">Dealer :</label>
                      </div>
                      <div class="col-11">
@@ -172,7 +172,7 @@
                  </div>
          
                  <div class="row ">
-                     <div class="col">
+                     <div class="col mt-1">
                          <label class="d-flex justify-content-end align-items-center" for="location">Location :</label>
                      </div>
                      <div class="col-11">
@@ -195,7 +195,7 @@
                          </div>
                          <div class="col-4" >
                              
-                        <p>{{fileType.fileType}}</p>
+                        <p class="f-11">{{fileType.fileType}}</p>
                          </div>
                          <div class="col-1 me-2">
      
@@ -210,7 +210,7 @@
                              [name]="'fileType_' + i"
                              (onSelect)="onUpload($event,fileType,i)" 
                                />
-                               <p>{{fileNames[i]}}</p>
+                               <label class="f-11">{{fileNames[i]}}</label>
                                <!-- <div *ngIf="uploadForm.get('fileType' + i)?.touched && uploadForm.get('fileType' + i)?.invalid">
                                  <small *ngIf="uploadForm.get('fileType' + i)?.hasError('required')" style="color: red; font-size: 12px;">Location is required.</small>
                                </div> -->

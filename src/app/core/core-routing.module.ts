@@ -25,8 +25,7 @@ const routes: Routes = [
   {
     path:'update-user-password',
     component:UpdatePasswordWhileCreateUserComponent,
-   
-    canActivate:[authGuard]
+  
 },
 {
     path: 'home',

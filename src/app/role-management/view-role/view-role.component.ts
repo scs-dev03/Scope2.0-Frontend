@@ -353,31 +353,7 @@ export class ViewRoleComponent {
   // this.cdr.detectChanges();
 }
 
-   // Toggle the "All" checkbox for all submodules
-//  toggleAllForModule(module: any,event:any,index:any |null,eventString:string): void {
-  
-//   module.submodules.forEach((submodule: any,i:any) => {
-   
-//     if(index==i){
-//       if(eventString=='all'){
-//         submodule.all = event.checked;
-//         submodule.view1 = event.checked;
-//         submodule.edit1 = event.checked;
-//         submodule.add1 = event.checked;
-//         submodule.delete1 = event.checked;
-//       }
-//       else{
-//         submodule.all=false;
-//       }
-//        console.log("eventString ",eventString,submodule)
-//     //   if(eventString=='view' && eventString=='add' && eventString=='delete' && eventString=='edit'){
-//     // submodule.all=true;        
-//     //   }
-//     }
-    
-//   });
-//   //console.log("submodules ",event,module.submodules)
-// }
+
 
 
  

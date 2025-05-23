@@ -122,10 +122,16 @@ body.loader {
     padding: 3px !important;
   }
 
+  .f-11{
+    font-size: 11px !important;
+  }
   .f-16{
     font-size: 16px !important;
   }
 
+  .min-w-12rem{
+ min-width: 12rem!important;
+  }
   .max-w-10rem{
     max-width: 10rem;
   }

@@ -18,7 +18,7 @@ export const authGuard: CanActivateFn = (route, state) => {
    // Redirect to external login URL
    localStorage.clear();
     sessionStorage.clear();
-   //  window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx';
+      window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx';
 
     return false;
   }

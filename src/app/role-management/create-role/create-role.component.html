@@ -55,12 +55,15 @@
               placeholder="Role Name"
               pInputText
             />
-            <div
+            <!-- <div
               *ngIf="rolename?.hasError('required') && rolename?.touched"
               class="text-red-500"
             >
               Role Name is required.
-            </div>
+            </div> -->
+            <div *ngIf="roleForm.get('rolename')?.hasError('required') && roleForm.get('rolename')?.touched" class="text-red-500">
+  Role name is required and cannot be just empty spaces
+</div>
               </div>
            <div class="ml-3">
   <label class="font-semibold lg:text-lg d-flex align-items-center" for="rolename"
@@ -224,6 +227,7 @@
             <ng-template pTemplate="header">
               <tr class="bg-gray-200 text-gray-700 text-sm font-semibold">
                 <th class="text-left">Business Vertical</th>
+                <th class="text-left">Module Type</th>
                 <th class="text-left">Module</th>
                 <th class="text-left">Sub Module</th>
                 <th class="text-left">View</th>
@@ -235,8 +239,8 @@
             </ng-template>
 
             <!-- Table Body -->
-            <ng-template pTemplate="body" let-module>
-              <!-- Submodule Rows (if any) -->
+            <!-- <ng-template pTemplate="body" let-module>
+             
               <tr
                 *ngFor="let submodule of module.submodules; let i = index"
                 class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-sm h-14"
@@ -247,7 +251,7 @@
                 <td>{{ submodule.parentModuleName }}</td>
                 <td class="!p-3 text-left">{{ submodule.module_name }}</td>
                 <!-- <td class="!p-3 text-left">-</td> -->
-                <td class="!p-3 text-center">
+                <!-- <td class="!p-3 text-center">
                   <p-checkbox
                     [(ngModel)]="submodule.view1"
                     binary="true"
@@ -283,6 +287,112 @@
                   ></p-checkbox>
                 </td>
               </tr>
+            </ng-template> --> 
+            <ng-template pTemplate="body" let-module>
+            <!-- If submodules exist -->
+            <ng-container
+              *ngIf="module.submodules?.length > 0; else noSubmodules" 
+            >
+              <tr
+                *ngFor="let submodule of module.submodules; let i = index"
+                class="hover:bg-gray-100 transition duration-300 text-sm h-14"
+              >
+                <td class="!p-3 text-left f-11">
+                  {{ submodule.businessVerticalName }}
+                </td>
+                 <td class="!p-3 text-left f-11">
+                  {{ submodule.module_type=='a'?'Admin':'User' }}
+                </td>
+                <td class="!p-3 text-left f-11">
+                  {{ submodule.parentModuleName }}
+                </td>
+                <td class="!p-3 text-left f-11">{{ submodule.module_name }}</td>
+                <td class="!p-3 text-center f-11">
+                  <p-checkbox
+                    [(ngModel)]="submodule.view1"
+                    binary="true"
+                    (onChange)="toggleAllForModule(module, $event, i, 'view')"
+                  ></p-checkbox>
+                </td>
+                <td class="!p-3 text-center">
+                  <p-checkbox
+                    [(ngModel)]="submodule.edit1"
+                    binary="true"
+                    (onChange)="toggleAllForModule(module, $event, i, 'edit')"
+                  ></p-checkbox>
+                </td>
+                <td class="!p-3 text-center">
+                  <p-checkbox
+                    [(ngModel)]="submodule.add1"
+                    binary="true"
+                    (onChange)="toggleAllForModule(module, $event, i, 'add')"
+                  ></p-checkbox>
+                </td>
+                <td class="!p-3 text-center">
+                  <p-checkbox
+                    [(ngModel)]="submodule.delete1"
+                    binary="true"
+                    (onChange)="toggleAllForModule(module, $event, i, 'delete')"
+                  ></p-checkbox>
+                </td>
+                <td class="!p-3 text-center">
+                  <p-checkbox
+                    [(ngModel)]="submodule.all"
+                    (onChange)="toggleAllForModule(module, $event, i, 'all')"
+                    binary="true"
+                  ></p-checkbox>
+                </td>
+              </tr>
+            </ng-container>
+
+            <!-- Else: Show parent module as row if it has no submodules -->
+            <ng-template #noSubmodules>
+              <tr
+                class="hover:bg-gray-100 transition duration-300 text-sm h-14"
+              >
+                <td class="!p-3 text-left f-11">
+                  {{ module.businessVerticalName  }}
+                </td>
+                 <td class="!p-3 text-left f-11">{{ module.module_type=='a'?'Admin':'User'  }}</td>
+                <td class="!p-3 text-left f-11">{{ module.module_name }}</td>
+                <td class="!p-3 text-left f-11">-</td>
+                <td class="!p-3 text-center f-11">
+                  <p-checkbox
+                    [(ngModel)]="module.view1"
+                    binary="true"
+                    (onChange)="toggleAllForModule(module, $event, null, 'view')"
+                  ></p-checkbox>
+                </td>
+                <td class="!p-3 text-center">
+                  <p-checkbox
+                    [(ngModel)]="module.edit1"
+                    binary="true"
+                    (onChange)="toggleAllForModule(module, $event, null, 'edit')"
+                  ></p-checkbox>
+                </td>
+                <td class="!p-3 text-center">
+                  <p-checkbox
+                    [(ngModel)]="module.add1"
+                    binary="true"
+                    (onChange)="toggleAllForModule(module, $event, null, 'add')"
+                  ></p-checkbox>
+                </td>
+                <td class="!p-3 text-center">
+                  <p-checkbox
+                    [(ngModel)]="module.delete1"
+                     (onChange)="toggleAllForModule(module, $event, null, 'delete')"
+                    binary="true"
+                  ></p-checkbox>
+                </td>
+                <td class="!p-3 text-center">
+                  <p-checkbox
+                    [(ngModel)]="module.all"
+                    (onChange)="toggleAllForModule(module, $event, null, 'all')"
+                    binary="true"
+                  ></p-checkbox>
+                </td>
+              </tr>
+            </ng-template>
             </ng-template>
             <ng-template pTemplate="footer">
               <tr *ngIf="allModules.length == 0">
