@@ -48,7 +48,7 @@ export class AdminVonComponent {
   this.fetchNature();
   this.fetchPartType();
   this.fetchSeasonaData();
-  this.adminvonservice.setLocalStorage();
+  //this.adminvonservice.setLocalStorage();
 
   this.maxData = [
     { name: 'Planned', code: '1' },
@@ -487,7 +487,10 @@ formatHeader(key: string): string {
         }, (error: any) => {
           this.globalBlockUiService.stopLoading();
           this.visible = true;
-          this.Result = error.error?.Error || 'Error fetching data';
+          if(error.error?.Error == "partnumber or locationid is required"){
+            this.Result = "Part Number Or Dealer Name and Location is Required"
+          }
+          //this.Result = error.error?.Error || 'Error fetching data';
           reject(error.error?.Error || 'Error fetching data'); // ⬅ Reject Promise
         });
     });
@@ -766,6 +769,7 @@ fetchAdminRemark(brandid: any, usertype: any) {
           this.visible = true
           this.Result = "File Upload Failed"
           this.selectedFileName = ""
+          this.globalBlockUiService.stopLoading()
         }
         else if(error.error.message && error.error.pendingRecords){
           console.error("File upload failed:", error);

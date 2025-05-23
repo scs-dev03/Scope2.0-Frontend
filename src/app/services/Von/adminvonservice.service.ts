@@ -20,13 +20,13 @@ export class AdminvonserviceService {
 // private apiurlmaster: any =
 //   'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/master/';
 
-    usertype: any = "A"
-    userid: any = '146297'
-  setLocalStorage(){
-    localStorage.setItem('usertype',this.usertype)
-    localStorage.setItem('userid',this.userid)
+  //   usertype: any = "A"
+  //   userid: any = '146297'
+  // setLocalStorage(){
+  //   localStorage.setItem('usertype',this.usertype)
+  //   localStorage.setItem('userid',this.userid)
 
-  }
+  // }
 
   constructor(private http: HttpClient) {}
 

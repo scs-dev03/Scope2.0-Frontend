@@ -149,3 +149,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     font-size:12px;
    }
   
+
+    :host ::ng-deep timesicon.p-component.p-iconwrapper.p-select-clear-icon.ng-star-inserted {
+    top: 60%;
+    left: 60%
+}

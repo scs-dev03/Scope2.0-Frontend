@@ -11,14 +11,18 @@
         [scrollable]="true"
         scrollHeight="600px"
         [value]="pendingcount"
-        [paginator]="true"
+         [paginator]="true"
         [rows]="10"
-        [rowsPerPageOptions]="[20, 30, 40, 50, 100]"
+        [rowsPerPageOptions]="[10, 20, 40, 50, 100]"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         [showGridlines]="true"
+        paginatorDropdownAppendTo="body"
         scrollDirection="both"
         class="!w-[90vw]"
         sortable="true"
         [tableStyle]="{ 'min-width': '50rem' }"
+        [globalFilterFields]="['Brand', 'dealer', 'location', 'pending']"
       >
         <ng-template #header>
           <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
@@ -28,28 +32,28 @@
               S.No
             </th>
             <th
-              pSortableColumn="Brand"
               class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]"
             >
-              Brand <p-sortIcon field="Brand" />
+              Brand
+              <p-columnFilter type="text" field="Brand" display="menu" />
             </th>
             <th
-              pSortableColumn="dealer"
               class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]"
             >
-              Dealer <p-sortIcon field="dealer" />
+              Dealer
+              <p-columnFilter type="text" field="dealer" display="menu" />
             </th>
             <th
-              pSortableColumn="location"
               class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]"
             >
-              Location <p-sortIcon field="location" />
+              Location
+              <p-columnFilter type="text" field="location" display="menu" />
             </th>
             <th
-              pSortableColumn="Pending"
               class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[18px]"
             >
-              Pending Count <p-sortIcon field="Pending" />
+              Pending Count
+              <p-columnFilter type="text" field="Pending" display="menu" />
             </th>
           </tr>
         </ng-template>

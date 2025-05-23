@@ -1,13 +1,7 @@
 <div class="relative h-full w-full bg-gray-200 overflow-auto">
   <!-- <app-loader [isloading]="isloading"></app-loader> -->
 
-  
-
-  
-  <div
-      class="flex flex-wrap items-center justify-between h-[8vh]  px-2"
-    >
-
+  <div class="flex flex-wrap items-center justify-between h-[8vh] px-2">
     <!-- <div>
       <h1 class="text-3xl ml-10 font-semibold">Remark Creation</h1>
     </div> -->
@@ -15,7 +9,7 @@
     <form
       action=""
       [formGroup]="adminRemarkInputData"
-      class="flex py-10 justify-center items-center gap-2 w-full "
+      class="flex py-10 flex-wrap justify-center items-center gap-2 w-full"
     >
       <p-floatlabel variant="on">
         <p-select
@@ -27,7 +21,7 @@
         />
         <label for="type" class="text-xs !font-normal">Type</label>
       </p-floatlabel>
-  
+
       <p-floatlabel variant="on">
         <p-select
           formControlName="brand"
@@ -38,12 +32,13 @@
         />
         <label for="brand" class="text-xs !font-normal">Brand</label>
       </p-floatlabel>
-  
+
       <div class="card flex flex-col justify-center">
         <textarea
           rows="5"
           cols="30"
           pTextarea
+          [attr.aria-placeholder]="'Enter your name'"
           placeholder="Enter Remark"
           class="h-11 w-72"
           formControlName="remarkInput"
@@ -63,13 +58,13 @@
           </div>
         </div>
       </div>
-  
+
       <div class="card flex justify-center">
         <p-button
           label="Submit"
           [disabled]="adminRemarkInputData.invalid"
           (click)="onSubmitRemarkData()"
-          class=" text-xs"
+          class="text-xs"
         />
       </div>
       <div class="card flex justify-center">
@@ -77,27 +72,36 @@
           label="Show Table"
           [disabled]="adminRemarkInputData.invalid"
           (click)="onclickShowTable()"
-          class=" text-xs"
+          class="text-xs"
         />
       </div>
     </form>
-  
-    <div class="flex justify-center mt-10 scale-[.8]" *ngIf="showtable">
+
+    <div class="flex justify-center w-full mt-3 scale-[.8]" *ngIf="showtable">
       <div
-        class="!w-auto h-auto md:w-[120vw] flex justify-center p-3 bg-gray-50 rounded-lg shadow-lg mb-5"
+        class="!w-auto h-auto md:w-[120vw] flex items-center justify-center p-3 bg-gray-50 rounded-lg shadow-lg mb-5"
       >
         <div class="p-text-secondary mb-8">
           <p-table
+            #dt
             [tableStyle]="{ 'min-width': '50rem' }"
             [scrollable]="true"
             [value]="remarkData"
+             [rowHover]="true"
             scrollHeight="400px"
+            [globalFilterFields]="['vcbrand', 'remark',  'AddedBy']"
           >
+            <ng-template #caption>
+            <div class="flex justify-between">
+                <p-button [outlined]="true" icon="pi pi-filter-slash" label="Clear" (click)="clear(dt)" />
+            </div>
+        </ng-template>
+
             <ng-template #header>
               <tr>
-                <th>Brand</th>
-                <th>Remark</th>
-                <th>Added By</th>
+                <th>Brand<p-columnFilter type="text" field="vcbrand" display="menu" /></th>
+                <th>Remark<p-columnFilter type="text" field="remark" display="menu" /></th>
+                <th>Added By <p-columnFilter type="text" field="AddedBy" display="menu" /></th>
                 <th>Added On</th>
               </tr>
             </ng-template>
@@ -106,8 +110,10 @@
                 <td>{{ data.vcbrand }}</td>
                 <td>{{ data.remark }}</td>
                 <td>{{ data.AddedBy }}</td>
-                <td>{{ data.addedon | date : "dd-MMM-yy / h:mm a" : "UTC" }}</td>
-    
+                <td>
+                  {{ data.addedon | date : "dd-MMM-yy / h:mm a" : "UTC" }}
+                </td>
+
                 <!-- <td>{{ data.AdminRemark }}</td> -->
               </tr>
             </ng-template>
@@ -116,23 +122,21 @@
       </div>
     </div>
   </div>
-  
-  
-    <!-- it is for error Message -->
-    <p-dialog
-      header="Message"
-      [(visible)]="visible"
-      [modal]="true"
-      [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-      [style]="{ width: '30vw' }"
-      [draggable]="false"
-      [resizable]="false"
-    >
-      <p class="text-lg font-semibold">
-        {{ Result }}
-      </p>
-    </p-dialog>
- 
-  
+
+  <!-- it is for error Message -->
+  <p-dialog
+    header="Message"
+    [(visible)]="visible"
+    [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '30vw' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <p class="text-lg font-semibold">
+      {{ Result }}
+    </p>
+  </p-dialog>
+
   <!-- <app-sidebar-2 [sidebarvisible]="sidebarvisible" (close)="sidebarvisible = false"></app-sidebar-2> -->
-  
+</div>

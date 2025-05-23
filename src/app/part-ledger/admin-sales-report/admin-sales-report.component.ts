@@ -12,6 +12,7 @@ import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
 import { CommonModule } from '@angular/common';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { SharedServiceService } from '../../services/shared-service.service';
+import FileSaver from 'file-saver';
 @Component({
   selector: 'app-admin-sales-report',
   imports: [PrimengModuleModule, SharedModule,SHARED_IMPORTS,CommonModule, ProductDesctiptionTableComponent, ProductSaleInfoComponent, TotalsumComponent, LoaderComponent],
@@ -55,8 +56,8 @@ export class AdminSalesReportComponent {
   }
 
   AdminSalesReportInputData: FormGroup = new FormGroup({
-    BrandID: new FormControl('',[Validators.required]),
-    DealerID: new FormControl('',[Validators.required]),
+    BrandID: new FormControl(null,[Validators.required]),
+    DealerID: new FormControl(null,[Validators.required]),
     LocationID: new FormControl(),
     FormDate: new FormControl('',[Validators.required]),
     ToDate: new FormControl('',[Validators.required]),
@@ -463,13 +464,14 @@ export class AdminSalesReportComponent {
       this.showupload = false})
     this.adminSalesReportService.getSalesInfo(formData).subscribe((res:any)=>{
       this.SalesInfoVisible = true
-        this.globalBlockUiService.stopLoading()
-        this.exportVisible = true
-        this.SalesInfoVisible = true
-        this.SalesInfo = res.Data
-        this.showupload = false
-        this.exportVisible = false
-        this.partsExcel = undefined
+      this.exportVisible = true
+      this.SalesInfoVisible = true
+      this.SalesInfo = res.Data
+      this.showupload = false
+      this.exportVisible = false
+      this.istotal = false
+      this.partsExcel = undefined
+      this.globalBlockUiService.stopLoading()
       },
       (error:any) => {
         console.error("File upload failed:", error);
@@ -481,5 +483,32 @@ export class AdminSalesReportComponent {
     })
 
   }
+
+
+  exportPartNumberExcel(): void {
+  const partNumbers = [
+    { PartNumber: '12345-AB' },
+    { PartNumber: '67890-CD' },
+    { PartNumber: '11223-EF' },
+    { PartNumber: '44556-GH' },
+    { PartNumber: '77889-IJ' }
+  ];
+
+  // Step 1: Create worksheet
+  const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(partNumbers);
+
+  // Step 2: Create workbook
+  const workbook: XLSX.WorkBook = {
+    Sheets: { 'PartNumbers': worksheet },
+    SheetNames: ['PartNumbers']
+  };
+
+  // Step 3: Write workbook buffer
+  const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+  // Step 4: Save to file
+  const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  FileSaver.saveAs(data, 'PartNumberExport.xlsx');
+}
 
 }
