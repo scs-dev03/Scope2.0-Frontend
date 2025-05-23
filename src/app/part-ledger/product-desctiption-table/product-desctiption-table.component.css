@@ -39,3 +39,12 @@ td {
   ::ng-deep .p-paginator .p-paginator-rpp-dropdown {
   z-index: auto !important;
 }
+
+
+::ng-deep .low-z-paginator .p-paginator .p-paginator-page,
+::ng-deep .low-z-paginator .p-paginator .p-paginator-first,
+::ng-deep .low-z-paginator .p-paginator .p-paginator-prev,
+::ng-deep .low-z-paginator .p-paginator .p-paginator-next,
+::ng-deep .low-z-paginator .p-paginator .p-paginator-last {
+  z-index: 1 !important; /* or even 0 if needed */
+}

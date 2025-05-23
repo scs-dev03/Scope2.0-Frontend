@@ -87,7 +87,7 @@
               formControlName="FormDate"
               size="small"
               dateFormat="mm/yy"
-              [showIcon]="true"
+              [showIcon]="false"
               [minDate]="minDate"
               [maxDate]="maxDate"
               class="w-full"
@@ -102,6 +102,7 @@
               formControlName="ToDate"
               size="small"
               [showIcon]="true"
+              [showIcon]="false"
               [minDate]="minDate"
               [maxDate]="maxDate"
               dateFormat="mm/yy"
@@ -147,7 +148,7 @@
   
         <p-button label="Submit" severity="success" size="small" (onClick)="onSubmitAdminInputData()" />
         <p-button size="small" (onClick)="onClickShowUpload()" label="Upload Excel" />
-        <p-button size="small" (onClick)="exportPartNumberExcel()" label="Sample Upload" />
+        <p-button size="small" (onClick)="exportPartNumberExcel()" label="Sample Format Download" />
   
         
   

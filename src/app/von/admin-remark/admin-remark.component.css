@@ -1,0 +1,8 @@
+::ng-deep .p-datatable-filter-overlay {
+  transform: scale(0.85) !important; /* or 0.75 if you want smaller */
+}
+
+/* Optional: reduce font-size and padding inside */
+::ng-deep .p-datatable-filter-overlay * {
+  font-size: 12px !important;
+}

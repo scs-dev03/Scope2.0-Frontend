@@ -7,10 +7,13 @@ import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from
 import { Sidebar2Component } from "../../core/sidebar-2/sidebar-2.component";
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
 import { SharedServiceService } from '../../services/shared-service.service';
+import { Table } from 'primeng/table';
+import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+
 
 @Component({
   selector: 'app-admin-remark',
-  imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS, Sidebar2Component, LoaderComponent],
+  imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS, LoaderComponent],
   templateUrl: './admin-remark.component.html',
   styleUrl: './admin-remark.component.css'
 })
@@ -27,8 +30,13 @@ export class AdminRemarkComponent {
     
   }
 
+  clear(table: Table) {
+        table.clear();
+        
+    }
+
   constructor(private adminvonservice: AdminvonserviceService,
-    private sharedService:SharedServiceService
+    private sharedService:SharedServiceService,private globalblockui : GlobalBlockUiService
   ) {}
 
   adminRemarkInputData = new FormGroup({
@@ -71,15 +79,17 @@ export class AdminRemarkComponent {
   
 
   fetchBrandData() {
-    this.isloading = true;
+    this.globalblockui.startLoading()
     this.adminvonservice.getBrandMaster().subscribe((res: any) => {
       this.brandData = res;
-      this.isloading = false;
+      //this.isloading = false;
+      this.globalblockui.stopLoading()
     });
   }
 
   remarkCreation(remark: any, brandid: any, addedby: any, usertype: any) {
-    this.isloading = true;
+    //this.isloading = true;
+    this.globalblockui.startLoading()
     this.adminvonservice
       .newRemarkCreation({
         remark: remark,
@@ -91,7 +101,8 @@ export class AdminRemarkComponent {
         this.adminRemarkInputData.value.remarkInput='';
         this.visible = true;
         this.Result = res.message;
-        this.isloading = false
+        this.globalblockui.stopLoading()
+        //this.isloading = false
         
         
       });

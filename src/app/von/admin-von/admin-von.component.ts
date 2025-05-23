@@ -487,7 +487,10 @@ formatHeader(key: string): string {
         }, (error: any) => {
           this.globalBlockUiService.stopLoading();
           this.visible = true;
-          this.Result = error.error?.Error || 'Error fetching data';
+          if(error.error?.Error == "partnumber or locationid is required"){
+            this.Result = "Part Number Or Dealer Name and Location is Required"
+          }
+          //this.Result = error.error?.Error || 'Error fetching data';
           reject(error.error?.Error || 'Error fetching data'); // ⬅ Reject Promise
         });
     });
