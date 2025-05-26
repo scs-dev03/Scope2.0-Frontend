@@ -45,8 +45,9 @@ export class DealerSalesReportComponent {
       { "id": 18, "name": "Others" }
     ]
     //this.fetchBrandAdminData();
+    this.fetchLocationAdminData(localStorage.getItem('dealerid'))
     
-     this.sharedService.updateModuleName('5Dealer Parts Ledger')
+     this.sharedService.updateModuleName('Dealer Parts Ledger')
     
     this.minDate = new Date(2023, 4, 1); // Month is zero-based (4 = May)
 
