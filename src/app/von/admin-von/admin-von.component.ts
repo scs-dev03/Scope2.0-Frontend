@@ -61,8 +61,8 @@ export class AdminVonComponent {
       { name: 'Unplanned', code: '0' },
     ];
     this.adminstatus = [
-      { name: 'Reviewd', code: '1' },
-      { name: 'Unreviewd', code: '0' },
+      { name: 'Reviewed', code: '1' },
+      { name: 'Unreviewed', code: '0' },
     ];
 
     this.adminFilterData.patchValue({
