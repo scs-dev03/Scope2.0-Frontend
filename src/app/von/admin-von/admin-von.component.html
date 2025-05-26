@@ -703,7 +703,8 @@
     >
       <ng-template #header>
         <tr>
-          <th>Feedback Date</th>
+          <th>PartNumber</th>9
+          <th>Feedback Date</th>9
           <th>Proposed Qty</th>
           <th>Reviewed Qty</th>
           <th>Proposed Remark</th>
@@ -715,15 +716,16 @@
       </ng-template>
       <ng-template #body let-data>
         <tr>
+          <td>{{ data.PartNumber6 }}</td>
           <td>{{ data.FeedbackDate | date : "dd-MMM-yy / h:mm a" : "UTC" }}</td>
           <td>{{ data.ProposedQty }}</td>
           <td>{{ data.ApprovedQty }}</td>
           <td>{{ data.UserRemark }}</td>
-          <td>{{ data.MaxValue }}</td>
           <td>{{ data.AdminRemark }}</td>
+          <td>{{ data.MaxValue }}</td>
           <!-- <td>{{ data.AdminRemark }}</td> -->
           <td>{{ data.AdminFBDate | date : "dd-MMM-yy / h:mm a" : "UTC" }}</td>
-          <td>{{ data.quantity }}</td>
+          <td>{{ data.UpdatedBy }}</td>
         </tr>
       </ng-template>
     </p-table>

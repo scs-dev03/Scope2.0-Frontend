@@ -41,6 +41,8 @@ export class DashboardSchedulerComponent {
     ToDate: new FormControl('',Validators.required)
   })
   ngOnInit(): void {
+
+    localStorage.setItem("userid",'138032')
      this.sharedService.updateModuleName('Dashboard Scheduler')
     this.fetchBdm();
     
