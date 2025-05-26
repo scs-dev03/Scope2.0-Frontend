@@ -1,1 +1,192 @@
-<p>dealer-sales-report works!</p>
+
+    <!-- <app-loader [isloading]="isloading"></app-loader> -->
+     <div class="w-full h-full">
+
+      <!-- <div>
+        <h1 class="text-3xl ml-10 font-semibold">Parts Ledger</h1>
+      </div> -->
+      
+      
+    <div class="flex flex-wrap -mt-10 ">
+      <form
+        action=""
+        [formGroup]="DealerSalesReportInputData"
+        class="flex flex-1 flex-wrap p-5 justify-start items-center gap-3 w-auto"
+      >
+
+      <div class="w-32">
+        <p-floatlabel variant="on">
+          <p-select
+            inputId="LocationID"
+            formControlName="LocationID"
+            [options]="LocationData"
+            optionValue="locationid"
+            [showClear]="true"
+            optionLabel="location"
+            scrollHeight="150px"
+            appendTo="body"
+            filterBy="location"
+            class="!w-full !text-[10px]"
+          />
+          <label for="LocationID" class="text-[10px]">Locations</label>
+        </p-floatlabel>
+        <div *ngIf="DealerSalesReportInputData.get('LocationID')?.invalid && (DealerSalesReportInputData.get('LocationID')?.dirty || DealerSalesReportInputData.get('LocationID')?.touched)" class="text-red-500 text-[10px]">
+          This field is mandatory
+        </div>
+      </div>
+      
+  
+        <div class="w-32">
+          <p-floatlabel variant="on">
+            <p-datepicker
+              inputId="FormDate"
+              view="month"
+              formControlName="FormDate"
+              size="small"
+              dateFormat="mm/yy"
+              [showIcon]="false"
+              [minDate]="minDate"
+              [maxDate]="maxDate"
+              class="w-full"
+            />
+            <label for="FormDate" class="text-[10px]">From Date</label>
+          </p-floatlabel>
+        </div>
+        <div class="w-32">
+          <p-floatlabel variant="on">
+            <p-datepicker
+              view="month"
+              formControlName="ToDate"
+              size="small"
+              [showIcon]="true"
+              [showIcon]="false"
+              [minDate]="minDate"
+              [maxDate]="maxDate"
+              dateFormat="mm/yy"
+            />
+    
+            <label for="ToDate" class="text-[10px]">To Date</label>
+          </p-floatlabel>
+        </div>
+  
+        <div class="w-32">
+          <p-floatlabel variant="on">
+            <p-multiselect
+              [options]="DataType"
+              inputId="datatype"
+              formControlName="DataType"
+              optionValue="name"
+              
+              optionLabel="name"
+              scrollHeight="150px"
+              filterBy="name"
+              class="!w-full !text-[10px]"
+            />
+            <label for="DealerID" class="text-[10px]">Data Type</label>
+          </p-floatlabel>
+        </div>
+        
+        <div class="">
+          <p-floatlabel variant="on">
+            <input type="text" pInputText size="small" class="w-44 !text-xs !h-9 " formControlName="PartNumber" />
+            <label for="PartNumber" class="text-[10px] ">Part Number</label>
+            <div class="text-xs text-red-600">
+              <p class="ml-2">Example: xyz, abc, prqs</p>
+            </div>
+          </p-floatlabel>
+          <div
+          *ngIf="DealerSalesReportInputData.get('PartNumber')?.invalid && (DealerSalesReportInputData.get('PartNumber')?.dirty || DealerSalesReportInputData.get('PartNumber')?.touched)"
+          class="text-red-500 text-[10px]"
+        >
+          This field is mandatory
+        </div>
+        </div>
+        
+  
+        <p-button label="Submit" severity="success" size="small" (onClick)="onSubmitAdminInputData()" />
+        <p-button size="small" (onClick)="onClickShowUpload()" label="Upload Excel" />
+        <p-button size="small" (onClick)="exportPartNumberExcel()" label="Sample Format Download" />
+  
+        
+  
+        
+        
+      </form> 
+    </div>
+    <div class="ml-10">
+      <h1 class="font-semibold text-2xl" >Parts Description</h1>
+    </div>
+    
+    <div class="h-auto flex items-center justify-center ">
+      <app-product-desctiption-table [PartDetails] = 'PartDetail'></app-product-desctiption-table>
+    </div>
+    <div class="flex flex-row justify-between w-full">
+      <div class="ml-10">
+        <h1 class="font-semibold text-2xl" >Parts Sales Info</h1>
+      </div>
+      <div class="flex gap-3 mr-10">
+        <!-- <p-button label="Show Sales" size="small" (onClick)="onClickShowSaleinfo()" />
+        <p-button label="Total Sales" size="small" (onClick)="onclicktotal()" /> -->
+        <p-button label="Export Data" size="small" [disabled]="exportVisible" (onClick)="exportToExcel()" />
+      </div>
+    </div>
+    <div class="w-full h-auto flex justify-center items-center" *ngIf="SalesInfoVisible">
+      <app-product-sale-info [SalesInfo] = 'SalesInfo[0]' [DataTypeArray]="DataTypeArray" ></app-product-sale-info>
+    </div>
+    <div class="ml-10">
+      <h1 class="font-semibold text-2xl" *ngIf="istotal" >Total Sales</h1>
+    </div>
+    <div class="w-full h-auto flex justify-center items-center !p-3" *ngIf="istotal">
+      <app-totalsum [SalesInfo] = 'SalesInfo[1]' [DataTypeArray]="DataTypeArray" ></app-totalsum>
+    </div>
+
+     </div>
+
+  
+
+    <!-- it is for error Message -->
+    <p-dialog
+      header="Message"
+      [(visible)]="visible"
+      [modal]="true"
+      [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+      [style]="{ width: '30vw' }"
+      [draggable]="false"
+      [resizable]="false"
+    >
+      <p class="text-lg font-semibold">
+        {{ Result }}
+      </p>
+    </p-dialog>
+  
+  
+  <p-dialog
+    header="Upload"
+    [(visible)]="showupload"
+    class="!w-auto !h-auto bg-slate-500 gap-16"
+    
+  >
+  <div  class="flex gap-5 ">
+    <div class="flex flex-col">
+      <p-fileupload
+        #fu
+        mode="basic"
+        chooseLabel="Parts Excel"
+        chooseIcon="pi pi-upload"
+        name="excelFile"
+        accept=".xls,.xlsx"
+        maxFileSize="5000000"
+        [auto]="false"
+        (onSelect)="onFileSelect($event)"
+      />
+      <!-- <span class="text-sm">{{ selectedFileName }}</span> -->
+    </div>
+    <p-button
+      label="Upload"
+      (onClick)="UploadPartNumber()"
+      severity="secondary"
+      size="small"
+    />
+  </div>
+  
+  </p-dialog>

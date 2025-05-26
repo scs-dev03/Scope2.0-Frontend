@@ -7,72 +7,81 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { Sidebar2Component } from "../../core/sidebar-2/sidebar-2.component";
-import { LoaderComponent } from "../../shared/components/loader/loader.component";
+import { Sidebar2Component } from '../../core/sidebar-2/sidebar-2.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-admin-von',
-  imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS, Sidebar2Component, LoaderComponent],
+  imports: [
+    PrimengModuleModule,
+    SharedModule,
+    SHARED_IMPORTS,
+    Sidebar2Component,
+    LoaderComponent,
+  ],
   templateUrl: './admin-von.component.html',
-  styleUrl: './admin-von.component.css'
+  styleUrl: './admin-von.component.css',
 })
 export class AdminVonComponent {
   ngOnInit(): void {
-  this.fetchBrandData();
-  this.sharedService.updateModuleName('Admin Norms Management');
+    this.fetchBrandData();
+    this.sharedService.updateModuleName('Admin Norms Management');
 
-  this.route.queryParams.subscribe((params: any) => {
-    this.brandid = params['brandid'];
-    this.dealerid = params['dealerid'];
-    this.locationid = params['locationid'];
+    this.route.queryParams.subscribe((params: any) => {
+      this.brandid = params['brandid'];
+      this.dealerid = params['dealerid'];
+      this.locationid = params['locationid'];
 
-    if (this.brandid && this.dealerid && this.locationid) {
-      localStorage.setItem('brandid', this.brandid);
-      localStorage.setItem('dealerid', this.dealerid);
-      localStorage.setItem('locationid', this.locationid);
+      if (this.brandid && this.dealerid && this.locationid) {
+        localStorage.setItem('brandid', this.brandid);
+        localStorage.setItem('dealerid', this.dealerid);
+        localStorage.setItem('locationid', this.locationid);
 
-      this.fetchDealerData(this.brandid);
-      this.fetchlocation(this.dealerid);
+        this.fetchDealerData(this.brandid);
+        this.fetchlocation(this.dealerid);
 
-      this.adminFilterData.patchValue({
-        brand: Number(this.brandid),
-        dealer: this.dealerid,
-        location: this.locationid,
-      });
+        this.adminFilterData.patchValue({
+          brand: Number(this.brandid),
+          dealer: this.dealerid,
+          location: this.locationid,
+        });
 
-      this.onClickSubmitfilterData();
-    }
-  });
+        this.onClickSubmitfilterData();
+      }
+    });
 
-  this.fetchNature();
-  this.fetchPartType();
-  this.fetchSeasonaData();
-  //this.adminvonservice.setLocalStorage();
+    this.fetchNature();
+    this.fetchPartType();
+    this.fetchSeasonaData();
+    //this.adminvonservice.setLocalStorage();
 
-  this.maxData = [
-    { name: 'Planned', code: '1' },
-    { name: 'Unplanned', code: '0' },
-  ];
-  this.adminstatus = [
-    { name: 'Reviewd', code: '1' },
-    { name: 'Unreviewd', code: '0' },
-  ];
+    this.maxData = [
+      { name: 'Planned', code: '1' },
+      { name: 'Unplanned', code: '0' },
+    ];
+    this.adminstatus = [
+      { name: 'Reviewd', code: '1' },
+      { name: 'Unreviewd', code: '0' },
+    ];
 
-  this.adminFilterData.patchValue({
-    max: '1',
-    status: '0',
-  });
-}
+    this.adminFilterData.patchValue({
+      max: '1',
+      status: '0',
+    });
+  }
 
-
-  constructor(private adminvonservice: AdminvonserviceService,
-    private route: ActivatedRoute,private router: Router,
-    private globalBlockUiService:GlobalBlockUiService,private sharedService:SharedServiceService) {}
+  constructor(
+    private adminvonservice: AdminvonserviceService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private globalBlockUiService: GlobalBlockUiService,
+    private sharedService: SharedServiceService
+  ) {}
 
   // formgroup for filter
   adminFilterData = new FormGroup({
-    brand: new FormControl<number | null>(null,[Validators.required]),
+    brand: new FormControl<number | null>(null, [Validators.required]),
     dealer: new FormControl(),
     location: new FormControl(),
     max: new FormControl(),
@@ -86,12 +95,12 @@ export class AdminVonComponent {
     status: new FormControl(),
     fromrate: new FormControl(),
     torate: new FormControl(),
-    parttype: new FormControl()
+    parttype: new FormControl(),
   });
 
-  // diclaration of all the variable 
-  DealerExcel:any
-  AdminExcel:any
+  // diclaration of all the variable
+  DealerExcel: any;
+  AdminExcel: any;
   locaitonData: any = [];
   AdminPeningView: any = [];
   natureData: any = [];
@@ -100,15 +109,15 @@ export class AdminVonComponent {
   maxData: any = [];
   tableData: any = [];
   seasondata: any = [];
-  columns: any[] = []
-  partType: any[] = []
+  columns: any[] = [];
+  partType: any[] = [];
   dealerRemark: any[] = [];
   brandData: any[] = [];
   familyPartData: any[] = [];
-  partFamilySaleData: any = []
+  partFamilySaleData: any = [];
   isloading: boolean = false;
   visible: boolean = false;
-  familyPartDataVisible:boolean = false;
+  familyPartDataVisible: boolean = false;
   Result: any;
   selectedRemark: any;
   customRemark: any = null;
@@ -119,7 +128,7 @@ export class AdminVonComponent {
   brandid: string = '';
   dealerid: string = '';
   locationid: string = '';
-  showSale:boolean = false;
+  showSale: boolean = false;
   adminRemark: any = [];
   categories: any[] = [
     { name: 'WS', key: '0' },
@@ -133,11 +142,11 @@ export class AdminVonComponent {
     this.fetchlocation(dealerId);
     localStorage.setItem('dealerid', dealerId);
   }
-// fetching brands 
+  // fetching brands
   onClickBrand() {
     const brandId = String(this.adminFilterData.value.brand ?? ''); // Default to an empty string if null/undefined
     this.fetchDealerData(brandId);
-    localStorage.setItem('brandid',brandId);
+    localStorage.setItem('brandid', brandId);
     this.fetchModel(brandId);
   }
   // setting location for local storage
@@ -146,26 +155,23 @@ export class AdminVonComponent {
     localStorage.setItem('locationid', locationId);
   }
   // Reset Filter values
-  onClickResetField(){
-    this.adminFilterData.reset()
+  onClickResetField() {
+    this.adminFilterData.reset();
   }
 
   // submitting filter values for fetching data
   onClickSubmitfilterData() {
     console.log(this.adminFilterData.value);
-    
 
     // validation for empty fields
-    if(!this.adminFilterData.valid){
+    if (!this.adminFilterData.valid) {
       this.adminFilterData.markAllAsTouched();
-    }
-    else{
-
+    } else {
       if (!this.adminFilterData.value.selectedCategory) {
         this.adminFilterData.patchValue({
           selectedCategory: { name: 'Both', key: '2' },
         });
-      }     
+      }
       this.fetchAdminPendingView(
         this.adminFilterData.value.brand,
         this.adminFilterData.value.dealer,
@@ -181,7 +187,6 @@ export class AdminVonComponent {
         this.adminFilterData.value.fromrate,
         this.adminFilterData.value.torate,
         this.adminFilterData.value.parttype
-       
       );
     }
   }
@@ -191,15 +196,17 @@ export class AdminVonComponent {
   // extracting keys for dynamic columns
   extractKeys(data: any) {
     const keys = Object.keys(data[0]);
-  
+
     if (this.adminFilterData.value.selectedCategory.key == '0') {
       this.wsCsKeys = keys.filter((key) => key.endsWith('_WS'));
     } else if (this.adminFilterData.value.selectedCategory.key == '1') {
       this.wsCsKeys = keys.filter((key) => key.endsWith('_CS'));
     } else {
-      this.wsCsKeys = keys.filter((key) => key.endsWith('_CS') || key.endsWith('_WS'));
+      this.wsCsKeys = keys.filter(
+        (key) => key.endsWith('_CS') || key.endsWith('_WS')
+      );
     }
-  
+
     // partnumber ko shuru me add karne ke liye ek aur object insert karenge
     this.formattedKeys = [
       { header: 'Part Number', field: 'partnumber' }, // Part Number column added
@@ -210,21 +217,20 @@ export class AdminVonComponent {
         return { header, field };
       }),
     ];
-  
+
     return this.formattedKeys;
   }
-  
-  // populating dynamic columns in table 
+
+  // populating dynamic columns in table
   getValues(rowData: any): any[] {
     //console.log(rowData);
-    
+
     return this.columns.map((col: any) => {
       const value = col.field
         .split('.')
         .reduce((obj: any, key: any) => obj && obj[key], rowData);
-       // console.log(value);
+      // console.log(value);
       return value;
-      
     });
   }
 
@@ -250,54 +256,52 @@ export class AdminVonComponent {
       rowData.partid
     );
   }
-// getting part family
+  // getting part family
   onclickPartNumber(partnumber: any) {
-    this.fetchFamilyPart(partnumber,localStorage.getItem('brandid')); 
+    this.fetchFamilyPart(partnumber, localStorage.getItem('brandid'));
   }
 
-
-  onClickShowSales(rowData: any){
-    
+  onClickShowSales(rowData: any) {
     this.fetchPartSale(
       localStorage.getItem('brandid'),
       localStorage.getItem('dealerid'),
       localStorage.getItem('locationid'),
       rowData.partnumber
-    )
+    );
   }
 
   transformPartFamilySalesData() {
-    const data = this.partFamilySaleData
+    const data = this.partFamilySaleData;
     if (!data || !Array.isArray(data)) return [];
-    const totalObject: any = { partnumber: "Total" };
+    const totalObject: any = { partnumber: 'Total' };
     data.forEach((entry) => {
       Object.keys(entry).forEach((key) => {
-        if (key !== "partnumber") {
-          totalObject[key] = (totalObject[key] || 0) + parseFloat(entry[key] || "0");
+        if (key !== 'partnumber') {
+          totalObject[key] =
+            (totalObject[key] || 0) + parseFloat(entry[key] || '0');
         }
       });
     });
-  
+
     return [...data, totalObject];
   }
-
 
   submitAdminRow(rowData: any) {
     this.globalBlockUiService.startLoading();
     const validCustomRemarkRegex = /^(?![\s,@-]*$)(?!-?\d+$)[a-zA-Z0-9\s,@-]*$/;
     this.globalBlockUiService.startLoading();
     if (rowData.selectedRemark == null) {
-      this.globalBlockUiService.stopLoading()
+      this.globalBlockUiService.stopLoading();
       this.visible = true;
-      this.Result = "Select the Remark";
+      this.Result = 'Select the Remark';
       this.globalBlockUiService.stopLoading();
     } else if (rowData.qty == null) {
-      this.globalBlockUiService.stopLoading()
+      this.globalBlockUiService.stopLoading();
       this.visible = true;
       this.Result = 'Input the Quantity';
       this.globalBlockUiService.stopLoading();
     } else if (rowData.qty < 0) {
-      this.globalBlockUiService.stopLoading()
+      this.globalBlockUiService.stopLoading();
       this.visible = true;
       this.Result = 'Invalid Qty';
       this.globalBlockUiService.stopLoading();
@@ -305,17 +309,18 @@ export class AdminVonComponent {
       if (rowData.showOtherInput) {
         // Check for empty or invalid customRemark
         if (
-          !rowData.customRemark || 
+          !rowData.customRemark ||
           !validCustomRemarkRegex.test(rowData.customRemark.trim())
         ) {
-          this.globalBlockUiService.stopLoading()
-          
+          this.globalBlockUiService.stopLoading();
+
           this.visible = true;
-          this.Result = 'Invalid Custom Remark Only Number are not Allowed and  Allowed Special Character are - and @';
+          this.Result =
+            'Invalid Custom Remark Only Number are not Allowed and  Allowed Special Character are - and @';
           this.globalBlockUiService.stopLoading();
           return;
         }
-  
+
         this.adminvonservice
           .submitAdminlog({
             brandid: localStorage.getItem('brandid'),
@@ -328,15 +333,16 @@ export class AdminVonComponent {
           })
           .subscribe(
             (res: any) => {
-              this.globalBlockUiService.stopLoading()
+              this.globalBlockUiService.stopLoading();
               this.visible = true;
               this.Result = res.message;
               this.globalBlockUiService.stopLoading();
               rowData.status = 'Reviewed';
             },
             (error: any) => {
-              this.globalBlockUiService.stopLoading()
-              this.Result = 'There is no dealer remark for this part, so you cannot add a remark.';
+              this.globalBlockUiService.stopLoading();
+              this.Result =
+                'There is no dealer remark for this part, so you cannot add a remark.';
               this.visible = true;
               this.globalBlockUiService.stopLoading();
             }
@@ -354,24 +360,21 @@ export class AdminVonComponent {
           })
           .subscribe(
             (res: any) => {
-              this.globalBlockUiService.stopLoading()
+              this.globalBlockUiService.stopLoading();
               this.visible = true;
               this.Result = res.message;
               this.globalBlockUiService.stopLoading();
               rowData.status = 'Reviewed';
             },
             (error: any) => {
-              this.globalBlockUiService.stopLoading()
+              this.globalBlockUiService.stopLoading();
               this.visible = true;
-              this.Result = 'Remark not submmited'
+              this.Result = 'Remark not submmited';
             }
           );
       }
     }
-  
-    
   }
-  
 
   // fetching brands
   fetchBrandData() {
@@ -380,138 +383,168 @@ export class AdminVonComponent {
       this.brandData = res;
       this.globalBlockUiService.stopLoading();
       console.log(this.brandData);
-      
     });
   }
-// Fetch Dealer Data
-fetchDealerData(brandid: any) {
-  this.globalBlockUiService.startLoading();
-  this.adminvonservice.getDealersMaster({ brandid }).subscribe({
+  // Fetch Dealer Data
+  fetchDealerData(brandid: any) {
+    this.globalBlockUiService.startLoading();
+    this.adminvonservice.getDealersMaster({ brandid }).subscribe({
       next: (res: any) => {
-          this.dealerData = res;
-          this.dealerData.sort((a: any, b: any) => a.dealer.localeCompare(b.dealer));
-          this.globalBlockUiService.stopLoading();
+        this.dealerData = res;
+        this.dealerData.sort((a: any, b: any) =>
+          a.dealer.localeCompare(b.dealer)
+        );
+        this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
-          console.error("Error fetching dealer data:", err);
-          this.globalBlockUiService.stopLoading();
-      }
-  });
-}
+        console.error('Error fetching dealer data:', err);
+        this.globalBlockUiService.stopLoading();
+      },
+    });
+  }
 
-// Fetch Location
-fetchlocation(dealerId: any) {
-  this.globalBlockUiService.startLoading();
-  this.adminvonservice.getlocationMaster({ dealerid: dealerId }).subscribe({
+  // Fetch Location
+  fetchlocation(dealerId: any) {
+    this.globalBlockUiService.startLoading();
+    this.adminvonservice.getlocationMaster({ dealerid: dealerId }).subscribe({
       next: (res: any) => {
-          this.locaitonData = res;
-          this.globalBlockUiService.stopLoading();
+        this.locaitonData = res;
+        this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
-          console.error("Error fetching location data:", err);
-          this.globalBlockUiService.stopLoading();
-      }
-  });
-}
+        console.error('Error fetching location data:', err);
+        this.globalBlockUiService.stopLoading();
+      },
+    });
+  }
 
-// Fetch Nature Data
-fetchNature() {
-  this.globalBlockUiService.startLoading();
-  this.adminvonservice.getNature().subscribe({
+  // Fetch Nature Data
+  fetchNature() {
+    this.globalBlockUiService.startLoading();
+    this.adminvonservice.getNature().subscribe({
       next: (res: any) => {
-          this.natureData = res.Data;
-          this.globalBlockUiService.stopLoading();
+        this.natureData = res.Data;
+        this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
-          console.error("Error fetching nature data:", err);
-          this.globalBlockUiService.stopLoading();
-      }
-  });
-}
+        console.error('Error fetching nature data:', err);
+        this.globalBlockUiService.stopLoading();
+      },
+    });
+  }
 
-// Fetch Brand Models
-fetchModel(brandid: any) {
-  this.adminvonservice.getModel({ brandid }).subscribe({
+  // Fetch Brand Models
+  fetchModel(brandid: any) {
+    this.adminvonservice.getModel({ brandid }).subscribe({
       next: (res: any) => {
-          this.modelData = res.Data;
+        this.modelData = res.Data;
       },
       error: (err: any) => {
-          console.error("Error fetching model data:", err);
-      }
-  });
-}
+        console.error('Error fetching model data:', err);
+      },
+    });
+  }
 
-// Fetch Seasonal Data
-fetchSeasonaData() {
-  this.adminvonservice.getseason().subscribe({
+  // Fetch Seasonal Data
+  fetchSeasonaData() {
+    this.adminvonservice.getseason().subscribe({
       next: (res: any) => {
-          this.seasondata = res.Data;
+        this.seasondata = res.Data;
       },
       error: (err: any) => {
-          console.error("Error fetching seasonal data:", err);
-      }
-  });
-}
+        console.error('Error fetching seasonal data:', err);
+      },
+    });
+  }
 
-// Format Dynamic Columns Header
-formatHeader(key: string): string {
-  return key.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
-}
+  // Format Dynamic Columns Header
+  formatHeader(key: string): string {
+    return key
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  }
 
-
-  // fetching admin view table 
+  // fetching admin view table
   fetchAdminExportDataOldSP(
-    brandid: any, dealerid: any, r1: any, r2: any, partnumber: any, locationid: any,
-    flag: any, seasonalid: any, modelid: any, natureid: any, status: null,
-    l1: any, l2: any, parttype: any
+    brandid: any,
+    dealerid: any,
+    r1: any,
+    r2: any,
+    partnumber: any,
+    locationid: any,
+    flag: any,
+    seasonalid: any,
+    modelid: any,
+    natureid: any,
+    status: null,
+    l1: any,
+    l2: any,
+    parttype: any
   ): Promise<any> {
-    return new Promise((resolve, reject) => { // ⬅ Promise return kiya
+    return new Promise((resolve, reject) => {
+      // ⬅ Promise return kiya
       this.globalBlockUiService.startLoading();
       this.adminvonservice
         .getAdminViewData({
-          brandid, dealerid, r1, r2, partnumber, locationid, flag,
-          seasonalid, modelid, natureid, status, l1, l2, parttype
+          brandid,
+          dealerid,
+          r1,
+          r2,
+          partnumber,
+          locationid,
+          flag,
+          seasonalid,
+          modelid,
+          natureid,
+          status,
+          l1,
+          l2,
+          parttype,
         })
-        .subscribe((res: any) => {
-          if (res.Data && res.Data.length) {
-            this.tableData = res.Data;
-            console.log("Fetched Data: ", this.tableData);
+        .subscribe(
+          (res: any) => {
+            if (res.Data && res.Data.length) {
+              this.tableData = res.Data;
+              console.log('Fetched Data: ', this.tableData);
+              this.globalBlockUiService.stopLoading();
+              resolve(this.tableData); // ⬅ Resolve Promise
+            } else {
+              this.visible = true;
+              this.Result = 'No Data Available';
+              this.globalBlockUiService.stopLoading();
+              reject('No Data Available'); // ⬅ Reject Promise
+            }
+          },
+          (error: any) => {
             this.globalBlockUiService.stopLoading();
-            resolve(this.tableData); // ⬅ Resolve Promise
-          } else {
             this.visible = true;
-            this.Result = 'No Data Available';
-            this.globalBlockUiService.stopLoading();
-            reject('No Data Available'); // ⬅ Reject Promise
+            if (error.error?.Error == 'partnumber or locationid is required') {
+              this.Result =
+                'Part Number Or Dealer Name and Location is Required';
+            }
+            //this.Result = error.error?.Error || 'Error fetching data';
+            reject(error.error?.Error || 'Error fetching data'); // ⬅ Reject Promise
           }
-        }, (error: any) => {
-          this.globalBlockUiService.stopLoading();
-          this.visible = true;
-          if(error.error?.Error == "partnumber or locationid is required"){
-            this.Result = "Part Number Or Dealer Name and Location is Required"
-          }
-          //this.Result = error.error?.Error || 'Error fetching data';
-          reject(error.error?.Error || 'Error fetching data'); // ⬅ Reject Promise
-        });
+        );
     });
   }
-  
-// fetching admin remark
-fetchAdminRemark(brandid: any, usertype: any) {
-  this.globalBlockUiService.startLoading();
-  this.adminvonservice.getAdminRemark({ brandid, usertype }).subscribe({
+
+  // fetching admin remark
+  fetchAdminRemark(brandid: any, usertype: any) {
+    this.globalBlockUiService.startLoading();
+    this.adminvonservice.getAdminRemark({ brandid, usertype }).subscribe({
       next: (res: any) => {
-          this.adminRemark = res.Data;
-          this.globalBlockUiService.stopLoading();  // Success case me isloading reset
+        this.adminRemark = res.Data;
+        this.globalBlockUiService.stopLoading(); // Success case me isloading reset
       },
       error: (err: any) => {
-        this.Result = 'Remarker Not Available Please Contact IT Admin'
-        this.visible = true
+        this.Result = 'Remarker Not Available Please Contact IT Admin';
+        this.visible = true;
 
-          this.globalBlockUiService.stopLoading();  // API fail hone par bhi loading false ho
-      }
-  });
-}
+        this.globalBlockUiService.stopLoading(); // API fail hone par bhi loading false ho
+      },
+    });
+  }
 
   //fetching  adming view logs row wise
   fetchAdminViewlog(brandid: any, dealerid: any, locationid: any, partid: any) {
@@ -524,64 +557,59 @@ fetchAdminRemark(brandid: any, usertype: any) {
         partid: partid,
       })
       .subscribe((res: any) => {
-        
-        if(res.Data && res.Data.length){
+        if (res.Data && res.Data.length) {
           this.changelogDialog = true;
           this.Adminviewlog = res.Data;
           this.globalBlockUiService.stopLoading();
-        }
-        else{
-          this.Result = 'There is No Previous Record, Please Give new Remark for this Part'
-          this.visible = true
+        } else {
+          this.Result =
+            'There is No Previous Record, Please Give new Remark for this Part';
+          this.visible = true;
           this.globalBlockUiService.stopLoading();
         }
       });
   }
-// fetching part type
-  fetchPartType(){
+  // fetching part type
+  fetchPartType() {
     this.globalBlockUiService.startLoading();
-    this.adminvonservice.getPartType().subscribe((res:any)=>{
-      this.partType = res.Data
+    this.adminvonservice.getPartType().subscribe((res: any) => {
+      this.partType = res.Data;
       this.globalBlockUiService.stopLoading();
-
-    })
+    });
   }
-   // fetching family part
-   fetchFamilyPart(partnumber: any, brandid: any) {
+  // fetching family part
+  fetchFamilyPart(partnumber: any, brandid: any) {
     this.globalBlockUiService.startLoading();
     this.adminvonservice.getSubstitutePart({ partnumber, brandid }).subscribe({
-        next: (res: any) => {
-            if (res.Data && res.Data.length) {
-                this.familyPartDataVisible = true;
-                this.familyPartData = res.Data;
-            } else {
-                this.visible = true;
-                this.Result = 'There is No Substitute Part Available for this Part';
-            }
-            this.globalBlockUiService.stopLoading(); // Ensure loading is reset in success case
-        },
-        error: (err: any) => {
-            console.error("Error fetching family part data:", err);
-            this.visible = true;
-            this.Result = "Failed to fetch substitute part data. Please try again.";
-            this.globalBlockUiService.stopLoading(); // Ensure loading is reset in error case
+      next: (res: any) => {
+        if (res.Data && res.Data.length) {
+          this.familyPartDataVisible = true;
+          this.familyPartData = res.Data;
+        } else {
+          this.visible = true;
+          this.Result = 'There is No Substitute Part Available for this Part';
         }
+        this.globalBlockUiService.stopLoading(); // Ensure loading is reset in success case
+      },
+      error: (err: any) => {
+        console.error('Error fetching family part data:', err);
+        this.visible = true;
+        this.Result = 'Failed to fetch substitute part data. Please try again.';
+        this.globalBlockUiService.stopLoading(); // Ensure loading is reset in error case
+      },
     });
-}
-
+  }
 
   // excel export function for old SP
   async exportToExcelOldSP(): Promise<any> {
-    if(!this.adminFilterData.valid){
+    if (!this.adminFilterData.valid) {
       this.adminFilterData.markAllAsTouched();
-    }
-    else{
-
+    } else {
       if (!this.adminFilterData.value.selectedCategory) {
         this.adminFilterData.patchValue({
           selectedCategory: { name: 'Both', key: '2' },
         });
-      }     
+      }
       await this.fetchAdminExportDataOldSP(
         this.adminFilterData.value.brand,
         this.adminFilterData.value.dealer,
@@ -599,97 +627,165 @@ fetchAdminRemark(brandid: any, usertype: any) {
         this.adminFilterData.value.parttype
       );
     }
-  
+
     console.log(this.tableData);
-  
-    const formattedData = this.tableData.map(({brand,dealer,location,...rest }: any) => ({
-      Brand: rest.brand,
-      Dealer: rest.dealer,
-      Location:rest.location,...rest, // Pehle sab kuch
-      UserRemark: rest.UserRemark ?? '', // Default value if undefined
-      ProposedQty: rest.ProposedQty ?? '',
-      SPMRemark: rest.SPMRemark ?? '',
-      AdminRemark: rest.AdminRemark ?? '',
-    }));
-  
+
+    const formattedData = this.tableData.map(
+      ({ brand, dealer, location, ...rest }: any) => ({
+        Brand: rest.brand,
+        Dealer: rest.dealer,
+        Location: rest.location,
+        ...rest, // Pehle sab kuch
+        UserRemark: rest.UserRemark ?? '', // Default value if undefined
+        ProposedQty: rest.ProposedQty ?? '',
+        SPMRemark: rest.SPMRemark ?? '',
+        AdminRemark: rest.AdminRemark ?? '',
+      })
+    );
+
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedData);
-    const workbook: XLSX.WorkBook = { Sheets: { 'Data': worksheet }, SheetNames: ['Data'] };
-  
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const data: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+    const workbook: XLSX.WorkBook = {
+      Sheets: { Data: worksheet },
+      SheetNames: ['Data'],
+    };
+
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+    const data: Blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
+    });
 
     console.log(`${this.tableData[0]?.dealer ?? 'Export'}_Norms_Data.xlsx`);
-    
+
     saveAs(data, `${this.tableData[0]?.dealer ?? 'Export'}_Norms_Data.xlsx`);
   }
-  
 
-  // excel export function for new SP 
+  // excel export function for new SP
   async exportToExcelNewSP(): Promise<any> {
-    if(!this.adminFilterData.valid){
-      this.adminFilterData.markAllAsTouched();
-    }
-    const formattedData = this.AdminPeningView.map(({brand,dealer,location,model,Subpartcount,partid,feedbackdate,BlockAvg,	LocPer,LocCount,
-      status,LatestAdminRemark,AdminRemark ,RemarkQty	,ApprovedQty,
-            ...rest }: any) => ({
-              brand: brand,
-              dealer: dealer,
-              location: location,
-              Block_Average:BlockAvg,
-              Location_percentage:LocPer,
-              Location_count:	LocCount,
-
-    }));
-  
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedData);
-    const workbook: XLSX.WorkBook = { Sheets: { 'Data': worksheet }, SheetNames: ['Data'] };
-  
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const data: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
-    //console.log(this.AdminPeningView[0].dealer);
-    
-    saveAs(data, `${this.AdminPeningView[0].dealer ?? 'Admin_Export'}_Norms_Data.xlsx`);
+  if (!this.adminFilterData.valid) {
+    this.adminFilterData.markAllAsTouched();
   }
 
+  // Filter only Pending status records
+  const pendingData = this.AdminPeningView.filter(
+    (item: any) => item.status === 'Pending'
+  );
+
+  const formattedData = pendingData.map(
+    ({
+      brand,
+      dealer,
+      location,
+      model,
+      Subpartcount,
+      partid,
+      feedbackdate,
+      BlockAvg,
+      orderpartnumber,
+      partnumber,
+      partdesc,
+      landedcost,
+      maxvalue,
+      LocPer,
+      Avg3Msale,
+      n1,
+      n2,
+      n3,
+      category,
+      moq,
+      LocCount,
+      status,
+      LatestAdminRemark,
+      AdminRemark,
+      RemarkQty,
+      ApprovedQty,
+      ...rest
+    }: any) => ({
+      brand: brand,
+      dealer: dealer,
+      location: location,
+      partnumber: partnumber,
+      orderpartnumber: orderpartnumber,
+      partdesc: partdesc,
+      landedcost: landedcost,
+      moq: moq,
+      Avg3Msale: Avg3Msale,
+      maxvalue: maxvalue,
+      n1: n1,
+      n2: n2,
+      n3: n3,
+      category: category,
+      model: model,
+      feedbackdate: feedbackdate,
+      LatestAdminRemark: LatestAdminRemark,
+      Block_Average: BlockAvg,
+      Location_percentage: LocPer,
+      Location_count: LocCount,
+      ApprovedQty: '',
+      AdminRemark: ''
+    })
+  );
+
+  const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedData);
+  const workbook: XLSX.WorkBook = {
+    Sheets: { Data: worksheet },
+    SheetNames: ['Data'],
+  };
+
+  const excelBuffer: any = XLSX.write(workbook, {
+    bookType: 'xlsx',
+    type: 'array',
+  });
+  const data: Blob = new Blob([excelBuffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
+  });
+
+  saveAs(
+    data,
+    `${pendingData[0]?.dealer ?? 'Admin_Export'}_Norms_Data.xlsx`
+  );
+}
 
 
-
-  // part Sale Data 
+  // part Sale Data
   fetchPartSale(brandid: any, dealerid: any, locationid: any, partnumber: any) {
     this.globalBlockUiService.startLoading();
-    this.adminvonservice.getPartFamilySales({ brandid, dealerid, locationid, partnumber }).subscribe({
+    this.adminvonservice
+      .getPartFamilySales({ brandid, dealerid, locationid, partnumber })
+      .subscribe({
         next: (res: any) => {
-           
-            if(!res.Data || res.Data.length === 0){
-              this.Result = 'No Sales Available for this'
-              this.visible = true
-            }
-            else{
-              this.showSale = true
-              this.partFamilySaleData = res.Data;
-               this.partFamilySaleData = this.transformPartFamilySalesData();
+          if (!res.Data || res.Data.length === 0) {
+            this.Result = 'No Sales Available for this';
+            this.visible = true;
+          } else {
+            this.showSale = true;
+            this.partFamilySaleData = res.Data;
+            this.partFamilySaleData = this.transformPartFamilySalesData();
 
             //console.log(this.partFamilySaleData);
             this.columns = this.extractKeys(this.partFamilySaleData);
             console.log(this.columns);
 
             this.globalBlockUiService.stopLoading();
-
-            }
-              // API success hone ke baad loading false karenge
+          }
+          // API success hone ke baad loading false karenge
         },
         error: (err: any) => {
-          this.Result = 'Something is not well Please Contact IT Admin'
-          this.visible = true
-            this.globalBlockUiService.stopLoading();  // API fail hone par bhi loading false ho
-        }
-    });
-}
-
-
+          this.Result = 'Something is not well Please Contact IT Admin';
+          this.visible = true;
+          this.globalBlockUiService.stopLoading(); // API fail hone par bhi loading false ho
+        },
+      });
+  }
 
   // Admin pending View for new table
-  fetchAdminPendingView(brandid: any, dealerid: any, locationid: any, status: any ,
+  fetchAdminPendingView(
+    brandid: any,
+    dealerid: any,
+    locationid: any,
+    status: any,
     r1: any,
     r2: any,
     partnumber: any,
@@ -699,9 +795,12 @@ fetchAdminRemark(brandid: any, usertype: any) {
     natureid: any,
     l1: any,
     l2: any,
-  parttype:any) {
+    parttype: any
+  ) {
     this.globalBlockUiService.startLoading();
-    this.adminvonservice.getAdminPendinview({ brandid: brandid,
+    this.adminvonservice
+      .getAdminPendinview({
+        brandid: brandid,
         dealerid: dealerid,
         locationid: locationid,
         status: status,
@@ -713,140 +812,135 @@ fetchAdminRemark(brandid: any, usertype: any) {
         modelid: modelid,
         natureid: natureid,
         l1: l1,
-        l2: l2,parttype:parttype }).subscribe({
+        l2: l2,
+        parttype: parttype,
+      })
+      .subscribe({
         next: (res: any) => {
-          if(!res.Data || res.Data.length === 0 ){
-              this.Result = 'No Data Available'
-              this.visible = true;    
-              this.globalBlockUiService.stopLoading()
-          }
-          else{
+          if (!res.Data || res.Data.length === 0) {
+            this.Result = 'No Data Available';
+            this.visible = true;
+            this.globalBlockUiService.stopLoading();
+          } else {
             this.AdminPeningView = res.Data;
             this.fetchAdminRemark(
-                this.adminFilterData.value.brand,
-                localStorage.getItem('usertype')
+              this.adminFilterData.value.brand,
+              localStorage.getItem('usertype')
             );
             this.globalBlockUiService.stopLoading();
           }
-            
         },
         error: (err: any) => {
-           this.Result = 'Something is not well Please Contact IT Admin'
-           this.visible = true
-            this.globalBlockUiService.stopLoading();
-        }
-    });
-}
+          this.Result = 'Something is not well Please Contact IT Admin';
+          this.visible = true;
+          this.globalBlockUiService.stopLoading();
+        },
+      });
+  }
 
   // error handling yet to be done
-  selectedFileName: any
+  selectedFileName: any;
   onFileSelectDealer(event: any) {
     if (event.files && event.files.length > 0) {
       this.DealerExcel = event.files[0];
-      this.selectedFileName = event.files[0].name // Pehli file select karna
+      this.selectedFileName = event.files[0].name; // Pehli file select karna
     }
   }
 
-  UploadExcelDealer(){
-    this.globalBlockUiService.startLoading()
+  UploadExcelDealer() {
+    this.globalBlockUiService.startLoading();
 
     if (!this.DealerExcel) {
-      console.error("Please select a file first!");
+      console.error('Please select a file first!');
       return;
     }
     const formData = new FormData();
-  formData.append("file", this.DealerExcel);
+    formData.append('file', this.DealerExcel);
     this.adminvonservice.uploadExcelDealer(formData).subscribe(
       (res: any) => {
-        
-        this.Result = res.message
-        this.showupload = false
-        this.globalBlockUiService.stopLoading()
+        this.Result = res.message;
+        this.showupload = false;
+        this.globalBlockUiService.stopLoading();
         this.visible = true;
       },
       (error) => {
-        if(error.error.Error){
-          this.visible = true
-          this.Result = "File Upload Failed"
-          this.selectedFileName = ""
-          this.globalBlockUiService.stopLoading()
-        }
-        else if(error.error.message && error.error.pendingRecords){
-          console.error("File upload failed:", error);
-        this.visible = true
-        const partNumbers = error.error.pendingRecords.map((rec:any )=> rec.PartNumber).join(', ');
-        this.Result = `${error.error.message} following are the Partnumber ${partNumbers} `;
-        this.globalBlockUiService.stopLoading()
-        this.showupload = false
-        this.selectedFileName = ""
-        
-        }
-        else if(error.error.pendingRecords){
-          console.error("File upload failed:", error);
-          this.visible = true
-          const partNumbers = error.error.pendingRecords.map((rec:any )=> rec.PartNumber).join(', ');
+        if (error.error.Error) {
+          this.visible = true;
+          this.Result = 'File Upload Failed';
+          this.selectedFileName = '';
+          this.globalBlockUiService.stopLoading();
+        } else if (error.error.message && error.error.pendingRecords) {
+          console.error('File upload failed:', error);
+          this.visible = true;
+          const partNumbers = error.error.pendingRecords
+            .map((rec: any) => rec.PartNumber)
+            .join(', ');
+          this.Result = `${error.error.message} following are the Partnumber ${partNumbers} `;
+          this.globalBlockUiService.stopLoading();
+          this.showupload = false;
+          this.selectedFileName = '';
+        } else if (error.error.pendingRecords) {
+          console.error('File upload failed:', error);
+          this.visible = true;
+          const partNumbers = error.error.pendingRecords
+            .map((rec: any) => rec.PartNumber)
+            .join(', ');
           this.Result = `${error.error.message} (${partNumbers}) `;
-          this.globalBlockUiService.stopLoading()
-          this.showupload = false
-          this.selectedFileName = ""
+          this.globalBlockUiService.stopLoading();
+          this.showupload = false;
+          this.selectedFileName = '';
         }
-        
       }
     );
   }
-  showupload: boolean = false
-  onClickShowUpload(){
-    this.showupload = true
+  showupload: boolean = false;
+  onClickShowUpload() {
+    this.showupload = true;
   }
-  adminFileName: any
+  adminFileName: any;
   onFileSelectAdmin(event: any) {
     if (event.files && event.files.length > 0) {
       this.AdminExcel = event.files[0];
-      this.adminFileName = event.files[0].name // Pehli file select karna
+      this.adminFileName = event.files[0].name; // Pehli file select karna
     }
   }
 
-  UploadExcelAdmin(){
-    this.globalBlockUiService.startLoading()
+  UploadExcelAdmin() {
+    this.globalBlockUiService.startLoading();
 
     if (!this.AdminExcel) {
-      console.error("Please select a file first!");
+      console.error('Please select a file first!');
       return;
     }
     const formData = new FormData();
-    formData.append("file2", this.AdminExcel);
+    formData.append('file2', this.AdminExcel);
     this.adminvonservice.AdminuploadExcel(formData).subscribe(
       (res: any) => {
-       
-        this.Result = res.message
-        this.showupload = false
-        this.globalBlockUiService.stopLoading()
+        this.Result = res.message;
+        this.showupload = false;
+        this.globalBlockUiService.stopLoading();
         this.visible = true;
-        this.adminFileName = ""
-
+        this.adminFileName = '';
       },
       (error) => {
-        console.error("File upload failed:", error);
-        this.visible = true
-        this.Result = "File upload failed"
-        this.globalBlockUiService.stopLoading()
-        this.showupload = false
-        this.adminFileName = ""
+        console.error('File upload failed:', error);
+        this.visible = true;
+        this.Result = 'File upload failed';
+        this.globalBlockUiService.stopLoading();
+        this.showupload = false;
+        this.adminFileName = '';
       }
     );
   }
 
-OnclickPendinCount(){
-  this.router.navigate(['/pcount'])
-}
+  OnclickPendinCount() {
+    this.router.navigate(['/pcount']);
+  }
 
+  sidebarvisible: boolean = false;
 
-sidebarvisible: boolean = false;
-    
-   
-
-    onClickSidebar(){
-        this.sidebarvisible = true
-        console.log(this.sidebarvisible);
-    }
+  onClickSidebar() {
+    this.sidebarvisible = true;
+    console.log(this.sidebarvisible);
+  }
 }
