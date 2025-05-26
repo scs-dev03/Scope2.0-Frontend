@@ -49,8 +49,8 @@ export class DealerVonComponent {
     this.dealerFilterData.reset();
     this.globalBlockUiService.startLoading();
     this.dealerstatus = [
-      { name: 'Reviewd', code: '2' },
-      { name: 'Unreviewd', code: '1' },
+      { name: 'Reviewed', code: '2' },
+      { name: 'Unreviewed', code: '1' },
       { name: 'No Feedback', code: '0'}
       
     ];
@@ -254,12 +254,24 @@ fetchDealerTableData(
           if (res.Data && res.Data.length) {
               if(this.dealerFilterData.value.status == '0'){
                 this.tableData = res.Data.filter((item:any)=> item.status == '0')
+                if(this.tableData.length == 0){
+                  this.Result = "No Data Avaiable"
+                  this.visible = true;
+                }
               }
               else if(this.dealerFilterData.value.status == '1'){
                 this.tableData = res.Data.filter((item:any)=> item.status == '1')
+                if(this.tableData.length == 0){
+                  this.Result = "No Data Avaiable"
+                  this.visible = true;
+                }
               }
               else if(this.dealerFilterData.value.status == '2'){
                 this.tableData = res.Data.filter((item:any)=> item.status == '2')
+                if(this.tableData.length == 0){
+                  this.Result = "No Data Avaiable"
+                  this.visible = true;
+                }
               }
               else{
                 this.tableData = res.Data
