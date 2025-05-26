@@ -42,7 +42,7 @@ export class DashboardSchedulerComponent {
   })
   ngOnInit(): void {
 
-    localStorage.setItem("userid",'138032')
+    //localStorage.setItem("userid",'138032')
      this.sharedService.updateModuleName('Dashboard Scheduler')
     this.fetchBdm();
     
