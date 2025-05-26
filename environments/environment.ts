@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-  //apiUrl: 'http://localhost:3000/api/',
+ // apiUrl: 'http://localhost:3000/api/',
 
   //  apiUrl: 'https://8bbmhgb4-3000.inc1.devtunnels.ms/api/'
      
@@ -10,7 +10,7 @@ export const environment = {
      //  apiUrl:'http://web17.185.238.new.ocpwebserver.com/api/'
 
     // scope 2.0 backend
-     apiUrl:'http://web10.185.238.new.ocpwebserver.com/api/'
+    apiUrl:'http://web10.185.238.new.ocpwebserver.com/api/'
   };
 
 

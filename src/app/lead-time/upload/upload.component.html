@@ -81,6 +81,8 @@
                                        formControlName="brand"
                                        optionLabel="brand"
                                        optionValue="brand_id"
+                                       [filter]="true"
+                                        filterPlaceholder="Select Brand.."
                                        placeholder="Select Brand"/>
                                        <div *ngIf="locationFormGroup.get('brand')?.touched && locationFormGroup.get('brand')?.invalid">
                                          <small *ngIf="locationFormGroup.get('brand')?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small>
@@ -145,6 +147,8 @@
                    optionLabel="brand"
                    optionValue="brand_id"
                    placeholder="Select Brand"
+                   [filter]="true"
+                filterPlaceholder="Select Brand.."
                    (ngModelChange)="getDealers($event)"/>
                    <div *ngIf="uploadForm.get('brand')?.touched && uploadForm.get('brand')?.invalid">
                      <small *ngIf="uploadForm.get('brand')?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small>
@@ -164,6 +168,8 @@
                formControlName="dealer"
                optionLabel="dealer_name"
                placeholder="Select Dealer"
+               [filter]="true"
+                filterPlaceholder="Select Dealer.."
                (ngModelChange)="getLocations($event)"/>
                <div *ngIf="uploadForm.get('dealer')?.touched && uploadForm.get('dealer')?.invalid">
                  <small *ngIf="uploadForm.get('dealer')?.hasError('required')" style="color: red; font-size: 12px;">Dealer is required.</small>
@@ -182,6 +188,8 @@
                formControlName="location"
                optionLabel="location_name"
                optionValue="location_id"
+               [filter]="true"
+                filterPlaceholder="Select Location.."
                placeholder="Select Location"/>
                <div *ngIf="uploadForm.get('location')?.touched && uploadForm.get('location')?.invalid">
                  <small *ngIf="uploadForm.get('location')?.hasError('required')" style="color: red; font-size: 12px;">Location is required.</small>
