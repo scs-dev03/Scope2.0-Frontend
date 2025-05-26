@@ -474,49 +474,93 @@ export class CreateRoleComponent {
     }
   }
 
-  downloadRoleFormat(){
-    let data=[];
-    let data1:any[]=[];
-    if(this.allModules.length>0){
+  // downloadRoleFormat(){
+  //   let data=[];
+  //   let data1:any[]=[];
+  //   if(this.allModules.length>0){
     
-    for(let item1 of this.allModules){
-       data.push(item1.submodules);
+  //   for(let item1 of this.allModules){
+  //      data.push(item1.submodules);
       
-    }
+  //   }
  
-    for(let module of data){
-      //console.log("modules ",module);
-      module.map((item:any)=>{
-        data1.push({
-          ['Business Vertical']: item.businessVerticalName,  // The business vertical name
-        ['Module Name']: item.parentModuleName,  // The name of the parent module
-          ['Sub Module']:item.module_name,
-          view:'',   // Convert boolean to 'Y' or 'N'
-          edit:'',   // Convert boolean to 'Y' or 'N'
-          delete:'',   // Convert boolean to 'Y' or 'N'
-          add: ''
-      })
-    }
-  )
+  //   for(let module of data){
+  //     //console.log("modules ",module);
+  //     module.map((item:any)=>{
+  //       data1.push({
+  //         ['Business Vertical']: item.businessVerticalName,  // The business vertical name
+  //       ['Module Name']: item.parentModuleName,  // The name of the parent module
+  //         ['Sub Module']:item.module_name,
+  //         view:'',   // Convert boolean to 'Y' or 'N'
+  //         edit:'',   // Convert boolean to 'Y' or 'N'
+  //         delete:'',   // Convert boolean to 'Y' or 'N'
+  //         add: ''
+  //     })
+  //   }
+  // )
  
-    }
-    data1.push({Note:'Values for View, Edit, Add, Delete accepted in Y or N '})
-  }
-    if(this.allModules.length==0){
-      data1=[{message:'You have not selected Business Verticals'}]
-    }
-   //console.log("data ",data1)
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data1);
+  //   }
+  //   data1.push({Note:'Values for View, Edit, Add, Delete accepted in Y or N '})
+  // }
+  //   if(this.allModules.length==0){
+  //     data1=[{message:'You have not selected Business Verticals'}]
+  //   }
+  //  //console.log("data ",data1)
+  //   const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data1);
     
-    // Create a new workbook
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+  //   // Create a new workbook
+  //   const wb: XLSX.WorkBook = XLSX.utils.book_new();
     
-    // Append the worksheet to the workbook
-    XLSX.utils.book_append_sheet(wb, ws, 'Modules');
+  //   // Append the worksheet to the workbook
+  //   XLSX.utils.book_append_sheet(wb, ws, 'Modules');
 
-    // Export the workbook to an Excel file
-    XLSX.writeFile(wb, 'Role-Access-Settings.xlsx');
+  //   // Export the workbook to an Excel file
+  //   XLSX.writeFile(wb, 'Role-Access-Settings.xlsx');
+  // }
+  
+  downloadRoleFormat() {
+  let data1: any[] = [];
+
+  if (this.allModules.length > 0) {
+    for (let item of this.allModules) {
+      if (Array.isArray(item.submodules) && item.submodules.length > 0) {
+        // Include each submodule as a row
+        for (let sub of item.submodules) {
+          data1.push({
+            ['Business Vertical']: sub.businessVerticalName || item.businessVerticalName || '',
+            ['Module Name']: sub.parentModuleName || item.module_name || '',
+            ['Sub Module']: sub.module_name || '',
+            view: '',
+            edit: '',
+            delete: '',
+            add: ''
+          });
+        }
+      } else if (Array.isArray(item.submodules) && item.submodules.length === 0) {
+        // Include module with empty submodule
+        data1.push({
+          ['Business Vertical']: item.businessVerticalName || '',
+          ['Module Name']: item.module_name || '',
+          ['Sub Module']: '',
+          view: '',
+          edit: '',
+          delete: '',
+          add: ''
+        });
+      }
+    }
+
+    data1.push({ Note: 'Values for View, Edit, Add, Delete accepted in Y or N ' });
+  } else {
+    data1 = [{ message: 'You have not selected Business Verticals' }];
   }
+
+  const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data1);
+  const wb: XLSX.WorkBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Modules');
+  XLSX.writeFile(wb, 'Role-Access-Settings.xlsx');
+}
+
 
   uploadRoleFormat(data:any){
     this.globalBlockUiService.startLoading();

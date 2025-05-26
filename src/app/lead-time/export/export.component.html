@@ -48,7 +48,8 @@
                     <p-select
                 [styleClass]=""
                 [options]="brands"
-    
+    [filter]="true"
+                filterPlaceholder="Select Brand.."
                 id="brand"
                 formControlName="brand"
                 optionLabel="brand"
@@ -75,6 +76,8 @@
             formControlName="dealer"
             optionLabel="dealer_name"
             placeholder="Select Dealer"
+            [filter]="true"
+                filterPlaceholder="Select Dealer.."
             (ngModelChange)="getLocations($event)"
           >
           </p-select>
@@ -91,6 +94,8 @@
                 <div class="col-10">
                     <p-select
             [options]="locations"
+            [filter]="true"
+                filterPlaceholder="Select Location.."
             id="location"
             formControlName="location"
             optionLabel="location_name"
