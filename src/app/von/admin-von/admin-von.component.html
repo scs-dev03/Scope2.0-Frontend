@@ -320,7 +320,7 @@
                 *ngFor="let value of getValues(rowData)"
                 style="min-width: 50px; font-size: 11px"
               >
-                {{ value }}
+                {{ value  }}
               </td>
             </tr>
           </ng-template>
@@ -757,11 +757,11 @@
       </ng-template>
       <ng-template #body let-Data>
         <tr>
-          <td class="!text-[12px]">{{ Data.partnumber1 }}</td>
+          <td class="!text-[12px]">{{ Data.PartNumber1 }}</td>
           <td class="!text-[12px]">{{ Data.LatestPartNumber }}</td>
-          <td class="!text-[12px]">{{ Data.partdesc }}</td>
-          <td class="!text-[12px]">{{ Data.category }}</td>
-          <td class="!text-[12px]">{{ Data.landedcost }}</td>
+          <td class="!text-[12px]">{{ Data.PartDesc }}</td>
+          <td class="!text-[12px]">{{ Data.Category }}</td>
+          <td class="!text-[12px]">{{ Data.LandedCost }}</td>
         </tr>
       </ng-template>
     </p-table>

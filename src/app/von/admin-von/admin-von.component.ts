@@ -631,7 +631,7 @@ export class AdminVonComponent {
     console.log(this.tableData);
 
     const formattedData = this.tableData.map(
-      ({ brand, dealer, location, ...rest }: any) => ({
+      ({ brand, dealer, location, Brandid, Dealerid,Locationid,Partid,feedbackid,UserRemark,ProposedQty,status, ...rest }: any) => ({
         Brand: rest.brand,
         Dealer: rest.dealer,
         Location: rest.location,
