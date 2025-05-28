@@ -57,7 +57,7 @@ export class DealerSalesReportComponent {
   }
 
   DealerSalesReportInputData: FormGroup = new FormGroup({
-    LocationID: new FormControl(),
+    LocationID: new FormControl('',[Validators.required]),
     FormDate: new FormControl('',[Validators.required]),
     ToDate: new FormControl('',[Validators.required]),
     DataType: new FormControl('',[Validators.required]),
@@ -405,9 +405,7 @@ export class DealerSalesReportComponent {
     if(this.istotal===false){
       this.istotal = true
     }
-    else{
-      this.istotal = false
-    }
+    
   }
 
   refreshPage(): void {
@@ -468,7 +466,7 @@ export class DealerSalesReportComponent {
       this.SalesInfo = res.Data
       this.showupload = false
       this.exportVisible = false
-      this.istotal = false
+      this.onclicktotal()
       this.partsExcel = undefined
       this.globalBlockUiService.stopLoading()
       },

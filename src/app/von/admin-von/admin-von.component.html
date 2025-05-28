@@ -31,10 +31,9 @@
           <p-select
             formControlName="brand"
             [options]="brandData"
-            [showClear]="true"
             optionValue="bigid"
             optionLabel="vcbrand"
-            class="!w-32 !text-[10px]"
+            class="!w-32 !text-[10px] custom-clear-style"
             scrollHeight="150px"
             (onChange)="onClickBrand()"
             [filter]="true"
@@ -56,7 +55,7 @@
             optionValue="dealerid"
             optionLabel="dealer"
             scrollHeight="150px"
-            class="!w-32 !text-[10px]"
+            class="!w-32 !text-[10px] custom-clear-style"
             (onChange)="onclickDealer()"
             [filter]="true"
             filterBy="dealer"
@@ -77,7 +76,7 @@
             optionValue="locationid"
             optionLabel="location"
             scrollHeight="150px"
-            class="!w-28 !text-[10px]"
+            class="!w-28 !text-[10px] custom-clear-style"
             (onChange)="onClickLocation()"
             [filter]="true"
             filterBy="location"
@@ -248,14 +247,7 @@
           severity="info"
           (onClick)="exportToExcelOldSP()"
         />
-        <p-button
-          id="submit"
-          size="small"
-          class="text-[10px]"
-          label="Pending Export"
-          severity="info"
-          (onClick)="exportToExcelNewSP()"
-        />
+
         <!-- <p-button
           id="submit"
           class="text-[10px]"
@@ -281,11 +273,20 @@
     <!-- part family sales Table -->
 
     <div
-      class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+      class="m-2 !-mt-3 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
       *ngIf="showSale"
     >
+      <div class="flex justify-end w-full">
+        <p-button
+          icon="pi pi-times"
+          [rounded]="true"
+          [text]="true"
+          severity="danger"
+          (onClick)="onClickCloseSales()"
+        />
+      </div>
       <div
-        class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden"
+        class="bg-gray-50  h-auto rounded-lg shadow-lg w-full overflow-hidden"
         style="zoom: 0.77"
       >
         <p-table
@@ -320,21 +321,34 @@
                 *ngFor="let value of getValues(rowData)"
                 style="min-width: 50px; font-size: 11px"
               >
-                {{ value  }}
+                {{ value }}
               </td>
             </tr>
           </ng-template>
         </p-table>
       </div>
     </div>
+    
 
-    <div class="flex gap-3 ml-4">
-      <div class="w-10 h-10w-10 border-black border-1 bg-orange-100"></div>
+    <div class=" flex justify-between">
+      <div class="flex gap-3  ml-4">
+      <div class="w-10 h-10w-10  border-[1px] border-gray-500 bg-orange-100"></div>
       <h6 class="">Pending</h6>
-      <div class="w-10 h-10w-10 bg-green-100 border-black border-1"></div>
+      <div class="w-10 h-10w-10 bg-green-100 border-gray-500 border-[1px]"></div>
       <h6 class="">Reviewed</h6>
-      <div class="w-10 h-10w-10 bg-white border-black border-1"></div>
+      <div class="w-10 h-10w-10 bg-white border-gray-500 border-[1px]"></div>
       <h6 class="">No feedback</h6>
+    </div>
+
+    <p-button
+      id="submit"
+      size="small"
+      icon="pi pi-download"
+      class="text-[10px]  mr-4"
+      label="Export Data"
+      severity="info"
+      (onClick)="exportToExcelNewSP()"
+    />
     </div>
 
     <!-- table Data -->
@@ -357,7 +371,7 @@
           [showGridlines]="true"
           scrollDirection="both"
           class="!w-[90vw]"
-           class="low-z-paginator"
+          class="low-z-paginator"
           sortable="true"
           [tableStyle]="{ 'min-width': '50rem' }"
           [globalFilterFields]="['partnumber', 'partdesc', 'UserRemark']"

@@ -1,19 +1,16 @@
-
-    <!-- <app-loader [isloading]="isloading"></app-loader> -->
-     <div class="w-full h-full">
-
-      <!-- <div>
+<!-- <app-loader [isloading]="isloading"></app-loader> -->
+<div class="w-full h-full">
+  <!-- <div>
         <h1 class="text-3xl ml-10 font-semibold">Parts Ledger</h1>
       </div> -->
-      
-      
-    <div class="flex flex-wrap -mt-10 ">
-      <form
-        action=""
-        [formGroup]="AdminSalesReportInputData"
-        class="flex flex-1 flex-wrap p-5 justify-start items-center gap-3 w-auto"
-      >
-      <div class="w-32">
+
+  <div class="flex flex-wrap -mt-10">
+    <form
+      action=""
+      [formGroup]="AdminSalesReportInputData"
+      class="flex flex-1 flex-wrap p-5 justify-start items-center gap-3 w-auto"
+    >
+      <div class="w-32 relative ">
         <p-floatlabel variant="on">
           <p-select
             inputId="BrandID"
@@ -26,22 +23,30 @@
             scrollHeight="150px"
             (onChange)="onSelectionChangeBrandData()"
             filterBy="vcbrand"
-            class="!w-full !text-[10px]"
+            class="!w-full !text-[10px] "
           />
           <label for="BrandID" class="text-[10px]">Brand</label>
         </p-floatlabel>
-        <div *ngIf="AdminSalesReportInputData.get('BrandID')?.invalid && (AdminSalesReportInputData.get('BrandID')?.dirty || AdminSalesReportInputData.get('BrandID')?.touched)" class="text-red-500 text-[10px]">
+        <div
+          *ngIf="
+            AdminSalesReportInputData.get('BrandID')?.invalid &&
+            (AdminSalesReportInputData.get('BrandID')?.dirty ||
+              AdminSalesReportInputData.get('BrandID')?.touched)
+          "
+          class="text-red-500 text-[10px]  absolute left-0"
+        >
           This field is mandatory
         </div>
       </div>
-  
-      <div class="w-32">
+
+      <div class="w-32 relative">
         <p-floatlabel variant="on">
           <p-select
             inputId="DealerID"
             formControlName="DealerID"
             [showClear]="true"
             [options]="DealerData"
+            [filter]="true"
             optionValue="dealerid"
             optionLabel="dealer"
             appendTo="body"
@@ -52,12 +57,19 @@
           />
           <label for="DealerID" class="text-[10px]">Dealer</label>
         </p-floatlabel>
-        <div *ngIf="AdminSalesReportInputData.get('DealerID')?.invalid && (AdminSalesReportInputData.get('DealerID')?.dirty || AdminSalesReportInputData.get('DealerID')?.touched)" class="text-red-500 text-[10px]">
+        <div
+          *ngIf="
+            AdminSalesReportInputData.get('DealerID')?.invalid &&
+            (AdminSalesReportInputData.get('DealerID')?.dirty ||
+              AdminSalesReportInputData.get('DealerID')?.touched)
+          "
+          class="text-red-500 text-[10px]  absolute left-0"
+        >
           This field is mandatory
         </div>
       </div>
-      
-      <div class="w-32">
+
+      <div class="w-32 relative">
         <p-floatlabel variant="on">
           <p-select
             inputId="LocationID"
@@ -73,143 +85,220 @@
           />
           <label for="LocationID" class="text-[10px]">Locations</label>
         </p-floatlabel>
-        <div *ngIf="AdminSalesReportInputData.get('LocationID')?.invalid && (AdminSalesReportInputData.get('LocationID')?.dirty || AdminSalesReportInputData.get('LocationID')?.touched)" class="text-red-500 text-[10px]">
-          This field is mandatory
-        </div>
-      </div>
-      
-  
-        <div class="w-32">
-          <p-floatlabel variant="on">
-            <p-datepicker
-              inputId="FormDate"
-              view="month"
-              formControlName="FormDate"
-              size="small"
-              dateFormat="mm/yy"
-              [showIcon]="false"
-              [minDate]="minDate"
-              [maxDate]="maxDate"
-              class="w-full"
-            />
-            <label for="FormDate" class="text-[10px]">From Date</label>
-          </p-floatlabel>
-        </div>
-        <div class="w-32">
-          <p-floatlabel variant="on">
-            <p-datepicker
-              view="month"
-              formControlName="ToDate"
-              size="small"
-              [showIcon]="true"
-              [showIcon]="false"
-              [minDate]="minDate"
-              [maxDate]="maxDate"
-              dateFormat="mm/yy"
-            />
-    
-            <label for="ToDate" class="text-[10px]">To Date</label>
-          </p-floatlabel>
-        </div>
-  
-        <div class="w-32">
-          <p-floatlabel variant="on">
-            <p-multiselect
-              [options]="DataType"
-              inputId="datatype"
-              formControlName="DataType"
-              optionValue="name"
-              
-              optionLabel="name"
-              scrollHeight="150px"
-              filterBy="name"
-              class="!w-full !text-[10px]"
-            />
-            <label for="DealerID" class="text-[10px]">Data Type</label>
-          </p-floatlabel>
-        </div>
-        
-        <div class="">
-          <p-floatlabel variant="on">
-            <input type="text" pInputText size="small" class="w-44 !text-xs !h-9 " formControlName="PartNumber" />
-            <label for="PartNumber" class="text-[10px] ">Part Number</label>
-            <div class="text-xs text-red-600">
-              <p class="ml-2">Example: xyz, abc, prqs</p>
-            </div>
-          </p-floatlabel>
-          <div
-          *ngIf="AdminSalesReportInputData.get('PartNumber')?.invalid && (AdminSalesReportInputData.get('PartNumber')?.dirty || AdminSalesReportInputData.get('PartNumber')?.touched)"
-          class="text-red-500 text-[10px]"
+        <div
+          *ngIf="
+            AdminSalesReportInputData.get('LocationID')?.invalid &&
+            (AdminSalesReportInputData.get('LocationID')?.dirty ||
+              AdminSalesReportInputData.get('LocationID')?.touched)
+          "
+          class="text-red-500 text-[10px]  absolute left-0"
         >
           This field is mandatory
         </div>
+      </div>
+
+      <div class="w-32 relative">
+        <p-floatlabel variant="on">
+          <p-datepicker
+            inputId="FormDate"
+            view="month"
+            formControlName="FormDate"
+            size="small"
+            dateFormat="mm/yy"
+            [showIcon]="false"
+            [minDate]="minDate"
+            [maxDate]="maxDate"
+            class="w-full"
+          />
+          <label for="FormDate" class="text-[10px]">From Month</label>
+          <div
+            *ngIf="
+              AdminSalesReportInputData.get('FormDate')?.invalid &&
+              (AdminSalesReportInputData.get('FormDate')?.dirty ||
+                AdminSalesReportInputData.get('FormDate')?.touched)
+            "
+            class="text-red-500 text-[10px]  absolute left-0"
+          >
+            This field is mandatory
+          </div>
+        </p-floatlabel>
+      </div>
+      <div class="w-32 relative">
+        <p-floatlabel variant="on">
+          <p-datepicker
+            view="month"
+            formControlName="ToDate"
+            size="small"
+            [showIcon]="true"
+            [showIcon]="false"
+            [minDate]="minDate"
+            [maxDate]="maxDate"
+            dateFormat="mm/yy"
+          />
+
+          <label for="ToDate" class="text-[10px]">To Month</label>
+          <div
+            *ngIf="
+              AdminSalesReportInputData.get('ToDate')?.invalid &&
+              (AdminSalesReportInputData.get('ToDate')?.dirty ||
+                AdminSalesReportInputData.get('ToDate')?.touched)
+            "
+            class="text-red-500 text-[10px]  absolute left-0"
+          >
+            This field is mandatory
+          </div>
+        </p-floatlabel>
+      </div>
+
+      <div class="w-32 relative">
+        <p-floatlabel variant="on">
+          <p-multiselect
+            [options]="DataType"
+            inputId="datatype"
+            formControlName="DataType"
+            optionValue="name"
+            optionLabel="name"
+            scrollHeight="150px"
+            filterBy="name"
+            class="!w-full !text-[10px]"
+          />
+          <label for="Datatype" class="text-[10px]">Data Type</label>
+          <div
+            *ngIf="
+              AdminSalesReportInputData.get('DataType')?.invalid &&
+              (AdminSalesReportInputData.get('DataType')?.dirty ||
+                AdminSalesReportInputData.get('DataType')?.touched)
+            "
+            class="text-red-500 text-[10px]  absolute left-0"
+          >
+            This field is mandatory
+          </div>
+        </p-floatlabel>
+      </div>
+
+      <div class="relative w-44">
+        <p-floatlabel variant="on">
+          <input
+            id="PartNumber"
+            type="text"
+            pInputText
+            pTooltip="Example: xyz, abc, prqs"
+            tooltipPosition="top"
+            size="small"
+            class="w-full !text-xs !h-9"
+            formControlName="PartNumber"
+          />
+          <label for="PartNumber" class="text-[10px]">Part Number</label>
+        </p-floatlabel>
+
+        <!-- Helper text (fixed just below input) -->
+        <div class="text-[10px] text-green-600 absolute left-0 mt-1">
+          <p class="ml-2">Multiparts Allowed with ,</p>
         </div>
-        
-  
-        <p-button label="Submit" severity="success" size="small" (onClick)="onSubmitAdminInputData()" />
-        <p-button size="small" (onClick)="onClickShowUpload()" label="Upload Excel" />
-        <p-button size="small" (onClick)="exportPartNumberExcel()" label="Sample Format Download" />
-  
-        
-  
-        
-        
-      </form> 
-    </div>
-    <div class="ml-10">
-      <h1 class="font-semibold text-lg" >Parts Description</h1>
-    </div>
-    
-    <div class="h-auto flex items-center justify-center ">
-      <app-product-desctiption-table [PartDetails] = 'PartDetail'></app-product-desctiption-table>
-    </div>
-    <div class="flex flex-row justify-between w-full">
-      <div class="ml-10">
-        <h1 class="font-semibold text-lg" >Parts Sales Info</h1>
+
+        <!-- Validation message absolutely positioned below helper text -->
+        <div
+          *ngIf="
+            AdminSalesReportInputData.get('PartNumber')?.invalid &&
+            (AdminSalesReportInputData.get('PartNumber')?.dirty ||
+              AdminSalesReportInputData.get('PartNumber')?.touched)
+          "
+          class="text-red-500 ml-2 text-[10px] absolute left-0"
+          style="top: 3.5rem"
+        >
+          This field is mandatory
+        </div>
       </div>
-      <div class="flex gap-3 mr-10">
-        <!-- <p-button label="Show Sales" size="small" (onClick)="onClickShowSaleinfo()" />
-        <p-button label="Total Sales" size="small" (onClick)="onclicktotal()" /> -->
-        <p-button label="Export Data" size="small" [disabled]="exportVisible" (onClick)="exportToExcel()" />
-      </div>
-    </div>
-    <div class="w-full h-auto flex justify-center items-center" *ngIf="SalesInfoVisible">
-      <app-product-sale-info [SalesInfo] = 'SalesInfo[0]' [DataTypeArray]="DataTypeArray" ></app-product-sale-info>
-    </div>
+
+      <p-button
+        label="Submit"      
+        size="small"
+        (onClick)="onSubmitAdminInputData()"
+      />
+      <p-button
+        size="small"
+        icon="pi pi-upload"
+        (onClick)="onClickShowUpload()"
+       
+      />
+      <p-button
+        size="small"
+        icon="pi pi-download"
+        (onClick)="exportPartNumberExcel()"
+        
+      />
+    </form>
+  </div>
+  <div class="ml-12">
+    <h1 class="font-semibold text-lg">Parts Description</h1>
+  </div>
+
+  <div class="w-full h-auto flex justify-start items-center !p-4">
+    <app-product-desctiption-table
+      [PartDetails]="PartDetail"
+      class="!w-full"
+    ></app-product-desctiption-table>
+  </div>
+  <div class="flex flex-row justify-between w-full">
     <div class="ml-10">
-      <h1 class="font-semibold text-2xl" *ngIf="istotal" >Total Sales</h1>
+      <h1 class="font-semibold text-lg">Parts Sales Info</h1>
     </div>
-    <div class="w-full h-auto flex justify-center items-center !p-3" *ngIf="istotal">
-      <app-totalsum [SalesInfo] = 'SalesInfo[1]' [DataTypeArray]="DataTypeArray" ></app-totalsum>
+    <div class="flex gap-3 mr-10">
+      <p-button
+        label="Export Data"
+        [icon]="'pi-download'"
+        size="small"
+        [disabled]="exportVisible"
+        (onClick)="exportToExcel()"
+      />
     </div>
-
-     </div>
-
-  
-
-    <!-- it is for error Message -->
-    <p-dialog
-      header="Message"
-      [(visible)]="visible"
-      [modal]="true"
-      [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-      [style]="{ width: '30vw' }"
-      [draggable]="false"
-      [resizable]="false"
-    >
-      <p class="text-lg font-semibold">
-        {{ Result }}
-      </p>
-    </p-dialog>
-  
-  
-  <p-dialog
-    header="Upload"
-    [(visible)]="showupload"
-    class="!w-auto !h-auto bg-slate-500 gap-16"
-    
+  </div>
+  <div
+    class="w-full h-auto flex justify-start items-center !p-4"
+    *ngIf="SalesInfoVisible"
   >
-  <div  class="flex gap-5 ">
+    <app-product-sale-info
+      [SalesInfo]="SalesInfo[0]"
+      class="!w-full"
+      [DataTypeArray]="DataTypeArray"
+    ></app-product-sale-info>
+  </div>
+  <div class="ml-10">
+    <h1 class="font-semibold text-lg" *ngIf="istotal">Total Sales</h1>
+  </div>
+  <div
+    class="w-full h-auto flex justify-start items-center !p-4"
+    *ngIf="istotal"
+  >
+    <app-totalsum
+      [SalesInfo]="SalesInfo[1]"
+      class="!w-full"
+      [DataTypeArray]="DataTypeArray"
+    ></app-totalsum>
+  </div>
+</div>
+
+<!-- it is for error Message -->
+<p-dialog
+  header="Message"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '30vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="text-lg font-semibold">
+    {{ Result }}
+  </p>
+</p-dialog>
+
+<p-dialog
+  header="Upload"
+  [(visible)]="showupload"
+  class="!w-auto !h-auto bg-slate-500 gap-16"
+>
+  <div class="flex gap-5">
     <div class="flex flex-col">
       <p-fileupload
         #fu
@@ -231,5 +320,4 @@
       size="small"
     />
   </div>
-  
-  </p-dialog>
+</p-dialog>

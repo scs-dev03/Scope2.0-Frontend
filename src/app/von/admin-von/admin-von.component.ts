@@ -136,6 +136,11 @@ export class AdminVonComponent {
     { name: 'Both', key: '2' },
   ];
 
+
+    onClickCloseSales(){
+    this.showSale = false
+  }
+
   // fetching locations
   onclickDealer() {
     const dealerId = this.adminFilterData.value.dealer ?? ''; // Default to an empty string if null/undefined
@@ -285,6 +290,8 @@ export class AdminVonComponent {
 
     return [...data, totalObject];
   }
+
+
 
   submitAdminRow(rowData: any) {
     this.globalBlockUiService.startLoading();
@@ -823,19 +830,23 @@ export class AdminVonComponent {
             this.Result = 'No Data Available';
             this.visible = true;
             this.globalBlockUiService.stopLoading();
+            this.onClickCloseSales()
           } else {
             this.AdminPeningView = res.Data;
+            this.onClickCloseSales()
             this.fetchAdminRemark(
               this.adminFilterData.value.brand,
               localStorage.getItem('usertype')
             );
             this.globalBlockUiService.stopLoading();
+            this.onClickCloseSales()
           }
         },
         error: (err: any) => {
           this.Result = 'Something is not well Please Contact IT Admin';
           this.visible = true;
           this.globalBlockUiService.stopLoading();
+          this.onClickCloseSales()
         },
       });
   }

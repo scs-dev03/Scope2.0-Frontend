@@ -20,6 +20,7 @@ import FileSaver from 'file-saver';
   styleUrl: './admin-sales-report.component.css'
 })
 export class AdminSalesReportComponent {
+
   minDate: Date | undefined;
   maxDate: Date | undefined;
   ngOnInit(){
@@ -406,9 +407,7 @@ export class AdminSalesReportComponent {
     if(this.istotal===false){
       this.istotal = true
     }
-    else{
-      this.istotal = false
-    }
+    
   }
 
   refreshPage(): void {
@@ -469,8 +468,9 @@ export class AdminSalesReportComponent {
       this.SalesInfo = res.Data
       this.showupload = false
       this.exportVisible = false
-      this.istotal = false
+      //this.istotal = false
       this.partsExcel = undefined
+      this.onclicktotal()
       this.globalBlockUiService.stopLoading()
       },
       (error:any) => {

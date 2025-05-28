@@ -46,9 +46,9 @@ export class DealerVonComponent {
 
   ngOnInit(): void {
 
-    localStorage.setItem('brandid','9')
-    localStorage.setItem('dealerid','8')
-    localStorage.setItem('usertype','U')
+    // localStorage.setItem('brandid','9')
+    // localStorage.setItem('dealerid','8')
+    // localStorage.setItem('usertype','U')
     //this.dealerVonService.setLocalStorage()
     this.dealerFilterData.reset();
     this.globalBlockUiService.startLoading();
@@ -76,6 +76,8 @@ export class DealerVonComponent {
 
      this.sharedService.updateModuleName('Dealer Norms Management')
   }
+
+
 
 
  //Declaretion of all Variables
@@ -111,7 +113,10 @@ export class DealerVonComponent {
   visible: any;
 
 
-  
+
+  onClickCloseSales(){
+    this.showSale = false
+  }
 
 
 // for sending dealer logs
@@ -261,6 +266,7 @@ fetchDealerTableData(
                 if(this.tableData.length == 0){
                   this.Result = "No Data Avaiable"
                   this.visible = true;
+                  this.onClickCloseSales()
                 }
               }
               else if(this.dealerFilterData.value.status == '1'){
@@ -268,6 +274,7 @@ fetchDealerTableData(
                 if(this.tableData.length == 0){
                   this.Result = "No Data Avaiable"
                   this.visible = true;
+                  this.onClickCloseSales()
                 }
               }
               else if(this.dealerFilterData.value.status == '2'){
@@ -275,10 +282,12 @@ fetchDealerTableData(
                 if(this.tableData.length == 0){
                   this.Result = "No Data Avaiable"
                   this.visible = true;
+                  this.onClickCloseSales()
                 }
               }
               else{
                 this.tableData = res.Data
+                this.onClickCloseSales()
               }
               this.noOfRow = res.Data.length
 
@@ -311,6 +320,7 @@ fetchDealerTableData(
           console.error("Error fetching dealer table data:", err);
           this.Result = "Failed to fetch data. Please try again.";
           this.visible = true;
+          this.onClickCloseSales()
           this.globalBlockUiService.stopLoading();  // Ensure `isloading` is reset in failure case
       }
   });

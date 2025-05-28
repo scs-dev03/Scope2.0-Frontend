@@ -112,15 +112,16 @@
 
 
 
-<div ngClass="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2" style="zoom: 0.70;"  >
+<div ngClass="m-2 flex  flex-col items-center rounded-lg bg-white shadow-lg p-2"   >
     
-    <div ngClass=" bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+    <div ngClass=" bg-gray-50 rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
       [scrollable]="true"
       scrollHeight="600px"
       [value]="SalesInfo"
       [paginator]="true"
       [rows]="10"
+       paginatorDropdownAppendTo="body"
       [showCurrentPageReport]="true"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
       [rowsPerPageOptions]="[10, 20, 40, 50, 100]"

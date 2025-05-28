@@ -4,13 +4,13 @@
       <h1 class="text-3xl ml-10 font-semibold">Dealer Norms Management</h1>
     </div> -->
      
-      <div class="flex w-auto flex-col gap-1 -mt-10 h-[100vh] ">
+      <div class="flex w-auto flex-col  -mt-10 h-[100vh] ">
         <!-- filter form -->
         <div>
           <form
             action=""
             [formGroup]="dealerFilterData"
-            class="flex flex-wrap py-5 justify-center items-center gap-2 w-auto scale-[0.9]">
+            class="flex flex-wrap py-5 justify-start items-center gap-2 w-auto scale-[0.9]">
             <div class="flex flex-col">
               <p-floatlabel variant="on">
                 <p-select
@@ -200,7 +200,7 @@
                 class="text-[10px] !scale-[0.80]"
               />
               <p-button
-                label="Export"
+                label="Export Selection"
                 id="export"
                 icon="pi pi-file-export"
                 [disabled]="this.showTable == false" (onClick)="exportToExcel()"
@@ -217,10 +217,14 @@
           </form>
         </div>
     
+ 
     
     
-        <div class="m-2 flex flex-col items-center bg-white rounded-lg shadow-lg p-2"  [class.hidden]="!showSale" >
-        
+        <div class="m-2 !-mt-3 flex flex-col items-center bg-white rounded-lg shadow-lg p-2"  [class.hidden]="!showSale" >
+          <div class="flex justify-end w-full">
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="danger" (onClick)="onClickCloseSales()" />
+
+          </div>
           <div class=" bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden" style="zoom: 0.77;">
             <p-table
             
