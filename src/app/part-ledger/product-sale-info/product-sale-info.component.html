@@ -136,19 +136,19 @@
         <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
           <th
             pSortableColumn="Partnumber"
-            class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+            class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"pFrozenColumn
           >
             Part Number<p-sortIcon field="Partnumber" />
           </th>
           <th
             pSortableColumn="Location"
-            class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+            class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"pFrozenColumn
           >
             Location<p-sortIcon field="Location" />
           </th>
           <th
             pSortableColumn="Months"
-            class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+            class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"pFrozenColumn
           >
             Month<p-sortIcon field="Months" />
           </th>
@@ -169,20 +169,20 @@
         </tr>
       </ng-template>
       <ng-template #body let-sale let-i="rowIndex">
-        <tr
+        <tr 
           class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
         >
-          <td
+          <td  pFrozenColumn
             class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
           >
             {{ sale.Partnumber }}
           </td>
-          <td
+          <td pFrozenColumn
             class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
           >
             {{ sale.Location }}
           </td>
-          <td
+          <td pFrozenColumn
             class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
           >
             {{ sale.Months }}

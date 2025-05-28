@@ -18,7 +18,7 @@ const routes: Routes = [
   },{
     path: 'ds',
     component: DashboardSchedulerComponent,
-    //canActivate:[authGuard]
+    canActivate:[authGuard]
   }
 ];
 

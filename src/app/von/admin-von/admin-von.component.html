@@ -33,7 +33,8 @@
             [options]="brandData"
             optionValue="bigid"
             optionLabel="vcbrand"
-            class="!w-32 !text-[10px] custom-clear-style"
+            showClear="true"
+            class="!w-36 !text-[10px] custom-clear-style"
             scrollHeight="150px"
             (onChange)="onClickBrand()"
             [filter]="true"
@@ -55,7 +56,7 @@
             optionValue="dealerid"
             optionLabel="dealer"
             scrollHeight="150px"
-            class="!w-32 !text-[10px] custom-clear-style"
+            class="!w-36 !text-[10px] custom-clear-style"
             (onChange)="onclickDealer()"
             [filter]="true"
             filterBy="dealer"
@@ -76,7 +77,7 @@
             optionValue="locationid"
             optionLabel="location"
             scrollHeight="150px"
-            class="!w-28 !text-[10px] custom-clear-style"
+            class="!w-36 !text-[10px] custom-clear-style"
             (onChange)="onClickLocation()"
             [filter]="true"
             filterBy="location"
@@ -96,7 +97,7 @@
             optionLabel="name"
             [showClear]="true"
             optionValue="code"
-            class="!w-32 !text-[10px]"
+            class="!w-36 !text-[10px]"
             [filter]="true"
             filterBy="name"
           />
@@ -110,7 +111,7 @@
             formControlName="parttype"
             optionLabel="Description"
             optionValue="parttypeid"
-            class="!w-32 !text-[10px]"
+            class="!w-36 !text-[10px]"
           />
           <label for="parttype" class="text-[10px]">Part Type</label>
         </p-floatlabel>
@@ -122,7 +123,7 @@
             optionLabel="Description"
             optionValue="tCode"
             [showClear]="true"
-            class="!w-28 !text-[10px]"
+            class="!w-36 !text-[10px]"
             [filter]="true"
             scrollHeight="150px"
             filterBy=" Description"
@@ -137,7 +138,7 @@
             [showClear]="true"
             optionLabel="Model"
             scrollHeight="150px"
-            class="!w-28 !text-[10px]"
+            class="!w-36 !text-[10px]"
             [filter]="true"
             filterBy=" Model"
           />
@@ -151,7 +152,7 @@
             optionLabel="Description"
             [showClear]="true"
             optionValue="tCode"
-            class="!w-28 !text-[10px]"
+            class="!w-36 !text-[10px]"
           />
           <label for="seasonal" class="text-[10px]">Seasonal </label>
         </p-floatlabel>
@@ -161,7 +162,7 @@
             [options]="adminstatus"
             optionValue="code"
             optionLabel="name"
-            class="!w-32 !text-pretty !text-[10px]"
+            class="!w-36 !text-pretty !text-[10px]"
             (onChange)="onClickBrand()"
           />
           <label for="status" class="text-[10px]">Status </label>
@@ -235,6 +236,7 @@
           class="text-[10px]"
           id="submit"
           label="Submit"
+          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
           size="small"
           severity="success"
           (onClick)="onClickSubmitfilterData()"
@@ -242,8 +244,11 @@
         <p-button
           id="submit"
           size="small"
+          icon="pi pi-download"
           class="text-[10px]"
-          label="Norms Export"
+          pTooltip="Norms Export" tooltipPosition="top"
+          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+          label="Norms"
           severity="info"
           (onClick)="exportToExcelOldSP()"
         />
@@ -259,8 +264,11 @@
 
         <p-button
           size="small"
+          icon="pi pi-upload"
+          pTooltip="Upload Review or Feedback" tooltipPosition="top"
           (onClick)="onClickShowUpload()"
-          label="Upload Review or Feedback"
+          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+          label="Upload "
         />
         <!-- <p-button
           size="small"
@@ -332,19 +340,21 @@
 
     <div class=" flex justify-between">
       <div class="flex gap-3  ml-4">
-      <div class="w-10 h-10w-10  border-[1px] border-gray-500 bg-orange-100"></div>
+      <div class="w-5 h-5  border-[1px] border-gray-500 bg-orange-100"></div>
       <h6 class="">Pending</h6>
-      <div class="w-10 h-10w-10 bg-green-100 border-gray-500 border-[1px]"></div>
+      <div class="w-5 h-5 bg-green-100 border-gray-500 border-[1px]"></div>
       <h6 class="">Reviewed</h6>
-      <div class="w-10 h-10w-10 bg-white border-gray-500 border-[1px]"></div>
+      <div class="w-5 h-5 bg-white border-gray-500 border-[1px]"></div>
       <h6 class="">No feedback</h6>
     </div>
 
     <p-button
       id="submit"
       size="small"
+      [style]="{ 'background-color': '#008080', 'color': '#fff'}"
       icon="pi pi-download"
       class="text-[10px]  mr-4"
+      pTooltip="Export Table Data" tooltipPosition="top"
       label="Export Data"
       severity="info"
       (onClick)="exportToExcelNewSP()"

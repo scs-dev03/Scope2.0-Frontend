@@ -126,7 +126,7 @@
             pTooltip="Example: xyz, abc, prqs"
             tooltipPosition="top"
             size="small"
-            class="w-full !text-xs  !h-9"
+            class="w-full !text-xs !h-9"
             formControlName="PartNumber"
           />
           <label for="PartNumber" class="text-[10px]">Part Number</label>
@@ -156,17 +156,20 @@
         severity="success"
         size="small"
         (onClick)="onSubmitAdminInputData()"
+        [style]="{ 'background-color': '#008080', color: '#fff' }"
       />
       <p-button
         size="small"
         icon="pi pi-upload"
         (onClick)="onClickShowUpload()"
+        [style]="{ 'background-color': '#008080', color: '#fff' }"
         label="Upload Excel"
       />
       <p-button
         size="small"
         icon="pi pi-download"
         (onClick)="exportPartNumberExcel()"
+        [style]="{ 'background-color': '#008080', color: '#fff' }"
         label="Sample Format Download"
       />
     </form>
@@ -189,6 +192,7 @@
       <p-button
         label="Export Data"
         size="small"
+        [style]="{ 'background-color': '#008080', 'color': '#fff'}"
         [disabled]="exportVisible"
         (onClick)="exportToExcel()"
       />

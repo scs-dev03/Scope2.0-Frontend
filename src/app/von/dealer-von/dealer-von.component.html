@@ -196,21 +196,16 @@
               <p-button
                 label="Submit"
                 id="submit"
+                [style]="{ 'background-color': '#008080', 'color': '#fff'}"
                 (click)="onSubmitfilterData()"
                 class="text-[10px] !scale-[0.80]"
               />
-              <p-button
-                label="Export Selection"
-                id="export"
-                icon="pi pi-file-export"
-                [disabled]="this.showTable == false" (onClick)="exportToExcel()"
-                
-                class="text-[10px] !scale-[0.80]"
-              />          
+                       
               <!-- <p-button icon="pi pi-file-export" size="small" severity="success" " /> -->
               <p-button
                 label="Reset Filter"
                 (onClick)="onClickReset()"
+                [style]="{ 'background-color': '#008080', 'color': '#fff'}"
                 id="reset-filter"
                 class="text-[10px] !scale-[0.80]"
               />
@@ -264,7 +259,7 @@
       
         </div>    
         
-        <div class="flex  w-full ml-5 px-2 overflow">
+        <div class="flex justify-between w-full ml-5 px-2 overflow">
           <div class="flex justify-between gap-x-3">
             <div class=" flex gap-x-2">
               <div> Total Parts  </div> 
@@ -272,7 +267,7 @@
              </div>
              <div class=" flex gap-x-2">
                <div > Pending  </div> 
-              <span class="text-orange-300 ">{{pendingCount}}</span>
+              <span class="text-orange-300  ">{{pendingCount}}</span>
              </div>
              <div class=" flex gap-x-2 ">
                <div > Reviewed  </div> 
@@ -280,15 +275,24 @@
             </div>
 
             <div class="flex  gap-x-3">
-              <div class="w-5 h-5 border-black border-1 bg-orange-100" ></div>
+              <div class="w-5 h-5 border-black border-[1px] bg-orange-100" ></div>
               <h6 class="text-xs">Pending</h6>
-              <div class="w-5 h-5 bg-green-100  border-black border-1" ></div>
+              <div class="w-5 h-5 bg-green-100  border-black border-[1px]" ></div>
               <h6 class="text-xs">Reviewed</h6>
-              <div class="w-5 h-5  bg-white  border-black border-1" ></div>
+              <div class="w-5 h-5  bg-white  border-black border-[1px]" ></div>
               <h6 class="text-xs">No feedback</h6>
             
             </div>
-          </div>      
+          </div>  
+          <p-button
+                label="Export Selection"
+                id="export"
+                icon="pi pi-download"
+                [disabled]="this.showTable == false" (onClick)="exportToExcel()"
+                [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+                
+                class="text-[10px] mr-5 !scale-[0.80]"
+              />     
         </div>
         
     
@@ -303,7 +307,9 @@
               [value]="tableData"
               [paginator]="true"
               [rows]="10"
-              [rowsPerPageOptions]="[20, 30, 40, 50, 100]"
+              [showCurrentPageReport]="true"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+              [rowsPerPageOptions]="[10, 30, 40, 50, 100]"
               [showGridlines]="true"
               scrollDirection="both"
               ngClass=" !w-[90vw] "

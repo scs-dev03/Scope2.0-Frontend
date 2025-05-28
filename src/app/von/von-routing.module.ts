@@ -10,19 +10,19 @@ const routes: Routes = [
   {
     path: 'armk',
     component: AdminRemarkComponent,
-    //canActivate:[authGuard]
+    canActivate:[authGuard]
   },{
     path: 'pcount',
     component: AdminpendingcountComponent,
-    //canActivate:[authGuard]
+    canActivate:[authGuard]
   },{
     path: 'dvon',
     component: DealerVonComponent,
-    //canActivate:[authGuard]
+    canActivate:[authGuard]
   },{
     path: 'avon',
     component: AdminVonComponent,
-    //canActivate:[authGuard]
+    canActivate:[authGuard]
   }
 ];
 

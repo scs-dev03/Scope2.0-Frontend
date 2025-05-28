@@ -10,7 +10,7 @@ const routes: Routes = [
   {
     path: 'as',
     component: AdminSalesReportComponent,
-    //canActivate:[authGuard]
+    canActivate:[authGuard]
   },
   {
     path: 'login',
@@ -19,7 +19,8 @@ const routes: Routes = [
   },
   {
     path: 'ds',
-    component: DealerSalesReportComponent
+    component: DealerSalesReportComponent,
+    canActivate:[authGuard]
 
   }
 ];

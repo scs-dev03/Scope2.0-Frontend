@@ -10,7 +10,7 @@
       [formGroup]="AdminSalesReportInputData"
       class="flex flex-1 flex-wrap p-5 justify-start items-center gap-3 w-auto"
     >
-      <div class="w-32 relative ">
+      <div class="w-32 relative">
         <p-floatlabel variant="on">
           <p-select
             inputId="BrandID"
@@ -23,7 +23,7 @@
             scrollHeight="150px"
             (onChange)="onSelectionChangeBrandData()"
             filterBy="vcbrand"
-            class="!w-full !text-[10px] "
+            class="!w-full !text-[10px]"
           />
           <label for="BrandID" class="text-[10px]">Brand</label>
         </p-floatlabel>
@@ -33,7 +33,7 @@
             (AdminSalesReportInputData.get('BrandID')?.dirty ||
               AdminSalesReportInputData.get('BrandID')?.touched)
           "
-          class="text-red-500 text-[10px]  absolute left-0"
+          class="text-red-500 text-[10px] absolute left-0"
         >
           This field is mandatory
         </div>
@@ -63,7 +63,7 @@
             (AdminSalesReportInputData.get('DealerID')?.dirty ||
               AdminSalesReportInputData.get('DealerID')?.touched)
           "
-          class="text-red-500 text-[10px]  absolute left-0"
+          class="text-red-500 text-[10px] absolute left-0"
         >
           This field is mandatory
         </div>
@@ -91,7 +91,7 @@
             (AdminSalesReportInputData.get('LocationID')?.dirty ||
               AdminSalesReportInputData.get('LocationID')?.touched)
           "
-          class="text-red-500 text-[10px]  absolute left-0"
+          class="text-red-500 text-[10px] absolute left-0"
         >
           This field is mandatory
         </div>
@@ -117,7 +117,7 @@
               (AdminSalesReportInputData.get('FormDate')?.dirty ||
                 AdminSalesReportInputData.get('FormDate')?.touched)
             "
-            class="text-red-500 text-[10px]  absolute left-0"
+            class="text-red-500 text-[10px] absolute left-0"
           >
             This field is mandatory
           </div>
@@ -143,7 +143,7 @@
               (AdminSalesReportInputData.get('ToDate')?.dirty ||
                 AdminSalesReportInputData.get('ToDate')?.touched)
             "
-            class="text-red-500 text-[10px]  absolute left-0"
+            class="text-red-500 text-[10px] absolute left-0"
           >
             This field is mandatory
           </div>
@@ -169,7 +169,7 @@
               (AdminSalesReportInputData.get('DataType')?.dirty ||
                 AdminSalesReportInputData.get('DataType')?.touched)
             "
-            class="text-red-500 text-[10px]  absolute left-0"
+            class="text-red-500 text-[10px] absolute left-0"
           >
             This field is mandatory
           </div>
@@ -211,21 +211,24 @@
       </div>
 
       <p-button
-        label="Submit"      
+        label="Submit"
         size="small"
+        [style]="{ 'background-color': '#008080', color: '#fff' }"
         (onClick)="onSubmitAdminInputData()"
       />
       <p-button
         size="small"
         icon="pi pi-upload"
+        pTooltip="Upload Parts Excel" tooltipPosition="top"
+        [style]="{ 'background-color': '#008080', color: '#fff' }"
         (onClick)="onClickShowUpload()"
-       
       />
       <p-button
         size="small"
         icon="pi pi-download"
+         pTooltip="Download Sample Parts Excel" tooltipPosition="top"
+        [style]="{ 'background-color': '#008080', color: '#fff' }"
         (onClick)="exportPartNumberExcel()"
-        
       />
     </form>
   </div>
@@ -246,10 +249,11 @@
     <div class="flex gap-3 mr-10">
       <p-button
         label="Export Data"
-        [icon]="'pi-download'"
+        icon="pi pi-download"
         size="small"
         [disabled]="exportVisible"
         (onClick)="exportToExcel()"
+        [style]="{ 'background-color': '#008080', color: '#fff' }"
       />
     </div>
   </div>
