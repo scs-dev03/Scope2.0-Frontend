@@ -15,7 +15,7 @@ import { SharedServiceService } from '../../services/shared-service.service';
 import FileSaver from 'file-saver';
 @Component({
   selector: 'app-admin-sales-report',
-  imports: [PrimengModuleModule, SharedModule,SHARED_IMPORTS,CommonModule, ProductDesctiptionTableComponent, ProductSaleInfoComponent, TotalsumComponent, LoaderComponent],
+  imports: [PrimengModuleModule, SharedModule,SHARED_IMPORTS,CommonModule, ProductDesctiptionTableComponent, ProductSaleInfoComponent, TotalsumComponent],
   templateUrl: './admin-sales-report.component.html',
   styleUrl: './admin-sales-report.component.css'
 })
@@ -307,8 +307,37 @@ export class AdminSalesReportComponent {
  
 
   exportToExcel() {
-    const flatData = [...this.SalesInfo[0], ...this.SalesInfo[1]];
+    const flatData = [...this.SalesInfo[0]];
+    const salesData = [...this.SalesInfo[1]];
+    
+    
     const reorderedData = flatData.map(item => ({
+      Partnumber: item.Partnumber,
+      LocationName: item.Location,
+      Month: item.Months,
+      ClosingStocks: item.ClosingStocks,
+      WorkshopSale: item.WorkshopSale, 
+      Counter: item.Counter,
+      StockTransferOut: item.StockTransferOut,
+      AdjustmentOut: item.AdjustmentOut,
+      PaidSale: item.PaidSale,
+      WarrantySale: item.WarrantySale,
+      FOCSales: item.FOCSales,
+      GoodwillSale: item.GoodwillSale,
+      NormalPurchase: item.NormalPurchase,
+      StockTransferIn: item.StockTransferIn,
+      JobcardReturnValue: item.JobcardReturnValue,
+      CounterSaleReturn: item.CounterSaleReturn,
+      EmergencyPurchase: item.EmergencyPurchase,
+      VORPurchase: item.VORPurchase,
+      CoDlrPurchase: item.CoDlrPurchase,
+      StockAdjustmentIn: item.StockAdjustmentIn,
+      OEMPurchase: item.OEMPurchase,
+      idk: item.idk,
+      Others: item.Others,
+    }));
+
+    const recoredTotal = salesData.map(item => ({
       Partnumber: item.Partnumber,
       LocationName: item.Location,
       Month: item.Months,
@@ -335,6 +364,7 @@ export class AdminSalesReportComponent {
     }));
     // Convert JSON to worksheet
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(reorderedData);
+    const TotalSales: XLSX.WorkSheet = XLSX.utils.json_to_sheet(recoredTotal); 
     const partDetailsData = this.PartDetail.map((item: { partnumber: any; LatestPartno: any; partdesc: any; moq: any; category: any; landedcost: any; mrp: any; dateadded: any; }) => ({
       PartNumber: item.partnumber,
       Latest_Part_Number: item.LatestPartno,
@@ -353,8 +383,9 @@ export class AdminSalesReportComponent {
     const workbook: XLSX.WorkBook = {
       Sheets: { SalesInfo: worksheet,
         PartDetails: partDetailsWorksheet,
+        Total_Sales: TotalSales
        },
-      SheetNames: ['PartDetails','SalesInfo'],
+      SheetNames: ['PartDetails','SalesInfo','Total_Sales'],
     };
     // Write the workbook
     XLSX.writeFile(workbook, `Salesview.xlsx`);
@@ -439,7 +470,7 @@ export class AdminSalesReportComponent {
     }
   }
 
-  UploadPartNumber(){
+  UploadPartNumber(fu: any){
    this.globalBlockUiService.startLoading()
    this.DataTypeArray = this.AdminSalesReportInputData.value.DataType
    const formData = new FormData();
@@ -460,8 +491,12 @@ export class AdminSalesReportComponent {
     (error:any) => {
       console.error("File upload failed:", error);
       this.globalBlockUiService.stopLoading()
-      this.showupload = false})
-    this.adminSalesReportService.getSalesInfo(formData).subscribe((res:any)=>{
+      this.showupload = false
+     fu.clear();})
+
+
+     setTimeout(() => {
+      this.adminSalesReportService.getSalesInfo(formData).subscribe((res:any)=>{
       this.SalesInfoVisible = true
       this.exportVisible = true
       this.SalesInfoVisible = true
@@ -469,18 +504,26 @@ export class AdminSalesReportComponent {
       this.showupload = false
       this.exportVisible = false
       //this.istotal = false
+      fu.clear(); 
       this.partsExcel = undefined
       this.onclicktotal()
       this.globalBlockUiService.stopLoading()
       },
       (error:any) => {
+
+        if(error.error.message){
+
+        }
         console.error("File upload failed:", error);
         this.visible = true
-        this.Result =  `${error.error.message +'Part Number: '+ error.error.unmatchedParts}`
+        this.Result =  `${error.error.message +' Part Number: '+ error.error.unmatchedParts}`
         this.globalBlockUiService.stopLoading()
         this.showupload = false
+          fu.clear();
 
     })
+      
+     },1500 );
 
   }
 

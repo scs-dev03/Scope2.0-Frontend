@@ -7,10 +7,10 @@ import { Observable } from 'rxjs';
 })
 export class DashboardSchedulerService {
   private apiurl: any =
-  'http://web10.185.238.new.ocpwebserver.com/api/v1/dashboardscheduler/';
+  'http://web36.185.238.new.ocpwebserver.com/api/v1/dashboardscheduler/';
 
 private apiurlmaster: any =
-  'http://web10.185.238.new.ocpwebserver.com/api/v1/';
+  'http://web36.185.238.new.ocpwebserver.com/api/v1/';
 
   
 

@@ -75,7 +75,7 @@ export class DealerLocationMappingComponent {
    this.visibleSidebar=visible;
   })
 
-  this.userId=localStorage.getItem('userId');
+  this.userId=localStorage.getItem('userid');
 
   this.userService.allUserData$.subscribe((users:any)=>{
     this.users=users;
@@ -117,7 +117,7 @@ export class DealerLocationMappingComponent {
 
       this.formData.append('excelFile', this.file, this.fileName);
         this.formData.append('brand_id', this.dlForm.value.brand.toString());
-      this.formData.append('added_by',this.userId.toString())
+      this.formData.append('added_by',this.userId?.toString())
     }
 
     this.globalUiService.startLoading()

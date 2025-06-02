@@ -254,13 +254,14 @@
         accept=".xls,.xlsx"
         maxFileSize="5000000"
         [auto]="false"
-        (onSelect)="onFileSelect($event)"
+        (onSelect)="onFileSelect($event,fu)"
       />
       <!-- <span class="text-sm">{{ selectedFileName }}</span> -->
     </div>
     <p-button
+     #fu
       label="Upload"
-      (onClick)="UploadPartNumber()"
+      (onClick)="UploadPartNumber(fu)"
       severity="secondary"
       size="small"
     />

@@ -12,7 +12,7 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-dealer-von',
-  imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS, Sidebar2Component, LoaderComponent],
+  imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS],
   templateUrl: './dealer-von.component.html',
   styleUrl: './dealer-von.component.css'
 })
@@ -354,7 +354,7 @@ fetchDealerTableData(
   }
 // submitting user remarks
 submitRow(rowData: any) {
-  this.globalBlockUiService.startLoading();
+  
 
   const validCustomRemarkRegex = /^(?![\s,@-]*$)(?!-?\d+$)[a-zA-Z0-9\s,@-]*$/;
 
@@ -398,7 +398,9 @@ submitRow(rowData: any) {
       return;
     }
   }
+  
 
+  this.globalBlockUiService.startLoading()
   // Proceed with submission
   this.dealerVonService
     .submituserlog({
@@ -559,7 +561,7 @@ fetchDealerRemark(brandid: any, usertype: any) {
   exportToExcel(): void {
 
     // Unwanted keys hatao aur columns ko order karo
-    const formattedData = this.tableData.map(({Brand,Dealer,Brandid,Dealerid,Partid,Locationid,status, feedbackid, UserRemark, ProposedQty, ...rest }: any) => ({
+    const formattedData = this.tableData.map(({Brandid,Dealerid,Partid,Locationid,status, feedbackid, UserRemark, ProposedQty, ...rest }: any) => ({
       ...rest, // Baaki sab pehle rahega
       UserRemark:null, // UserRemark ko last me shift kiya
       ProposedQty:null        

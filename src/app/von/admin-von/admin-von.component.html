@@ -24,7 +24,7 @@
       <form
         action=""
         [formGroup]="adminFilterData"
-        class="flex flex-wrap py-5 justify-start items-center gap-3 w-auto scale-[.9]"
+        class="flex flex-wrap py-2 justify-start items-center gap-3 w-auto scale-[.9]"
       >
         <!-- brand -->
         <p-floatlabel variant="on">
@@ -34,6 +34,7 @@
             optionValue="bigid"
             optionLabel="vcbrand"
             showClear="true"
+            appendTo="body"
             class="!w-36 !text-[10px] custom-clear-style"
             scrollHeight="150px"
             (onChange)="onClickBrand()"
@@ -56,6 +57,7 @@
             optionValue="dealerid"
             optionLabel="dealer"
             scrollHeight="150px"
+            appendTo="body"
             class="!w-36 !text-[10px] custom-clear-style"
             (onChange)="onclickDealer()"
             [filter]="true"
@@ -75,6 +77,7 @@
             [options]="locaitonData"
             [showClear]="true"
             optionValue="locationid"
+            appendTo="body"
             optionLabel="location"
             scrollHeight="150px"
             class="!w-36 !text-[10px] custom-clear-style"
@@ -813,8 +816,9 @@
       <span class="text-sm">{{ selectedFileName }}</span>
     </div>
     <p-button
+      #fu
       label="Upload"
-      (onClick)="UploadExcelDealer()"
+      (onClick)="UploadExcelDealer(fu)"
       severity="secondary"
       size="small"
     />
@@ -836,8 +840,9 @@
       <span class="text-sm">{{ adminFileName }}</span>
     </div>
     <p-button
+    #fu
       label="Upload"
-      (onClick)="UploadExcelAdmin()"
+      (onClick)="UploadExcelAdmin(fu)"
       severity="secondary"
       size="small"
     />
