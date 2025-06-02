@@ -32,4 +32,8 @@ export class DealerLocationMappingService {
   deleteDealerLocationMapping(data:any):Observable<any>{
     return this.http.post(`${this.url}dl-mapping/delete`,data);
   }
+  
+  editLocInventoryMapping(data:any):Observable<any>{
+    return this.http.post(`${this.url}dl-mapping/edit-from-table`,data)
+  }
 }

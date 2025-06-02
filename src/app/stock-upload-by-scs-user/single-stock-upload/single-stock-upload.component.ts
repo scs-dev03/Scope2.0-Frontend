@@ -278,7 +278,8 @@ export class SingleStockUploadComponent {
  
    exportToExcel(){
 
-    const modifiedData = this.partNotInMasterRecords.map((item: any) => ({
+    if(this.partNotInMasterRecords?.length>0){
+ const modifiedData = this.partNotInMasterRecords.map((item: any) => ({
      
       ['Part Number']: item.partnumber , 
 
@@ -292,6 +293,8 @@ export class SingleStockUploadComponent {
 
     // Write the workbook to a file and trigger download
     XLSX.writeFile(wb, 'Part_Not_In_Master.xlsx');
+    }
+   
     
    }
 
@@ -312,10 +315,27 @@ export class SingleStockUploadComponent {
 
    exportUploadedData(){
     
+    if(this.uploadedData?.length>0){
+      let brandObj=this.brands.find((obj:any)=>{return obj.brand_id==this.slForm.value.brand});
+      let dealerObj=this.dealers.find((obj:any)=>{return obj.dealer_id==this.slForm.value.dealer});
+      let locationobj=this.locations.find((obj:any)=>{
+        return obj.location_id==this.slForm.value.location
+      })
     const modifiedData = this.uploadedData.map((item: any) => ({
      
-      ['Part Number']: item.partnumber , 
-      Quantity:item.qty
+      Brand:brandObj?.brand,
+      Dealer:dealerObj?.dealer_name,
+      Location:locationobj?.location_name,
+      ['Part Number']: item.partNumber , 
+      ['Latest Part Number']:item.LatestPartNumber,
+      Description:item.partDesc,
+      Category:item.PartType,
+      Rate:item.LandedCost,
+      MRP:item.mrp,
+      MOQ:item.moq,
+      ['Part Nature']:item.partNature,
+      Quantity:item.Quantity,
+      Date:this.formatDate(item.stockDate)
 
     }));
     const ws = XLSX.utils.json_to_sheet(modifiedData);
@@ -326,6 +346,7 @@ export class SingleStockUploadComponent {
 
     // Write the workbook to a file and trigger download
     XLSX.writeFile(wb, 'uploaded_data.xlsx');
+  }
    }
 
    getLocations(){
@@ -346,7 +367,7 @@ export class SingleStockUploadComponent {
  
    exportTableData(){
  
-    console.log("records",this.records)
+   // console.log("records",this.records)
     let brandObj=this.brands.find((obj:any)=> obj.brand_id==this.slForm.value.brand)
     let dealerObj=this.dealers.find((obj:any)=>obj.dealer_id==this.slForm.value.dealer)
       const modifiedData = this.records.map((item: any) => {

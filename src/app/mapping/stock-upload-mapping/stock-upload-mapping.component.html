@@ -109,7 +109,8 @@
                               [options]="currentStockColumns"
                              formControlName="partNumber"
                               placeholder="Select"
-                              class="dropdown !mt-3 "
+                              class=" !mt-3 "
+                              [ngClass]="isSidebarVisible?'dropdown':'dropdown-collapse1'"
                             />
                           </div>
                         </div>
@@ -126,7 +127,8 @@
                             [options]="currentStockColumns"
                               placeholder="Select"
                               formControlName="location"
-                              class="dropdown !mt-3 "
+                              class=" !mt-3 "
+                               [ngClass]="isSidebarVisible?'dropdown':'dropdown-collapse1'"
                             />
                           </div>
                         </div>
@@ -144,7 +146,8 @@
                               placeholder="Select"
                               class="dropdown !mt-3 "
                             /> -->
-                            <p-multiselect [options]="currentStockColumns" appendTo="body" placeholder="Select" styleClass="w-full md:w-80" class="dropdown !mt-3 " formControlName="stockQty" />
+                            <p-multiselect [options]="currentStockColumns" appendTo="body" placeholder="Select" styleClass="w-full md:w-80" class=" !mt-3 "
+                             formControlName="stockQty"  [ngClass]="isSidebarVisible?'dropdown':'dropdown-collapse1'" />
                           </div>
                           
                         </div>
@@ -210,7 +213,8 @@
                           [options]="olderStockColumns"
                           placeholder="Select"
                           formControlName="partNumber"
-                          class="dropdown !mt-3 "
+                          class=" !mt-3 "
+                          [ngClass]="isSidebarVisible?'dropdown':'dropdown-collapse1'"
                         />
                       </div>
                     </div>
@@ -226,7 +230,8 @@
                           [options]="olderStockColumns"
                           placeholder="Select"
                           formControlName="location"
-                          class="dropdown !mt-3 "
+                          class=" !mt-3 "
+                          [ngClass]="isSidebarVisible?'dropdown':'dropdown-collapse1'"
                         />
                       </div>
                     </div>
@@ -244,7 +249,9 @@
                           formControlName="stockQty"
                           class="dropdown !mt-3 "
                         /> -->
-                        <p-multiselect [options]="olderStockColumns" appendTo="body" placeholder="Select" styleClass="w-full md:w-80" class="dropdown !mt-3 " formControlName="stockQty"/>
+                        <p-multiselect [options]="olderStockColumns" appendTo="body" 
+                        placeholder="Select" styleClass="w-full md:w-80" class=" !mt-3 "
+                        [ngClass]="isSidebarVisible?'dropdown':'dropdown-collapse1'" formControlName="stockQty"/>
                       </div>
                     </div>
                   
@@ -272,7 +279,7 @@
   <ng-template #header>
     <div class="inline-flex items-center justify-center gap-2">
       <!-- <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" /> -->
-      <span class="font-bold whitespace-nowrap">View Mapping</span>
+      <span class="font-bold whitespace-nowrap">View & Edit Mapping</span>
     </div>
   </ng-template>
   <div>
@@ -382,7 +389,7 @@
           <div class="  mt-1" *ngIf="editCurrentDayStockForm.get('stockQty')?.touched && editCurrentDayStockForm?.get('stockQty')?.invalid " >
             <small *ngIf="editCurrentDayStockForm?.get('stockQty')?.hasError('required')" style="color: red; font-size: 12px;">Stock Quantity is required.</small> 
            </div>
-           <div class="row" *ngIf="!isCurrentQtyOne">
+           <div class="row" >
             <div class="col-6 d-flex  align-items-center mt-2">
               <span>Stock Calculation:</span>
             </div>
@@ -407,6 +414,15 @@
               class="pb-3"
             />
           </div> -->
+          <div class="d-flex justify-content-end my-2">
+             <!-- <p-button *ngIf="editCurrentDaysStock || editOlderDaysStock ||  isCurrentQtyOne || isOlderQtyOne"
+      label="Save"
+      [outlined]="true"
+      severity="secondary"
+      [disabled]="checkCurrentQuantitiesInViewEdit() "
+       (click)="editMappingWithViewEditBtn()"
+    /> -->
+          </div>
         </form>
       </div>
     </div>
@@ -503,7 +519,7 @@
           <div class="  mt-1" *ngIf="editOlderDaysStockForm.get('stockQty')?.touched && editOlderDaysStockForm?.get('stockQty')?.invalid " >
             <small *ngIf="editOlderDaysStockForm?.get('stockQty')?.hasError('required')" style="color: red; font-size: 12px;">Stock Quantity is required.</small> 
            </div>
-           <div class="row" *ngIf="!isOlderQtyOne">
+           <div class="row" >
             <div class="col-6 d-flex  align-items-center mt-2">
               <span>Stock Calculation:</span>
             </div>
@@ -532,17 +548,17 @@
     *ngIf=" !editCurrentDaysStock && !editOlderDaysStock "
     (click)="visibleViewEditPopUp = false"
   />
-    <p-button *ngIf="editCurrentDaysStock || editOlderDaysStock || isCurrentQtyOne || isOlderQtyOne"
+    <!-- <p-button *ngIf="editCurrentDaysStock || editOlderDaysStock || isCurrentQtyOne || isOlderQtyOne"
       label="Cancel"
       [text]="true"
       severity="secondary"
       (click)="visible = false"
-    />
+    /> -->
     <p-button *ngIf="editCurrentDaysStock || editOlderDaysStock ||  isCurrentQtyOne || isOlderQtyOne"
       label="Save"
       [outlined]="true"
       severity="secondary"
-      [disabled]="(!isCurrentQtyOne && calculativeFormula=='') || (!isOlderQtyOne && calculativeFormula=='')"
+      [disabled]="checkOlderQuantitiesInViewEdit() ||checkOlderQuantitiesInViewEdit()"
        (click)="editMappingWithViewEditBtn()"
     />
   </ng-template>

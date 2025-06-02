@@ -44,4 +44,12 @@ export class StockUploadBySpmService {
     return this.http.post(`${this.url}stock-upload/all-records-ml`,data)
   }
 
+  getPartNotInMasterForBulk(data:any):Observable<any>{
+    return this.http.post(`${this.url}stock-upload/part-not-in-master-bulk`,data)
+  }
+
+  uploadBulkStock(data:any):Observable<any>{
+    return this.http.post(`${this.url}stock-upload/bulk-upload`,data)
+  }
+
 }

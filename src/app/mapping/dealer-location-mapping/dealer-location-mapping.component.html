@@ -138,14 +138,18 @@
     
       <th style="font-size: 13px;" class=" ">
         <span class="pb-2">Location</span>
+         
         <p-columnFilter type="text" field="location" display="menu" class="column-filter ms-2" />
       </th>
     
       <th style="font-size: 13px;" class=" ">
         <span class="pb-2">Inventory Location</span>
+      
         <p-columnFilter type="text" field="inventory_location" display="menu" class="column-filter ms-2" />
       </th>
-    
+      <th style="font-size: 13px;" class="pb-6px">
+        Remark
+      </th>
       <th style="font-size: 13px;" class="pb-6px">
         <!-- <div class="pb-2">Status</div> -->
          Status
@@ -158,13 +162,20 @@
       <th style="font-size: 13px;" class="pb-6px">
         Added By
       </th>
+     
+       <th style="font-size: 13px;" class="pb-6px">
+        Action
+      </th>
+        
     </tr>
     
     
     
   </ng-template>
   <ng-template #body let-rowData let-i="rowIndex">
-    <tr>
+   
+    <tr > 
+         <ng-container [formGroup]="editDlForms[i]">
       <td style="font-size: 11px;">
         {{rowData.brandName}}
   
@@ -172,14 +183,61 @@
       <td style="font-size: 11px;">
           {{rowData.dealer}}
       </td>
-      <td style="font-size: 11px;">
+      <td style="font-size: 11px;" *ngIf="editloc!=i">
           {{rowData.location}}
-         
+        
+      </td>
+      
+      <td style="font-size: 11px;" *ngIf="editloc==i">
+         <p-select
+                                  [options]="locations"
+                                  formControlName="location_id"
+                                  optionLabel="location_name"
+                                  optionValue="location_id"
+                                  placeholder="Select Location"
+                                  class="  w-56 md:w-56"
+                                  [ngClass]="visibleSidebar?'dropdown':'brandDropdown-collapse'"
+                                 
+                                />
+       <div class="text-red-500 text-xs mt-1" *ngIf="editDlForms[i].get('location_id')?.touched && editDlForms[i].get('location_id')?.invalid">
+    Location is required.
+  </div>
       </td>
  
-      <td style="font-size: 11px; " class="word-break">
+      <td style="font-size: 11px; " class="word-break" *ngIf="editloc!=i">
          {{rowData.inventory_location}}
       </td>
+      <td style="font-size: 11px; " class="word-break" *ngIf="editloc==i">
+          <input type="text" pInputText formControlName="inventory_location"  />
+          <div
+    class="text-red-500 text-xs mt-1"
+    *ngIf="
+      editloc === i &&
+      editDlForms[i]?.get('inventory_location')?.touched &&
+      editDlForms[i]?.get('inventory_location')?.invalid
+    "
+  >
+   Inventory Location is required.
+  </div>
+      </td>
+
+         <td  style="font-size: 11px; " class="word-break"  *ngIf="editloc!=i">
+      {{rowData.remark}}
+  </td>
+      <td  *ngIf="editloc==i"  style="font-size: 11px; " class="word-break" >
+         <input type="text" pInputText formControlName="remark"  />
+          <div
+    class="text-red-500 text-xs mt-1"
+    *ngIf="
+      editloc === i &&
+      editDlForms[i]?.get('remark')?.touched &&
+      editDlForms[i]?.get('remark')?.invalid
+    "
+  >
+   Remark is required.
+  </div>
+      </td>
+         </ng-container>
       <td class="p-2" >
         <p-toggleswitch [(ngModel)]="rowData.statusBoolean" (change)="deleteMapping(rowData)"  /></td>
      <td style="font-size: 11px;">
@@ -188,8 +246,13 @@
      <td style="font-size: 11px;">
         {{rowData.addedBy}}
      </td>
-     
+  
+      <td class="text-center" ><i class='bx bx-edit cursor-pointer' (click)="editLocationInventorylocation(rowData,i)"></i>
+      <p-button class="" (onClick)="submit(i)">Submit</p-button></td>
+    
+       
     </tr>
+   
   </ng-template>
 </p-table>
 </div>
@@ -214,8 +277,29 @@
 
                 <div class="inline-flex items-center justify-center gap-2 flex-row">
 
-                    <p-fileupload [multiple]="false" #fu class=" !line-clamp-3" mode="basic" chooseLabel="Choose"  chooseIcon="pi pi-upload" name="demo[]"
-                    [auto]="false" accept=".xlsx,.csv,.xls" [multiple]="false" (onSelect)="onSelect($event)"   />
+                    <!-- <p-fileupload [multiple]="false" #fu1 class=" !line-clamp-3" mode="basic" chooseLabel="Choose"  chooseIcon="pi pi-upload" name="demo[]"
+                    [auto]="false" accept=".xlsx,.csv,.xls" [multiple]="false" (onSelect)="onSelect($event)"   /> -->
+                     <p-fileUpload
+                        #fu1
+                        [customUpload]="true"
+                        [auto]="false"
+                        [showUploadButton]="false"
+                        [showCancelButton]="false"
+                        chooseLabel="Upload"
+                        chooseIcon="pi pi-upload"
+                        name="demo[]"
+                        accept=".xlsx,.csv,.xls"
+                        [multiple]="false"
+                        (onSelect)="onSelect($event)"
+                        
+                      >
+                        <!-- Truncated file name with tooltip -->
+                        <ng-template let-file pTemplate="file">
+                          <div class="truncate-file-name" [title]="file.name">
+                            {{ file.name.length > 10 ? (file.name | slice: 0: 10) + '...' : file.name }}
+                          </div>
+                        </ng-template>
+                      </p-fileUpload>
                     <!-- <span>{{fileName}}</span> -->
 
                     

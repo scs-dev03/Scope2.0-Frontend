@@ -116,31 +116,31 @@ export class UploadComponent {
    this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.sidebarVisible=visible
    })
-   this.dataSubscription = this.sharedService.sidebarData.subscribe(
-    (data) => {
-      this.receivedData = data;
-     // console.log('Data received in User:', this.receivedData);
-      if(this.receivedData!=null){
+//    this.dataSubscription = this.sharedService.sidebarData.subscribe(
+//     (data) => {
+//       this.receivedData = data;
+//      // console.log('Data received in User:', this.receivedData);
+//       if(this.receivedData.length!=null){
 
-        for(let item of this.receivedData){
-          const moduleItem = item.subchildren.find((child:any) => child.module_route === this.currentRoute);
+//         for(let item of this.receivedData){
+//           const moduleItem = item?.subchildren.find((child:any) => child.module_route === this.currentRoute);
 
-if (moduleItem) {
-  // Extract values if module is found
-  this.userPermissions = {
-    view1: moduleItem.view1,
-    add1: moduleItem.add1,
-    delete1: moduleItem.delete1,
-    edit1: moduleItem.edit1
-  };
+// if (moduleItem) {
+//   // Extract values if module is found
+//   this.userPermissions = {
+//     view1: moduleItem.view1,
+//     add1: moduleItem.add1,
+//     delete1: moduleItem.delete1,
+//     edit1: moduleItem.edit1
+//   };
  
-}
-        }
-      }
-    // console.log("result",this.userPermissions)
+// }
+//         }
+//       }
+//     // console.log("result",this.userPermissions)
      
-    }
-  );
+//     }
+//   );
   }
   onBrandSelect(brand: string): void {
     this.fileTypes=[]
@@ -561,6 +561,7 @@ search(){
   // }
 
   async submit(){
+    console.log("called this method")
    this.fileNames=[];
     this.globalBlockUiService.startLoading();;
     this.updatedAuditLogs=[];
@@ -584,6 +585,7 @@ search(){
             }
       }
         else{
+          console.log("called this method")
           if(this.uploadForm.valid){
                       this.globalBlockUiService.startLoading();;   
                       this.updatedAuditLogs=[];
@@ -906,7 +908,7 @@ search(){
               })
 
               this.location=locationObj.location_name;
-              console.log("location at 902 ",this.location,locationObj)
+           //   console.log("location at 902 ",this.location,locationObj)
               uploadLogsResponse = await this.uploadService.uploadLogs({
                 brand: this.uploadForm.value.brand,
                 dealer: this.uploadForm.value.dealer,
@@ -1000,8 +1002,10 @@ search(){
   }
   
   getUserNameById(userId: string) {
-    const user = this.users.find((u:any) => u.userId === userId);
-    return user ? user.name : 'Unknown';
+    // console.log("users ",this.users)
+    const user = this.users.find((u:any) => {return u.userId == userId});
+    // console.log("user",user)
+    return user ? (user.vcFirstName+' '+user.vcLastName) : 'Unknown';
   }
 downloadExcelFile(data?:any){
   const sheet1:XLSX.WorkSheet = XLSX.utils.json_to_sheet(data[0]);

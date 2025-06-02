@@ -2,7 +2,26 @@
 
 <div class="body mt-2 ml-10">
    <!-- <span class="text-black text-2xl ">Multi Location Stock Upload</span>   -->
-                <div class="d-flex">
+
+    <div class="ml-3">
+  <label class="font-semibold lg:text-lg d-flex align-items-center" for="rolename"
+              >Module type</label
+            >
+
+             <div class="mb-3 flex flex-wrap gap-4 align-items-center">
+            <div class="flex items-center ">
+                <p-radiobutton name="moduleType" value="multi" [(ngModel)]="moduleType"   inputId="Multi Location" />
+                <label for="admin" class="ml-2 f-12 d-flex align-items-center mb-0">Multi Location</label>
+            </div>
+
+    <div class="flex align-items-center my-2 ">
+        <p-radiobutton name="moduleType" value="bulk" [(ngModel)]="moduleType" inputId="Bulk Upload"  />
+        <label for="dealer" class="ml-2 f-12 d-flex align-items-center mb-0">Bulk Upload</label>
+    </div>
+        </div>
+
+           </div>
+                <div class="d-flex" *ngIf="moduleType=='multi'">
                     <form [formGroup]="mlForm">
                         <!-- [ngClass]="showTable ? 'cursor-pointer' : 'disabled'" -->
 
@@ -11,7 +30,7 @@
                             <i class='bx bx-export mb-2 f-20 bx-rotate-180' [ngClass]="isDataPresentPartNotInMaster?'cursor-pointer':'disabled'" pTooltip="Part Not In Master Export" (click)="exportToExcel()"></i>
                         </div>
                         <div class="!flex !flex-row !gap-6 ps-3 pb-3 !items-center">
-                          <div>
+                          <!-- <div>
                             <p-select
                             [options]="brands"
                             formControlName="brand"
@@ -23,8 +42,8 @@
                             [filter]="true" 
                           filterPlaceholder="Search Brand..."
                           />
-                          </div>
-                          <div>
+                          </div> -->
+                          <!-- <div>
                             <p-select
                             [options]="dealers"
                             formControlName="dealer"
@@ -36,7 +55,7 @@
                             [filter]="true" 
                           filterPlaceholder="Search Dealer..."
                           />
-                          </div>
+                          </div> -->
   
                       </div>
                     
@@ -117,6 +136,53 @@
                     </form>
                     
                     
+                </div>
+
+                <div class=" " *ngIf="moduleType=='bulk'">
+                   <div class="flex justify-end pb-3" [ngClass]="visibleSidebar?'w-[70vw]':'w-[90vw]'">
+                            <!-- <span class="btn-view mb-2" [ngClass]="isDataPresentPartNotInMaster?'cursor-pointer':'disabled'"  (click)="exportToExcel()">Part Not In Master Export</span> -->
+                            <i class='bx bx-export mb-2 f-20 bx-rotate-180' [ngClass]="isDataPresentPartNotInMaster?'cursor-pointer':'disabled'" pTooltip="Part Not In Master Export" (click)="exportToExcel()"></i>
+                     </div>
+                     <div class="add-mapping-card w-[70vw] h-auto  !gap-6 p-3" [ngClass]="visibleSidebar?'w-[70vw]':'w-[90vw]'">
+                        <div class="!flex   !flex-row" [formGroup]="blForm">
+                          <div class="d-flex !flex-col">
+
+                          
+                                      <p-fileUpload
+                                      #fu
+                                      chooseLabel="Upload"
+                                      chooseIcon="pi pi-upload"
+                                      name="file"
+                                      [auto]="false"
+                                      [multiple]="false"
+                                      accept=".xlsx,.csv,.xls"
+                                      [customUpload]="true"
+                                      [showUploadButton]="false"
+                                      [showCancelButton]="false"
+                                     (onSelect)="onSelectForBulk($event)"
+                                    >
+                                      <ng-template let-file pTemplate="file">
+                                        <div
+                                          class="truncate-file-name"
+                                          [title]="file.name"
+                                          style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                        >
+                                          {{ file.name.length > 10 ? (file.name | slice: 0: 10) + '...' : file.name }}
+                                        </div>
+                                      </ng-template>
+                                    </p-fileUpload>
+                                     <div class=" d-flex mt-1" *ngIf="blForm.get('file')?.touched && blForm?.get('file')?.invalid " >
+                            <small *ngIf="blForm?.get('file')?.hasError('required')" style="color: red; font-size: 12px;">File is required.</small> 
+                        </div>
+                        </div>
+                                  <div class="d-flex">
+                          <p-button label="Submit" class=" ml-5"(onClick)="onBulkUpload()" severity="secondary" />
+                          <!-- [disabled]="!showTable" -->
+                          <!-- <p-button label="Get Uploaded Data" class="" (onClick)="exportUploadedData()" severity="secondary" class="ms-3" /> -->
+                          <i class='bx bx-export f-20 d-flex align-items-center bx-rotate-180 ms-3' pTooltip="Get Uploaded Data"    (click)="getBulkUploadedData()" severity="secondary" ></i>
+                        </div>                                   
+                                    </div>
+                     </div>
                 </div>
             </div>
             <div

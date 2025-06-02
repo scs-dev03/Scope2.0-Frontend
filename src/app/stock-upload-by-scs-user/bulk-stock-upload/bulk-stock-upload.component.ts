@@ -318,6 +318,8 @@ export class BulkStockUploadComponent {
  
    exportToExcel(){
 
+    if(this.partNotInMasterRecords?.length>0){
+
     let brandObj=this.brands.find((obj:any)=> obj.brand_id==this.mlForm.value.brand)
     let brandName=brandObj.brand;
     const modifiedData = this.partNotInMasterRecords.map((item: any) => ({
@@ -335,7 +337,7 @@ export class BulkStockUploadComponent {
 
     // Write the workbook to a file and trigger download
     XLSX.writeFile(wb, 'Part_Not_In_Master.xlsx');
-    
+  }
    }
 
 

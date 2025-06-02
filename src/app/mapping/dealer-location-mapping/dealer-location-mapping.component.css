@@ -82,3 +82,20 @@
 .pb-6px{
     padding-bottom: 6px !important;
 }
+
+:host ::ng-deep button.p-ripple.p-button.p-component{
+    padding: 4px !important;
+}
+
+:host ::ng-deep input.p-inputtext.p-component{
+  padding: 3px !important;
+  font-size: 14px !important;
+}
+
+ .truncate-file-name {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 5px !important;
+  }
