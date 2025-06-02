@@ -140,8 +140,8 @@ export class DealerViewCreateUserComponent {
     })
    }
     showDialog(action:any,rowData?:any) {
-    console.log(rowData)
-   this.getBrands();
+    // console.log(rowData)
+
       this.actionName=action;
 //           if (this.actionName != 'Add User') {
 //   this.editUserForm.get('brand')?.disable();
@@ -159,19 +159,24 @@ export class DealerViewCreateUserComponent {
         
       }else{
         this.rowId=rowData.userId;
-        
+    //   console.log(rowData.brandId,rowData.dealerId);
+        this.utilitiesService.getBrands().subscribe((res:any)=>{
+      this.brands=res.data;
+      // console.log("brands ",this.brands)
+    })
         this.utilitiesService.getDealers({brand_id:rowData.brandId}).subscribe((res:any)=>{
             this.dealers=res.data;  
              this.utilitiesService.getLocations({dealer_id:rowData.dealerId}).subscribe((res:any)=>{
             this.locations=res.data; 
-            let brandObj=this.brands.find((obj:any)=> {return obj.brand_id=rowData.brandId});
-             let dealerObj=this.dealers.find((obj:any)=> {return obj.dealer_id=rowData.dealerId});
-         let locationObj=this.locations.find((obj:any)=> {return obj.location_id=rowData.locationId});
+             // console.log(rowData.brandId,rowData.dealerId);
+            let brandObj=this.brands.find((obj:any)=> {return obj.brand_id==rowData.brandId});
+             let dealerObj=this.dealers.find((obj:any)=> {return obj.dealer_id==rowData.dealerId});
+         let locationObj=this.locations.find((obj:any)=> {return obj.location_id==rowData.locationId});
         let designationObj=this.designations.find((obj:any)=>{ return obj.id==rowData.designationId})
         let roleObj=this.roles.find((obj:any)=>{return obj.id==rowData.roleId})
         let verticalObj=this.associatedBusinesses.find((obj:any)=>{return obj.id==rowData.business_vertical})
          let statusObj=this.statuses.find((obj:any)=>{return obj.name==rowData.status?'Active':'Inactive'})
-       //console.log(brandObj,dealerObj,locationObj)
+     //  console.log(brandObj,dealerObj,locationObj)
 
         this.editUserForm.patchValue({
           brand:brandObj?.brand_id,
@@ -188,6 +193,7 @@ export class DealerViewCreateUserComponent {
           userId: rowData.userId,
           status: statusObj?statusObj?.name:null
         });
+      //  console.log("this edit ",this.editUserForm.value)
         }
         )     
         }

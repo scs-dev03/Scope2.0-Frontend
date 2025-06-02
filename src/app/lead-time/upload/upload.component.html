@@ -100,7 +100,7 @@
                                              <small *ngIf="locationFormGroup.get('fileType')?.hasError('required')" style="color: red; font-size: 12px;">FileType is required.</small>
                                            </div> -->
                                              </div>
-                                             <div class="col-2 me-2">
+                                             <div class="col-4 me-2 ">
          
                                                  <p-fileUpload #fileUpload
                                                  [name]="'fileType_' + i"
@@ -114,7 +114,7 @@
                                                  multiple="false"
                                          >
                                     </p-fileUpload>
-                                    <label class="f-11">{{fileNames[i]}}</label>
+                                    <label class="f-11 ms-2">{{fileNames[i]}}</label>
                                     <!-- <div *ngIf="locationFormGroup.get('fileType' + i)?.touched && locationFormGroup.get('fileType' + i)?.invalid">
                                      <small *ngIf="locationFormGroup.get('fileType' + i)?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small>
                                    </div> -->
@@ -205,7 +205,7 @@
                              
                         <p class="f-11">{{fileType.fileType}}</p>
                          </div>
-                         <div class="col-1 me-2">
+                         <div class="col-4 me-2 d-flex ">
      
                              <p-fileUpload #fileUpload
                              mode="advanced"
@@ -218,7 +218,7 @@
                              [name]="'fileType_' + i"
                              (onSelect)="onUpload($event,fileType,i)" 
                                />
-                               <label class="f-11">{{fileNames[i]}}</label>
+                               <label class="f-11 ms-2">{{fileNames[i]}}</label>
                                <!-- <div *ngIf="uploadForm.get('fileType' + i)?.touched && uploadForm.get('fileType' + i)?.invalid">
                                  <small *ngIf="uploadForm.get('fileType' + i)?.hasError('required')" style="color: red; font-size: 12px;">Location is required.</small>
                                </div> -->
@@ -240,14 +240,14 @@
                      <div class=" d-flex justify-content-end" [ngClass]="isScreenCollapsed?'':''">
              
                          <div class=" btn-search  " [ngClass]="isScreenCollapsed?'':''">
-                             <p-button [styleClass]="'text-white'" label="Submit"  [disabled]="!isFileUploaded" (click)="submit()" />
+                             <p-button [styleClass]="'text-white'" class="btn-upload " label="Submit"  [disabled]="!isFileUploaded" (click)="submit()" />
                          </div>
                          <div class="d-flex ">
                               <div class=" btn-export"  [ngClass]="isScreenCollapsed?'':''">
-                                 <p-button [styleClass]="'text-white'" class="" label="Download Format" [disabled]="showDownloadFormat"  (click)="downloadExcel()" />
+                                 <p-button [styleClass]="'text-white'" class="btn-upload" label="Download Format" [disabled]="showDownloadFormat"  (click)="downloadExcel()" />
                              </div>
                              <div class=" btn-export " *ngIf="!isLocationWiseChecked " [ngClass]="isScreenCollapsed?'':''">
-                                 <p-button [styleClass]="'text-white'" class="" label="Download Workshop List" [disabled]="showDownloadFormat"  (click)="downloadWorkShopList()" />
+                                 <p-button [styleClass]="'text-white'" class="btn-upload" label="Download Workshop List" [disabled]="showDownloadFormat"  (click)="downloadWorkShopList()" />
                              </div>
                              <!-- <div class=" btn-search" [ngClass]="isScreenCollapsed?'col-3':'col-2'">
                                  <p-button [styleClass]="'text-white'" label="Search" [disabled]="!isSearchButton" (click)="search()" />
@@ -269,7 +269,7 @@
                          <p-button [styleClass]="'text-white'" class="" label="Download Logs File" (click)="downloadExcelFile()" />
                      </div> -->
                  </div>
-                 <div class="row  mt-4 flex justify-start " [ngClass]="sidebarVisible?'w-[65vw]':'w-[90vw]'"  >
+                 <div class="row  mt-4 flex justify-start " [ngClass]="sidebarVisible?'w-[72vw]':'w-[90vw]'"  >
                      <div class="col-12 d-flex justify-content-start">
                          <p-table
                         [value]="updatedAuditLogs" *ngIf="showTable"

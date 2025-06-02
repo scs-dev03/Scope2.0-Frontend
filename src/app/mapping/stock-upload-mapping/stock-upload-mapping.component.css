@@ -152,13 +152,18 @@ span{
     width:15vw !important;
     overflow-x: hidden !important;
 }
+
 /* :host ::ng-deep .brandDropdown input.p-inputtext.p-component.p-select-filter{
     width:196px !important
 } */
+
 :host ::ng-deep .brandDropdown .p-select-filter {
+   
      width:196px !important;
 }
+
 :host ::ng-deep .brandDropdown-collapse .p-select-filter {
+   
      width:19vw !important;
 }
 :host ::ng-deep  li{

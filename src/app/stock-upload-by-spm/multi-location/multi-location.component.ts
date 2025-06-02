@@ -13,6 +13,7 @@ import { Table } from 'primeng/table';
 import { UserService } from '../../services/user.service';
 import { SidebarService } from '../../services/sidebar.service';
 import { SharedServiceService } from '../../services/shared-service.service';
+import { StockUploadByUserService } from '../../services/stock-upload-by-user.service';
 @Component({
   selector: 'app-multi-location',
   imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
@@ -42,6 +43,11 @@ export class MultiLocationComponent {
 response:any=[];
 users:any=[];
 visibleSidebar:boolean=false;
+dealerId:any;
+moduleType:any='multi'
+file:any;
+fileName:any;
+blForm:FormGroup
  isDataPresentPartNotInMaster:boolean=false;
         locationSelected: Set<number> = new Set(); // To track selected locations
         @ViewChildren('fu') fu: QueryList<FileUpload> | undefined;
@@ -52,7 +58,8 @@ visibleSidebar:boolean=false;
      private messageService:MessageService,
      private userService:UserService,
      private sidebarService:SidebarService,
-     private sharedService:SharedServiceService
+     private sharedService:SharedServiceService,
+     private stockUploadServiceBySCSUser:StockUploadByUserService
     ){
 
      
@@ -62,10 +69,37 @@ visibleSidebar:boolean=false;
           dealer:['']
         });
         // this.addLocation(); // Initially add one location entry
-       this.sharedService.updateModuleName('Multi Location Stock Upload')
+
+        this.blForm=this.fb.group({
+          file:['',Validators.required]
+        })
+       this.sharedService.updateModuleName('Multi Location / Bulk Stock Upload')
       
     }
 
+     onSelectForBulk(event: any) {
+    const fileControl = this.blForm.get('file'); // Get the file form control
+    
+    // Check if exactly one file is selected
+    if (event.files && event.files.length === 1) {
+      const file = event.files[0]; // Get the first selected file
+      
+      // If a file is selected, update the form control with the new file
+      fileControl?.setValue(file);
+      
+      // Set class variables for further use (e.g., for displaying the file name)
+      this.file = file;
+      this.fileName = file.name;
+    } else {
+      // If no file or more than one file is selected, reset the form control
+      fileControl?.setValue(null);
+      this.file = null;
+      this.fileName = '';
+    }
+  
+    // Trigger form control validation to ensure the validation state is updated
+    fileControl?.updateValueAndValidity();
+  }
     onPageChange(event: any) {
       this.first = event.first; // Track current page number
     }
@@ -75,7 +109,8 @@ visibleSidebar:boolean=false;
       this.userService.allUserData$.subscribe((users:any)=>{
         this.users=users;
       })
-      
+      this.dealerId=localStorage.getItem('dealerid');
+      this.getLocations()
        this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible;
    })
@@ -217,7 +252,7 @@ visibleSidebar:boolean=false;
         }
         this.formData.append('user_id', this.userId.toString());
         
-        this.formData.append('dealer_id', this.mlForm.value.dealer.toString());
+        this.formData.append('dealer_id', this.dealerId.toString());
       });
     
 
@@ -328,6 +363,30 @@ visibleSidebar:boolean=false;
         }
       }        
     }
+
+    onBulkUpload(){
+
+      if(this.blForm.invalid){
+        Object.keys(this.blForm.controls).forEach(controlName => {
+          this.blForm.get(controlName)?.markAllAsTouched()
+        });
+      }
+      else{
+         const formData = new FormData();
+       formData.append('excelFile', this.file, this.fileName);
+       formData.append('dealer_id', localStorage?.getItem('dealerid')?.toString()??'');
+       formData.append('brand_id', localStorage?.getItem('brandid')?.toString()??'');
+       formData.append('user_id', this.userId.toString());
+         this.globalBlockUiService.startLoading();
+        this.stockUploadService.uploadBulkStock(formData).subscribe((res:any)=>{
+ this.globalBlockUiService.stopLoading();
+        },(error:any)=>{
+
+           this.globalBlockUiService.stopLoading();
+        })
+      }
+    }
+
     clearResponse() {
       this.response = [];
     }
@@ -389,9 +448,10 @@ visibleSidebar:boolean=false;
 
     getLocations(){
       this.globalBlockUiService.startLoading();
-      this.utilitiesService.getLocations({dealer_id:20295}).subscribe((res:any)=>{
+      this.utilitiesService.getLocations({dealer_id:this.dealerId}).subscribe((res:any)=>{
         this.globalBlockUiService.stopLoading();
         this.locations=res.data;
+         this.initializeFormArray();
         // console.log(this.brands)
       },(error:any)=>{
         this.globalBlockUiService.stopLoading();
@@ -451,6 +511,7 @@ visibleSidebar:boolean=false;
 
     exportToExcel(){
    
+      if(this.partNotInMasterData?.length>0){
       const ws = XLSX.utils.json_to_sheet(this.partNotInMasterData);
           
               // Create a workbook and append the worksheet
@@ -460,7 +521,7 @@ visibleSidebar:boolean=false;
               // Write the workbook to a file and trigger download
               XLSX.writeFile(wb, 'part_not_in_master_data.xlsx');
     }
-
+  }
     exportUploadedData(){
       this.getUploadedData();
     }
@@ -555,7 +616,7 @@ visibleSidebar:boolean=false;
     this.utilitiesService.getLocations({dealer_id:this.mlForm.value.dealer}).subscribe((res:any)=>{
       this.locations=res.data;
       // this.updateFormArray();
-      this.initializeFormArray();
+     
       this.globalBlockUiService.stopLoading();
       if(res?.data?.error){
         this.globalBlockUiService.stopLoading();
@@ -564,5 +625,49 @@ visibleSidebar:boolean=false;
     },(error:any)=>{
       this.globalBlockUiService.stopLoading();
     })
+    }
+
+    getBulkUploadedData(){
+
+      this.stockUploadServiceBySCSUser.getUploadedData({dealer_id:localStorage.getItem('dealerid'),user_id:this.userId}).subscribe((blob:any)=>{
+      const link = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+
+      // Set the file name and trigger the download
+      link.href = url;
+      link.download = 'uploaded_data.zip'; // You can set a dynamic file name here
+      link.click();
+
+      // Cleanup the object URL after download
+      window.URL.revokeObjectURL(url);
+          this.globalBlockUiService.stopLoading();
+          this.messageService.add({severity:'success',detail:'File is generated succesfully for Uploaded Data',life:3000})
+    },(error:any)=>{
+      this.globalBlockUiService.stopLoading();
+      this.messageService.add({severity:'error',detail:'Error in downloading the file',life:4000});
+    }) 
+    }
+
+    getPartNotInMasterBulk(){
+      this.stockUploadService.getPartNotInMasterForBulk({dealer_id:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
+         this.partNotInMasterData=res.data;
+          if(this.partNotInMasterData.length==0){
+            this.isDataPresentPartNotInMaster=false;
+          }
+          else{
+            this.isDataPresentPartNotInMaster=true;
+             if(this.partNotInMasterData?.length>0){
+      const ws = XLSX.utils.json_to_sheet(this.partNotInMasterData);
+          
+              // Create a workbook and append the worksheet
+              const wb = XLSX.utils.book_new();
+              XLSX.utils.book_append_sheet(wb, ws, 'Table Data');
+          
+              // Write the workbook to a file and trigger download
+              XLSX.writeFile(wb, 'part_not_in_master_data.xlsx');
+    }
+          }
+          this.globalBlockUiService.stopLoading();
+      })
     }
 }

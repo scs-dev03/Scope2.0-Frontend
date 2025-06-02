@@ -49,6 +49,7 @@ export class SingleLocationComponent {
   visibleSidebar:boolean=false
   isDataPresentPartNotInMaster:boolean=false;
   @ViewChild('fu') fu:FileUpload|null=null;
+  dealerId:any;
   constructor(private utilitiesService:UtilitiesService,
    private fb:FormBuilder,
    private stockUploadService:StockUploadBySpmService,
@@ -69,7 +70,8 @@ export class SingleLocationComponent {
  
   ngOnInit(){
   //  this.getLocations();
-   this.getBrands();  
+  this.dealerId=localStorage.getItem('dealerid');
+  // this.getBrands();  
    this.userService.allUserData$.subscribe((res:any)=>{
     this.users=res;
    })
@@ -79,7 +81,18 @@ export class SingleLocationComponent {
     this.visibleSidebar=visible
    })
 
-    this.sharedService.updateModuleName('Single Location Stock Upload')
+    this.sharedService.updateModuleName('Single Location Stock Upload');
+     this.utilitiesService.getLocations({dealer_id:this.dealerId}).subscribe((res:any)=>{
+      this.locations=res.data;
+      this.globalBlockUiService.stopLoading();
+      // console.log(this.brands)
+      if(res?.data?.error){
+        this.globalBlockUiService.stopLoading();
+        return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Locations!'})
+      }
+    },(error:any)=>{
+      this.globalBlockUiService.stopLoading();
+    })
   }
  
   onSelect(event: any) {
@@ -256,6 +269,9 @@ export class SingleLocationComponent {
  
    exportToExcel(){
 
+    if(this.partNotInMasterRecords?.length>0){
+
+  
     const modifiedData = this.partNotInMasterRecords.map((item: any) => ({
      
       ['Part Number']: item.partnumber , 
@@ -270,7 +286,7 @@ export class SingleLocationComponent {
 
     // Write the workbook to a file and trigger download
     XLSX.writeFile(wb, 'Part_Not_In_Master.xlsx');
-    
+  }
    }
 
 
@@ -290,11 +306,22 @@ export class SingleLocationComponent {
 
    exportUploadedData(){
     
-    
+    if(this.uploadedData?.length>0){
+   //   console.log("uploaded data ",this.uploadedData)
     const modifiedData = this.uploadedData.map((item: any) => ({
-     
-      ['Part Number']: item.partnumber , 
-      Quantity:item.qty
+                  Brand:item.brand,
+                  Dealer:item.dealer,
+                  Location:item.location,
+                  ['Part Number']: item.partNumber , 
+                  ['Latest Part Number']:item.LatestPartNumber,
+                  Description:item.partDesc,
+                  Category:item.PartType,
+                  Rate:item.LandedCost,
+                  MRP:item.mrp,
+                  MOQ:item.moq,
+                  ['Part Nature']:item.partNature,
+                  Quantity:item.Quantity,
+                  Date:this.formatDate(item.stockDate)
 
     }));
     const ws = XLSX.utils.json_to_sheet(modifiedData);
@@ -305,6 +332,7 @@ export class SingleLocationComponent {
 
     // Write the workbook to a file and trigger download
     XLSX.writeFile(wb, 'uploaded_data.xlsx');
+  }
    }
    getLocations(){
        

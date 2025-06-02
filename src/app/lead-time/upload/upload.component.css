@@ -181,6 +181,15 @@ margin-left: 64px; */
 label{
     font-size: 11px ;
 }
+
+:host ::ng-deep button.p-ripple.p-button.p-component.text-white{
+
+    padding: 3px !important;
+}
+
+:host ::ng-deep input.p-inputtext.p-component.p-select-filter{
+    font-size: 12px !important;
+}
 @media (min-width:768px) and (max-width:1023px){
     label{
         font-size:11px !important

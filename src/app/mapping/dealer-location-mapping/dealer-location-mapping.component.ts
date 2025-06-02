@@ -53,13 +53,17 @@ export class DealerLocationMappingComponent {
  isViewMapping:boolean=false;
  filteredRecords:any[]=[]
  visibleSidebar:boolean=false;
+ locations:any=[];
+ editDlForms: { [key: string]: FormGroup } = {};
+ editloc:number|null=null;
  constructor(private utilitiesService:UtilitiesService,
   private fb:FormBuilder,private dealerLocationService:DealerLocationMappingService,
   private globalUiService:GlobalBlockUiService,
   private messageService:MessageService,
   private sidebarService:SidebarService,
   private userService:UserService,
-  private sharedService:SharedServiceService
+  private sharedService:SharedServiceService,
+  
  ){
 
   this.dlForm=this.fb.group({
@@ -103,6 +107,7 @@ export class DealerLocationMappingComponent {
    if(!this.showEditPopUp){
     this.addFileName=this.file.name;
    }
+  
  }
 
   onUpload() {
@@ -187,7 +192,7 @@ export class DealerLocationMappingComponent {
    }
    else{
     Object.keys(this.dlForm.controls).forEach((controlName:any)=>{
-      this.dlForm.get(controlName)?.markAsTouched();
+      this.dlForm.get(controlName)?.markAllAsTouched();
     })
    
    }
@@ -219,12 +224,25 @@ export class DealerLocationMappingComponent {
           this.exportType = 'All';
          
           this.showTable=true;
+          this.records.forEach((row:any, index:any) => {
+    this.editDlForms[index] = this.fb.group({
+      location_id: [row.location_id,Validators.required],
+      inventory_location: [row.inventory_location,Validators.required],
+      remark:[row.remark,Validators.required]
+    });
+
+  //   console.log("location ",row)
+  //   this.editDlForms[index].patchValue({
+  // location: row.location_id
+  //   })
+    
+  });
         }else{
           
           this.showTable=false;
         }
       
-       // console.log("records ",this.records)
+        // console.log("records ",this.records)
         let brandObj=this.brands.find((obj:any)=>obj?.brand_id==this.dlForm.value.brand);
        
        this.records= this.records.map((item:any)=>{
@@ -463,11 +481,14 @@ onBrandSelect(event:any){
     this.dealerLocationService.editDealerLocationMapping(formData).subscribe((res:any)=>{
       if(res?.isDealerAndLocationPresent==false){
         this.messageService.add({severity:'error',summary:'Dealer, Location and Inventory Location is not present in Uploaded File!',life:4000})
-      
+      this.fu1?.clear();
+      this.fu?.clear();
+        
       }
       if(res?.isDealerAndLocationNull){
         this.messageService.add({severity:'error',summary:'Dealer, Location and Inventory Location cannot be null!',life:4000})
-       
+       this.fu1?.clear();
+      this.fu?.clear();
       }
 
       if(res?.dealerLocationNotInMasterPresent){
@@ -475,10 +496,14 @@ onBrandSelect(event:any){
        // console.log("data not present in master ",this.dataNotPresentInMaster)
         if(this.dataNotPresentInMaster.length==0){
           this.wrongDataExist=false;
+          this.fu1?.clear();
+      this.fu?.clear();
         }
         else{
           this.wrongDataExist=true;
           this.exportWrongDealerLocation();
+          this.fu1?.clear();
+      this.fu?.clear();
         }
         this.messageService.add({severity:'error',summary:'Dealers and Locations are not present in our database!',life:4000})
        
@@ -489,6 +514,8 @@ onBrandSelect(event:any){
         this.viewMapping();
         this.dealerLocationService.exportToExcel({brand_id:this.dlForm.value.brand}).subscribe((res:any)=>{
          this.uploadedData=res.data;
+         this.fu1?.clear();
+      this.fu?.clear();
         if(this.uploadedData.length!=0){
           this.isDataPresent=true;
           this.isDataExist=true;
@@ -577,10 +604,151 @@ onBrandSelect(event:any){
   showEditPopup(){
     this.fu?.clear();
     this.showEditPopUp=true;
-    this.formData=new FormData;
+    this.formData=new FormData();
     this.file=null;
     this.selectedFile=null;
     this.addFileName=''
     this.fu1?.clear();
   }
+
+  editLocationInventorylocation(rowData:any,rowIndex:any){
+
+   this.editloc = rowIndex;
+    
+
+    this.utilitiesService.getLocations({dealer_id:rowData.dealerId}).subscribe((res:any)=>{
+    //  this.locations=res.data;
+       this.locations = res.data.map((loc: any) => ({
+    ...loc,
+    location_id: Number(loc.location_id) // ensure type consistency
+  }));
+      if (this.locations?.length) {
+  this.records.forEach((row: any, index: number) => {
+    const locationId = Array.isArray(row.location_id) ? row.location_id[0] : row.location_id;// Ensure type match
+    // console.log("lcoationId ",locationId)
+    this.editDlForms[index].patchValue({
+      location_id: locationId,
+      inventory_location: row.inventory_location,
+      remark:row.remark
+    });
+
+    // Optional: debug
+    // console.log(`Form ${index}:`, this.editDlForms[index].value);
+  });
+}
+    })
+   
+  }
+
+ submit(i: number) {
+  Object.keys(this.editDlForms[i].controls).forEach((controlName) => {
+    this.editDlForms[i].get(controlName)?.markAsTouched(); // ✅ mark each control
+  });
+
+  if (this.editDlForms[i].valid) {
+    // console.log("Submit row:", this.editDlForms[i].value);
+    this.editloc = null; // close edit mode after submit
+ const editedRow = this.editDlForms[i].value;
+//console.log("edit Row ",editedRow)
+  // Make a deep copy of records and apply the edited row
+  const recordsToValidate = [...this.records];
+  recordsToValidate[i] = {
+    ...recordsToValidate[i],
+    ...editedRow, // Apply edited form values
+  };
+
+  const errors = this.validateInventoryMapping(recordsToValidate);
+
+  if (errors.length > 0) {
+    this.messageService.add({ severity: 'error', summary: 'Validation Error', detail: errors.join('\n') });
+    return;
+  }
+  else{
+    // console.log("id ",i,this.records[i]?.id,this.records[i])
+   let locObj= this.locations.find((obj:any)=>{return obj.location_id==editedRow.location_id})
+ this.dealerLocationService.editLocInventoryMapping({location_id:editedRow.location_id,added_by:this.userId,location:locObj?.location_name,inventory_location:editedRow.inventory_location,id:this.records[i]?.id,remark:editedRow.remark}).subscribe((res:any)=>{
+
+  this.messageService.add({severity:'success',summary:'Updated Successfully',life:3000})
+  this.viewMapping()
+    })
+  }
+    
+  }
+}
+// validateInventoryMapping(records: any[]): string[] {
+//   const errors: string[] = [];
+
+//  // console.log("records",records)
+//   // dealerId -> inventoryLocation -> Set of associated locations
+//   const dealerInventoryMap = new Map<number, Map<string, Set<string>>>();
+
+//   for (const record of records) {
+//     const { dealerId, location, inventory_location } = record;
+
+//     if (!dealerInventoryMap.has(dealerId)) {
+//       dealerInventoryMap.set(dealerId, new Map());
+//     }
+
+//     const inventoryMap = dealerInventoryMap.get(dealerId)!;
+
+//     if (!inventoryMap.has(inventory_location)) {
+//       inventoryMap.set(inventory_location, new Set());
+//     }
+
+//     inventoryMap.get(inventory_location)!.add(location);
+//   }
+
+//   // Check if any inventoryLocation maps to more than 1 location for same dealer
+//   for (const [dealerId, inventoryMap] of dealerInventoryMap) {
+//     for (const [inventoryLocation, locationsSet] of inventoryMap) {
+//       if (locationsSet.size > 1) {
+//         errors.push(
+//           `Inventory Location "${inventoryLocation}" is linked to multiple locations: ${Array.from(locationsSet).join(', ')}`
+//         );
+//       }
+//     }
+//   }
+
+//   return errors;
+// }
+
+ validateInventoryMapping(records: any[]): string[] {
+  const errors: string[] = [];
+
+  const dealerInventoryMap = new Map<number, Map<string, Set<string>>>();
+
+  for (const record of records) {
+    const dealerId = record.dealerId;
+    const location = String(record.location).toLowerCase(); // ✅ normalize to lowercase
+    const inventory_location = String(record.inventory_location).toLowerCase(); // ✅ normalize
+
+    if (!dealerInventoryMap.has(dealerId)) {
+      dealerInventoryMap.set(dealerId, new Map());
+    }
+
+    const inventoryMap = dealerInventoryMap.get(dealerId)!;
+
+    if (!inventoryMap.has(inventory_location)) {
+      inventoryMap.set(inventory_location, new Set());
+    }
+
+    inventoryMap.get(inventory_location)!.add(location);
+  }
+
+  // Validate mapping: 1 inventory_location should map to only 1 location per dealer
+  for (const [dealerId, inventoryMap] of dealerInventoryMap) {
+    for (const [inventoryLocation, locationsSet] of inventoryMap) {
+      if (locationsSet.size > 1) {
+        errors.push(
+          `Dealer ${dealerId}: Inventory Location "${inventoryLocation}" is linked to multiple locations: ${Array.from(locationsSet).join(', ')}`
+        );
+      }
+    }
+  }
+
+  return errors;
+}
+
+
+
 }
