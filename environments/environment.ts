@@ -9,8 +9,11 @@ export const environment = {
       //leadtime backend
      //  apiUrl:'http://web17.185.238.new.ocpwebserver.com/api/'
 
-    //scope 2.0 backend
-     apiUrl:'http://web36.185.238.new.ocpwebserver.com/api/'
+    // scope 2.0 backend dev
+     // apiUrl:'http://web10.185.238.new.ocpwebserver.com/api/'
+
+      // scope 2.0 backend uat
+    //  apiUrl:'http://web36.185.238.new.ocpwebserver.com/api/'
   };
 
 

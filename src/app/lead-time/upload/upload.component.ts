@@ -116,31 +116,31 @@ export class UploadComponent {
    this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.sidebarVisible=visible
    })
-//    this.dataSubscription = this.sharedService.sidebarData.subscribe(
-//     (data) => {
-//       this.receivedData = data;
-//      // console.log('Data received in User:', this.receivedData);
-//       if(this.receivedData.length!=null){
+   this.dataSubscription = this.sharedService.sidebarData.subscribe(
+    (data) => {
+      this.receivedData = data;
+     // console.log('Data received in User:', this.receivedData);
+      if(this.receivedData.length!=null){
 
-//         for(let item of this.receivedData){
-//           const moduleItem = item?.subchildren.find((child:any) => child.module_route === this.currentRoute);
+        for(let item of this.receivedData){
+          const moduleItem = item?.subchildren.find((child:any) => child.module_route === this.currentRoute);
 
-// if (moduleItem) {
-//   // Extract values if module is found
-//   this.userPermissions = {
-//     view1: moduleItem.view1,
-//     add1: moduleItem.add1,
-//     delete1: moduleItem.delete1,
-//     edit1: moduleItem.edit1
-//   };
+if (moduleItem) {
+  // Extract values if module is found
+  this.userPermissions = {
+    view1: moduleItem.view1,
+    add1: moduleItem.add1,
+    delete1: moduleItem.delete1,
+    edit1: moduleItem.edit1
+  };
  
-// }
-//         }
-//       }
-//     // console.log("result",this.userPermissions)
+}
+        }
+      }
+    // console.log("result",this.userPermissions)
      
-//     }
-//   );
+    }
+  );
   }
   onBrandSelect(brand: string): void {
     this.fileTypes=[]
