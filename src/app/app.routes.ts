@@ -8,8 +8,8 @@ export const routes: Routes = [
     {
         path:'part-ledger',
         loadChildren:()=> import('../app/part-ledger/part-ledger.module').then(m=>m.PartLedgerModule),
-        // canLoad:[authGuard],
-        // canActivate:[authGuard]
+         canLoad:[authGuard],
+         canActivate:[authGuard]
     },
     {
         path:'mapping',
@@ -35,14 +35,14 @@ export const routes: Routes = [
     {
         path:'dashboard-scheduler',
         loadChildren:()=> import('../app/dasboard-scheduler/dasboard-scheduler.module').then(m=>m.DasboardSchedulerModule),
-        //  canLoad:[authGuard],
-        //  canActivate:[authGuard]
+          canLoad:[authGuard],
+          canActivate:[authGuard]
     },
     {
         path:'von',
         loadChildren:()=> import('../app/von/von.module').then(m=>m.VonModule),
-        //  canLoad:[authGuard],
-        //  canActivate:[authGuard]
+          canLoad:[authGuard],
+          canActivate:[authGuard]
     },
     {
         path:'core',

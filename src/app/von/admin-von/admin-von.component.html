@@ -630,8 +630,9 @@
               <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px]">
                 <p-button
                   icon="pi pi-eye"
-                  raised="true"
+                  
                   [rounded]="true"
+                  [text]="true"
                   class="!w-[13px] !h-[15px]"
                   (onClick)="onClickShowSales(rowData)"
                 />
@@ -688,8 +689,9 @@
               <td class="p-3 text-center">
                 <p-button
                   icon="pi pi-eye"
-                  raised="true"
+                  
                   [rounded]="true"
+                  text="true"
                   (onClick)="onClickViewLog(rowData)"
                 />
               </td>
@@ -723,13 +725,13 @@
 >
   <div class="p-text-secondary block mb-8">
     <p-table
-      [tableStyle]="{ 'min-width': '50rem' }"
+      [tableStyle]="{ 'min-width': '30rem' }"
       [scrollable]="true"
       [value]="Adminviewlog"
       showGridlines="true"
     >
       <ng-template #header>
-        <tr>
+        <tr class="text-[12px]">
           <th>PartNumber</th>
           <th>Feedback Date</th>
           <th>Proposed Qty</th>
@@ -742,7 +744,7 @@
         </tr>
       </ng-template>
       <ng-template #body let-data>
-        <tr>
+        <tr class="text-xs">
           <td>{{ data.PartNumber }}</td>
           <td>{{ data.FeedbackDate | date : "dd-MMM-yy / h:mm a" : "UTC" }}</td>
           <td>{{ data.ProposedQty }}</td>

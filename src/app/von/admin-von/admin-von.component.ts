@@ -771,6 +771,7 @@ export class AdminVonComponent {
           if (!res.Data || res.Data.length === 0) {
             this.Result = 'No Sales Available for this';
             this.visible = true;
+            this.globalBlockUiService.stopLoading();
           } else {
             this.showSale = true;
             this.partFamilySaleData = res.Data;

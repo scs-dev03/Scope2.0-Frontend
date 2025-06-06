@@ -297,7 +297,7 @@ export class AdminSalesReportComponent {
           this.showMessage = true;
           this.exportVisible = true;
           this.visible = true
-          this.Result = 'Failed to load Sales Information'
+          this.Result = 'No Data Available for this Location' 
           // Optional: Toast or user-friendly alert
           // this.toastr.error('Failed to load sales info. Please try again.');
         }
