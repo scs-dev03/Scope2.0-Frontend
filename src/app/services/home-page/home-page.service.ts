@@ -7,10 +7,10 @@ import { Observable } from 'rxjs';
 })
 export class HomePageService {
   private apiurl: any =
-  'http://web10.185.238.new.ocpwebserver.com/api/v1/von/';
+  'http://web36.185.238.new.ocpwebserver.com/api/v1/von/';
 
 private apiurlmaster: any =
-  'http://web10.185.238.new.ocpwebserver.com/api/v1/master/';
+  'http://web36.185.238.new.ocpwebserver.com/api/v1/master/';
 
 // private apiurlmaster: any =
 //   'http://localhost:3000/api/v1/master/';

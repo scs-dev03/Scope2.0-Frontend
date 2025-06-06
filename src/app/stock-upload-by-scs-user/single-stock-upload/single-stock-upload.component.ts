@@ -334,7 +334,7 @@ export class SingleStockUploadComponent {
       MRP:item.mrp,
       MOQ:item.moq,
       ['Part Nature']:item.partNature,
-      Quantity:item.Quantity,
+      Stock:item.Quantity,
       Date:this.formatDate(item.stockDate)
 
     }));

@@ -18,6 +18,7 @@ import { SHARED_IMPORTS } from './shared/shared-imports/shared-module';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PageStateService } from './services/page-state.service';
 import { PageNotFoundComponent } from './core/page-not-found/page-not-found.component';
+import { IdleService } from './services/idle.service';
 
 @Component({
   selector: 'app-root',
@@ -49,6 +50,7 @@ export class AppComponent {
     private utilitiesService:UtilitiesService,
     private sharedService:SharedServiceService,
     private pageStateService:PageStateService,
+    private idleService:IdleService,
   private userService:UserService) {
     this.homeData = new FormGroup({
     locationId: new FormControl(),

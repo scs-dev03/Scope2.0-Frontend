@@ -24,17 +24,18 @@
       <form
         action=""
         [formGroup]="adminFilterData"
-        class="flex flex-wrap py-5 justify-start items-center gap-3 w-auto scale-[.9]"
+        class="flex flex-wrap py-2 justify-start items-center gap-3 w-auto scale-[.9]"
       >
         <!-- brand -->
         <p-floatlabel variant="on">
           <p-select
             formControlName="brand"
             [options]="brandData"
-            [showClear]="true"
             optionValue="bigid"
             optionLabel="vcbrand"
-            class="!w-32 !text-[10px]"
+            showClear="true"
+            appendTo="body"
+            class="!w-36 !text-[10px] custom-clear-style"
             scrollHeight="150px"
             (onChange)="onClickBrand()"
             [filter]="true"
@@ -56,7 +57,8 @@
             optionValue="dealerid"
             optionLabel="dealer"
             scrollHeight="150px"
-            class="!w-32 !text-[10px]"
+            appendTo="body"
+            class="!w-36 !text-[10px] custom-clear-style"
             (onChange)="onclickDealer()"
             [filter]="true"
             filterBy="dealer"
@@ -75,9 +77,10 @@
             [options]="locaitonData"
             [showClear]="true"
             optionValue="locationid"
+            appendTo="body"
             optionLabel="location"
             scrollHeight="150px"
-            class="!w-28 !text-[10px]"
+            class="!w-36 !text-[10px] custom-clear-style"
             (onChange)="onClickLocation()"
             [filter]="true"
             filterBy="location"
@@ -97,7 +100,7 @@
             optionLabel="name"
             [showClear]="true"
             optionValue="code"
-            class="!w-32 !text-[10px]"
+            class="!w-36 !text-[10px]"
             [filter]="true"
             filterBy="name"
           />
@@ -111,7 +114,7 @@
             formControlName="parttype"
             optionLabel="Description"
             optionValue="parttypeid"
-            class="!w-32 !text-[10px]"
+            class="!w-36 !text-[10px]"
           />
           <label for="parttype" class="text-[10px]">Part Type</label>
         </p-floatlabel>
@@ -123,7 +126,7 @@
             optionLabel="Description"
             optionValue="tCode"
             [showClear]="true"
-            class="!w-28 !text-[10px]"
+            class="!w-36 !text-[10px]"
             [filter]="true"
             scrollHeight="150px"
             filterBy=" Description"
@@ -138,7 +141,7 @@
             [showClear]="true"
             optionLabel="Model"
             scrollHeight="150px"
-            class="!w-28 !text-[10px]"
+            class="!w-36 !text-[10px]"
             [filter]="true"
             filterBy=" Model"
           />
@@ -152,7 +155,7 @@
             optionLabel="Description"
             [showClear]="true"
             optionValue="tCode"
-            class="!w-28 !text-[10px]"
+            class="!w-36 !text-[10px]"
           />
           <label for="seasonal" class="text-[10px]">Seasonal </label>
         </p-floatlabel>
@@ -162,7 +165,7 @@
             [options]="adminstatus"
             optionValue="code"
             optionLabel="name"
-            class="!w-32 !text-pretty !text-[10px]"
+            class="!w-36 !text-pretty !text-[10px]"
             (onChange)="onClickBrand()"
           />
           <label for="status" class="text-[10px]">Status </label>
@@ -236,6 +239,7 @@
           class="text-[10px]"
           id="submit"
           label="Submit"
+          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
           size="small"
           severity="success"
           (onClick)="onClickSubmitfilterData()"
@@ -243,19 +247,15 @@
         <p-button
           id="submit"
           size="small"
+          icon="pi pi-download"
           class="text-[10px]"
-          label="All Export"
+          pTooltip="Norms Export" tooltipPosition="top"
+          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+          label="Norms"
           severity="info"
           (onClick)="exportToExcelOldSP()"
         />
-        <p-button
-          id="submit"
-          size="small"
-          class="text-[10px]"
-          label="Pending Export"
-          severity="info"
-          (onClick)="exportToExcelNewSP()"
-        />
+
         <!-- <p-button
           id="submit"
           class="text-[10px]"
@@ -267,25 +267,37 @@
 
         <p-button
           size="small"
+          icon="pi pi-upload"
+          pTooltip="Upload Review or Feedback" tooltipPosition="top"
           (onClick)="onClickShowUpload()"
-          label="Upload Review or Feedback"
+          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+          label="Upload "
         />
-        <p-button
+        <!-- <p-button
           size="small"
           (onClick)="OnclickPendinCount()"
           label="Pending Count"
-        />
+        /> -->
       </form>
     </div>
 
     <!-- part family sales Table -->
 
     <div
-      class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+      class="m-2 !-mt-3 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
       *ngIf="showSale"
     >
+      <div class="flex justify-end w-full">
+        <p-button
+          icon="pi pi-times"
+          [rounded]="true"
+          [text]="true"
+          severity="danger"
+          (onClick)="onClickCloseSales()"
+        />
+      </div>
       <div
-        class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden"
+        class="bg-gray-50  h-auto rounded-lg shadow-lg w-full overflow-hidden"
         style="zoom: 0.77"
       >
         <p-table
@@ -327,14 +339,29 @@
         </p-table>
       </div>
     </div>
+    
 
-    <div class="flex gap-3 ml-4">
-      <div class="w-10 h-10w-10 border-black border-1 bg-orange-100"></div>
+    <div class=" flex justify-between">
+      <div class="flex gap-3  ml-4">
+      <div class="w-5 h-5  border-[1px] border-gray-500 bg-orange-100"></div>
       <h6 class="">Pending</h6>
-      <div class="w-10 h-10w-10 bg-green-100 border-black border-1"></div>
+      <div class="w-5 h-5 bg-green-100 border-gray-500 border-[1px]"></div>
       <h6 class="">Reviewed</h6>
-      <div class="w-10 h-10w-10 bg-white border-black border-1"></div>
+      <div class="w-5 h-5 bg-white border-gray-500 border-[1px]"></div>
       <h6 class="">No feedback</h6>
+    </div>
+
+    <p-button
+      id="submit"
+      size="small"
+      [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+      icon="pi pi-download"
+      class="text-[10px]  mr-4"
+      pTooltip="Export Table Data" tooltipPosition="top"
+      label="Export Data"
+      severity="info"
+      (onClick)="exportToExcelNewSP()"
+    />
     </div>
 
     <!-- table Data -->
@@ -357,7 +384,7 @@
           [showGridlines]="true"
           scrollDirection="both"
           class="!w-[90vw]"
-           class="low-z-paginator"
+          class="low-z-paginator"
           sortable="true"
           [tableStyle]="{ 'min-width': '50rem' }"
           [globalFilterFields]="['partnumber', 'partdesc', 'UserRemark']"
@@ -757,11 +784,11 @@
       </ng-template>
       <ng-template #body let-Data>
         <tr>
-          <td class="!text-[12px]">{{ Data.partnumber1 }}</td>
+          <td class="!text-[12px]">{{ Data.PartNumber1 }}</td>
           <td class="!text-[12px]">{{ Data.LatestPartNumber }}</td>
-          <td class="!text-[12px]">{{ Data.partdesc }}</td>
-          <td class="!text-[12px]">{{ Data.category }}</td>
-          <td class="!text-[12px]">{{ Data.landedcost }}</td>
+          <td class="!text-[12px]">{{ Data.PartDesc }}</td>
+          <td class="!text-[12px]">{{ Data.Category }}</td>
+          <td class="!text-[12px]">{{ Data.LandedCost }}</td>
         </tr>
       </ng-template>
     </p-table>
@@ -789,8 +816,9 @@
       <span class="text-sm">{{ selectedFileName }}</span>
     </div>
     <p-button
+      #fu
       label="Upload"
-      (onClick)="UploadExcelDealer()"
+      (onClick)="UploadExcelDealer(fu)"
       severity="secondary"
       size="small"
     />
@@ -812,8 +840,9 @@
       <span class="text-sm">{{ adminFileName }}</span>
     </div>
     <p-button
+    #fu
       label="Upload"
-      (onClick)="UploadExcelAdmin()"
+      (onClick)="UploadExcelAdmin(fu)"
       severity="secondary"
       size="small"
     />

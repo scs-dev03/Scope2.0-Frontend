@@ -11,21 +11,44 @@
       [formGroup]="adminRemarkInputData"
       class="flex py-10 flex-wrap justify-center items-center gap-2 w-full"
     >
+    <div class="flex-col">
       <p-floatlabel variant="on">
         <p-select
           formControlName="type"
           [options]="typeData"
           optionValue="code"
+          showClear="true"
           optionLabel="name"
           class="!w-40 !text-xs"
+          [ngClass]="{
+            'p-invalid':
+              adminRemarkInputData.get('type')?.invalid &&
+              adminRemarkInputData.get('type')?.touched
+          }"
+          inputId="type"
         />
         <label for="type" class="text-xs !font-normal">Type</label>
       </p-floatlabel>
+
+      <!-- Validation message -->
+      <div
+        *ngIf="
+          adminRemarkInputData.get('type')?.invalid &&
+          adminRemarkInputData.get('type')?.touched
+        "
+        class="text-red-500 text-[10px] mt-1"
+      >
+        Type is required.
+      </div>
+
+    </div>
+      
 
       <p-floatlabel variant="on">
         <p-select
           formControlName="brand"
           [options]="brandData"
+          showClear="true"
           optionValue="bigid"
           optionLabel="vcbrand"
           class="!w-40 !text-xs"
@@ -87,21 +110,41 @@
             [tableStyle]="{ 'min-width': '50rem' }"
             [scrollable]="true"
             [value]="remarkData"
-             [rowHover]="true"
+            [rowHover]="true"
             scrollHeight="400px"
-            [globalFilterFields]="['vcbrand', 'remark',  'AddedBy']"
+            [globalFilterFields]="['vcbrand', 'remark', 'AddedBy']"
           >
             <ng-template #caption>
-            <div class="flex justify-between">
-                <p-button [outlined]="true" icon="pi pi-filter-slash" label="Clear" (click)="clear(dt)" />
-            </div>
-        </ng-template>
+              <div class="flex justify-between">
+                <p-button
+                  [outlined]="true"
+                  icon="pi pi-filter-slash"
+                  label="Clear"
+                  (click)="clear(dt)"
+                />
+              </div>
+            </ng-template>
 
             <ng-template #header>
               <tr>
-                <th>Brand<p-columnFilter type="text" field="vcbrand" display="menu" /></th>
-                <th>Remark<p-columnFilter type="text" field="remark" display="menu" /></th>
-                <th>Added By <p-columnFilter type="text" field="AddedBy" display="menu" /></th>
+                <th>
+                  Brand<p-columnFilter
+                    type="text"
+                    field="vcbrand"
+                    display="menu"
+                  />
+                </th>
+                <th>
+                  Remark<p-columnFilter
+                    type="text"
+                    field="remark"
+                    display="menu"
+                  />
+                </th>
+                <th>
+                  Added By
+                  <p-columnFilter type="text" field="AddedBy" display="menu" />
+                </th>
                 <th>Added On</th>
               </tr>
             </ng-template>

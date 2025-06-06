@@ -51,6 +51,8 @@ blForm:FormGroup
  isDataPresentPartNotInMaster:boolean=false;
         locationSelected: Set<number> = new Set(); // To track selected locations
         @ViewChildren('fu') fu: QueryList<FileUpload> | undefined;
+         @ViewChild('fu1') fu1: FileUpload | undefined;
+         showUploader:boolean=true;
     constructor(private utilitiesService:UtilitiesService,
      private fb:FormBuilder,
      private stockUploadService:StockUploadBySpmService,
@@ -77,6 +79,13 @@ blForm:FormGroup
       
     }
 
+    onRadioButtonChange(event:any){
+      this.showTable=false;
+      this.mlForm.reset();
+      this.blForm.reset();
+      this.partNotInMasterData=[];
+      
+    }
      onSelectForBulk(event: any) {
     const fileControl = this.blForm.get('file'); // Get the file form control
     
@@ -106,6 +115,8 @@ blForm:FormGroup
     ngOnInit(){
       // this.getLocations();
       this.getBrands();
+      localStorage.setItem('dealerid',"20490");
+      localStorage.setItem('brandid',"33")
       this.userService.allUserData$.subscribe((users:any)=>{
         this.users=users;
       })
@@ -365,26 +376,99 @@ blForm:FormGroup
     }
 
     onBulkUpload(){
-
+let formData1 = new FormData();
       if(this.blForm.invalid){
         Object.keys(this.blForm.controls).forEach(controlName => {
           this.blForm.get(controlName)?.markAllAsTouched()
         });
       }
       else{
-         const formData = new FormData();
-       formData.append('excelFile', this.file, this.fileName);
-       formData.append('dealer_id', localStorage?.getItem('dealerid')?.toString()??'');
-       formData.append('brand_id', localStorage?.getItem('brandid')?.toString()??'');
-       formData.append('user_id', this.userId.toString());
+         
+       formData1.append('excelFile', this.file, this.fileName);
+       formData1.append('dealer_id', localStorage?.getItem('dealerid')?.toString()??'');
+       formData1.append('brand_id', localStorage?.getItem('brandid')?.toString()??'');
+       formData1.append('user_id', this.userId.toString());
          this.globalBlockUiService.startLoading();
-        this.stockUploadService.uploadBulkStock(formData).subscribe((res:any)=>{
- this.globalBlockUiService.stopLoading();
+        this.stockUploadService.uploadBulkStock(formData1).subscribe((res:any)=>{
+     this.globalBlockUiService.stopLoading();
+      if(res?.headerNotPresent){
+          this.resetBulkForm();
+          if(res?.data?.missingFields){
+            return this.messageService.add({severity:'error',life:4000,summary:`Required Fields for Quantity are not present ${res?.data?.missingFields}!`})
+          }
+          return this.messageService.add({severity:'error',life:4000,summary:'Headers are not matched with the required fields!'})
+        }
+        if(res?.mappingNotPresent){
+          this.blForm.reset();
+          this.showTable=false
+           this.resetBulkForm();
+          this.messageService.add({severity:'error',detail:'Brand Mapping is not available!',life:4000});
+        }
+        if(res?.dealerLocationMappingNotPresent){
+          this.blForm.reset();
+          this.showTable=false;
+           this.resetBulkForm();
+          this.messageService.add({severity:'error',detail:'Dealer Location Mapping is not available for selected Dealer!',life:4000});
+        }
+        
+      if(res?.mappingNotPresent){
+            this.blForm.reset();
+            this.fu1?.clear();
+             this.resetBulkForm();
+            this.messageService.add({severity:'error',detail:'Brand Mapping is not available!!',life:4000});
+          }
+          else{
+            this.showTable=true;
+            if (this.dataTable) {
+              this.dataTable.reset(); // Reset the paginator after data changes
+            }
+           this.getBulkRecords();
+
+           if(res?.error){
+             this.blForm.reset();
+             this.fu1?.clear();
+             this.file=null;
+             this.fileName=''
+             formData1=new FormData();
+            return this.messageService.add({severity:'error',life:4000,detail:'Error is uploaded File!'});
+           }else{
+            // this.visible=true;
+            let responseData=res;
+             this.file=null;
+             this.fileName=''
+             this.resetBulkForm();
+             this.messageService.add({severity:'success',detail:'Data Uploaded Succesfully!',life:4000});
+            this.getBulkPartNotInMasterRecords()
+         //   console.log("uploaded locations ",responseData)         
+           }
+                 
+          
+           formData1=new FormData();
+           this.blForm.reset();
+           this.resetBulkForm();
+            this.file=null;
+             this.fileName=''
+          this.clearFileUploads();
+          }
         },(error:any)=>{
 
+          this.fu1?.clear()
            this.globalBlockUiService.stopLoading();
+           this.resetBulkForm();
+            this.file=null;
+             this.fileName=''
+           formData1=new FormData();
+            this.blForm.reset();
         })
       }
+    }
+
+    resetBulkForm(){
+      this.file=null;
+      this.fileName=''
+      this.blForm.reset();
+      this.showUploader = false;
+  setTimeout(() => this.showUploader = true, 10);
     }
 
     clearResponse() {
@@ -409,6 +493,32 @@ blForm:FormGroup
         });
       }
     }
+
+    getBulkRecords(){
+
+      this.globalBlockUiService.startLoading();
+        this.stockUploadServiceBySCSUser.getAllBulkRecords({dealer_id:localStorage.getItem('dealerid'),added_by:this.userId}).subscribe((res:any)=>{
+          this.globalBlockUiService.stopLoading();
+          this.records=[];
+          this.records=res.data;
+      // console.log("locations ",this.locations)
+      this.addedOn=res.data.added_on;
+    
+     this.records= this.records.map((item:any)=>{
+      let locationObj=this.locations.find((obj:any)=>obj.location_id==parseInt(item.location_id));
+      let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
+    //  console.log("loc obj ",locationObj)
+      return{
+        ...item,
+        added_on: (item.added_on),
+        locationName:locationObj?.location_name,
+        added_by:userObj?.vcFirstName+' '+userObj.vcLastName
+      }
+       
+       
+     })
+    })
+    }
     
     getRecords(){
     
@@ -416,6 +526,7 @@ blForm:FormGroup
       
       this.globalBlockUiService.startLoading();
       this.stockUploadService.getRecordsMultiLocation({locations:locations}).subscribe((res:any)=>{
+        this.records=[];
         this.records=res.data;
         this.globalBlockUiService.stopLoading();
        
@@ -446,6 +557,22 @@ blForm:FormGroup
       })
     }
 
+    getBulkPartNotInMasterRecords(){
+      this.globalBlockUiService.startLoading();
+ this.stockUploadService.getPartNotInMasterForBulk({brand_id:localStorage.getItem('brandid')}).subscribe((res:any)=>{
+      this.globalBlockUiService.stopLoading();
+      this.partNotInMasterData=[];
+      this.partNotInMasterData=res.data;
+      if(this.partNotInMasterData.length>0){
+        this.isDataPresentPartNotInMaster=true;
+      }else{
+        this.isDataPresentPartNotInMaster=false;
+      }
+    },(error:any)=>{
+      this.globalBlockUiService.stopLoading();
+      this.messageService.add({severity:'error',summary:'Error in getting the part not in master !',life:4000})
+    });
+    }
     getLocations(){
       this.globalBlockUiService.startLoading();
       this.utilitiesService.getLocations({dealer_id:this.dealerId}).subscribe((res:any)=>{
@@ -473,7 +600,8 @@ blForm:FormGroup
       if(this.mlForm.get('locations')?.value!=''){
         this.globalBlockUiService.startLoading();
         this.stockUploadService.getPartNotInMasterMultiLocation({locations:this.mlForm.get('locations')?.value}).subscribe((res:any)=>{
-            this.partNotInMasterData=res.data;
+           this.partNotInMasterData=[]; 
+          this.partNotInMasterData=res.data;
           if(this.partNotInMasterData.length==0){
             this.isDataPresentPartNotInMaster=false;
           }

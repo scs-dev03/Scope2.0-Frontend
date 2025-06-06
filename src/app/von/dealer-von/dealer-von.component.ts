@@ -12,7 +12,7 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-dealer-von',
-  imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS, Sidebar2Component, LoaderComponent],
+  imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS],
   templateUrl: './dealer-von.component.html',
   styleUrl: './dealer-von.component.css'
 })
@@ -45,6 +45,10 @@ export class DealerVonComponent {
   ];
 
   ngOnInit(): void {
+
+    // localStorage.setItem('brandid','9')
+    // localStorage.setItem('dealerid','8')
+    // localStorage.setItem('usertype','U')
     //this.dealerVonService.setLocalStorage()
     this.dealerFilterData.reset();
     this.globalBlockUiService.startLoading();
@@ -72,6 +76,8 @@ export class DealerVonComponent {
 
      this.sharedService.updateModuleName('Dealer Norms Management')
   }
+
+
 
 
  //Declaretion of all Variables
@@ -107,7 +113,10 @@ export class DealerVonComponent {
   visible: any;
 
 
-  
+
+  onClickCloseSales(){
+    this.showSale = false
+  }
 
 
 // for sending dealer logs
@@ -257,6 +266,7 @@ fetchDealerTableData(
                 if(this.tableData.length == 0){
                   this.Result = "No Data Avaiable"
                   this.visible = true;
+                  this.onClickCloseSales()
                 }
               }
               else if(this.dealerFilterData.value.status == '1'){
@@ -264,6 +274,7 @@ fetchDealerTableData(
                 if(this.tableData.length == 0){
                   this.Result = "No Data Avaiable"
                   this.visible = true;
+                  this.onClickCloseSales()
                 }
               }
               else if(this.dealerFilterData.value.status == '2'){
@@ -271,10 +282,12 @@ fetchDealerTableData(
                 if(this.tableData.length == 0){
                   this.Result = "No Data Avaiable"
                   this.visible = true;
+                  this.onClickCloseSales()
                 }
               }
               else{
                 this.tableData = res.Data
+                this.onClickCloseSales()
               }
               this.noOfRow = res.Data.length
 
@@ -307,6 +320,7 @@ fetchDealerTableData(
           console.error("Error fetching dealer table data:", err);
           this.Result = "Failed to fetch data. Please try again.";
           this.visible = true;
+          this.onClickCloseSales()
           this.globalBlockUiService.stopLoading();  // Ensure `isloading` is reset in failure case
       }
   });
@@ -340,7 +354,7 @@ fetchDealerTableData(
   }
 // submitting user remarks
 submitRow(rowData: any) {
-  this.globalBlockUiService.startLoading();
+  
 
   const validCustomRemarkRegex = /^(?![\s,@-]*$)(?!-?\d+$)[a-zA-Z0-9\s,@-]*$/;
 
@@ -384,7 +398,9 @@ submitRow(rowData: any) {
       return;
     }
   }
+  
 
+  this.globalBlockUiService.startLoading()
   // Proceed with submission
   this.dealerVonService
     .submituserlog({
@@ -415,19 +431,37 @@ submitRow(rowData: any) {
       .replace(/_/g, ' ')
       .replace(/\b\w/g, (char) => char.toUpperCase());
   }
-  fetchSeasonaData() {
-    this.dealerVonService.getseason().subscribe((res: any) => {
+ fetchSeasonaData() {
+  this.dealerVonService.getseason().subscribe({
+    next: (res: any) => {
       this.seasondata = res.Data;
-    });
-  }
-  // fetching dealer Remark
-  fetchDealerRemark(brandid: any, usertype: any) {
-    this.dealerVonService
-      .getDealerRemark({ brandid: brandid, usertype: usertype })
-      .subscribe((res: any) => {
+    },
+    error: (err) => {
+      console.error('Error fetching seasonal data:', err);
+      // Optionally, show a message to the user
+      this.Result = 'Unable to fetch seasonal data. Please try again.';
+      this.visible = true;
+    }
+  });
+}
+
+// fetching dealer Remark
+fetchDealerRemark(brandid: any, usertype: any) {
+  this.dealerVonService
+    .getDealerRemark({ brandid: brandid, usertype: usertype })
+    .subscribe({
+      next: (res: any) => {
         this.dealerRemark = res.Data;
-      });
-  }
+      },
+      error: (err) => {
+        console.error('Error fetching dealer remark:', err);
+        // Optionally, show a message to the user
+        this.Result = 'Unable to fetch dealer remarks. Please try again.';
+        this.visible = true;
+      }
+    });
+}
+
 
   formattedKeys: any;
   wsCsKeys: any;
@@ -459,28 +493,35 @@ submitRow(rowData: any) {
   
   // fetching dealer view log
   fetchDelerViewlog(brandid: any, dealerid: any, locationid: any, partid: any) {
-    this.globalBlockUiService.startLoading();
-    this.dealerVonService
-      .getDealerViewLog({
-        brandid: brandid,
-        dealerid: dealerid,
-        locationid: locationid,
-        partid: partid,
-      })
-      .subscribe((res: any) => {
+  this.globalBlockUiService.startLoading();
 
-        if(res.Data && res.Data.length){
+  this.dealerVonService
+    .getDealerViewLog({
+      brandid: brandid,
+      dealerid: dealerid,
+      locationid: locationid,
+      partid: partid,
+    })
+    .subscribe({
+      next: (res: any) => {
+        if (res.Data && res.Data.length) {
           this.changelogDialog = true;
           this.dealerViewLog = res.Data;
-          this.globalBlockUiService.stopLoading();
+        } else {
+          this.Result = 'There is No Previous Record, Please Give new Remark for this Part';
+          this.visible = true;
         }
-        else{
-          this.Result = 'There is No Previous Record, Please Give new Remark for this Part'
-          this.visible = true
-          this.globalBlockUiService.stopLoading();
-        }
-      });
-  }
+        this.globalBlockUiService.stopLoading();
+      },
+      error: (err) => {
+        console.error('Error while fetching dealer view log:', err);
+        this.globalBlockUiService.stopLoading();
+        this.Result = 'Something went wrong while fetching logs. Please try again later.';
+        this.visible = true;
+      }
+    });
+}
+
 
   // fetching parttype dropdowndata
   fetchPartType() {
@@ -492,22 +533,30 @@ submitRow(rowData: any) {
   }
 // fetching part family detils
   fetchFamilyPart(partnumber: any) {
-    this.globalBlockUiService.startLoading();
-    this.dealerVonService
-      .getSubstitutePart({ partnumber: partnumber })
-      .subscribe((res: any) => {
+  this.globalBlockUiService.startLoading();
+
+  this.dealerVonService
+    .getSubstitutePart({ partnumber: partnumber })
+    .subscribe({
+      next: (res: any) => {
         if (res.Data && res.Data.length) {
-          this.familyPartDataVisible = true
+          this.familyPartDataVisible = true;
           this.familyPartData = res.Data;
-          this.globalBlockUiService.stopLoading();
         } else {
           this.visible = true;
           this.Result = 'There is No Substitute Part Available for this Part';
-          this.globalBlockUiService.stopLoading(); // Set a default message or empty state
-
         }
-      });
-  }
+        this.globalBlockUiService.stopLoading();
+      },
+      error: (err) => {
+        console.error('Error fetching substitute parts:', err);
+        this.globalBlockUiService.stopLoading();
+        this.visible = true;
+        this.Result = 'Unable to fetch substitute parts. Please try again later.';
+      }
+    });
+}
+
   
   exportToExcel(): void {
 
@@ -529,18 +578,32 @@ submitRow(rowData: any) {
   }
 
 
-  fetchPartSale(brandid: any, dealerid: any, locationid:any, partnumber: any){
-    this.globalBlockUiService.startLoading()
-    this.dealerVonService.getPartFamilySales({brandid:brandid,dealerid:dealerid, locationid:locationid, partnumber:partnumber}).subscribe((res: any)=>{
-        
-      this.partFamilySaleData = res.Data
-      this.showSale = true;
+  fetchPartSale(brandid: any, dealerid: any, locationid: any, partnumber: any) {
+  this.globalBlockUiService.startLoading();
 
-        this.columns = this.extractKeys(this.partFamilySaleData);
-        
+  this.dealerVonService
+    .getPartFamilySales({
+      brandid: brandid,
+      dealerid: dealerid,
+      locationid: locationid,
+      partnumber: partnumber
     })
-    this.globalBlockUiService.stopLoading()
-  }
+    .subscribe({
+      next: (res: any) => {
+        this.partFamilySaleData = res.Data;
+        this.showSale = true;
+        this.columns = this.extractKeys(this.partFamilySaleData);
+        this.globalBlockUiService.stopLoading();
+      },
+      error: (err) => {
+        console.error('Error fetching part sale data:', err);
+        this.globalBlockUiService.stopLoading();
+        this.Result = 'Unable to fetch part sale data. Please try again later.';
+        this.visible = true;
+      }
+    });
+}
+
 
 
 

@@ -13,13 +13,7 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-admin-von',
-  imports: [
-    PrimengModuleModule,
-    SharedModule,
-    SHARED_IMPORTS,
-    Sidebar2Component,
-    LoaderComponent,
-  ],
+  imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS],
   templateUrl: './admin-von.component.html',
   styleUrl: './admin-von.component.css',
 })
@@ -135,6 +129,10 @@ export class AdminVonComponent {
     { name: 'CS', key: '1' },
     { name: 'Both', key: '2' },
   ];
+
+  onClickCloseSales() {
+    this.showSale = false;
+  }
 
   // fetching locations
   onclickDealer() {
@@ -631,7 +629,20 @@ export class AdminVonComponent {
     console.log(this.tableData);
 
     const formattedData = this.tableData.map(
-      ({ brand, dealer, location, ...rest }: any) => ({
+      ({
+        brand,
+        dealer,
+        location,
+        Brandid,
+        Dealerid,
+        Locationid,
+        Partid,
+        feedbackid,
+        UserRemark,
+        ProposedQty,
+        status,
+        ...rest
+      }: any) => ({
         Brand: rest.brand,
         Dealer: rest.dealer,
         Location: rest.location,
@@ -664,90 +675,91 @@ export class AdminVonComponent {
 
   // excel export function for new SP
   async exportToExcelNewSP(): Promise<any> {
-  if (!this.adminFilterData.valid) {
-    this.adminFilterData.markAllAsTouched();
+    if (!this.adminFilterData.valid) {
+      this.adminFilterData.markAllAsTouched();
+    }
+
+    // Filter only Pending status records
+    const pendingData = this.AdminPeningView.filter(
+      (item: any) => item.status === 'Pending'
+    );
+
+    const formattedData = pendingData.map(
+      ({
+        brand,
+        dealer,
+        location,
+        model,
+        Subpartcount,
+        partid,
+        feedbackdate,
+        BlockAvg,
+        orderpartnumber,
+        partnumber,
+        partdesc,
+        landedcost,
+        feedbackid,
+        maxvalue,
+        LocPer,
+        Avg3Msale,
+        n1,
+        n2,
+        n3,
+        category,
+        moq,
+        LocCount,
+        status,
+        SPMRemark,
+        ProposedQty,
+        LatestAdminRemark,
+        AdminRemark,
+        RemarkQty,
+        ApprovedQty,
+        ...rest
+      }: any) => ({
+        brand: brand,
+        dealer: dealer,
+        location: location,
+        partnumber: partnumber,
+        orderpartnumber: orderpartnumber,
+        partdesc: partdesc,
+        landedcost: landedcost,
+        moq: moq,
+        Avg3Msale: Avg3Msale,
+        maxvalue: maxvalue,
+        n1: n1,
+        n2: n2,
+        n3: n3,
+        Block_Average: BlockAvg,
+        Location_percentage: LocPer,
+        Location_count: LocCount,
+        category: category,
+        model: model,
+        feedbackdate: feedbackdate,
+        feedbackid:feedbackid,
+        Proposed_QTY: ProposedQty,
+        LatestSPMRemark: SPMRemark,
+        ApprovedQty: '',
+        AdminRemark: '',
+      })
+    );
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook: XLSX.WorkBook = {
+      Sheets: { Data: worksheet },
+      SheetNames: ['Data'],
+    };
+
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+    const data: Blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
+    });
+
+    saveAs(data, `${pendingData[0]?.dealer ?? 'Admin_Export'}_Norms_Data.xlsx`);
   }
-
-  // Filter only Pending status records
-  const pendingData = this.AdminPeningView.filter(
-    (item: any) => item.status === 'Pending'
-  );
-
-  const formattedData = pendingData.map(
-    ({
-      brand,
-      dealer,
-      location,
-      model,
-      Subpartcount,
-      partid,
-      feedbackdate,
-      BlockAvg,
-      orderpartnumber,
-      partnumber,
-      partdesc,
-      landedcost,
-      maxvalue,
-      LocPer,
-      Avg3Msale,
-      n1,
-      n2,
-      n3,
-      category,
-      moq,
-      LocCount,
-      status,
-      LatestAdminRemark,
-      AdminRemark,
-      RemarkQty,
-      ApprovedQty,
-      ...rest
-    }: any) => ({
-      brand: brand,
-      dealer: dealer,
-      location: location,
-      partnumber: partnumber,
-      orderpartnumber: orderpartnumber,
-      partdesc: partdesc,
-      landedcost: landedcost,
-      moq: moq,
-      Avg3Msale: Avg3Msale,
-      maxvalue: maxvalue,
-      n1: n1,
-      n2: n2,
-      n3: n3,
-      category: category,
-      model: model,
-      feedbackdate: feedbackdate,
-      LatestAdminRemark: LatestAdminRemark,
-      Block_Average: BlockAvg,
-      Location_percentage: LocPer,
-      Location_count: LocCount,
-      ApprovedQty: '',
-      AdminRemark: ''
-    })
-  );
-
-  const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedData);
-  const workbook: XLSX.WorkBook = {
-    Sheets: { Data: worksheet },
-    SheetNames: ['Data'],
-  };
-
-  const excelBuffer: any = XLSX.write(workbook, {
-    bookType: 'xlsx',
-    type: 'array',
-  });
-  const data: Blob = new Blob([excelBuffer], {
-    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
-  });
-
-  saveAs(
-    data,
-    `${pendingData[0]?.dealer ?? 'Admin_Export'}_Norms_Data.xlsx`
-  );
-}
-
 
   // part Sale Data
   fetchPartSale(brandid: any, dealerid: any, locationid: any, partnumber: any) {
@@ -821,19 +833,23 @@ export class AdminVonComponent {
             this.Result = 'No Data Available';
             this.visible = true;
             this.globalBlockUiService.stopLoading();
+            this.onClickCloseSales();
           } else {
             this.AdminPeningView = res.Data;
+            this.onClickCloseSales();
             this.fetchAdminRemark(
               this.adminFilterData.value.brand,
               localStorage.getItem('usertype')
             );
             this.globalBlockUiService.stopLoading();
+            this.onClickCloseSales();
           }
         },
         error: (err: any) => {
           this.Result = 'Something is not well Please Contact IT Admin';
           this.visible = true;
           this.globalBlockUiService.stopLoading();
+          this.onClickCloseSales();
         },
       });
   }
@@ -847,7 +863,7 @@ export class AdminVonComponent {
     }
   }
 
-  UploadExcelDealer() {
+  UploadExcelDealer(fu: any) {
     this.globalBlockUiService.startLoading();
 
     if (!this.DealerExcel) {
@@ -862,6 +878,8 @@ export class AdminVonComponent {
         this.showupload = false;
         this.globalBlockUiService.stopLoading();
         this.visible = true;
+        fu.clear();
+        this.selectedFileName = '';
       },
       (error) => {
         if (error.error.Error) {
@@ -869,6 +887,7 @@ export class AdminVonComponent {
           this.Result = 'File Upload Failed';
           this.selectedFileName = '';
           this.globalBlockUiService.stopLoading();
+          fu.clear();
         } else if (error.error.message && error.error.pendingRecords) {
           console.error('File upload failed:', error);
           this.visible = true;
@@ -879,6 +898,7 @@ export class AdminVonComponent {
           this.globalBlockUiService.stopLoading();
           this.showupload = false;
           this.selectedFileName = '';
+          fu.clear();
         } else if (error.error.pendingRecords) {
           console.error('File upload failed:', error);
           this.visible = true;
@@ -889,6 +909,35 @@ export class AdminVonComponent {
           this.globalBlockUiService.stopLoading();
           this.showupload = false;
           this.selectedFileName = '';
+          fu.clear();
+        } else if (error.error.message && error.error.invalidRecords) {
+          const partNumbersMessage = error.error.invalidRecords
+            .map((rec: any) => {
+              return `PartNumber: ${rec.PartNumber}, MaxValue: ${
+                rec.MaxValue ?? 'Missing'
+              }`;
+            })
+            .join(' | ');
+
+          this.Result = `${error.error.message}: ${partNumbersMessage}`;
+          this.visible = true;
+          this.globalBlockUiService.stopLoading();
+           this.selectedFileName = '';
+            fu.clear();
+        } else if (error.error.message && error.error.missingHeaders) {
+          const missingHeadersMessage = error.error.missingHeaders.join(', ');
+          this.Result = `${error.error.message}: ${missingHeadersMessage}`;
+          this.visible = true;
+           this.selectedFileName = '';
+          this.globalBlockUiService.stopLoading();
+            fu.clear();
+        } else {
+          this.Result = error.error.message;
+          this.visible = true;
+          this.globalBlockUiService.stopLoading();
+          fu.clear();
+          this.selectedFileName = '';
+      
         }
       }
     );
@@ -905,7 +954,7 @@ export class AdminVonComponent {
     }
   }
 
-  UploadExcelAdmin() {
+  UploadExcelAdmin(fu: any) {
     this.globalBlockUiService.startLoading();
 
     if (!this.AdminExcel) {
@@ -921,20 +970,30 @@ export class AdminVonComponent {
         this.globalBlockUiService.stopLoading();
         this.visible = true;
         this.adminFileName = '';
+        fu.clear();
       },
       (error) => {
-        console.error('File upload failed:', error);
-        this.visible = true;
-        this.Result = 'File upload failed';
-        this.globalBlockUiService.stopLoading();
-        this.showupload = false;
-        this.adminFileName = '';
+        if (error.error.message) {
+          this.Result = error.error.message;
+          this.visible = true;
+          this.adminFileName = '';
+          this.globalBlockUiService.stopLoading();
+          fu.clear();
+        } else {
+          console.error('File upload failed:', error);
+          this.visible = true;
+          this.Result = 'File upload failed';
+          this.globalBlockUiService.stopLoading();
+          this.showupload = false;
+          fu.clear();
+          this.adminFileName = '';
+        }
       }
     );
   }
 
   OnclickPendinCount() {
-    this.router.navigate(['/pcount']);
+    this.router.navigate(['von/pcount']);
   }
 
   sidebarvisible: boolean = false;

@@ -20,7 +20,7 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 export class AdminRemarkComponent {
 
   ngOnInit(): void {
-    //this.adminvonservice.setLocalStorage()
+    this.adminvonservice.setLocalStorage()
     this.typeData = [
       { name: 'Admin', code: 'A' },
       { name: 'User', code: 'U' },
@@ -40,7 +40,7 @@ export class AdminRemarkComponent {
   ) {}
 
   adminRemarkInputData = new FormGroup({
-    type: new FormControl(),
+    type: new FormControl(null,[Validators.required]),
     brand: new FormControl(),
     remarkInput: new FormControl('', [Validators.maxLength(50), this.allowedCharactersValidator()]),
   });
@@ -87,26 +87,39 @@ export class AdminRemarkComponent {
     });
   }
 
-  remarkCreation(remark: any, brandid: any, addedby: any, usertype: any) {
-    //this.isloading = true;
-    this.globalblockui.startLoading()
-    this.adminvonservice
-      .newRemarkCreation({
-        remark: remark,
-        brandid: brandid,
-        addedby: localStorage.getItem('userid'),
-        usertype: usertype,
-      })
-      .subscribe((res: any) => {
-        this.adminRemarkInputData.value.remarkInput='';
+ remarkCreation(remark: any, brandid: any, addedby: any, usertype: any) {
+  this.globalblockui.startLoading();
+
+  this.adminvonservice
+    .newRemarkCreation({
+      remark: remark,
+      brandid: brandid,
+      addedby: localStorage.getItem('userid'),
+      usertype: usertype,
+    })
+    .subscribe({
+      next: (res: any) => {
+        this.adminRemarkInputData.get('remarkInput')?.setValue(''); // better than direct object update
         this.visible = true;
         this.Result = res.message;
-        this.globalblockui.stopLoading()
-        //this.isloading = false
+        this.globalblockui.stopLoading();
+      },
+      error: (err) => {
+        this.globalblockui.stopLoading();
+        if(err.error.message){
+          this.Result = err.error.message
+          this.visible = true
+        }
+        else if(err.error.Error){
+          
+          this.Result = err.error.Error
+          this.visible = true
+        }
         
-        
-      });
-  }
+      }
+    });
+}
+
 
   FetchViewRemark(brandid: any,usertype:any){
     this.isloading = true;

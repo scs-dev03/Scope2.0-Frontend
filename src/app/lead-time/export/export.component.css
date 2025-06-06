@@ -172,6 +172,9 @@ margin-left: 64px; */
     font-size: 14px !important;
 }
 
+:host ::ng-deep input.p-inputtext.p-component.p-select-filter{
+    font-size: 12px !important;
+}
   @media (min-width:768px) and (max-width:900px){
     :host ::ng-deep .label-ordering-months{
         margin-left:27px;

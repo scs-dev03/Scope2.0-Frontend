@@ -15,7 +15,7 @@ import { SharedServiceService } from '../../services/shared-service.service';
 import FileSaver from 'file-saver';
 @Component({
   selector: 'app-dealer-sales-report',
-  imports: [PrimengModuleModule, SharedModule,SHARED_IMPORTS,CommonModule, ProductDesctiptionTableComponent, ProductSaleInfoComponent, TotalsumComponent, LoaderComponent],
+  imports: [PrimengModuleModule, SharedModule,SHARED_IMPORTS,CommonModule, ProductDesctiptionTableComponent, ProductSaleInfoComponent, TotalsumComponent],
   templateUrl: './dealer-sales-report.component.html',
   styleUrl: './dealer-sales-report.component.css'
 })
@@ -57,7 +57,7 @@ export class DealerSalesReportComponent {
   }
 
   DealerSalesReportInputData: FormGroup = new FormGroup({
-    LocationID: new FormControl(),
+    LocationID: new FormControl('',[Validators.required]),
     FormDate: new FormControl('',[Validators.required]),
     ToDate: new FormControl('',[Validators.required]),
     DataType: new FormControl('',[Validators.required]),
@@ -405,9 +405,7 @@ export class DealerSalesReportComponent {
     if(this.istotal===false){
       this.istotal = true
     }
-    else{
-      this.istotal = false
-    }
+    
   }
 
   refreshPage(): void {
@@ -430,7 +428,7 @@ export class DealerSalesReportComponent {
   partsExcel:any
   selectedFileName:any
 
-  onFileSelect(event: any) {
+  onFileSelect(event: any, fu:any) {
     this.globalBlockUiService.startLoading()
     if (event.files && event.files.length > 0) {
       this.partsExcel = event.files[0];
@@ -439,7 +437,7 @@ export class DealerSalesReportComponent {
     }
   }
 
-  UploadPartNumber(){
+  UploadPartNumber(fu:any){
    this.globalBlockUiService.startLoading()
    this.DataTypeArray = this.DealerSalesReportInputData.value.DataType
    const formData = new FormData();
@@ -456,11 +454,13 @@ export class DealerSalesReportComponent {
       this.PartDetail = res
       this.showupload = false
       this.partsExcel = null
+       fu.clear();
     },
     (error:any) => {
       console.error("File upload failed:", error);
       this.globalBlockUiService.stopLoading()
-      this.showupload = false})
+      this.showupload = false
+     fu.clear();})
     this.adminSalesReportService.getSalesInfo(formData).subscribe((res:any)=>{
       this.SalesInfoVisible = true
       this.exportVisible = true
@@ -468,9 +468,11 @@ export class DealerSalesReportComponent {
       this.SalesInfo = res.Data
       this.showupload = false
       this.exportVisible = false
-      this.istotal = false
+      this.onclicktotal()
       this.partsExcel = undefined
+      
       this.globalBlockUiService.stopLoading()
+       fu.clear();
       },
       (error:any) => {
         console.error("File upload failed:", error);
@@ -478,6 +480,7 @@ export class DealerSalesReportComponent {
         this.Result =  `${error.error.message +'Part Number: '+ error.error.unmatchedParts}`
         this.globalBlockUiService.stopLoading()
         this.showupload = false
+          fu.clear();
 
     })
 

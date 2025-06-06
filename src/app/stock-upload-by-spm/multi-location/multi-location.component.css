@@ -107,5 +107,7 @@
   z-index: auto !important;
   
 }
-  
+:host ::ng-deep input.p-inputtext.p-component.p-select-filter{
+    font-size: 12px !important;
+}
   

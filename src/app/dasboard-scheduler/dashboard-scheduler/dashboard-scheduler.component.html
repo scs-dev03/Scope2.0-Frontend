@@ -21,7 +21,7 @@
 
   <div class="mt-7">
     <form action="" [formGroup]="dashboardInputData">
-      <div class="flex flex-wrap gap-5 w-full py-2 justify-center">
+      <div class="flex flex-wrap flex-1 gap-5 w-full py-2 justify-start ml-5">
         <!-- <p-floatlabel variant="on">
             <p-select
               placeholder="BDM"
@@ -50,7 +50,7 @@
             [options]="brandData"
             optionLabel="Brand"
             optionValue="BrandID"
-            class="!w-40 !text-[10px]"
+            class="!w-36 !text-[10px] flex-1"
             scrollHeight="150px"
             [filter]="true"
             filterBy="Brand"
@@ -70,7 +70,7 @@
             [options]="dealerData"
             optionLabel="dealer"
             optionValue="dealerid"
-            class="!w-40 !text-[10px]"
+            class="!w-36 !text-[10px]"
             scrollHeight="150px"
             [filter]="true"
             filterBy="dealer"
@@ -92,7 +92,7 @@
             optionLabel="Dashboard"
             optionValue="tCode"
             [maxSelectedLabels]="3"
-            class="!w-40 !text-[10px]"
+            class="!w-36 !text-[10px]"
             scrollHeight="150px"
             [ngClass]="{
               'ng-invalid ng-dirty':
@@ -109,7 +109,7 @@
             size="small"
             dateFormat="dd.mm.yy"
             [minDate]="minDate"
-            class="!w-40 !text-[10px] datepicker"
+            class="!w-36 !text-[10px] datepicker"
             [ngClass]="{
               'ng-invalid ng-dirty':
                 dashboardInputData.get('date')?.touched &&
@@ -127,7 +127,7 @@
             hourFormat="12"
             size="small"
             minuteValues="[0, 30]"
-            class="!w-40 !text-[10px] timepicker"
+            class="!w-36 !text-[10px] timepicker"
             (onSelect)="fixMinutes()"
             [ngClass]="{
               'ng-invalid ng-dirty':
@@ -194,7 +194,7 @@
             [showGridlines]="true"
             [scrollHeight]="'400px'"
             [scrollable]="true"
-            [rowsPerPageOptions]="[20, 30, 40, 50, 100]"
+            [rowsPerPageOptions]="[20, 30, 36, 50, 100]"
             class="bg-white !w-full !rounded-lg border border-gray-200 shadow-md"
             [globalFilterFields]="['Dashboard', 'Brand', 'Dealer', 'statusname']"
           >
