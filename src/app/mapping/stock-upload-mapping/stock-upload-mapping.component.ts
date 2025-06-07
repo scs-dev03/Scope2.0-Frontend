@@ -85,6 +85,8 @@ export class StockUploadMappingComponent {
   visibleStockCalculation:boolean=false;
   isSidebarVisible:boolean=false;
   userId:any;
+  isViewEditCurrent:boolean=false;
+  isViewEditOlder:boolean=false;
   // users:any=[{
   //   id:1,name:'Kirti'
   // }]
@@ -712,7 +714,7 @@ export class StockUploadMappingComponent {
               this.messageService.add({
                 severity: 'success',
                 summary: 'Mapping has been successfully updated !',
-                life: 10000,
+                life: 4000,
               });
             },
             (error: any) => {
@@ -769,7 +771,7 @@ export class StockUploadMappingComponent {
               this.messageService.add({
                 severity: 'success',
                 summary: 'Mapping has been successfully updated !',
-                life: 10000,
+                life: 4000,
               });
             },
             (error: any) => {
@@ -855,7 +857,7 @@ export class StockUploadMappingComponent {
           this.messageService.add({
             severity: 'success',
             summary: 'Mapping has been successfully updated !',
-            life: 10000,
+            life: 4000,
           });
         },(error:any)=>{
           this.clearSelectedFiles()
@@ -895,7 +897,7 @@ export class StockUploadMappingComponent {
           this.messageService.add({
             severity: 'success',
             summary: 'Mapping has been successfully updated !',
-            life: 10000,
+            life: 4000,
           });
         },(error:any)=>{
           this.clearSelectedFiles()
@@ -945,7 +947,7 @@ export class StockUploadMappingComponent {
   //                 this.messageService.add({
   //                   severity: 'success',
   //                   summary: 'Mapping has been successfully updated !',
-  //                   life: 10000,
+  //                   life: 4000,
   //                 });
   //               },
   //               (error: any) => {
@@ -976,7 +978,7 @@ export class StockUploadMappingComponent {
   //             this.messageService.add({
   //               severity: 'success',
   //               summary: 'Mapping has been successfully updated !',
-  //               life: 10000,
+  //               life: 4000,
   //             });
   //           },(error:any)=>{
   //             this.messageService.add({
@@ -1018,7 +1020,7 @@ export class StockUploadMappingComponent {
   //               (res: any) => {
   //                 this.globalBlockUIService.stopLoading();
   //                 this.viewAllExistingMapping();
-  //                 // this.messageService.add({severity:'success',summary:'Mapping has been successfully updated !',life:10000})
+  //                 // this.messageService.add({severity:'success',summary:'Mapping has been successfully updated !',life:4000})
   //               },
   //               (error: any) => {
   //                 this.globalBlockUIService.stopLoading();
@@ -1048,7 +1050,7 @@ export class StockUploadMappingComponent {
   //             this.messageService.add({
   //               severity: 'success',
   //               summary: 'Mapping has been successfully updated !',
-  //               life: 10000,
+  //               life: 4000,
   //             });
   //           },(error:any)=>{
   //             this.messageService.add({
@@ -1092,7 +1094,7 @@ export class StockUploadMappingComponent {
   //             this.messageService.add({
   //               severity: 'success',
   //               summary: 'Mapping has been successfully updated !',
-  //               life: 10000,
+  //               life: 4000,
   //             });
   //           },
   //           (error: any) => {
@@ -1100,7 +1102,7 @@ export class StockUploadMappingComponent {
   //             this.messageService.add({
   //               severity: 'error',
   //               summary: 'Error in updating the mapping for current stocks !',
-  //               life: 10000,
+  //               life: 4000,
   //             });
   //           },
   //           () => {
@@ -1149,7 +1151,7 @@ export class StockUploadMappingComponent {
                 this.messageService.add({
                   severity: 'success',
                   summary: 'Mapping has been successfully updated for current days !',
-                  life: 10000,
+                  life: 4000,
                 });
               },
               (error: any) => {
@@ -1203,7 +1205,7 @@ export class StockUploadMappingComponent {
                 this.viewAllExistingMapping();
                 this.visibleStockCalculation=false;
                 this.viewColumnMapping();
-                 this.messageService.add({severity:'success',summary:'Mapping has been successfully updated for older days !',life:10000})
+                 this.messageService.add({severity:'success',summary:'Mapping has been successfully updated for older days !',life:4000})
               },
               (error: any) => {
                 this.globalBlockUIService.stopLoading();
@@ -1257,7 +1259,7 @@ export class StockUploadMappingComponent {
                 this.viewAllExistingMapping();
                 this.visibleStockCalculation=false;
                 this.viewColumnMapping();
-                 this.messageService.add({severity:'success',summary:'Mapping has been successfully updated for older days !',life:10000})
+                 this.messageService.add({severity:'success',summary:'Mapping has been successfully updated for older days !',life:4000})
               },
               (error: any) => {
                 this.globalBlockUIService.stopLoading();
@@ -1312,7 +1314,7 @@ export class StockUploadMappingComponent {
                 this.messageService.add({
                   severity: 'success',
                   summary: 'Mapping has been successfully updated for current days !',
-                  life: 10000,
+                  life: 4000,
                 });
               },
               (error: any) => {
@@ -1385,7 +1387,7 @@ export class StockUploadMappingComponent {
                 this.messageService.add({
                   severity: 'success',
                   summary: 'Mapping has been successfully updated for current days !',
-                  life: 10000,
+                  life: 4000,
                 });
               },
               (error: any) => {
@@ -1441,7 +1443,7 @@ export class StockUploadMappingComponent {
                 this.viewAllExistingMapping();
                 this.visibleStockCalculation=false;
                 this.viewColumnMapping();
-                 this.messageService.add({severity:'success',summary:'Mapping has been successfully updated for older days !',life:10000})
+                 this.messageService.add({severity:'success',summary:'Mapping has been successfully updated for older days !',life:4000})
               },
               (error: any) => {
                 this.globalBlockUIService.stopLoading();
@@ -1495,7 +1497,7 @@ export class StockUploadMappingComponent {
                 this.viewAllExistingMapping();
                 this.visibleStockCalculation=false;
                 this.viewColumnMapping();
-                 this.messageService.add({severity:'success',summary:'Mapping has been successfully updated for older days !',life:10000})
+                 this.messageService.add({severity:'success',summary:'Mapping has been successfully updated for older days !',life:4000})
               },
               (error: any) => {
                 this.globalBlockUIService.stopLoading();
@@ -1550,7 +1552,7 @@ export class StockUploadMappingComponent {
                 this.messageService.add({
                   severity: 'success',
                   summary: 'Mapping has been successfully updated for current days !',
-                  life: 10000,
+                  life: 4000,
                 });
               },
               (error: any) => {
@@ -1755,6 +1757,7 @@ patchStockCalculation(formula: string) {
   checkOlderQuantitiesInViewEdit(){
 const stockQty = this.editOlderDaysStockForm.get('stockQty')?.value;
   // console.log("stock qty older",stockQty)
+  
   return Array.isArray(stockQty) && stockQty.length > 1;
   }
   onSelect(event:any){
@@ -2156,10 +2159,11 @@ const stockQty = this.editOlderDaysStockForm.get('stockQty')?.value;
                 this.globalBlockUIService.stopLoading();
                       this.currentStockForm.reset();
                       this.currentStockColumns=[];
+                      this.isMappingExist=true;
                       this.clearSelectedFiles()
                       this.messageService.add({
                         severity: 'success',
-                        life: 10000,
+                        life: 4000,
                         summary: 'Mapping is created Successfully for current days stock.',
                       });
                     },
@@ -2180,7 +2184,7 @@ const stockQty = this.editOlderDaysStockForm.get('stockQty')?.value;
                       this.globalBlockUIService.stopLoading();
                     }
                   );
-                // this.messageService.add({severity:'success',life:10000,summary:'Mapping is created Successfully for Current Stock'})           
+                // this.messageService.add({severity:'success',life:4000,summary:'Mapping is created Successfully for Current Stock'})           
         }
       }
     
@@ -2208,6 +2212,7 @@ const stockQty = this.editOlderDaysStockForm.get('stockQty')?.value;
           .subscribe(
             (res: any) => {
               
+              this.isMappingExist=true;
               this.currentStockForm.reset();
               this.currentStockColumns=[];
               this.olderStockForm.reset();
@@ -2218,7 +2223,7 @@ const stockQty = this.editOlderDaysStockForm.get('stockQty')?.value;
               this.clearSelectedFiles()
               this.messageService.add({
                 severity: 'success',
-                life: 10000,
+                life: 4000,
                 summary: 'Mapping is created Successfully for older days stock',
               });
             },
@@ -2240,7 +2245,7 @@ const stockQty = this.editOlderDaysStockForm.get('stockQty')?.value;
               this.clearSelectedFiles()
             }
           );        
-                // this.messageService.add({severity:'success',life:10000,summary:'Mapping is created Successfully for Current Stock'})
+                // this.messageService.add({severity:'success',life:4000,summary:'Mapping is created Successfully for Current Stock'})
         }
        
       }   
@@ -2281,7 +2286,7 @@ const stockQty = this.editOlderDaysStockForm.get('stockQty')?.value;
                 this.currentStockColumns = [];
                 this.messageService.add({
                   severity: 'success',
-                  life: 10000,
+                  life: 4000,
                   summary: 'Mapping is created Successfully.',
                 });
               })

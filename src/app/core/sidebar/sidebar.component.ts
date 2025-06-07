@@ -11,6 +11,7 @@ import { SidebarService } from '../../services/sidebar.service';
 import { SharedServiceService } from '../../services/shared-service.service';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { take } from 'rxjs';
+import {environment} from '../../../../environments/environment'
 
 @Component({
   selector: 'app-sidebar',
@@ -218,10 +219,10 @@ logOut(){
  //console.log(localStorage.getItem('usertype')=='A')
   if(localStorage.getItem('usertype')=='A')
   {
-window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uad_sc_wac/Login.aspx';
+window.location.href = environment.frontendAdminUrl;
   }else{
     
-    window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx';
+    window.location.href = environment.frontendUserUrl;
   }
    localStorage.clear();
    sessionStorage.clear();

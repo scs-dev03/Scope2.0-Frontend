@@ -10,10 +10,15 @@ export const environment = {
      //  apiUrl:'http://web17.185.238.new.ocpwebserver.com/api/'
 
     // scope 2.0 backend dev
-    apiUrl:'http://web10.185.238.new.ocpwebserver.com/api/'
+    apiUrl:'http://web10.185.238.new.ocpwebserver.com/api/',
 
       // scope 2.0 backend uat
-    //  apiUrl:'http://web36.185.238.new.ocpwebserver.com/api/'
+    //  apiUrl:'http://web36.185.238.new.ocpwebserver.com/api/';
+
+
+    //frontend UAT
+    frontendAdminUrl:'http://web13.185.238.new.ocpwebserver.com/uad_sc_wac/Login.aspx',
+    frontendUserUrl:'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx',
   };
 
 
