@@ -34,8 +34,11 @@ getDashboard(data: any): Observable<any> {
     data
   );
 }
-getDealersMaster(data: any): Observable<any> {
+getDealers(data: any): Observable<any> {
   return this.http.post(`${this.apiurl}getdealers`, data);
+}
+getDealersMaster(data: any): Observable<any> {
+  return this.http.post(`${this.apiurlmaster}Master/dealers`, data);
 }
 setDashboardSchedule(data: any): Observable<any> {
   return this.http.post(`${this.apiurl}setschedule`, data);
@@ -49,8 +52,11 @@ getEditDashboard(data: any): Observable<any> {
 getDeletDashboard(data: any): Observable<any> {
   return this.http.post(`${this.apiurl}delrequest`, data);
 }
-getBrandMaster(data: any): Observable<any> {
+getBrand(data: any): Observable<any> {
   return this.http.post(`${this.apiurl}getbrands`,data);
+}
+getBrandMaster(): Observable<any> {
+  return this.http.get(`${this.apiurlmaster}Master/brands`);
 }
 getDashboardRequest(data: any): Observable<any> {
   return this.http.post(`${this.apiurl}getnewdashboard`, data);

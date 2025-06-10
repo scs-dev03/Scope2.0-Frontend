@@ -4,21 +4,25 @@ import { DashboardRequestComponent } from './dashboard-request/dashboard-request
 import { DasboardChangeLogComponent } from './dasboard-change-log/dasboard-change-log.component';
 import { DashboardSchedulerComponent } from './dashboard-scheduler/dashboard-scheduler.component';
 import { authGuard } from '../auth.guard';
+import { AdminDashboardSchedulerComponent } from './admin-dashboard-scheduler/admin-dashboard-scheduler.component';
 
 const routes: Routes = [
   {
     path: 'request',
     component: DashboardRequestComponent,
-    canActivate:[authGuard]
+    //canActivate:[authGuard]
   },
   {
     path: 'change',
     component: DasboardChangeLogComponent,
-    canActivate:[authGuard]
+    ///canActivate:[authGuard]
   },{
     path: 'ds',
     component: DashboardSchedulerComponent,
-    canActivate:[authGuard]
+    //canActivate:[authGuard]
+  },{
+    path: 'ads',
+    component: AdminDashboardSchedulerComponent
   }
 ];
 

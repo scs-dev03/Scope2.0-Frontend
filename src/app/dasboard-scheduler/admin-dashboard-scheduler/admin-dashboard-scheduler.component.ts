@@ -10,14 +10,15 @@ import { LoaderComponent } from '../../shared/components/loader/loader.component
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { SharedServiceService } from '../../services/shared-service.service';
 
+
 @Component({
-  selector: 'app-dashboard-scheduler',
-  imports: [SHARED_IMPORTS,PrimengModuleModule,SharedModule,LoaderComponent],
-  templateUrl: './dashboard-scheduler.component.html',
-  styleUrl: './dashboard-scheduler.component.css',
-  providers: [DatePipe]
+  selector: 'app-admin-dashboard-scheduler',
+  imports: [SHARED_IMPORTS,DatePipe,PrimengModuleModule,SharedModule,LoaderComponent],
+  templateUrl: './admin-dashboard-scheduler.component.html',
+  providers: [DatePipe],
+  styleUrl: './admin-dashboard-scheduler.component.css'
 })
-export class DashboardSchedulerComponent {
+export class AdminDashboardSchedulerComponent {
   dashboardInputData: FormGroup = new FormGroup({
     bdmID: new FormControl(),
     dashboardID: new FormControl('', Validators.required),
@@ -44,7 +45,7 @@ export class DashboardSchedulerComponent {
 
     //localStorage.setItem("userid",'138032')
      this.sharedService.updateModuleName('Dashboard Scheduler')
-    this.fetchBdm();
+    //this.fetchBdm();
     
     this.dashboardInputData.controls['dashboardID'].disable();
     this.dashboardInputData.controls['brandID'].disable();
@@ -54,7 +55,7 @@ export class DashboardSchedulerComponent {
     this.dashboardInputData.patchValue({
     bdmID:  localStorage.getItem('userid')
     });
-    this.fetchBrandData(this.dashboardInputData.value.bdmID);
+    this.fetchBrandData();
 
 
     
@@ -112,7 +113,7 @@ export class DashboardSchedulerComponent {
 // adding brand name in submit 
   addBrandName() {
     this.brandname = this.brandData.find(
-      (item: any) => item.BrandID === this.dashboardInputData.value.brandID
+      (item: any) => item.bigid === this.dashboardInputData.value.brandID
     );
     console.log(this.brandname);
   }
@@ -140,7 +141,7 @@ export class DashboardSchedulerComponent {
       this.sendScheduleData(
         this.dashboardInputData.value.dashboardID,
         this.dashboardInputData.value.brandID,
-        this.brandname.Brand,
+        this.brandname.vcbrand,
         this.dealername.dealerid,
         this.dealername.dealer,
         this.formatedDate,
@@ -244,7 +245,7 @@ export class DashboardSchedulerComponent {
   }
 
   onClickBrand() {
-    this.fetchDealerData(this.dashboardInputData.value.brandID,this.dashboardInputData.value.bdmID);
+    this.fetchDealerData(this.dashboardInputData.value.brandID);
   }
   onDeleteDashboard() {
     this.deleteDashboardSchedule(this.req_id, this.dashboardInputData.value.bdmID);
@@ -301,7 +302,7 @@ export class DashboardSchedulerComponent {
   }
 // Fetch Dashboard Data for Drop down except gsi
   fetchDashboardData(dealerid: any) {
-    this.globalBlockUiService.startLoading();
+    //this.globalBlockUiService.startLoading();
     this.getDashboardService.getDashboard({ dealerid: dealerid }).subscribe(
       (res: any) => {
         this.dashBoardData = res.Data;
@@ -318,11 +319,11 @@ export class DashboardSchedulerComponent {
     );
   }
    // fetch brand form master
-  fetchBrandData(userid:any) {
-    this.globalBlockUiService.startLoading();
-    this.getDashboardService.getBrand({userid : userid}).subscribe(
+  fetchBrandData() {
+    //this.globalBlockUiService.startLoading();
+    this.getDashboardService.getBrandMaster().subscribe(
       (res: any) => {
-        this.brandData = res.Data;
+        this.brandData = res;
         this.globalBlockUiService.stopLoading();
       },
       (error: any) => {
@@ -334,13 +335,15 @@ export class DashboardSchedulerComponent {
     );
   }
    // fetch dealer from master
-  fetchDealerData(brandid: any,userid: any) {
-    this.globalBlockUiService.startLoading();
-    this.getDashboardService.getDealers({ brandid: brandid, userid: userid }).subscribe(
+  fetchDealerData(brandid: any) {
+    // //this.globalBlockUiService.startLoading();
+    this.getDashboardService.getDealersMaster({ brandid: brandid}).subscribe(
       (res: any) => {
-        this.dealerData = res.Data;
+        //this.globalBlockUiService.startLoading();
+        this.dealerData = res;
         this.dealerData.sort((a: any, b: any) => {
           return a.dealer.localeCompare(b.dealer);
+          
         });
         this.globalBlockUiService.stopLoading();
         console.log('this is dealer', this.dealerData);
@@ -363,7 +366,7 @@ export class DashboardSchedulerComponent {
     scheduledon: any,
     addedby: any
   ) {
-    this.globalBlockUiService.startLoading();
+    //this.globalBlockUiService.startLoading();
     this.getDashboardService
       .setDashboardSchedule({
         dashboardcodes: dashboardcode,
@@ -408,7 +411,7 @@ export class DashboardSchedulerComponent {
   // fetch table data 
 
   fetchDashboardSchedule(userid:any) {
-    this.globalBlockUiService.startLoading();
+    //this.globalBlockUiService.startLoading();
     this.getDashboardService.getDashboardSchedule({userid:userid}).subscribe(
       (res: any) => {
         // console.log(res.Request);
@@ -436,7 +439,7 @@ export class DashboardSchedulerComponent {
   }
 // edit dashboard data from edit button
   updateDashoardSchedule(reqid: any, scheduledon: any, userid: any) {
-    this.globalBlockUiService.startLoading();
+    //this.globalBlockUiService.startLoading();
     this.getDashboardService
       .getEditDashboard({
         reqid: reqid,
@@ -464,7 +467,7 @@ export class DashboardSchedulerComponent {
 
   //delete dashboard from table
   deleteDashboardSchedule(reqid: any, bintid_pk: any) {
-    this.globalBlockUiService.startLoading();
+    //this.globalBlockUiService.startLoading();
     this.getDashboardService
       .getDeletDashboard({ reqid: reqid, bintid_pk: bintid_pk })
       .subscribe(
@@ -509,7 +512,7 @@ export class DashboardSchedulerComponent {
   }
 // fetching bdm form master
   fetchBdm() {
-    this.globalBlockUiService.startLoading();
+    //this.globalBlockUiService.startLoading();
     this.getDashboardService.getBDM().subscribe((res: any) => {
       this.BdmData = res;
       this.globalBlockUiService.stopLoading();
@@ -594,4 +597,5 @@ export class DashboardSchedulerComponent {
   //   const [day, month, year] = dateStr.split('-').map(Number);
   //   return new Date(2000 + year, month - 1, day); // Adjust year correctly
   // }
+
 }

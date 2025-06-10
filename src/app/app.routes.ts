@@ -35,8 +35,8 @@ export const routes: Routes = [
     {
         path:'dashboard-scheduler',
         loadChildren:()=> import('../app/dasboard-scheduler/dasboard-scheduler.module').then(m=>m.DasboardSchedulerModule),
-          canLoad:[authGuard],
-          canActivate:[authGuard]
+         // canLoad:[authGuard],
+          //canActivate:[authGuard]
     },
     {
         path:'von',
