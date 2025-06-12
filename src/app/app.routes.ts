@@ -24,6 +24,12 @@ export const routes: Routes = [
         //  canLoad:[authGuard],
         //  canActivate:[authGuard]
     },
+    {
+        path:'auto',
+        loadChildren:()=> import('../app/auto-approval/auto-approval.module').then(m=>m.AutoApprovalModule),
+        //  canLoad:[authGuard],
+        //  canActivate:[authGuard]
+    },
 
     {
         path:'stock-upload',

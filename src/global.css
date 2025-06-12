@@ -147,3 +147,8 @@ body.loader {
     min-width: 13rem !important;
   }
 
+.low-z-paginator .p-paginator {
+  position: relative;
+  z-index: 1 !important;
+  height: 36px; /* Optional: to reduce height */
+}
