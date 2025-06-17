@@ -26,6 +26,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 
+
 const modules=[
   MultiSelectModule,
   ButtonModule,
@@ -33,6 +34,7 @@ const modules=[
   TableModule,
   DialogModule,
   FileUploadModule,
+  RadioButtonModule,
     SidebarModule,
     InputTextModule,
     DatePickerModule,

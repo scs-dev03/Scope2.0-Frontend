@@ -56,9 +56,6 @@ export class DashboardSchedulerComponent {
     });
     this.fetchBrandData(this.dashboardInputData.value.bdmID);
 
-
-    
-    
     this.onClickBDM()
 
     //this.getDashboardService.setLocalStorage();
@@ -86,7 +83,6 @@ export class DashboardSchedulerComponent {
   ) {}
 
   Severity: any;
-
   dashBoardData: any = [];
   BdmData: any = [];
   brandData: any = [];
@@ -383,8 +379,8 @@ export class DashboardSchedulerComponent {
         },
         (error: any) => {
           if (error.error) {
-            if(error.error.Error){
-              this.scheduleResult = error.error.Error;
+            if(error.error.message){
+              this.scheduleResult = error.error.message;
             }
             if (error.error.locations && error.error.saleTypes) {
               // Jab API response {"locations":["Hazaribagh","Ramgarh"],"saleTypes":["Ws","Ws"]} ho
