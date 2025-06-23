@@ -206,10 +206,7 @@
           </div>
           <div class="col-10">
             <p-multiSelect 
-            [options]="fileTypes" 
-            formControlName="fileType"
-            optionLabel="name" 
-            optionValue="name"
+            [options]="fileTypes"  formControlName="fileType" optionLabel="name" optionValue="name"
             placeholder="Select fileType" />
     <div *ngIf="exportForm.get('fileType')?.touched && exportForm.get('fileType')?.invalid">
       <small *ngIf="exportForm.get('fileType')?.hasError('required')" style="color: red; font-size: 12px;">File Type is required.</small>

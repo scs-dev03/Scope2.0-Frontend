@@ -541,13 +541,13 @@
   </div>
   <ng-template #footer>
  
-    <!-- <p-button
+    <p-button
     label="Ok"
     [text]="true"
     severity="secondary"
     *ngIf=" !editCurrentDaysStock && !editOlderDaysStock "
     (click)="visibleViewEditPopUp = false"
-  /> -->
+  />
     <!-- <p-button *ngIf="editCurrentDaysStock || editOlderDaysStock || isCurrentQtyOne || isOlderQtyOne"
       label="Cancel"
       [text]="true"
@@ -558,7 +558,7 @@
       label="Save"
       [outlined]="true"
       severity="secondary"
-      [disabled]="checkCurrentQuantitiesInViewEdit() ||checkOlderQuantitiesInViewEdit()"
+      [disabled]="isSaveDisabled"
        (click)="editMappingWithViewEditBtn()"
     />
   </ng-template>

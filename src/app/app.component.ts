@@ -50,13 +50,14 @@ export class AppComponent {
     private utilitiesService:UtilitiesService,
     private sharedService:SharedServiceService,
     private pageStateService:PageStateService,
-    private idleService:IdleService,
+    // private idleService:IdleService,
   private userService:UserService) {
     this.homeData = new FormGroup({
     locationId: new FormControl(),
   })}
 
   ngOnInit() {
+    //  localStorage.setItem('userid',"293")
     this.is404Page=this.pageStateService.is404;
    // console.log(this.is404Page)
     this.globalBlockUIService.loading$.subscribe((loading:any)=>{

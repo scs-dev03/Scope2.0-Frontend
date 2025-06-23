@@ -43,9 +43,16 @@ export class ViewCreateUserComponent {
     showErrorMessage:any;
     emailArray:any=[];
     sidebarItems:any=[];
+     selectedBrandId:any;
+     selectedDealerId:any;
+     selectedLocationId:any;
      dataSubscription: Subscription|null=null;
      currentRoute:any;
     receivedData: any=[];
+    brands:any=[];
+    dealers:any=[];
+    locations:any=[];
+    showBDL:boolean=false;
      userType:any=localStorage.getItem('usertype');
     userPermissions:any=[];
     @ViewChild('dt') dt: any;
@@ -74,7 +81,10 @@ export class ViewCreateUserComponent {
       ){
       //  ^[0-9]{10}$
    this.editUserForm= this.fb.group({
-      // Define each form control with validators combined using Validator.compose
+      // Define each form control with validators combined using Validator.
+      brand:['',Validators.compose([Validators.required,noWhitespaceValidator])],
+      dealer:['',Validators.compose([Validators.required,noWhitespaceValidator])],
+      location:['',Validators.compose([Validators.required,noWhitespaceValidator])],
       name: ['', Validators.compose([Validators.required,noWhitespaceValidator])],
       lastName:['',Validators.compose([Validators.required,noWhitespaceValidator])],
       designation: ['', Validators.required],
@@ -125,9 +135,7 @@ export class ViewCreateUserComponent {
       this.showErrorMessage=''
       
       // console.log(rowData)
-  
-     
-  
+
       // console.log("edituser form ",this.editUserForm.value)
   }
       addUser(){
@@ -188,6 +196,18 @@ export class ViewCreateUserComponent {
 
       this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
         this.isSidebarVisible=visible
+      })
+
+      this.editUserForm.get('userType')?.valueChanges.subscribe((selectedUserType)=>{
+        if(selectedUserType=='D'){
+          this.showBDL=true;
+          this.getBrands();
+        }
+        else{
+          this.showBDL=false;
+        }
+        
+       // console.log("selected user Type ",selectedUserType)
       })
       }
   
@@ -250,6 +270,86 @@ export class ViewCreateUserComponent {
   return combinedResult;
 }
 
+ onBrandChange(event:any){
+  if(this.userType=='A'){
+    this.utilitiesService.getDealers({brand_id:this.editUserForm.value.brand}).subscribe((res:any)=>{
+     
+      if(res?.data?.error){
+        this.globalBlockUiService.stopLoading();
+        return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Dealers!'})
+      }
+      else{
+        this.dealers=res.data;
+      }
+    },(error:any)=>{
+      this.globalBlockUiService.stopLoading();
+    })
+  }
+  else{
+     this.utilitiesService.getDealers({brand_id:this.selectedBrandId}).subscribe((res:any)=>{
+     
+      if(res?.data?.error){
+        this.globalBlockUiService.stopLoading();
+        return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Dealers!'})
+      }
+      else{
+        this.dealers=res.data;
+      }
+    },(error:any)=>{
+      this.globalBlockUiService.stopLoading();
+    })
+  }
+   }
+
+
+   onBDLSelection(){
+    this.viewUser();
+   }
+   getBrands(){
+    this.globalBlockUiService.startLoading();
+    this.utilitiesService.getBrands().subscribe((res:any)=>{
+     
+      this.globalBlockUiService.stopLoading();
+      if(res?.data?.error){
+        this.globalBlockUiService.stopLoading();
+        return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Brands!'})
+      }
+      this.brands=res.data;
+    },(error:any)=>{
+      this.globalBlockUiService.stopLoading();
+    })
+  }
+   onDealerChange(event:any){
+    // console.log(this.slForm.value)
+    // this.globalBlockUiService.startLoading();
+    if(this.userType=='A'){
+      this.utilitiesService.getLocations({dealer_id:this.editUserForm.value.dealer}).subscribe((res:any)=>{
+        this.locations=res.data;
+        this.globalBlockUiService.stopLoading();
+        // console.log(this.brands)
+        if(res?.data?.error){
+          this.globalBlockUiService.stopLoading();
+          return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Locations!'})
+        }
+      },(error:any)=>{
+        this.globalBlockUiService.stopLoading();
+      })
+
+    }
+    else{
+      this.utilitiesService.getLocations({dealer_id:this.selectedDealerId}).subscribe((res:any)=>{
+        this.locations=res.data;
+        this.globalBlockUiService.stopLoading();
+        // console.log(this.brands)
+        if(res?.data?.error){
+          this.globalBlockUiService.stopLoading();
+          return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Locations!'})
+        }
+      },(error:any)=>{
+        this.globalBlockUiService.stopLoading();
+      })
+    }
+   }
       checkEmailAvailability() {
         this.showErrorMessage = '';
     
@@ -405,43 +505,90 @@ filteredUsers.forEach((item: any) => {
       }
     
       viewUser(event?:any){
-         this.globalBlockUiService.startLoading();
+        
         //  localStorage.setItem('usertype','d');
        // console.log('user Type ',this.userType)
-        this.userService.viewUser({userType:this.userType}).subscribe((res:any)=>{
-           this.globalBlockUiService.stopLoading();
-           let userArray=[];
+        if(this.userType=='D'){
+          this.users=[];
+     // console.log("userType ",this.userType)
+          this.globalBlockUiService.startLoading();
+         this.getBrands();
+         console.log(this.selectedBrandId,this.selectedDealerId,this.selectedLocationId)
 
-          for(let item of res?.data){
-            //console.log(this.roles,this.associatedBusinesses,this.designations)
-            let designationObj=this.designations.find((obj:any)=> {return item.designationId==obj.id})
-           // console.log("designation ", item.designationId ,designationObj);
-            this.designationName=designationObj?.designation_name
-  
-            let businessVerticalObj=this.associatedBusinesses.find((obj:any)=>  { return item.business_vertical==obj.id})
-            // console.log("designation ",businessVerticalObj);
-            this.businessVertical=businessVerticalObj?.business_vertical
-  
-            let roleObj=this.roles.find((obj:any)=>  {return item.roleId==obj.id})
-            //console.log("designation ",roleObj);
-            this.roleName=roleObj?.role_name
-  
-            userArray.push({
-              ...item,
-              designationName:designationObj?.designation_name,
-              roleName:roleObj?.role_name,
-              associatedBusiness:businessVerticalObj?.business_vertical
-            
-          })
+          this.userService.viewUser({userType:this.userType,brandId:this.selectedBrandId,dealerId:this.selectedDealerId,locationId:this.selectedLocationId}).subscribe((res:any)=>{
+            this.globalBlockUiService.stopLoading();
+            let userArray=[];
+ 
+           for(let item of res?.data){
+             //console.log(this.roles,this.associatedBusinesses,this.designations)
+             let designationObj=this.designations.find((obj:any)=> {return item.designationId==obj.id})
+            // console.log("designation ", item.designationId ,designationObj);
+             this.designationName=designationObj?.designation_name
+   
+             let businessVerticalObj=this.associatedBusinesses.find((obj:any)=>  { return item.business_vertical==obj.id})
+             // console.log("designation ",businessVerticalObj);
+             this.businessVertical=businessVerticalObj?.business_vertical
+   
+             let roleObj=this.roles.find((obj:any)=>  {return item.roleId==obj.id})
+             //console.log("designation ",roleObj);
+             this.roleName=roleObj?.role_name
+   
+             userArray.push({
+               ...item,
+               designationName:designationObj?.designation_name,
+               roleName:roleObj?.role_name,
+               associatedBusiness:businessVerticalObj?.business_vertical
+             
+           })
+           
+         }
+         this.users=userArray;
+         this.dt?.clear()
+        // console.log("users ",this.users)
           
+         },(error:any)=>{
+           this.globalBlockUiService.stopLoading();
+         })
         }
-        this.users=userArray;
-        this.dt?.clear()
-       // console.log("users ",this.users)
-         
-        },(error:any)=>{
-          this.globalBlockUiService.stopLoading();
-        })
+       
+       else{
+        this.userType='A'
+         this.globalBlockUiService.startLoading();
+        this.userService.viewUser({userType:this.userType}).subscribe((res:any)=>{
+            this.globalBlockUiService.stopLoading();
+            let userArray=[];
+ 
+           for(let item of res?.data){
+             //console.log(this.roles,this.associatedBusinesses,this.designations)
+             let designationObj=this.designations.find((obj:any)=> {return item.designationId==obj.id})
+            // console.log("designation ", item.designationId ,designationObj);
+             this.designationName=designationObj?.designation_name
+   
+             let businessVerticalObj=this.associatedBusinesses.find((obj:any)=>  { return item.business_vertical==obj.id})
+             // console.log("designation ",businessVerticalObj);
+             this.businessVertical=businessVerticalObj?.business_vertical
+   
+             let roleObj=this.roles.find((obj:any)=>  {return item.roleId==obj.id})
+             //console.log("designation ",roleObj);
+             this.roleName=roleObj?.role_name
+   
+             userArray.push({
+               ...item,
+               designationName:designationObj?.designation_name,
+               roleName:roleObj?.role_name,
+               associatedBusiness:businessVerticalObj?.business_vertical
+             
+           })
+           
+         }
+         this.users=userArray;
+         this.dt?.clear()
+        // console.log("users ",this.users)
+          
+         },(error:any)=>{
+           this.globalBlockUiService.stopLoading();
+         })
+       }
       }
   
       submit(){

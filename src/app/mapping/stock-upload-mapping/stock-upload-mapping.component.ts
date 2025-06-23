@@ -1646,7 +1646,7 @@ patchStockCalculation(formula: string) {
     .subscribe(
       (res: any) => {
         this.viewMappedData = res.data;
-         console.log(this.viewMappedData);
+        // console.log(this.viewMappedData);
         if (this.viewMappedData.length > 0) {
           this.isMappingExist = true;
           this.visibleMapping = true;
@@ -1750,15 +1750,41 @@ patchStockCalculation(formula: string) {
 
   checkCurrentQuantitiesInViewEdit(){
     const stockQty = this.editCurrentDayStockForm.get('stockQty')?.value;
-   // console.log("stock qty ",stockQty)
-  return Array.isArray(stockQty) && stockQty.length > 1;
+  // console.log("stock qty ",stockQty,stockQty?.length>1)
+   
+   let visibleSaveBtn=Array.isArray(stockQty) && stockQty?.length > 1
+  // return Array.isArray(stockQty) && stockQty.length > 1;
+  // console.log("visible save btn current",visibleSaveBtn)
+  
+  return visibleSaveBtn
   }
+
+  get isSaveDisabled(): boolean {
+    // console.log("is Current One",this.editCurrentDaysStock,this.editOlderDaysStock)
+    if(this.editCurrentDaysStock && !this.editOlderDaysStock){
+      return this.checkCurrentQuantitiesInViewEdit()
+    }
+    else if(!this.editCurrentDaysStock && this.editOlderDaysStock){
+      return this.checkOlderQuantitiesInViewEdit();
+    }
+    else{
+     return   this.checkCurrentQuantitiesInViewEdit() || this.checkOlderQuantitiesInViewEdit()
+    }
+  //   console.log("button disabled ",this.checkCurrentQuantitiesInViewEdit() || this.checkOlderQuantitiesInViewEdit())
+  // return this.checkCurrentQuantitiesInViewEdit() || this.checkOlderQuantitiesInViewEdit();
+}
 
   checkOlderQuantitiesInViewEdit(){
 const stockQty = this.editOlderDaysStockForm.get('stockQty')?.value;
   // console.log("stock qty older",stockQty)
   
-  return Array.isArray(stockQty) && stockQty.length > 1;
+ let visibleSaveBtn=Array.isArray(stockQty) && stockQty?.length> 1
+// console.log("visible save btn older",visibleSaveBtn)
+  // return Array.isArray(stockQty) && stockQty.length > 1;
+  if(visibleSaveBtn==null){
+    visibleSaveBtn=false;
+  }
+  return visibleSaveBtn
   }
   onSelect(event:any){
    

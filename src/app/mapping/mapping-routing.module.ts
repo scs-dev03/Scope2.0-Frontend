@@ -9,7 +9,7 @@ const routes: Routes = [
   {
     path:'stock-upload',
     component:StockUploadMappingComponent,
-    canActivate:[authGuard]
+   // canActivate:[authGuard]
   },
 
   {

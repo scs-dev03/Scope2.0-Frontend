@@ -533,7 +533,7 @@ export class DealerViewCreateUserComponent {
           }
           else{
             this.globalBlockUiService.startLoading();
-            console.log("edit user ",this.editUserForm.value)
+           // console.log("edit user ",this.editUserForm.value)
             this.userService.editUser({...this.editUserForm.value,userId:this.rowId,updatedBy:this.userId,token:this.token}).subscribe((res:any)=>{
               this.globalBlockUiService.stopLoading();
               this.viewUser();

@@ -7,7 +7,7 @@ import { authGuard } from '../auth.guard';
 const routes: Routes = [
   {
     path:'view-create' ,component:ViewCreateUserComponent,
-    canActivate:[authGuard]
+   // canActivate:[authGuard]
   },
   {
     path:'dealer-view-create' ,component:DealerViewCreateUserComponent,

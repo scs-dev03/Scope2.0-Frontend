@@ -47,6 +47,53 @@
         <p-radiobutton name="User" value="D" [(ngModel)]="userType" inputId="dealer" (ngModelChange)="viewUser($event)" />
         <label for="dealer" class="ml-2 f-12 d-flex align-items-center mb-0">User</label>
     </div>
+    <div  *ngIf="userType=='D'" class="d-flex flex-row">
+
+     <div class="col p-2 d-flex flex-column" >
+              <span class="font-semibold">Brand</span>
+               <p-select  
+                [options]="brands" 
+                optionLabel="brand" 
+                optionValue="brand_id"
+                [filter]="true"
+                [(ngModel)]="selectedBrandId"
+                filterPlaceholder="Select Brand.."
+                 (onChange)="onBrandChange($event)"
+
+                placeholder="Select Brand" />
+                <!-- <input type="text" pInputText formControlName="brand" *ngIf="actionName!='Add User'"  /> -->
+              <!-- Show error message only if the field is touched and invalid -->
+            </div>
+             <div class="col p-2 d-flex flex-column" >
+              <span class="font-semibold">Dealer</span>
+               <p-select 
+                [options]="dealers" 
+                optionLabel="dealer_name" 
+                optionValue="dealer_id"
+                [filter]="true"
+                 [(ngModel)]="selectedDealerId"
+                filterPlaceholder="Select Dealer"
+                (onChange)="onDealerChange($event)"
+                placeholder="Select Dealer" />
+              <!-- Show error message only if the field is touched and invalid -->
+                <!-- <input type="text" pInputText formControlName="dealer" *ngIf="actionName!='Add User'"  /> -->
+              
+            </div>
+
+             <div class="col p-2 d-flex flex-column" >
+              <span class="font-semibold">Location</span>
+               <p-select 
+                [options]="locations" 
+                optionLabel="location_name" 
+                optionValue="location_id"
+                [(ngModel)]="selectedLocationId"
+                (onChange)="onBDLSelection()"
+                placeholder="Select Location" />
+                 <!-- <input type="text" pInputText formControlName="location" *ngIf="actionName!='Add User'"  /> -->
+              <!-- Show error message only if the field is touched and invalid -->
+             
+            </div>
+        </div>
         </div>
         <div>
             <!-- *ngIf="userPermissions?.add1" in i tag -->
@@ -145,6 +192,70 @@
       <div class="row">
         <div class="col-12">
           <div class="row">
+             <div class="col-6 p-2 d-flex flex-column">
+              <span class="font-semibold">User Type</span>
+              <p-select 
+                [options]="userTypes" 
+                formControlName="userType"
+                optionLabel="name" 
+                optionValue="value"
+                placeholder="Select User Type" />
+              <div *ngIf="editUserForm.get('userType')?.touched && editUserForm.get('userType')?.invalid">
+                <small *ngIf="editUserForm.get('userType')?.hasError('required')" style="color: red; font-size: 12px;">User Type is required.</small>
+              </div>
+            </div>
+
+             <div class="col-6 p-2 d-flex flex-column" *ngIf="showBDL">
+              <span class="font-semibold">Brand</span>
+               <p-select  
+                [options]="brands" 
+                formControlName="brand"
+                optionLabel="brand" 
+                optionValue="brand_id"
+                [filter]="true"
+                filterPlaceholder="Select Brand.."
+                 (onChange)="onBrandChange($event)"
+
+                placeholder="Select Brand" />
+                <!-- <input type="text" pInputText formControlName="brand" *ngIf="actionName!='Add User'"  /> -->
+              <!-- Show error message only if the field is touched and invalid -->
+              <div *ngIf="editUserForm.get('brand')?.touched && editUserForm.get('brand')?.invalid">
+                <small *ngIf="editUserForm.get('brand')?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small>
+              </div>
+            </div>
+             <div class="col-6 p-2 d-flex flex-column" *ngIf="showBDL">
+              <span class="font-semibold">Dealer</span>
+               <p-select 
+                [options]="dealers" 
+                formControlName="dealer"
+                optionLabel="dealer_name" 
+                optionValue="dealer_id"
+                [filter]="true"
+                filterPlaceholder="Select Dealer"
+                (onChange)="onDealerChange($event)"
+                placeholder="Select Dealer" />
+              <!-- Show error message only if the field is touched and invalid -->
+                <!-- <input type="text" pInputText formControlName="dealer" *ngIf="actionName!='Add User'"  /> -->
+              <div *ngIf="editUserForm.get('dealer')?.touched && editUserForm.get('dealer')?.invalid">
+                <small *ngIf="editUserForm.get('dealer')?.hasError('required')" style="color: red; font-size: 12px;">Dealer is required.</small>
+              </div>
+            </div>
+
+             <div class="col-6 p-2 d-flex flex-column" *ngIf="showBDL">
+              <span class="font-semibold">Location</span>
+               <p-select 
+                [options]="locations" 
+                formControlName="location"
+                optionLabel="location_name" 
+                optionValue="location_id"
+               
+                placeholder="Select Location" />
+                 <!-- <input type="text" pInputText formControlName="location" *ngIf="actionName!='Add User'"  /> -->
+              <!-- Show error message only if the field is touched and invalid -->
+              <div *ngIf="editUserForm.get('location')?.touched && editUserForm.get('location')?.invalid">
+                <small *ngIf="editUserForm.get('location')?.hasError('required')" style="color: red; font-size: 12px;">Location is required.</small>
+              </div>
+            </div>
             <!-- Name Field -->
             <div class="col-6 p-2 d-flex flex-column">
               <span class="font-semibold">First Name</span>
@@ -154,7 +265,7 @@
                 <small *ngIf="editUserForm.get('name')?.hasError('required')" style="color: red; font-size: 12px;">First Name is required.</small>
               </div>
                <small *ngIf="editUserForm.get('name')?.hasError('whitespace') && editUserForm.get('name')?.touched" class="text-red-500">
-  First Name cannot be empty or just spaces
+      First Name cannot be empty or just spaces
                </small>
             </div>
             
@@ -259,18 +370,7 @@
               </div>
             </div>
 
-            <div class="col-6 p-2 d-flex flex-column">
-              <span class="font-semibold">User Type</span>
-              <p-select 
-                [options]="userTypes" 
-                formControlName="userType"
-                optionLabel="name" 
-                optionValue="value"
-                placeholder="Select User Type" />
-              <div *ngIf="editUserForm.get('userType')?.touched && editUserForm.get('userType')?.invalid">
-                <small *ngIf="editUserForm.get('userType')?.hasError('required')" style="color: red; font-size: 12px;">User Type is required.</small>
-              </div>
-            </div>
+           
           </div>
           
           </div>
