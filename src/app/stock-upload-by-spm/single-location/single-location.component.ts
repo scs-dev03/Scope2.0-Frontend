@@ -71,7 +71,7 @@ export class SingleLocationComponent {
   ngOnInit(){
   //  this.getLocations();
   this.dealerId=localStorage.getItem('dealerid');
-  this.dealerId=10038;
+  //this.dealerId=10038;
   // this.getBrands();  
    this.userService.allUserData$.subscribe((res:any)=>{
     this.users=res;

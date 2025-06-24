@@ -276,11 +276,13 @@
                         [responsive]="true"
                         [paginator]="true" 
                         [rows]="15"
-                        styleClass="p-datatable-gridlines" 
+                        styleClass="p-datatable-gridlines paginator-css"
                          [showCurrentPageReport]="true"
                           [rowsPerPageOptions]="[15,30,45,60,80,100]"
                         responsiveLayout="scroll"
                          dataKey="code"
+                          
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                          class="w-full !rounded-lg-border border-gray-200 "  [scrollable]="true"
                          [scrollHeight]="isScreenCollapsed ? '285px' : '285px'" >
                              <ng-template pTemplate="header" >

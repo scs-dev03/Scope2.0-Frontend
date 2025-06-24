@@ -190,6 +190,10 @@ label{
 :host ::ng-deep input.p-inputtext.p-component.p-select-filter{
     font-size: 12px !important;
 }
+
+:host ::ng-deep  .p-paginator .p-select{
+    width: 7% !important;
+}
 @media (min-width:768px) and (max-width:1023px){
     label{
         font-size:11px !important
