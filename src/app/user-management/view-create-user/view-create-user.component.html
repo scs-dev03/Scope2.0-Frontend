@@ -56,6 +56,7 @@
                 optionLabel="brand" 
                 optionValue="brand_id"
                 [filter]="true"
+                [appendTo]="'body'"
                 [(ngModel)]="selectedBrandId"
                 filterPlaceholder="Select Brand.."
                  (onChange)="onBrandChange($event)"
@@ -86,6 +87,7 @@
                 [options]="locations" 
                 optionLabel="location_name" 
                 optionValue="location_id"
+                [appendTo]="'body'"
                 [(ngModel)]="selectedLocationId"
                 (onChange)="onBDLSelection()"
                 placeholder="Select Location" />
@@ -93,6 +95,29 @@
               <!-- Show error message only if the field is touched and invalid -->
              
             </div>
+            <div class="col p-2 d-flex flex-column">
+              <span class="font-semibold">Designation</span>
+              <p-select 
+                [options]="designations" 
+                formControlName="designation"
+                optionLabel="designation_name" 
+                [appendTo]="'body'"
+                optionValue="id"
+                placeholder="Enter Designation" />
+              <!-- Show error message only if the field is touched and invalid -->
+              
+            </div>
+            <div class="custom-input-wrapper mb-2 mt-2" style="width: 100%;">
+    <i class="pi pi-search"></i>
+   <input 
+      pInputText 
+      type="text" 
+      [(ngModel)]="globalFilterValue"
+      (input)="onGlobalFilter($event)" 
+      placeholder="Global Search" 
+      class="w-full custom-input"
+    />
+  </div>
         </div>
         </div>
         <div>
@@ -106,9 +131,10 @@
       <!-- [tableStyle]="{ 'min-width': '40rem' }" -->
       <!-- *ngIf="userPermissions?.view1"  bg-[#FDF5E6] -->
        <div class="card h-auto flex flex-col justify-start  rounded-lg " *ngIf="userPermissions?.view1" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[72vw]':'w-[90vw]'" >
-         <p-table 
+         <p-table  #table
          [value]="users" 
          [paginator]="true"
+         [globalFilterFields]="['name', 'designationName', 'roleName','associatedBusiness','emailId','mobileNo']"
          [rows]="100"
          [rowsPerPageOptions]="[100,200, 300, 400, 500, 600,700,800,900,1000]"
          styleClass="p-datatable-gridlines" 

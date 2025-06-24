@@ -14,6 +14,7 @@ import * as XLSX from 'xlsx';
 import { SidebarService } from '../../services/sidebar.service';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { noWhitespaceValidator } from '../../shared/validators/noWhiteSpaceValidators';
+import { Table } from 'primeng/table';
 @Component({
   selector: 'app-view-create-user',
   imports: [SHARED_IMPORTS,PrimengModuleModule,SharedModule],
@@ -23,6 +24,7 @@ import { noWhitespaceValidator } from '../../shared/validators/noWhiteSpaceValid
 })
 export class ViewCreateUserComponent {
 
+  @ViewChild('table') table!: Table; 
   users:any = [
   ]
       visible: boolean = false;
@@ -30,6 +32,7 @@ export class ViewCreateUserComponent {
     ];
     isSidebarVisible:boolean=false;
     designationName:any;
+    globalFilterValue: string = '';
     roleName:any;
     businessVertical:any;
     isLoading:boolean=false;
@@ -99,6 +102,10 @@ export class ViewCreateUserComponent {
    // console.log(this.currentRoute)
   }
     
+   onGlobalFilter(event: Event) {
+    const input = (event.target as HTMLInputElement).value;
+    this.table.filterGlobal(input, 'contains');
+  }
   
     showDialog(action:any,rowData?:any) {
     // console.log(rowData)

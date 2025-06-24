@@ -353,7 +353,7 @@ export class SingleStockUploadComponent {
    getLocations(){
        
     // this.globalBlockUiService.startLoading();
-     this.utilitiesService.getLocations({dealer_id:20295}).subscribe((res:any)=>{
+     this.utilitiesService.getLocations({dealer_id:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
       if(res?.data?.error){
         // console.log("res ",res.data.error)
         this.globalBlockUiService.stopLoading();
