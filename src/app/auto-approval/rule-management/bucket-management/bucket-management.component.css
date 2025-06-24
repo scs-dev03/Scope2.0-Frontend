@@ -1,0 +1,12 @@
+:host ::ng-deep .low-z-paginator .p-paginator .p-paginator-page,
+:host ::ng-deep .low-z-paginator .p-paginator .p-paginator-first,
+:host ::ng-deep .low-z-paginator .p-paginator .p-paginator-prev,
+:host ::ng-deep .low-z-paginator .p-paginator .p-paginator-next,
+:host ::ng-deep .low-z-paginator .p-paginator .p-paginator-last {
+  z-index: 1 !important; /* or even 0 if needed */
+}
+
+:host ::ng-deep .p-paginator {
+  position: relative;
+  z-index: 1 !important;
+}
