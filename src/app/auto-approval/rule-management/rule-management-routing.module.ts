@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { BucketManagementComponent } from './bucket-management/bucket-management.component';
 import { KeywordManagementComponent } from './keyword-management/keyword-management.component';
 import { RuleCreationComponent } from './rule-creation/rule-creation.component';
+import { ViewEditExportComponent } from './view-edit-export/view-edit-export.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,10 @@ const routes: Routes = [
   },{
     path: 'rc',
     component: RuleCreationComponent
+  },
+  {
+    path: 'rcv',
+    component: ViewEditExportComponent
   }
 ];
 

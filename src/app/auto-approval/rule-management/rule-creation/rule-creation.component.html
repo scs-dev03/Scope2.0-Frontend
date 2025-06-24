@@ -1,16 +1,31 @@
 <div class="min-w-full h-full bg-gray-100">
   <h1 class="text-2xl font-serif ml-2">Rule Creation</h1>
   <div class="flex flex-wrap gap-4 p-2">
-    <div class="flex">
-      <p-radiobutton name="pizza" value="Cheese" inputId="ingredient1" />
-      <label for="Numeric" class="ml-2 text-sm">Numeric Rule</label>
+    <div class="flex items-center">
+      <p-radiobutton
+        name="ruleType"
+        value="numeric"
+        inputId="numericRule"
+        [(ngModel)]="selectedRuleType"
+      />
+      <label for="numericRule" class="ml-2 mt-[10px] text-sm"
+        >Numeric Rule</label
+      >
     </div>
 
-    <div class="flex">
-      <p-radiobutton name="pizza" value="" inputId="ingredient2" />
-      <label for="alphanumeric" class="ml-2 text-sm">Alpha Numeric Rule</label>
+    <div class="flex items-center">
+      <p-radiobutton
+        name="ruleType"
+        value="alphanumeric"
+        inputId="alphaNumericRule"
+        [(ngModel)]="selectedRuleType"
+      />
+      <label for="alphaNumericRule" class="ml-2 mt-[10px] text-sm"
+        >Alpha Numeric Rule</label
+      >
     </div>
   </div>
+
   <div class="flex flex-wrap w-full p-2 gap-5">
     <p-floatlabel variant="on">
       <input type="text" id="rulename" pSize="small" pInputText />
@@ -30,139 +45,145 @@
     >
       <h1>Numeric Rule Creation</h1>
       <br />
-      <div class="min-h-auto flex flex-wrap items-center justify-start p-2 gap-2 border bg-gray-50 border-gray-200">
-        <p-floatlabel variant="on">
-          <p-select
-            size="small"
-            [options]="parameters"
-            [(ngModel)]="selectedParameter"
-            optionValue="value"
-            optionLabel="label"
-            styleClass="w-44"
-          />
-          <label for="parameter" class="text-sm">Bucket</label>
-        </p-floatlabel>
-        <p-floatlabel variant="on">
-          <p-select
-            size="small"
-            [options]="parameters"
-            [(ngModel)]="selectedParameter"
-            optionValue="value"
-            optionLabel="label"
-            styleClass="w-44"
-          />
-          <label for="parameter" class="text-sm">Parameters</label>
-        </p-floatlabel>
-        <p-floatlabel variant="on">
-          <p-select
-            size="small"
-            [options]="operators"
-            [(ngModel)]="selectedOperator"
-            optionValue="value"
-            optionLabel="label"
-            styleClass="w-44"
-          />
-          <label for="operator" class="text-sm">List of operators</label>
-        </p-floatlabel>
+      <form [formGroup]="NumericRule">
+        <div
+          class="min-h-auto flex flex-wrap items-center justify-start p-2 gap-2 border bg-gray-50 border-gray-200"
+        >
+          <p-floatlabel variant="on">
+            <p-select
+              size="small"
+              [options]="parametersNumeric"
+              formControlName="selectedBucket"
+              optionValue="value"
+              optionLabel="label"
+              styleClass="w-44"
+            />
+            <label for="parameter" class="text-sm">Bucket</label>
+          </p-floatlabel>
 
-        <input
-          type="number"
-          size="small"
-          [(ngModel)]="enteredValue"
-          placeholder="Enter Value (Optional)"
-          class="p-inputtext h-8 w-44"
-        />
-        <p-button
-          label="Add to Rule"
-          size="small"
-          (click)="appendToRule()"
-          
-        />
-      </div>
-      <br>
+          <p-floatlabel variant="on">
+            <p-select
+              size="small"
+              [options]="parametersNumeric"
+              formControlName="selectedParameter"
+              optionValue="label"
+              optionLabel="label"
+              styleClass="w-44 text-wrap"
+            />
+            <label for="parameter" class="text-sm">Parameters</label>
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <p-select
+              size="small"
+              [options]="operators"
+              formControlName="selectedOperator"
+              optionValue="value"
+              optionLabel="label"
+              styleClass="w-44"
+            />
+            <label for="operator" class="text-sm">List of operators</label>
+          </p-floatlabel>
+
+          <input
+            type="number"
+            formControlName="enteredValue"
+            placeholder="Enter Value (Optional)"
+            class="p-inputtext h-8 w-44"
+          />
+
+          <p-button
+            label="Add to Rule"
+            size="small"
+            (click)="appendToRuleNumeric()"
+          />
+        </div>
+      </form>
+
+      <br />
       <div>
-        <p>Expression: {{ expression }}</p>
+        <span class="text-black font-bold">Expression:</span>
+        <span class="ml-3 text-red-500">{{ expression }}</span>
       </div>
 
       <!-- second rule window -->
     </div>
   </div>
-  <br><br><br>
+  <br /><br /><br />
   <div class="min-w-full !min-h-[100px] flex items-center p-2">
     <div
       class="min-w-full min-h-[150px] flex-col flex-wrap p-2 border-dashed border-2 bg-gray-50 border-gray-200"
     >
       <h1>Alpha-Numeric Rule Creation</h1>
       <br />
-      <div class="min-h-auto flex flex-wrap items-center justify-start p-2 gap-x-2 gap-y-4 border bg-gray-50 border-gray-200">
-        <p-floatlabel  variant="on">
-          <p-select
-            size="small"
-            [options]="parameters"
-            [(ngModel)]="selectedParameter"
-            optionValue="value"
-            optionLabel="label"
-            styleClass="w-44" 
-          />
-          <label for="parameter" class="text-sm">Bucket </label>
-        </p-floatlabel>
-        <p-floatlabel variant="on">
-          <p-select
-            size="small"
-            [options]="parameters"
-            [(ngModel)]="selectedParameter"
-            optionValue="value"
-            optionLabel="label"
-            styleClass="w-44" 
-          />
-          <label for="parameter" class="text-sm">Parameters</label>
-        </p-floatlabel>
-        <p-floatlabel variant="on">
-          <p-select
-            size="small"
-            [options]="parameters"
-            [(ngModel)]="selectedParameter"
-            optionValue="value"
-            optionLabel="label"
-            styleClass="w-44" 
-          />
-          <label for="parameter" class="text-sm">keyword</label>
-        </p-floatlabel>
-        <p-floatlabel variant="on">
-          <p-select
-            size="small"
-            [options]="operators"
-            [(ngModel)]="selectedOperator"
-            optionValue="value"
-            optionLabel="label"
-            styleClass="w-44" 
-          />
-          <label for="operator" class="text-sm">List of operators</label>
-        </p-floatlabel>
+      <form [formGroup]="AlphaNumericRule">
+        <div
+          class="min-h-auto flex flex-wrap items-center justify-start p-2 gap-x-2 gap-y-4 border bg-gray-50 border-gray-200"
+        >
+          <p-floatlabel variant="on">
+            <p-select
+              size="small"
+              [options]="parametersNumeric"
+              formControlName="bucket"
+              optionValue="value"
+              optionLabel="label"
+              styleClass="w-44"
+            />
+            <label for="parameter" class="text-sm">Bucket</label>
+          </p-floatlabel>
 
-        <input
-          type="number"
-          size="small"
-          [(ngModel)]="enteredValue"
-          placeholder="Enter Value (Optional)"
-          class="p-inputtext w-44 !text-sm  h-8"
-        />
-        <p-button
-          label="Add to Rule"
-          size="small"
-          (click)="appendToRule()"
-          class=""
-          
-        />
-        <p-button
-          label="Clear Rule"
-          size="small"
-          (click)="clearRule()"
-          class=""
-          
-        />
-      </div>
-      <br>
+          <p-floatlabel variant="on">
+            <p-select
+              size="small"
+              [options]="parametersAlphaNumeric"
+              formControlName="parameter"
+              optionValue="label"
+              optionLabel="label"
+              styleClass="w-44"
+            />
+            <label for="parameter" class="text-sm">Parameters</label>
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <p-select
+              size="small"
+              [options]="parametersAlphaNumeric"
+              formControlName="keyword"
+              optionValue="label"
+              optionLabel="label"
+              class="w-44 h-6"
+            />
+            <label for="parameter" class="text-sm">Keyword</label>
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <p-select
+              size="small"
+              [options]="operators"
+              formControlName="operator"
+              optionValue="value"
+              optionLabel="label"
+              styleClass="w-44"
+            />
+            <label for="operator" class="text-sm">List of operators</label>
+          </p-floatlabel>
+
+          <input
+            type="number"
+            formControlName="enteredValue"
+            placeholder="Enter Value (Optional)"
+            class="p-inputtext w-44 !text-sm h-8"
+          />
+
+          <p-button
+            label="Add to Rule"
+            size="small"
+            (click)="appendToRuleAlphaNumeric()"
+          />
+        </div>
+      </form>
+
+      <br />
       <div>
         <p>Expression: {{ expression }}</p>
       </div>

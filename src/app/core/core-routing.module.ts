@@ -25,12 +25,11 @@ const routes: Routes = [
   {
     path:'update-user-password',
     component:UpdatePasswordWhileCreateUserComponent,
-  
 },
 {
     path: 'home',
-    component: HomePageComponent,
-    canActivate:[authGuard]
+    //component: HomePageComponent,
+    //canActivate:[authGuard]
   },
   // {
   //   path: '**',
