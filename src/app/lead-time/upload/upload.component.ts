@@ -292,7 +292,7 @@ async uploadFile(data:any){
 this.globalBlockUiService.startLoading();
   
   this.userId=localStorage.getItem('userid');
-  this.userId=293;
+ // this.userId=293;
   let logs;
   let responses:any=[];
   

@@ -65,7 +65,7 @@ export class SidebarService {
   }
 
   getModules():Observable<any>{
-      localStorage.setItem('userid',"293")
+   //   localStorage.setItem('userid',"293")
      let userId=localStorage.getItem('userid');
       //  console.log("user id in sidebar ",userId)
     // let userId='293';
