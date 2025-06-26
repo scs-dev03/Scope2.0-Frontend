@@ -25,9 +25,11 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
+import { TagModule } from 'primeng/tag';
 
 
 const modules=[
+  TagModule,
   MultiSelectModule,
   ButtonModule,
   SelectModule,

@@ -7,6 +7,7 @@
         value="numeric"
         inputId="numericRule"
         [(ngModel)]="selectedRuleType"
+        (onClick)="onRuleTypeChange()"
       />
       <label for="numericRule" class="ml-2 mt-[10px] text-sm"
         >Numeric Rule</label
@@ -19,12 +20,31 @@
         value="alphanumeric"
         inputId="alphaNumericRule"
         [(ngModel)]="selectedRuleType"
+        (onClick)="onRuleTypeChange()"
       />
       <label for="alphaNumericRule" class="ml-2 mt-[10px] text-sm"
         >Alpha Numeric Rule</label
       >
     </div>
+
+    <div class="flex items-center">
+      <p-checkbox
+    [(ngModel)]="locationSpecific"
+    [binary]="true"
+    (ngModelChange)="onlocationSpecificEnable($event)"
+  ></p-checkbox>
+  <label class="ml-2 mt-[10px] text-sm">Location Specific</label>
+    </div>
+    <br>
   </div>
+
+  <div class="p-2 gap-3 flex" [formGroup]="LocationSpecificName">
+    <p-select formControlName = "brand"  optionLabel="name" size="small" placeholder="Select a Brand" class="w-44 " />
+    <p-select formControlName = "dealer"  optionLabel="name" size="small" placeholder="Select a Dealer" class="w-44 " />
+    <p-select formControlName = "location"  optionLabel="name" size="small" placeholder="Select a Location" class="w-44 " />
+  </div>
+  <br>
+
 
   <div class="flex flex-wrap w-full p-2 gap-5">
     <p-floatlabel variant="on">
@@ -89,13 +109,25 @@
             type="number"
             formControlName="enteredValue"
             placeholder="Enter Value (Optional)"
-            class="p-inputtext h-8 w-44"
+            class="p-inputtext !text-sm h-8 w-44"
           />
 
           <p-button
             label="Add to Rule"
             size="small"
             (click)="appendToRuleNumeric()"
+          />
+          <p-button
+            label="Backspace"
+            size="small"
+            (click)="removeLastChunk()"
+            class="p-button-secondary"
+          />
+          <p-button
+            label="Save"
+            size="small"
+            (click)="showDialogForfinalCondition()"
+            class="p-button-secondary"
           />
         </div>
       </form>
@@ -135,7 +167,7 @@
           <p-floatlabel variant="on">
             <p-select
               size="small"
-              [options]="parametersAlphaNumeric"
+              [options]="parametersNumeric"
               formControlName="parameter"
               optionValue="label"
               optionLabel="label"
@@ -147,15 +179,14 @@
           <p-floatlabel variant="on">
             <p-select
               size="small"
-              [options]="parametersAlphaNumeric"
+              [options]="parametersNumeric"
               formControlName="keyword"
               optionValue="label"
               optionLabel="label"
-              class="w-44 h-6"
+              styleClass="w-44"
             />
-            <label for="parameter" class="text-sm">Keyword</label>
+            <label for="operator" class="text-sm">Keyword</label>
           </p-floatlabel>
-
           <p-floatlabel variant="on">
             <p-select
               size="small"
@@ -180,13 +211,93 @@
             size="small"
             (click)="appendToRuleAlphaNumeric()"
           />
+          <p-button
+            label="Backspace"
+            size="small"
+            (click)="removeLastAlphaChunk()"
+            class="p-button-secondary"
+          />
+          <p-button
+            label="Save"
+            size="small"
+            (click)="showDialogForfinalCondition()"
+            class="p-button-secondary"
+          />
         </div>
       </form>
 
       <br />
       <div>
-        <p>Expression: {{ expression }}</p>
+        <div class="flex flex-wrap gap-2 mt-2">
+          Expression:
+          <ng-container *ngFor="let chunk of ruleChunks2">
+            <p-tag
+              *ngIf="chunk.type === 'param'"
+              [value]="chunk.value"
+              severity="info"
+              [rounded]="true"
+            ></p-tag>
+          </ng-container>
+          <span class="ml-1 mt-[2px] text-red-500">
+            {{ expression2 }}
+          </span>
+        </div>
+
+        <!-- Text view for the rest -->
       </div>
+      <br />
+
+      <p-dialog
+        header="Rule Output Condition"
+        [modal]="true"
+        [(visible)]="visible"
+        [style]="{ width: '40rem', height: '70%' }"
+      >
+        <span class="p-text-secondary block mb-8 text-lg font-semibold"
+          >If Success</span
+        >
+        <div class="flex items-center gap-4 mb-4">
+          <label for="success" class="text-sm w-24">Remark for Success</label>
+          <p-select
+            [options]="ActionList"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select a Action "
+            class="w-full "
+          />
+
+          <input pInputText id="success" pSize="small" class="flex-auto" autocomplete="off" />
+        </div>
+        <span class="p-text-secondary block mb-8 text-lg font-semibold"
+          >If Failure</span
+        >
+
+        <div class="flex items-center gap-4 mb-8">
+          <label for="faileur" class="text-sm w-24">Remark for Failure</label>
+          <p-select
+            [options]="ActionList"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select a Action "
+            class="w-full md:w-56"
+          />
+          <input
+            pInputText
+            pSize="small"
+            id="faileur"
+            class="flex-auto"
+            autocomplete="off"
+          />
+        </div>
+        <div class="flex justify-end gap-2">
+          <p-button
+            label="Cancel"
+            severity="secondary"
+            (click)="visible = false"
+          />
+          <p-button label="Save" (click)="visible = false" />
+        </div>
+      </p-dialog>
 
       <!-- second rule window -->
     </div>
