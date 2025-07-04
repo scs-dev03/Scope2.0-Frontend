@@ -47,8 +47,8 @@ export const routes: Routes = [
     {
         path:'von',
         loadChildren:()=> import('../app/von/von.module').then(m=>m.VonModule),
-          // canLoad:[authGuard],
-          // canActivate:[authGuard]
+          canLoad:[authGuard],
+          canActivate:[authGuard]
     },
     {
         path:'core',
