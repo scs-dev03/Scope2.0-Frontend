@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-stock-order-request',
-  imports: [SHARED_IMPORTS, PrimengModuleModule, SharedModule,DividerModule],
+  imports: [SHARED_IMPORTS, PrimengModuleModule, SharedModule, DividerModule],
   templateUrl: './stock-order-request.component.html',
   styleUrl: './stock-order-request.component.css'
 })
@@ -17,7 +17,7 @@ export class StockOrderRequestComponent {
 
   AddPartWise: FormGroup
 
-   constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder) {
     this.AddPartWise = this.fb.group({
       PartNumber: (''),
       Quantity: (''),
@@ -26,9 +26,18 @@ export class StockOrderRequestComponent {
   }
 
 
+  private createPart(): FormGroup {
+    return this.fb.group({
+      PartNumber: (''),
+      Quantity: (''),
+      Remark: ('')
+
+    });
+  }
+
   selectedSalesType: any
 
-  SampleExcelDownload(){
+  SampleExcelDownload() {
 
     const Data = [
       {
@@ -42,16 +51,16 @@ export class StockOrderRequestComponent {
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(Data)
 
     const workbook: XLSX.WorkBook = {
-      Sheets: {'SampleData':worksheet},
+      Sheets: { 'SampleData': worksheet },
       SheetNames: ['SampleData']
     }
 
-    const ExcelBuffer: any = XLSX.write(workbook,{
+    const ExcelBuffer: any = XLSX.write(workbook, {
       type: 'array',
       bookType: 'xlsx'
     })
 
-    const data: Blob = new Blob([ExcelBuffer],{
+    const data: Blob = new Blob([ExcelBuffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
     });
@@ -60,9 +69,12 @@ export class StockOrderRequestComponent {
   }
 
 
-  OnClickAdd(){
+  OnClickAdd() {
     console.log(this.AddPartWise.value);
-    
+  }
+
+  OnAddRows() {
+
   }
 
 }
