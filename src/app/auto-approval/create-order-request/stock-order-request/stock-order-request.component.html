@@ -1,0 +1,162 @@
+<div class="min-w-full h-full bg-gray-100">
+  <h1 class="text-xl font-serif ml-2">Stock Order Request</h1>
+
+  <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
+    <div
+      class="min-w-full min-h-[15vh] flex-wrap flex-col p-2 gap-3 shadow-lg border-dashed border-2 bg-white rounded-md border-white"
+    >
+      <div class="flex flex-wrap gap-4">
+        <div class="flex items-center mr-3">Select Sales Type :</div>
+
+        <div class="flex items-center gap-2">
+          <p-radiobutton
+            name="salesType"
+            value="Workshop Sale"
+            inputId="workshop"
+            [(ngModel)]="selectedSalesType"
+          />
+          <label for="workshop" class="ml-1 text-sm mt-2">Workshop Sale</label>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <p-radiobutton
+            name="salesType"
+            value="Counter Sale"
+            inputId="counter"
+            [(ngModel)]="selectedSalesType"
+          />
+          <label for="counter" class="ml-1 text-sm mt-2">Counter Sale</label>
+        </div>
+
+      </div>
+
+      <br />
+
+      <div *ngIf="selectedSalesType === 'Counter Sale'" class="flex gap-4 mb-4">
+        <p-floatlabel variant="on">
+          <p-select
+            [checkmark]="true"
+            optionLabel="name"
+            [showClear]="true"
+            size="small"
+            class="w-44"
+          />
+          <label for="parameters" class="text-xs">Party Name</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+          <p-select
+            [checkmark]="true"
+            optionLabel="name"
+            [showClear]="true"
+            size="small"
+            class="w-44"
+          />
+          <label for="parameters" class="text-xs">Party Code</label>
+        </p-floatlabel>
+      </div>     
+      
+      <p class="text-md">Order Upload</p>
+      <div class="w-full max-w-full flex gap-5 flex-wrap items-center bg-gray-100 p-3 font-medium">
+         <p-button
+          label="Download Format"
+          size="small"
+          icon="pi pi-download"
+          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+          (onClick)="SampleExcelDownload()"
+          iconPos="right"
+          class="text-xs"
+        />
+        <p-fileupload
+          name="demo[]"
+          url="https://www.primefaces.org/cdn/api/upload.php"
+          [multiple]="true"
+          accept="xlxs/*"
+          
+          class="text-xs"
+          [maxFileSize]="1000000"
+          mode="advanced"
+          chooseLabel="Choose"
+          [chooseStyleClass]="'w-[84px] background-color: #008080, color: #fff h-[30px] !text-[12px]'"
+          uploadLabel="Upload"
+          cancelLabel="Cancel"
+          styleClass="w-auto"
+        >
+          <ng-template #empty>
+            <div class="text-gray-500 text-sm">
+              Drag and drop files here to upload.
+            </div>
+          </ng-template>
+        </p-fileupload>
+      </div>
+      <br />
+      <p-divider />
+      <div class="flex justify-start bg-white">
+        <p class="text-md font-medium">Add Part Wise</p>
+      </div>
+      <br />
+
+      <div class="flex flex-wrap gap-3" [formGroup]="AddPartWise">
+        <div class="flex items-center gap-2">
+          <label for="partnumber" class="text-sm mt-1 font-medium"
+            >Part Number :</label
+          >
+          <input
+            type="text"
+            id="partnumber"
+            formControlName="PartNumber"
+            placeholder="Enter Part Number"
+            [pSize]="'small'"
+            pInputText
+            class="w-44 h-8"
+          />
+        </div>
+        <div class="flex items-center gap-2">
+          <label for="qty" class="text-sm mt-1 font-medium"
+            >Quantity :</label
+          >
+          <input
+            type="text"
+            id="qty"
+            formControlName="Quantity"
+            placeholder="Enter Quantity"
+            [pSize]="'small'"
+            pInputText
+          />
+        </div>
+        <div class="flex items-center gap-2">
+          <label for="remark" class="text-sm mt-1 font-medium"
+            >Remark :</label
+          >
+          <input
+            type="text"
+            id="remark"
+            formControlName="Remark"
+            placeholder="Enter Remark"
+            [pSize]="'small'"
+            pInputText
+          />
+        </div>
+        <p-button  [style]="{ 'background-color': '#008080', 'color': '#fff'}" icon="pi pi-plus" aria-label="Save" />
+      </div>
+      <br />
+
+      <div class="flex gap-2">
+        <p-button
+          label="Reset"
+          size="small"
+          icon="pi pi-undo"
+          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+          iconPos="right"
+        />
+        <p-button
+          label="Save"
+          size="small"
+          (onClick)="OnClickAdd()"
+          icon="pi pi-check"
+          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+          iconPos="right"
+        />
+      </div>
+    </div>
+  </div>
+</div>
