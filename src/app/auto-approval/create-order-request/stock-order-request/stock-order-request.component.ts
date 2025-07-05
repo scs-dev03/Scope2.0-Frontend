@@ -73,8 +73,7 @@ export class StockOrderRequestComponent {
     console.log(this.AddPartWise.value);
   }
 
-  OnAddRows() {
-
-  }
+ 
+  
 
 }
