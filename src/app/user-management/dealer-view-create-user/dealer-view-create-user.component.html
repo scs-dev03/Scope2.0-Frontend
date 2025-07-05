@@ -57,7 +57,7 @@
          >
              <ng-template pTemplate="header" >
                  <tr>
-                    <th class="min-w-8rem">Brand <p-columnFilter
+                    <!-- <th class="min-w-8rem">Brand <p-columnFilter
                     class="table-input"
                     field="brand"
                     display="menu"
@@ -66,7 +66,7 @@
                     class="table-input"
                     field="dealer"
                     display="menu"
-                  ></p-columnFilter></th>
+                  ></p-columnFilter></th> -->
                   <th class="min-w-8rem">Location <p-columnFilter
                     class="table-input"
                     field="location"
@@ -82,16 +82,18 @@
                     field="designationName"
                    display="menu"
                   ></p-columnFilter></th>
-                     <th class="min-w-8rem">Role  <p-columnFilter
+                     <!-- <th class="min-w-8rem">Role  <p-columnFilter
                     class="table-input"
                     field="roleName"
                     display="menu"
-                  ></p-columnFilter></th>
-                     <th class=" whitespace-normal min-w-13rem">Associated Business  <p-columnFilter
+                  ></p-columnFilter></th> -->
+
+                     <!-- <th class=" whitespace-normal min-w-13rem">Associated Business  <p-columnFilter
                     class="table-input"
                     field="associatedBusiness"
                     display="menu"
-                  ></p-columnFilter></th>
+                  ></p-columnFilter></th> -->
+
                      <th>Email  <p-columnFilter
                     class="table-input"
                     field="emailId"
@@ -110,13 +112,13 @@
              </ng-template>
              <ng-template pTemplate="body" let-product>
                  <tr>
-                    <td class="break-words whitespace-normal max-w-10rem">{{ product.brand }}</td>
-                    <td class="break-words whitespace-normal max-w-10rem">{{ product.dealer }}</td>
+                    <!-- <td class="break-words whitespace-normal max-w-10rem">{{ product.brand }}</td>
+                    <td class="break-words whitespace-normal max-w-10rem">{{ product.dealer }}</td> -->
                     <td class="break-words whitespace-normal max-w-10rem">{{ product.location }}</td>
                      <td class="break-words whitespace-normal max-w-10rem">{{ product.name }}</td>
-                     <td class="break-words whitespace-normal max-w-10rem">{{ product.designationName }}</td>
-                     <td class="break-words whitespace-normal max-w-10rem">{{product.roleName}}</td>
-                     <td class="break-words whitespace-normal max-w-10rem">{{ product.associatedBusiness }}</td>
+                     <td class="break-words whitespace-normal max-w-10rem">{{ product.designation }}</td>
+                     <!-- <td class="break-words whitespace-normal max-w-10rem">{{product.roleName}}</td> -->
+                     <!-- <td class="break-words whitespace-normal max-w-10rem">{{ product.associatedBusiness }}</td> -->
                      <td class="break-words whitespace-normal max-w-10rem">{{ product.emailId }}</td>
                      <td>{{ product.mobileNo }}</td>
                      <!-- <td class="text-center" *ngIf="this.userPermissions?.edit1" ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td>
@@ -149,9 +151,9 @@
         <div class="col-12">
           <div class="row">
            
-             <div class="col-6 p-2 d-flex flex-column">
-              <span class="font-semibold">Brand</span>
-               <p-select  
+             <!-- <div class="col-6 p-2 d-flex flex-column">
+              <span class="font-semibold">Brand</span> -->
+               <!-- <p-select  
                 [options]="brands" 
                 formControlName="brand"
                 optionLabel="brand" 
@@ -160,14 +162,14 @@
                 filterPlaceholder="Select Brand.."
                  (onChange)="onBrandChange($event)"
 
-                placeholder="Select Brand" />
+                placeholder="Select Brand" /> -->
                 <!-- <input type="text" pInputText formControlName="brand" *ngIf="actionName!='Add User'"  /> -->
               <!-- Show error message only if the field is touched and invalid -->
-              <div *ngIf="editUserForm.get('brand')?.touched && editUserForm.get('brand')?.invalid">
+              <!-- <div *ngIf="editUserForm.get('brand')?.touched && editUserForm.get('brand')?.invalid">
                 <small *ngIf="editUserForm.get('brand')?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small>
               </div>
-            </div>
-             <div class="col-6 p-2 d-flex flex-column">
+            </div> -->
+             <!-- <div class="col-6 p-2 d-flex flex-column">
               <span class="font-semibold">Dealer</span>
                <p-select 
                 [options]="dealers" 
@@ -180,10 +182,10 @@
                 placeholder="Select Dealer" />
               <!-- Show error message only if the field is touched and invalid -->
                 <!-- <input type="text" pInputText formControlName="dealer" *ngIf="actionName!='Add User'"  /> -->
-              <div *ngIf="editUserForm.get('dealer')?.touched && editUserForm.get('dealer')?.invalid">
+              <!-- <div *ngIf="editUserForm.get('dealer')?.touched && editUserForm.get('dealer')?.invalid">
                 <small *ngIf="editUserForm.get('dealer')?.hasError('required')" style="color: red; font-size: 12px;">Dealer is required.</small>
               </div>
-            </div>
+            </div>  -->
 
              <div class="col-6 p-2 d-flex flex-column">
               <span class="font-semibold">Location</span>
@@ -226,7 +228,7 @@
                 [options]="designations" 
                 formControlName="designation"
                 optionLabel="designation_name" 
-                optionValue="id"
+                optionValue="designation_name"
                 placeholder="Enter Designation" />
               <!-- Show error message only if the field is touched and invalid -->
               <div *ngIf="editUserForm.get('designation')?.touched && editUserForm.get('designation')?.invalid">
@@ -238,7 +240,7 @@
 
           <!-- <div class="row"> -->
             <!-- Role Field -->
-            <div class="col-6 p-2 d-flex flex-column">
+            <!-- <div class="col-6 p-2 d-flex flex-column">
               <span class="font-semibold">Role</span>
               <p-select
                 [options]="roles" 
@@ -249,7 +251,7 @@
               <div *ngIf="editUserForm.get('role')?.touched && editUserForm.get('role')?.invalid">
                 <small *ngIf="editUserForm.get('role')?.hasError('required')" style="color: red; font-size: 12px;">Role is required.</small>
               </div>
-            </div>
+            </div> -->
             <!-- Email Field -->
             <div class="col-6 p-2">
               <span class="font-semibold">Email ID</span>
@@ -276,7 +278,7 @@
             </div>
 
             <!-- Associated Business Field -->
-            <div class="col-6 p-2">
+            <!-- <div class="col-6 p-2">
               <span class="font-semibold">Associated Business</span>
               <p-select 
                 [options]="associatedBusinesses" 
@@ -288,7 +290,7 @@
               <div *ngIf="editUserForm.get('associatedBusiness')?.touched && editUserForm.get('associatedBusiness')?.invalid">
                 <small *ngIf="editUserForm.get('associatedBusiness')?.hasError('required')" style="color: red; font-size: 12px;">Associated Business is required.</small>
               </div>
-            </div>
+            </div> -->
           <!-- </div> -->
 
           <!-- <div class="row"> -->

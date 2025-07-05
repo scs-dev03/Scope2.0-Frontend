@@ -115,8 +115,8 @@ blForm:FormGroup
     ngOnInit(){
       // this.getLocations();
       this.getBrands();
-      localStorage.setItem('dealerid',"20490");
-      localStorage.setItem('brandid',"33")
+      // localStorage.setItem('dealerid',);
+      // localStorage.setItem('brandid',"33")
       this.userService.allUserData$.subscribe((users:any)=>{
         this.users=users;
       })

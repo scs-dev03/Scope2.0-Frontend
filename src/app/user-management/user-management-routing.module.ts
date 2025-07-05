@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path:'dealer-view-create' ,component:DealerViewCreateUserComponent,
-    canActivate:[authGuard]
+  // canActivate:[authGuard]
   }
 ];
 

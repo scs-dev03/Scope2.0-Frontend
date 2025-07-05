@@ -51,16 +51,16 @@
 
      <div class="col p-2 d-flex flex-column" >
               <span class="font-semibold">Brand</span>
-               <p-select  
+               <p-select   
                 [options]="brands" 
                 optionLabel="brand" 
                 optionValue="brand_id"
+                class="dropdown"
                 [filter]="true"
-                [appendTo]="'body'"
+                 appendTo="self"
                 [(ngModel)]="selectedBrandId"
                 filterPlaceholder="Select Brand.."
-                 (onChange)="onBrandChange($event)"
-
+                 (ngModelChange)="onBrandChange($event,'model')"
                 placeholder="Select Brand" />
                 <!-- <input type="text" pInputText formControlName="brand" *ngIf="actionName!='Add User'"  /> -->
               <!-- Show error message only if the field is touched and invalid -->
@@ -72,10 +72,18 @@
                 optionLabel="dealer_name" 
                 optionValue="dealer_id"
                 [filter]="true"
+                class="dropdown"
+                  appendTo="self"
                  [(ngModel)]="selectedDealerId"
                 filterPlaceholder="Select Dealer"
-                (onChange)="onDealerChange($event)"
-                placeholder="Select Dealer" />
+                (ngModelChange)="onDealerChange($event,'model')"
+                placeholder="Select Dealer" >
+                 <ng-template let-option pTemplate="item">
+    <div class="truncate-text" [title]="option.dealer_name">
+      {{ option.dealer_name }}
+    </div>
+    </ng-template>
+              </p-select>
               <!-- Show error message only if the field is touched and invalid -->
                 <!-- <input type="text" pInputText formControlName="dealer" *ngIf="actionName!='Add User'"  /> -->
               
@@ -87,23 +95,39 @@
                 [options]="locations" 
                 optionLabel="location_name" 
                 optionValue="location_id"
-                [appendTo]="'body'"
+                 appendTo="self"
+                 class="dropdown"
                 [(ngModel)]="selectedLocationId"
-                (onChange)="onBDLSelection()"
+                 [filter]="true"
+                filterPlaceholder="Select Location"
+                (ngModelChange)="locationSelection()"
+                [showClear]="true"
                 placeholder="Select Location" />
                  <!-- <input type="text" pInputText formControlName="location" *ngIf="actionName!='Add User'"  /> -->
               <!-- Show error message only if the field is touched and invalid -->
              
             </div>
-            <div class="col p-2 d-flex flex-column">
+            <div class="col-3 p-2 d-flex flex-column">
               <span class="font-semibold">Designation</span>
+              
               <p-select 
                 [options]="designations" 
-                formControlName="designation"
                 optionLabel="designation_name" 
-                [appendTo]="'body'"
+               appendTo="self"
+               class="designation-dropdown"
+               [(ngModel)]="selectedDesignationId"
+               (onChange)="onDesignationChange()"
+                 [filter]="true"
+                 [showClear]="true"
+                filterPlaceholder="Select Designation"
                 optionValue="id"
-                placeholder="Enter Designation" />
+                placeholder="Select Designation"
+                >
+              <ng-template let-option pTemplate="item">
+    <div class="truncate-text" [title]="option.designation_name">
+      {{ option.designation_name }}
+    </div>
+  </ng-template></p-select>
               <!-- Show error message only if the field is touched and invalid -->
               
             </div>
@@ -120,7 +144,7 @@
   </div>
         </div>
         </div>
-        <div>
+        <div class="d-flex">
             <!-- *ngIf="userPermissions?.add1" in i tag -->
           <i class="pi pi-user cursor-pointer me-3"  style="font-size: 1.5rem !important;font-weight:bold " *ngIf="userPermissions?.add1" (click)="showDialog('Add User')"></i>
           <!-- *ngIf="userPermissions?.view1" in i tag -->
@@ -154,11 +178,17 @@
                     field="name"
                     display="menu"
                   ></p-columnFilter></th>
+                   <th class="min-w-10rem" *ngIf="userType=='D'">Location <p-columnFilter
+                    class="table-input"
+                    field="location"
+                   display="menu"
+                  ></p-columnFilter></th>
                      <th class="min-w-10rem">Designation <p-columnFilter
                     class="table-input"
                     field="designationName"
                    display="menu"
                   ></p-columnFilter></th>
+                  
                      <th class="min-w-8rem">Role  <p-columnFilter
                     class="table-input"
                     field="roleName"
@@ -188,6 +218,7 @@
              <ng-template pTemplate="body" let-product>
                  <tr>
                      <td class="break-words whitespace-normal max-w-10rem">{{ product.name }}</td>
+                     <td class="break-words whitespace-normal max-w-10rem" *ngIf="userType=='D'">{{ product.location[0].location_name }}</td>
                      <td class="break-words whitespace-normal max-w-10rem">{{ product.designationName }}</td>
                      <td class="break-words whitespace-normal max-w-10rem">{{product.roleName}}</td>
                      <td class="break-words whitespace-normal max-w-10rem">{{ product.associatedBusiness }}</td>
@@ -212,7 +243,7 @@
 
 
 
-<p-dialog [header]="actionName" [modal]="true" [(visible)]="visible" [style]="{ width: '100vh' }" class="header edit-add-user">
+<p-dialog [header]="actionName" [modal]="true" [(visible)]="visible" [style]="{ width: '50vw' ,height:'100vh' }" class="header edit-add-user">
   <form [formGroup]="editUserForm">
     <div class="card1">
       <div class="row">
@@ -225,6 +256,7 @@
                 formControlName="userType"
                 optionLabel="name" 
                 optionValue="value"
+                appendTo="body"
                 placeholder="Select User Type" />
               <div *ngIf="editUserForm.get('userType')?.touched && editUserForm.get('userType')?.invalid">
                 <small *ngIf="editUserForm.get('userType')?.hasError('required')" style="color: red; font-size: 12px;">User Type is required.</small>
@@ -239,6 +271,7 @@
                 optionLabel="brand" 
                 optionValue="brand_id"
                 [filter]="true"
+                appendTo="body"
                 filterPlaceholder="Select Brand.."
                  (onChange)="onBrandChange($event)"
 
@@ -257,6 +290,7 @@
                 optionLabel="dealer_name" 
                 optionValue="dealer_id"
                 [filter]="true"
+                appendTo="body"
                 filterPlaceholder="Select Dealer"
                 (onChange)="onDealerChange($event)"
                 placeholder="Select Dealer" />
@@ -269,13 +303,22 @@
 
              <div class="col-6 p-2 d-flex flex-column" *ngIf="showBDL">
               <span class="font-semibold">Location</span>
-               <p-select 
+               <!-- <p-select *ngIf="actionName=='Edit User'"
                 [options]="locations" 
                 formControlName="location"
                 optionLabel="location_name" 
                 optionValue="location_id"
-               
-                placeholder="Select Location" />
+               appendTo="body"
+                placeholder="Select Location" /> -->
+
+                <p-multiSelect 
+  [options]="locations" 
+  formControlName="location"
+  optionLabel="location_name" 
+  optionValue="location_id"
+  appendTo="body"
+  placeholder="Select Location">
+</p-multiSelect>
                  <!-- <input type="text" pInputText formControlName="location" *ngIf="actionName!='Add User'"  /> -->
               <!-- Show error message only if the field is touched and invalid -->
               <div *ngIf="editUserForm.get('location')?.touched && editUserForm.get('location')?.invalid">
@@ -313,6 +356,7 @@
               <span class="font-semibold">Designation</span>
               <p-select 
                 [options]="designations" 
+                appendTo="body"
                 formControlName="designation"
                 optionLabel="designation_name" 
                 optionValue="id"
@@ -333,6 +377,7 @@
                 [options]="roles" 
                 formControlName="role"
                 optionLabel="role_name"
+                appendTo="body"
                 optionValue="id" 
                 placeholder="Enter Role" />
               <div *ngIf="editUserForm.get('role')?.touched && editUserForm.get('role')?.invalid">
@@ -373,6 +418,7 @@
                 formControlName="associatedBusiness"
                 optionLabel="business_vertical" 
                 optionValue="id"
+                appendTo="body"
                 placeholder="Enter Associated Business"
                 class="businessVertical-dropdown" />
               <div *ngIf="editUserForm.get('associatedBusiness')?.touched && editUserForm.get('associatedBusiness')?.invalid">
@@ -389,6 +435,7 @@
                 [options]="statuses" 
                 formControlName="status"
                 optionLabel="name" 
+                appendTo="body"
                 optionValue="name"
                 placeholder="Enter Status" />
               <div *ngIf="editUserForm.get('status')?.touched && editUserForm.get('status')?.invalid">
@@ -404,7 +451,7 @@
       </div>
     <!-- </div> -->
 
-    <div class="div-btn">
+    <div class="div-btn" [ngClass]="showBDL?'mt-[110px]':'mt-[35px]'">
       <p-button label="Cancel" class="btn text-white mr-5" (click)="visible = false"></p-button>
       <p-button label="Submit" class="btn text-white" (click)="submit()"></p-button>
     </div>

@@ -70,13 +70,13 @@ export class DealerViewCreateUserComponent {
       name: ['', Validators.compose([Validators.required])],
       lastName:['',Validators.compose([Validators.required])],
       designation: ['', Validators.required],
-      role: ['', Validators.required],
+      // role: ['', Validators.required],
       email: ['', Validators.compose([Validators.required, Validators.email])],
       mobileNo: ['', Validators.compose([Validators.required, Validators.pattern('^[1-9][0-9]{9}$')])],
-      associatedBusiness: ['', Validators.required],
+      // associatedBusiness: ['', Validators.required],
       status: ['', Validators.required],
-      brand:['',Validators.compose([Validators.required])],
-      dealer:['',Validators.required],
+      // brand:['',Validators.compose([Validators.required])],
+      // dealer:['',Validators.required],
       location:['',Validators.required]
     });
     this.currentRoute=router.url;
@@ -92,6 +92,8 @@ export class DealerViewCreateUserComponent {
 //   this.editUserForm.get('location')?.enable();
 // }
 //    // console.log(this.currentRoute)
+   localStorage.setItem('dealerid',"20304");
+   localStorage.setItem('userid',"293");
   }
     
   
@@ -124,10 +126,12 @@ export class DealerViewCreateUserComponent {
       this.globalBlockUiService.stopLoading();
     })
   }
+
    onDealerChange(event:any){
     // console.log(this.slForm.value)
     // this.globalBlockUiService.startLoading();
-    this.utilitiesService.getLocations({dealer_id:this.editUserForm.value.dealer}).subscribe((res:any)=>{
+ 
+    this.utilitiesService.getLocations({dealer_id:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
       this.locations=res.data;
       this.globalBlockUiService.stopLoading();
       // console.log(this.brands)
@@ -154,7 +158,10 @@ export class DealerViewCreateUserComponent {
 //   this.editUserForm.get('location')?.enable();
 // }
       if(this.actionName=='Add User'){
-        this.viewUser();
+        //this.viewUser();
+          this.utilitiesService.getLocations({dealer_id:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
+            this.locations=res.data; 
+          })
         this.editUserForm.reset();
         
       }else{
@@ -179,16 +186,16 @@ export class DealerViewCreateUserComponent {
      //  console.log(brandObj,dealerObj,locationObj)
 
         this.editUserForm.patchValue({
-          brand:brandObj?.brand_id,
-          dealer:dealerObj?.dealer_id,
+          // brand:brandObj?.brand_id,
+          // dealer:dealerObj?.dealer_id,
 
           location:locationObj?.location_id,
           name: rowData.vcFirstName,
           lastName:rowData.vcLastName,
           email: rowData.emailId,
-          designation: designationObj ? designationObj.id : null,  // Patch the ID, not the name
-          role: roleObj ? roleObj.id : null,  // Patch the ID, not the name
-          associatedBusiness: verticalObj ? verticalObj.id : null,  // Patch the ID, not the name
+          designation: rowData.designation,  // Patch the ID, not the name
+          // role: roleObj ? roleObj.id : null,  // Patch the ID, not the name
+          // associatedBusiness: verticalObj ? verticalObj.id : null,  // Patch the ID, not the name
           mobileNo: rowData.mobileNo,
           userId: rowData.userId,
           status: statusObj?statusObj?.name:null
@@ -268,11 +275,12 @@ export class DealerViewCreateUserComponent {
         }
       );
 
-       this.sharedService.updateModuleName('View Users')
+       this.sharedService.updateModuleName('Dealer User Management')
 
       this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
         this.isSidebarVisible=visible
       })
+      this.viewUser();
       }
   
       transformData(data: any)
@@ -394,15 +402,24 @@ export class DealerViewCreateUserComponent {
       }
     
       getDesignations(){
-        this.globalBlockUiService.startLoading();
-        this.utilitiesService.getDesignations().subscribe((res:any)=>{
-          // this.globalBlockUiService.stopLoading();;
-          this.designations=res.data;
-          this.getBusinessVertical();
-        },(error:any)=>{
-          this.globalBlockUiService.stopLoading();
-          //console.log("designtion error ",error)
-        })
+        this.designations=[
+          {
+            id:1,
+            designation_name:'Floor Supervisior'
+          },
+          {id:2,
+            designation_name:'Workshop Advisor'
+          }
+        ]
+        // this.globalBlockUiService.startLoading();
+        // this.utilitiesService.getDesignations().subscribe((res:any)=>{
+        //   // this.globalBlockUiService.stopLoading();;
+        //   this.designations=res.data;
+        //   this.getBusinessVertical();
+        // },(error:any)=>{
+        //   this.globalBlockUiService.stopLoading();
+        //   //console.log("designtion error ",error)
+        // })
       }
   
       getBusinessVertical(){
@@ -436,15 +453,15 @@ export class DealerViewCreateUserComponent {
         let data:any=[];
         this.users.forEach((item:any)=>{
           data.push({
-            Brand:item.brand,
-            Dealer:item.dealer,
+            // Brand:item.brand,
+            // Dealer:item.dealer,
             Location:item.location,
             Name:item.name,
-          Role:item.roleName,
-          Designation:item.designationName,
+          // Role:item.roleName,
+          Designation:item.designation,
           'Email Id':item.emailId,
           'Mobile No':item.mobileNo,
-          'Business Vertical':item.associatedBusiness,
+          // 'Business Vertical':item.associatedBusiness,
           Status:item.status?'Active':'Inactive'
           })
           
@@ -470,28 +487,27 @@ export class DealerViewCreateUserComponent {
          this.globalBlockUiService.startLoading();
         //  localStorage.setItem('usertype','d');
       //  console.log('user Type ',this.userType)
-        this.userService.viewUser({userType:this.userType}).subscribe((res:any)=>{
+        this.userService.viewUser({userType:this.userType,dealerId:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
            this.globalBlockUiService.stopLoading();
            let userArray=[];
          //  console.log("resdata ",res?.data)
           for(let item of res?.data){
             //console.log(this.roles,this.associatedBusinesses,this.designations)
-            let designationObj=this.designations.find((obj:any)=> {return item.designationId==obj.id})
+            // let designationObj=this.designations.find((obj:any)=> {return item.designationId==obj.id})
            // console.log("designation ", item.designationId ,designationObj);
-            this.designationName=designationObj?.designation_name
+            // this.designationName=designationObj?.designation_name
   
-            let businessVerticalObj=this.associatedBusinesses.find((obj:any)=>  { return item.business_vertical==obj.id})
+            // let businessVerticalObj=this.associatedBusinesses.find((obj:any)=>  { return item.business_vertical==obj.id})
             // console.log("designation ",businessVerticalObj);
-            this.businessVertical=businessVerticalObj?.business_vertical
-            let roleObj=this.roles.find((obj:any)=>  {return item.roleId==obj.id})
+            // this.businessVertical=businessVerticalObj?.business_vertical
+            // let roleObj=this.roles.find((obj:any)=>  {return item.roleId==obj.id})
             
-            this.roleName=roleObj?.role_name
+            // this.roleName=roleObj?.role_name
   
             userArray.push({
               ...item,
-              designationName:designationObj?.designation_name,
-              roleName:roleObj?.role_name,
-              associatedBusiness:businessVerticalObj?.business_vertical
+              designation:item.designation,
+ 
             
           })
           
@@ -516,7 +532,7 @@ export class DealerViewCreateUserComponent {
           if(this.actionName=='Add User'){
             
             this.globalBlockUiService.startLoading();
-            this.userService.createUser({...this.editUserForm.value,userId:this.userId,token:this.token,link:link}).subscribe((res:any)=>{
+            this.userService.createUser({...this.editUserForm.value,userId:this.userId,token:this.token,link:link,dealer:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
               this.globalBlockUiService.stopLoading();
               this.viewUser();
               this.visible = false;
@@ -528,13 +544,13 @@ export class DealerViewCreateUserComponent {
               
             },(error:any)=>{
               this.globalBlockUiService.stopLoading();
-              this.messageService.add({severity:'error',life:30000000,summary:'Error in creating User...'})
+              this.messageService.add({severity:'error',life:30000,summary:'Error in creating User...'})
             })
           }
           else{
             this.globalBlockUiService.startLoading();
            // console.log("edit user ",this.editUserForm.value)
-            this.userService.editUser({...this.editUserForm.value,userId:this.rowId,updatedBy:this.userId,token:this.token}).subscribe((res:any)=>{
+            this.userService.editUser({...this.editUserForm.value,userId:this.rowId,updatedBy:this.userId,token:this.token,dealer:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
               this.globalBlockUiService.stopLoading();
               this.viewUser();
               this.visible = false;

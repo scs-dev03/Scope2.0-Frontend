@@ -50,7 +50,7 @@ export class AppComponent {
     private utilitiesService:UtilitiesService,
     private sharedService:SharedServiceService,
     private pageStateService:PageStateService,
-    //private idleService:IdleService,
+  //  private idleService:IdleService,
   private userService:UserService) {
     this.homeData = new FormGroup({
     locationId: new FormControl(),
