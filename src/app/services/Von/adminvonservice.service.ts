@@ -7,10 +7,10 @@ import { Observable } from 'rxjs';
 })
 export class AdminvonserviceService {
 
-  private apiurl: any = 'http://web36.185.238.new.ocpwebserver.com/api/v1/von/';
+  private apiurl: any = 'https://scopeapi.sparecare.in/api/v1/von/';
 
   private apiurlmaster: any =
-    'http://web36.185.238.new.ocpwebserver.com/api/v1/master/';
+    'https://scopeapi.sparecare.in/api/v1/master/';
 
   
 
@@ -20,13 +20,13 @@ export class AdminvonserviceService {
 // private apiurlmaster: any =
 //   'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/master/';
 
-    usertype: any = "A"
-    userid: any = '146297'
-  setLocalStorage(){
-    localStorage.setItem('usertype',this.usertype)
-    localStorage.setItem('userid',this.userid)
+    // usertype: any = "A"
+    // userid: any = '146297'
+  // setLocalStorage(){
+  //   localStorage.setItem('usertype',this.usertype)
+  //   localStorage.setItem('userid',this.userid)
 
-  }
+  // }
 
   constructor(private http: HttpClient) {}
 

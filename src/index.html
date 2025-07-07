@@ -5,7 +5,7 @@
     <title>Scope 2.O </title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="sparecare_favicon.png" />
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
       rel="stylesheet"
@@ -29,6 +29,30 @@
     <meta http-equiv="Cache-Control" content="no-store" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+    <script>
+  document.addEventListener('keydown', function (e) {
+    // Block F12
+    if (e.key === 'F12') {
+      e.preventDefault();
+    }
+
+    // Block Ctrl+Shift+I, J, C
+    if (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) {
+      e.preventDefault();
+    }
+
+    // Block Ctrl+U
+    if (e.ctrlKey && e.key.toLowerCase() === 'u') {
+      e.preventDefault();
+    }
+  });
+
+  // Block right-click context menu
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+  });
+</script>
+
   </head>
   <body class="mat-typography">
     <app-root></app-root>

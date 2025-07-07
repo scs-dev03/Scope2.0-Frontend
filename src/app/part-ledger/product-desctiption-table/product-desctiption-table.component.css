@@ -38,6 +38,7 @@ td {
 
   ::ng-deep .p-paginator .p-paginator-rpp-dropdown {
   z-index: auto !important;
+  
 }
 
 
@@ -47,4 +48,10 @@ td {
 ::ng-deep .low-z-paginator .p-paginator .p-paginator-next,
 ::ng-deep .low-z-paginator .p-paginator .p-paginator-last {
   z-index: 1 !important; /* or even 0 if needed */
+  
+}
+
+::ng-deep .low-z-paginator .p-paginator {
+  height: 3rem !important;          /* container height */
+  min-height: 3rem !important;
 }

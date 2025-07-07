@@ -27,8 +27,8 @@ export const routes: Routes = [
     {
         path:'auto',
         loadChildren:()=> import('../app/auto-approval/auto-approval.module').then(m=>m.AutoApprovalModule),
-        //  canLoad:[authGuard],
-        //  canActivate:[authGuard]
+         canLoad:[authGuard],
+         canActivate:[authGuard]
     },
 
     {
