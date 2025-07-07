@@ -20,7 +20,7 @@ const routes: Routes = [
   {
     path: 'ds',
     component: DealerSalesReportComponent,
-    //canActivate:[authGuard]
+    canActivate:[authGuard]
 
   }
 ];
