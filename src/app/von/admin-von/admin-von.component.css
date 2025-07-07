@@ -61,3 +61,10 @@
   overflow-wrap: break-word;
   line-height: 1.5;
 } */
+
+
+
+::ng-deep .low-z-paginator .p-paginator {
+  height: 3rem !important;          /* container height */
+  min-height: 3rem !important;
+}

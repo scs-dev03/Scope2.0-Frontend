@@ -284,6 +284,7 @@ export class AdminVonComponent {
     return [...data, totalObject];
   }
 
+  userid :any = localStorage.getItem('userid')
   submitAdminRow(rowData: any) {
     this.globalBlockUiService.startLoading();
     const validCustomRemarkRegex = /^(?![\s,@-]*$)(?!-?\d+$)[a-zA-Z0-9\s,@-]*$/;
@@ -328,6 +329,7 @@ export class AdminVonComponent {
             AdminRemark: rowData.selectedRemark,
             customRem: rowData.customRemark,
             ApprovedQty: rowData.qty,
+            addedby: this.userid
           })
           .subscribe(
             (res: any) => {
@@ -355,6 +357,7 @@ export class AdminVonComponent {
             AdminRemark: rowData.selectedRemark,
             customeRem: null,
             ApprovedQty: rowData.qty,
+            addedby: this.userid
           })
           .subscribe(
             (res: any) => {
@@ -854,7 +857,7 @@ export class AdminVonComponent {
         },
       });
   }
-
+  
   // error handling yet to be done
   selectedFileName: any;
   onFileSelectDealer(event: any) {
@@ -873,7 +876,8 @@ export class AdminVonComponent {
     }
     const formData = new FormData();
     formData.append('file', this.DealerExcel);
-    this.adminvonservice.uploadExcelDealer(formData).subscribe(
+    formData.append('addedby', this.userid);
+    this.adminvonservice.uploadExcelDealer(formData ).subscribe(
       (res: any) => {
         this.Result = res.message;
         this.showupload = false;
@@ -957,6 +961,7 @@ export class AdminVonComponent {
 
   UploadExcelAdmin(fu: any) {
     this.globalBlockUiService.startLoading();
+    
 
     if (!this.AdminExcel) {
       console.error('Please select a file first!');
@@ -964,6 +969,8 @@ export class AdminVonComponent {
     }
     const formData = new FormData();
     formData.append('file2', this.AdminExcel);
+    formData.append('addedby', this.userid);
+    
     this.adminvonservice.AdminuploadExcel(formData).subscribe(
       (res: any) => {
         this.Result = res.message;

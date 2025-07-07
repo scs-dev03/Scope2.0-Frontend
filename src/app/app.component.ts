@@ -102,9 +102,10 @@ export class AppComponent {
     });
 
     this.userService.loadDataOnce();
+    // localStorage.setItem('usertype','U');
     // localStorage.setItem('brandid','9');
     // localStorage.setItem('def_location','14')
-   //  localStorage.setItem('usertoken','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
+    // localStorage.setItem('usertoken','0x02000000F5710E149B719043CB40E5BC2503861707D0B1F078C883021B904D312763A5D0')
     let userToken=localStorage.getItem('usertoken');
 
     this.utilitiesService.getUserInfo({token:userToken}).subscribe((res:any)=>{
@@ -116,8 +117,6 @@ export class AppComponent {
       //console.log("header ",header)
       this.moduleName=header;
     })
-   
-
   }
 
   private getCurrentComponent(route: ActivatedRoute): any {
@@ -183,5 +182,17 @@ export class AppComponent {
   onClickLocation(){
   // console.log("location id in app component ",this.homeData,this.homeData.value.locationId)
     this.sharedService.updateLocationIdForHomePageData(this.homeData.value.locationId);
+  }
+
+  
+
+  redirectToLegacyScope(){
+    if(localStorage.getItem('usertype') == 'A'){
+      window.location.href = 'https://scope.sparecare.in/UAD_SC_WAC/home.aspx';
+    }
+    else{
+      window.location.href = 'https://scope.sparecare.in/UAP_SC/home.aspx';
+    }
+
   }
 }

@@ -8,8 +8,8 @@ export const routes: Routes = [
     {
         path:'part-ledger',
         loadChildren:()=> import('../app/part-ledger/part-ledger.module').then(m=>m.PartLedgerModule),
-         canLoad:[authGuard],
-         canActivate:[authGuard]
+        //  canLoad:[authGuard],
+        //  canActivate:[authGuard]
     },
     {
         path:'mapping',
@@ -53,8 +53,8 @@ export const routes: Routes = [
     {
         path:'core',
         loadChildren:()=> import('../app/core/core.module').then(m=>m.CoreModule),
-          canLoad:[authGuard],
-          canActivate:[authGuard]
+        //   canLoad:[authGuard],
+        //   canActivate:[authGuard]
     },
     {
         path:'lead-time',
