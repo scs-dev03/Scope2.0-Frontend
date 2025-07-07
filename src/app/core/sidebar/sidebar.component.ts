@@ -33,6 +33,7 @@ export class SidebarComponent {
   isVisible: boolean = true;
   sidebarItems:any=[];
   userName:any;
+  profilePhoto:any;
   // sidebarItems = [
   //   {id: 1, value: "Mapping", children: [
   //       {id: 2, value: "Stock Upload Mapping", route: 'mapping/stock-upload',isActive: true},
@@ -132,8 +133,6 @@ filterItems() {
     subItem.isActive = true;
   }
   
-
- 
 
   toggleChildren(item:any) {
     item.isExpanded = !item.isExpanded;
@@ -250,10 +249,9 @@ getModules(){
   this.sidebarService.getModules().subscribe((res:any)=>{
    
 // const cleaned = this.transformSidebarData(data);  // this will be dense, clean
-this.sidebarItems = res.data;
-// console.log("modules api in sidebar ",this.sidebarItems)
-//  this.sidebarItems=this.transformData(this.sidebarItems)
-// this.filteredItems=this.transformData(this.sidebarItems);
+this.sidebarItems = res.data[0].modules;
+this.profilePhoto=environment.uploadedProfileUrl+res.data[0].profile;
+
   this.sharedService.updateSidebarData(this.sidebarItems)
   //console.log("sidebar items ",this.sidebarItems)
    this.globalBlockUiService.stopLoading();
