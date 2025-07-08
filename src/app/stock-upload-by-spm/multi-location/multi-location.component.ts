@@ -117,6 +117,7 @@ blForm:FormGroup
       this.getBrands();
       // localStorage.setItem('dealerid',);
       // localStorage.setItem('brandid',"33")
+       
       this.userService.allUserData$.subscribe((users:any)=>{
         this.users=users;
       })
@@ -247,6 +248,7 @@ blForm:FormGroup
      
     
       // let dealerId=20295;
+  
       if (this.mlForm.valid) {
         this.globalBlockUiService.startLoading();
         // const formData = new FormData();
@@ -386,6 +388,7 @@ let formData1 = new FormData();
          
        formData1.append('excelFile', this.file, this.fileName);
        formData1.append('dealer_id', localStorage?.getItem('dealerid')?.toString()??'');
+      
        formData1.append('brand_id', localStorage?.getItem('brandid')?.toString()??'');
        formData1.append('user_id', this.userId.toString());
          this.globalBlockUiService.startLoading();
@@ -402,20 +405,20 @@ let formData1 = new FormData();
           this.blForm.reset();
           this.showTable=false
            this.resetBulkForm();
-          this.messageService.add({severity:'error',detail:'Brand Mapping is not available!',life:4000});
+         return this.messageService.add({severity:'error',detail:'Brand Mapping is not available!',life:4000});
         }
         if(res?.dealerLocationMappingNotPresent){
           this.blForm.reset();
           this.showTable=false;
            this.resetBulkForm();
-          this.messageService.add({severity:'error',detail:'Dealer Location Mapping is not available for selected Dealer!',life:4000});
+          return this.messageService.add({severity:'error',detail:'Dealer Location Mapping is not available for selected Dealer!',life:4000});
         }
         
       if(res?.mappingNotPresent){
             this.blForm.reset();
             this.fu1?.clear();
              this.resetBulkForm();
-            this.messageService.add({severity:'error',detail:'Brand Mapping is not available!!',life:4000});
+          return  this.messageService.add({severity:'error',detail:'Brand Mapping is not available!!',life:4000});
           }
           else{
             this.showTable=true;
@@ -505,9 +508,10 @@ let formData1 = new FormData();
       this.addedOn=res.data.added_on;
     
      this.records= this.records.map((item:any)=>{
-      let locationObj=this.locations.find((obj:any)=>obj.location_id==parseInt(item.location_id));
+      
+      let locationObj=this.locations.find((obj:any)=>obj.location_id==parseInt(item.location_id,10));
       let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
-    //  console.log("loc obj ",locationObj)
+    console.log("loc obj ",locationObj,this.locations)
       return{
         ...item,
         added_on: (item.added_on),

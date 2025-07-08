@@ -101,27 +101,6 @@ filterItems() {
       this.menu?.toggle(event);
     }
     
-   
-  //  setActive(subItem: any, parentItem: any) {
-
-  //   // console.log(subItem);
-  //    // Reset the active state for all main menu items and submenus
-  //    this.sidebarItems.forEach((menuItem: any) => {
-  //      menuItem.isActive = false;  // Reset active state for all main items
-  //      menuItem?.subchildren.forEach((sub: any) => {
-  //        sub.isActive = false;  // Reset active state for all submenus
-  //      });
-  //    });
-   
-  //    // Set the clicked submenu item as active
-  //    subItem.isActive = true;
-   
-  //    // Also set the parent main menu item as active
-  //    parentItem.isActive = true;
-   
-  //    // Ensure that the parent submenu is opened
-  //    parentItem.isOpen = true;
-  //  }
 
   setActive(subItem: any, parentItem: any) {
     this.filteredItems.forEach(item => {
@@ -249,8 +228,9 @@ getModules(){
   this.sidebarService.getModules().subscribe((res:any)=>{
    
 // const cleaned = this.transformSidebarData(data);  // this will be dense, clean
-this.sidebarItems = res.data[0].modules;
-this.profilePhoto=environment.uploadedProfileUrl+res.data[0].profile;
+this.sidebarItems = res.data;
+//console.log("sidebar items ",this.sidebarItems)
+//this.profilePhoto=environment.uploadedProfileUrl+res.data[0].profile;
 
   this.sharedService.updateSidebarData(this.sidebarItems)
   //console.log("sidebar items ",this.sidebarItems)
