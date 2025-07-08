@@ -1,521 +1,421 @@
-<div class="relative h-[100vh] w-full bg-[#f6f6f6] ">
-
-    <!-- <div>
+<div class="relative h-[100vh] w-full bg-[#f6f6f6]">
+  <!-- <div>
       <h1 class="text-3xl ml-10 font-semibold">Dealer Norms Management</h1>
     </div> -->
-     
-      <div class="flex w-auto flex-col  h-[100vh] ">
-        <!-- filter form -->
-        <div class="-mt-10">
-          <form
-            action=""
-            [formGroup]="dealerFilterData"
-            class="flex flex-wrap py-5 justify-start items-center gap-2 w-auto scale-[0.9]">
-            <div class="flex flex-col">
-              <p-floatlabel variant="on">
-                <p-select
-                  formControlName="location"
-                  [options]="locationData"
-                  optionValue="locationid"
-                  optionLabel="location"
-                  class="!w-28 !text-[10px]"
-                  scrollHeight="250px"
-                  scro
-                  [filter]="true"
-                  filterBy="location"
-                  appendTo="body"
-                  [ngClass]="{
-                    'ng-invalid ng-dirty':
-                      dealerFilterData.get('location')?.touched &&
-                      dealerFilterData.get('location')?.invalid
-                  }"
-                />
-                <label for="Locaiton" class="text-[10px]">Locations</label>
-              </p-floatlabel>
-              <div *ngIf="dealerFilterData.get('location')?.touched && dealerFilterData.get('location')?.invalid" class="text-red-500 text-[10px] mt-2">
+
+  <div class="flex w-auto flex-col h-[100vh]">
+    <!-- filter form -->
+    <div class="-mt-10">
+      <form action="" [formGroup]="dealerFilterData"
+        class="flex flex-wrap py-5 justify-start items-center gap-2 w-auto scale-[0.9]">
+        <div class="flex flex-col">
+          <p-floatlabel variant="on">
+            <p-select formControlName="location" [options]="locationData" optionValue="locationid"
+              optionLabel="location" class="!w-28 !text-[10px]" scrollHeight="250px" scro [filter]="true"
+              filterBy="location" appendTo="body" [ngClass]="{
+                'ng-invalid ng-dirty':
+                  dealerFilterData.get('location')?.touched &&
+                  dealerFilterData.get('location')?.invalid
+              }" />
+            <label for="Locaiton" class="text-[10px]">Locations</label>
+          </p-floatlabel>
+          <div *ngIf="
+              dealerFilterData.get('location')?.touched &&
+              dealerFilterData.get('location')?.invalid
+            " class="text-red-500 text-[10px] mt-2">
+            This field is required
+          </div>
+        </div>
+
+        <p-floatlabel variant="on">
+          <p-select [options]="maxData" formControlName="max" optionLabel="name" optionValue="code"
+            class="!w-28 !text-[10px]" />
+          <label for="max" class="text-[10px]">MAX</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+          <p-select [options]="partType" scrollHeight="150px" formControlName="parttype" optionLabel="Description"
+            optionValue="parttypeid" class="!w-28 !text-[10px]" appendTo="body" />
+          <label for="parttype" class="text-[10px]">Part Type</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+          <p-select formControlName="status" [options]="dealerstatus" optionValue="code" optionLabel="name"
+            class="!w-32 !text-pretty !text-[10px]" />
+          <label for="status" class="text-[10px]">Status </label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+          <p-select [options]="natureData" scrollHeight="150px" formControlName="nature" optionLabel="Description"
+            optionValue="tCode" class="!w-28 !text-[10px]" [filter]="true" filterBy="Description" appendTo="body" />
+          <label for="nature" class="text-[10px]">Part Nature</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+          <p-select [options]="modelData" scrollHeight="150px" formControlName="model" optionValue="ModelID"
+            optionLabel="Model" class="!w-28 !text-[10px]" appendTo="body" />
+
+          <label for="model" class="text-[10px]">Model</label>
+        </p-floatlabel>
+
+        <p-floatlabel variant="on">
+          <p-select [options]="seasondata" formControlName="seasonal" optionLabel="Description" optionValue="tCode"
+            class="!w-28 !text-[10px]" appendTo="body" />
+          <label for="seasonal" class="text-[10px]">Seasonal </label>
+        </p-floatlabel>
+        <div class="flex flex-col">
+          <span class="text-[10px] -mb-2 ml-3">Price Range</span>
+          <div class="flex flex-row">
+            <input type="text" pInputText formControlName="fromrate" class="w-24 !text-[10px] mb-4 h-[32px] mt-3"
+              placeholder="From" />
+            <input type="text" pInputText formControlName="torate"
+              class="w-24 !text-[10px] mb-4 h-[32px] -ml-3 !rounded-l-none !shadow-none mt-3" placeholder="To" />
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-[10px] -mb-2 ml-3">Average 3Mth Sale</span>
+          <div class="flex flex-row">
+            <input type="text" pInputText formControlName="fromrange" class="w-24 !text-[10px] mb-4 h-[32px] mt-3"
+              placeholder="From" />
+            <input type="text" pInputText formControlName="torange"
+              class="w-24 !text-[10px] mb-4 h-[32px] -ml-3 !rounded-l-none !shadow-none mt-3" placeholder="To" />
+          </div>
+        </div>
+
+        <div class="w-auto flex items-center">
+          <div *ngFor="let category of categories" class="field-checkbox">
+            <label [for]="category.key" class="ml-2 mt-1 text-[10px]">{{
+              category.name
+              }}</label>
+            <p-radiobutton [inputId]="category.key" name="selectedCategory" [value]="category"
+              formControlName="selectedCategory" class="ml-2" [ngClass]="{
+                'border border-red-500':
+                  dealerFilterData.get('selectedCategory')?.touched &&
+                  dealerFilterData.get('selectedCategory')?.invalid
+              }" />
+
+            <div *ngIf="
+                dealerFilterData.get('selectedCategory')?.touched &&
+                dealerFilterData.get('selectedCategory')?.invalid
+              " class="text-red-500 text-[10px] mt-2">
               This field is required
-              </div>
             </div>
-    
-            <p-floatlabel variant="on">
-              <p-select
-                [options]="maxData"
-                formControlName="max"
-                optionLabel="name"
-                optionValue="code"
-                class="!w-28 !text-[10px]"
-              />
-              <label for="max" class="text-[10px]">MAX</label>
-            </p-floatlabel>
-            <p-floatlabel variant="on">
-              <p-select
-                [options]="partType"
-                scrollHeight="150px"
-                formControlName="parttype"
-                optionLabel="Description"
-                optionValue="parttypeid"
-                class="!w-28 !text-[10px]"
-                appendTo="body"
-              />
-              <label for="parttype" class="text-[10px]">Part Type</label>
-            </p-floatlabel>
-            <p-floatlabel variant="on">
-              <p-select
-                formControlName="status"
-                [options]="dealerstatus"
-                optionValue="code"
-                optionLabel="name"
-                class="!w-32 !text-pretty !text-[10px]"
-               
-              />
-              <label for="status" class="text-[10px]">Status </label>
-            </p-floatlabel>
-            <p-floatlabel variant="on">
-              <p-select
-                [options]="natureData"
-                scrollHeight="150px"
-                formControlName="nature"
-                optionLabel="Description"
-                optionValue="tCode"
-                class="!w-28 !text-[10px]"
-                [filter]="true"
-                filterBy="Description"
-                appendTo="body"
-              />
-              <label for="nature" class="text-[10px]">Part Nature</label>
-            </p-floatlabel>
-            <p-floatlabel variant="on">
-              <p-select
-                [options]="modelData"
-                scrollHeight="150px"
-                formControlName="model"
-                optionValue="ModelID"
-                optionLabel="Model"
-                class="!w-28 !text-[10px]"
-                appendTo="body"
-              />
-    
-              <label for="model" class="text-[10px]">Model</label>
-            </p-floatlabel>
-    
-            <p-floatlabel variant="on">
-              <p-select
-                [options]="seasondata"
-                formControlName="seasonal"
-                optionLabel="Description"
-                optionValue="tCode"
-                class="!w-28 !text-[10px]"
-                appendTo="body"
-              />
-              <label for="seasonal" class="text-[10px]">Seasonal </label>
-            </p-floatlabel>
-            <div class="flex flex-col">
-              <span class="text-[10px] -mb-2 ml-3">Price Range</span>
-              <div class="flex flex-row">
-                <input
-                  type="text"
-                  pInputText
-                  formControlName="fromrate"
-                  class="w-24 !text-[10px] mb-4 h-[32px] mt-3"
-                  placeholder="From"
-                />
-                <input
-                  type="text"
-                  pInputText
-                  formControlName="torate"
-                  class="w-24 !text-[10px] mb-4 h-[32px] -ml-3 !rounded-l-none !shadow-none mt-3"
-                  placeholder="To"
-                />
-              </div>
-            </div>
-            <div class="flex flex-col">
-              <span class="text-[10px] -mb-2 ml-3">Average 3Mth Sale</span>
-              <div class="flex flex-row">
-                <input
-                  type="text"
-                  pInputText
-                  formControlName="fromrange"
-                  class="w-24 !text-[10px] mb-4 h-[32px] mt-3"
-                  placeholder="From"
-                />
-                <input
-                  type="text"
-                  pInputText
-                  formControlName="torange"
-                  class="w-24 !text-[10px] mb-4 h-[32px] -ml-3 !rounded-l-none !shadow-none mt-3"
-                  placeholder="To"
-                />
-              </div>
-            </div>
-            
-              <div class="w-auto flex items-center ">
-                <div
-                  *ngFor="let category of categories"
-                  class="field-checkbox"
-                >
-                  <label [for]="category.key" class="ml-2 mt-1 text-[10px]">{{
-                    category.name
-                  }}</label>
-                  <p-radiobutton
-                    [inputId]="category.key"
-                    name="selectedCategory"
-                    [value]="category"
-                    formControlName="selectedCategory"
-                    class="ml-2"
-                    [ngClass]="{
-                      'border border-red-500':
-                        dealerFilterData.get('selectedCategory')?.touched &&
-                        dealerFilterData.get('selectedCategory')?.invalid
-                    }"
-                  />
-    
-                  <div
-                    *ngIf="
-                      dealerFilterData.get('selectedCategory')?.touched &&
-                      dealerFilterData.get('selectedCategory')?.invalid
-                    "
-                    class="text-red-500 text-[10px] mt-2"
-                  >
-                    This field is required
-                  </div>
-                </div>
-              </div>
-              <div class="flex flex-col">
-                <p-floatlabel variant="on">
-                  <input
-                    formControlName="partnumber"
-                    pInputText
-                    id="parSearch"
-                    autocomplete="off"
-                    class="!w-[14vw] !text-[10px]"
-                  />
-                  <label for="Part Search" class="text-[10px]">Part Search</label>
-                </p-floatlabel>
-              </div>
-              
-              <p-button
-                label="Submit"
-                id="submit"
-                [style]="{ 'background-color': '#008080', 'color': '#fff'}"
-                (click)="onSubmitfilterData()"
-                class="text-[10px] !scale-[0.80]"
-              />
-                       
-              <!-- <p-button icon="pi pi-file-export" size="small" severity="success" " /> -->
-              <p-button
-                label="Reset Filter"
-                (onClick)="onClickReset()"
-                [style]="{ 'background-color': '#008080', 'color': '#fff'}"
-                id="reset-filter"
-                class="text-[10px] !scale-[0.80]"
-              />
-          </form>
-        </div>
-    
- 
-    
-    
-        <div class="m-2 !-mt-3 flex flex-col items-center bg-white rounded-lg shadow-lg p-2"  [class.hidden]="!showSale" >
-          <div class="flex justify-end w-full">
-            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="danger" (onClick)="onClickCloseSales()" />
-
           </div>
-          <div class=" bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden" style="zoom: 0.77;">
-            <p-table
-            
-            [value]="partFamilySaleData"
-            
-            [showGridlines]="true"
-            class=" !w-[90vw] "
-            [tableStyle]="{ 'min-width': '50rem' }"
-          >
-            <ng-template #header>
-              <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
-                <ng-container *ngFor="let col of columns">
-              
-                  <th *ngIf="col.header !== 'Brand' && col.header !== 'Dealer' && col.header !== 'Partid'"
-                    class="!text-wrap text-[11px] !bg-gray-400"
-                    style="min-width: 50px;">
-                    {{ col.header }}
-                  </th>
-                </ng-container>
-            </tr>
-            </ng-template>
-          
-            <ng-template #body let-rowData let-i="rowIndex">
-              <tr class="border-b hover:bg-green-100 transition duration-200">
-    
-        
-          
-                  <td *ngFor="let value of getValues(rowData)" style="min-width: 50px; font-size: 11px;">
-                    {{ value }}
-                  </td>
-                  
-                </tr>
-            </ng-template>
-          </p-table>
-          </div>
-        
-      
-        </div>    
-        
-        <div class="flex justify-between w-full ml-5 -mt-10 px-2 overflow">
-          <div class="flex justify-between gap-x-3">
-            <div class=" flex gap-x-2">
-              <div> Total Parts  </div> 
-             <span class="text-blue-300 ">{{noOfRow}}</span>
-             </div>
-             <div class=" flex gap-x-2">
-               <div > Pending  </div> 
-              <span class="text-orange-300  ">{{pendingCount}}</span>
-             </div>
-             <div class=" flex gap-x-2 ">
-               <div > Reviewed  </div> 
-              <span class="text-green-300 ">{{reviewedCount}}</span>
-            </div>
+        </div>
+        <div class="flex flex-col">
+          <p-floatlabel variant="on">
+            <input formControlName="partnumber" pInputText id="parSearch" autocomplete="off"
+              class="!w-[14vw] !text-[10px]" />
+            <label for="Part Search" class="text-[10px]">Part Search</label>
+          </p-floatlabel>
+        </div>
 
-            <div class="flex  gap-x-3">
-              <div class="w-5 h-5 border-black border-[1px] bg-orange-100" ></div>
-              <h6 class="text-xs">Pending</h6>
-              <div class="w-5 h-5 bg-green-100  border-black border-[1px]" ></div>
-              <h6 class="text-xs">Reviewed</h6>
-              <div class="w-5 h-5  bg-white  border-black border-[1px]" ></div>
-              <h6 class="text-xs">No feedback</h6>
-            
-            </div>
-          </div>  
-          <p-button
-                label="Export Selection"
-                id="export"
-                icon="pi pi-download"
-                [disabled]="this.showTable == false" (onClick)="exportToExcel()"
-                [style]="{ 'background-color': '#008080', 'color': '#fff'}"
-                
-                class="text-[10px] mr-5 !scale-[0.80]"
-              />     
-        </div>
-        
-    
-        <!-- table Data -->
-        
-          <div ngClass="m-2 flex flex-col items-center -mt-8 rounded-lg bg-white shadow-lg p-2" style="zoom: 0.77;"  >
-        
-            <div ngClass=" bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
-              <p-table
-              [scrollable]="true"
-              scrollHeight="600px"
-              [value]="tableData"
-              [paginator]="true"
-              [rows]="10"
-              [showCurrentPageReport]="true"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-              [rowsPerPageOptions]="[10, 30, 40, 50, 100]"
-              [showGridlines]="true"
-              scrollDirection="both"
-              ngClass=" !w-[90vw] "
-              sortable="true"
-              [tableStyle]="{ 'min-width': '50rem' }"
-              [globalFilterFields]="['partnumber', 'partdesc', 'UserRemark']"
-            >
-              <ng-template #header>
-                <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">S.No</th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Location</th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Part Number <p-columnFilter type="text" field="partnumber" Class="my-custom-filter" display="menu" /></th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Order Part Number</th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Part Desc <p-columnFilter type="text" field="partdesc" display="menu" /></th>
-                  <th pSortableColumn="landedcost" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Landed Cost <p-sortIcon field="landedcost" /></th>
-                  <th pSortableColumn="Maxvalue" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">MAX <p-sortIcon field="Maxvalue" /></th>
-                  <th pSortableColumn="Avg3MSale" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Avg 3M <p-sortIcon field="Avg3MSale" /></th>
-                  <th pSortableColumn="N1" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">N1 <p-sortIcon field="N1" /></th>
-                  <th pSortableColumn="N2" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">N2 <p-sortIcon field="N2" /></th>
-                  <th pSortableColumn="N3" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">N3 <p-sortIcon field="N3" /></th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Category</th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Part Nature</th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">MOQ</th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">View Sale</th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Latest Feedback <p-columnFilter type="text" field="UserRemark" display="menu" /></th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Proposed Qty</th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Feedback  </th>
-                  <th pSortableColumn="ProposedQty" class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Qty <p-sortIcon field="ProposedQty" /></th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">Action</th>
-                  <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">View Logs</th>
-                </tr>
-              </ng-template>
-              <ng-template #body let-rowData let-i="rowIndex">
-                <tr class="!border-b hover:!shadow-xl !hover:!border-2	 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
-                    [ngClass]="{
-                  '!bg-orange-100': rowData.status == '1', 
-                  '!bg-green-100': rowData.status == '2'
-                 }"
-                
-                 >
-                  <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.Location }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.partnumber }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.orderpartno }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.partdesc }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.landedcost | number:'1.0-0' }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.Maxvalue }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.Avg3MSale }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.N1 }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.N2 }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.N3 }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.parttype }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.PartNature }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.moq }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px]">
-                    <p-button icon="pi pi-eye"  raised="true" [rounded]="true" class="!w-[13px] !h-[15px] " (onClick)="onClickShowSales(rowData)" />
-                  </td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.UserRemark }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">{{ rowData.ProposedQty }}</td>
-                  <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px]">
-                    <div class="flex flex-col gap-y-2">
-                      <p-select
-                        [options]="dealerRemark"
-                        placeholder="Remark"
-                        [(ngModel)]="rowData.selectedRemark"
-                        optionLabel="remark"
-                        optionValue="Remarkid"
-                        appendTo="body"
-                        class="!w-[100px] text-[10px] !h-[33px] md:w-56"
-                        (onChange)="onRemarkChange(rowData, i)"
-                      />
-                      <input
-                        class="border px-2 py-1 rounded text-sm"
-                        *ngIf="rowData.showOtherInput"
-                        type="text"
-                        [(ngModel)]="rowData.customRemark"
-                        placeholder="Enter custom Feedback"
-                      />
-                    </div>
-                  </td>
-                  <td class="p-3">
-                    <input
-                      type="number"
-                      min="0"
-                      pInputText
-                      [(ngModel)]="rowData.qty"
-                      placeholder="Enter Qty"
-                      class="border rounded p-1 w-24 scale-75 text-center"
-                    />
-                  </td>
-                  <td class="p-3 text-center">
-                    <p-button label="Submit" severity="success" (click)="submitRow(rowData)" class="py-1 text-white rounded"  [disabled]="rowData.status == '1'"  />
-                  </td>
-                  <td class="p-3 text-center">
-                    <p-button icon="pi pi-eye" raised="true" [rounded]="true" (onClick)="onClickViewLog(rowData)" />
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
-            </div>
-          
-        
-        </div>
-       
-        
+        <p-button label="Submit" id="submit" [style]="{ 'background-color': '#008080', color: '#fff' }"
+          (click)="onSubmitfilterData()" class="text-[10px] !scale-[0.80]" />
+
+        <!-- <p-button icon="pi pi-file-export" size="small" severity="success" " /> -->
+        <p-button label="Reset Filter" (onClick)="onClickReset()"
+          [style]="{ 'background-color': '#008080', color: '#fff' }" id="reset-filter"
+          class="text-[10px] !scale-[0.80]" />
+      </form>
+    </div>
+
+    <div class="mx-2 mb-3 flex flex-col items-center bg-white rounded-lg shadow-lg p-2" [class.hidden]="!showSale">
+      <div class="flex justify-end w-full">
+        <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="danger" (onClick)="onClickCloseSales()" />
       </div>
-</div>
-    
-    <p-dialog
-      header="View Recent Log"
-      [(visible)]="changelogDialog"
-      class="w-auto h-auto"
-    >
-      <div class="p-text-secondary block mb-8">
-        <p-table
-          [tableStyle]="{ 'min-width': '40rem' }"
-          [scrollable]="true"
-          [value]="dealerViewLog"
-          [showGridlines]="true"
-          scrollHeight="400px"
-        >
+      <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden" style="zoom: 0.77">
+        <p-table [value]="partFamilySaleData" [showGridlines]="true" class="!w-[90vw]"
+          [tableStyle]="{ 'min-width': '50rem' }">
           <ng-template #header>
-            <tr>
-              <th class="min-w-[100px]">S.No</th>
-              <th class="min-w-[100px]">Feedback Date</th>
-              <th class="min-w-[100px]">Proposed Qty</th>
-              <th class="min-w-[100px]">Proposed Remark</th>
-              <th class="min-w-[100px]">Reviewed Qty</th>
-              <th class="min-w-[100px]">Reviewed Remark</th>
-              <th class="min-w-[100px]">Updated Date</th>
-              <th class="min-w-[100px]">Updated By</th>
-            </tr>
-          </ng-template>
-          <ng-template #body let-data let-i="rowIndex">
-            <tr>
-              <td>{{ i + 1 }}</td>
-              <td>{{ data.FeedbackDate | date : "dd-MMM-yy / h:mm a" : "UTC" }}</td>
-              <td>{{ data.ProposedQty }}</td>
-              <td>{{ data.UserRemark }}</td>
-              <td>{{ data.ApprovedQty }}</td>
-              <ng-container *ngIf="data.AdminRemark != 'Custom'; else showcustom">
-                <td>{{ data.AdminRemark }}</td>
+            <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
+              <ng-container *ngFor="let col of columns">
+                <th *ngIf="
+                    col.header !== 'Brand' &&
+                    col.header !== 'Dealer' &&
+                    col.header !== 'Partid'
+                  " class="!text-wrap text-[11px] !bg-gray-400" style="min-width: 50px">
+                  {{ col.header }}
+                </th>
               </ng-container>
-              <ng-template #showcustom>
-                <td>{{ data.Customrem }}</td>
-              </ng-template>
-    
-              <!-- <td>{{ data.AdminRemark }}</td> -->
-              <td>{{ data.AdminFBDate | date : "dd-MMM-yy / h:mm a" : "UTC" }}</td>
-              <td>{{ data.quantity }}</td>
+            </tr>
+          </ng-template>
+
+          <ng-template #body let-rowData let-i="rowIndex">
+            <tr class="border-b hover:bg-green-100 transition duration-200">
+              <td *ngFor="let value of getValues(rowData)" style="min-width: 50px; font-size: 11px">
+                {{ value }}
+              </td>
             </tr>
           </ng-template>
         </p-table>
       </div>
-    </p-dialog>
-    
-      <!-- it is for error Message -->
-      <p-dialog
-        header="Message"
-        [(visible)]="visible"
-        [modal]="true"
-        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-        [style]="{ width: '30vw' }"
-        [draggable]="false"
-        [resizable]="false"
-      >
-        <p class="text-lg font-semibold">
-          {{ Result }}
-        </p>
-      </p-dialog>
-   
-    
-   
-      <p-dialog
-        header="Message"
-        [(visible)]="familyPartDataVisible"
-        [modal]="true"
-        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-        [style]="{ width: '70vw' }"
-        [draggable]="false"
-        [resizable]="false"
-      >
-        <p-table
-          [value]="familyPartData"
-          showGridlines
-    
-          [tableStyle]="{ 'min-width': '50rem' }"
-        >
+    </div>
+
+    <div class="flex justify-between w-full ml-5 px-2 overflow">
+      <div class="flex justify-between gap-x-3">
+        <div class="flex gap-x-2">
+          <div>Total Parts</div>
+          <span class="text-blue-300">{{ noOfRow }}</span>
+        </div>
+        <div class="flex gap-x-2">
+          <div>Pending</div>
+          <span class="text-orange-300">{{ pendingCount }}</span>
+        </div>
+        <div class="flex gap-x-2">
+          <div>Reviewed</div>
+          <span class="text-green-300">{{ reviewedCount }}</span>
+        </div>
+
+        <div class="flex gap-x-3">
+          <div class="w-5 h-5 border-black border-[1px] bg-orange-100"></div>
+          <h6 class="text-xs">Pending</h6>
+          <div class="w-5 h-5 bg-green-100 border-black border-[1px]"></div>
+          <h6 class="text-xs">Reviewed</h6>
+          <div class="w-5 h-5 bg-white border-black border-[1px]"></div>
+          <h6 class="text-xs">No feedback</h6>
+        </div>
+      </div>
+      <p-button label="Export Selection" id="export" icon="pi pi-download" [disabled]="this.showTable == false"
+        (onClick)="exportToExcel()" [style]="{ 'background-color': '#008080', color: '#fff' }"
+        class="text-[10px] mr-5 !scale-[0.80]" />
+    </div>
+
+    <!-- table Data -->
+
+    <div ngClass="m-2 flex flex-col items-center -mt-8 rounded-lg bg-white shadow-lg p-2" style="zoom: 0.77">
+      <div ngClass=" bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+        <p-table [scrollable]="true" scrollHeight="600px" [value]="tableData" [paginator]="true" [rows]="10"
+          [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          [rowsPerPageOptions]="[10, 30, 40, 50, 100]" [showGridlines]="true" scrollDirection="both"
+          ngClass=" !w-[90vw] " sortable="true" [tableStyle]="{ 'min-width': '50rem' }"
+          [globalFilterFields]="['partnumber', 'partdesc', 'UserRemark']">
           <ng-template #header>
-            <tr>
-              <th class="!text-[12px]">Part Number</th>
-              <th class="!text-[12px]">Latest Part Number</th>
-              <th class="!text-[12px]">Part Description</th>
-              <th class="!text-[12px]">Category</th>
-              <th class="!text-[12px]">landed Cost</th>
+            <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                S.No
+              </th>
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                Location
+              </th>
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                Part Number
+                <p-columnFilter type="text" field="partnumber" Class="my-custom-filter" display="menu" />
+              </th>
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                Order Part Number
+              </th>
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                Part Desc
+                <p-columnFilter type="text" field="partdesc" display="menu" />
+              </th>
+              <th pSortableColumn="landedcost"
+                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                Landed Cost <p-sortIcon field="landedcost" />
+              </th>
+              <th pSortableColumn="Maxvalue"
+                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                MAX <p-sortIcon field="Maxvalue" />
+              </th>
+              <th pSortableColumn="Avg3MSale"
+                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                Avg 3M <p-sortIcon field="Avg3MSale" />
+              </th>
+              <th pSortableColumn="N1"
+                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                N1 <p-sortIcon field="N1" />
+              </th>
+              <th pSortableColumn="N2"
+                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                N2 <p-sortIcon field="N2" />
+              </th>
+              <th pSortableColumn="N3"
+                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                N3 <p-sortIcon field="N3" />
+              </th>
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                Category
+              </th>
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                Part Nature
+              </th>
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                MOQ
+              </th>
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                View Sale
+              </th>
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                Latest Feedback
+                <p-columnFilter type="text" field="UserRemark" display="menu" />
+              </th>
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                Proposed Qty
+              </th>
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                Feedback
+              </th>
+              <th pSortableColumn="ProposedQty"
+                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                Qty <p-sortIcon field="ProposedQty" />
+              </th>
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                Action
+              </th>
+              <th class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]">
+                View Logs
+              </th>
             </tr>
           </ng-template>
-          <ng-template #body let-Data>
-            <tr>
-              <td class="!text-[12px]">{{ Data.PartNumber1 }}</td>
-              <td class="!text-[12px]">{{ Data.LatestPartNumber }}</td>
-              <td class="!text-[12px]">{{ Data.PartDesc }}</td>
-              <td class="!text-[12px]">{{ Data.Category }}</td>
-              <td class="!text-[12px]">{{ Data.LandedCost }}</td>
+          <ng-template #body let-rowData let-i="rowIndex">
+            <tr *ngIf="!rowData.hidden"
+              class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+              [ngClass]="{
+                '!bg-orange-100': rowData.status == '1',
+                '!bg-green-100': rowData.status == '2'
+              }">
+              <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.Location }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.partnumber }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.orderpartno }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.partdesc }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.landedcost | number : "1.0-0" }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.Maxvalue }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.Avg3MSale }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.N1 }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.N2 }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.N3 }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.parttype }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.PartNature }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.moq }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px]">
+                <p-button icon="pi pi-eye" raised="true" [rounded]="true" class="!w-[13px] !h-[15px]"
+                  (onClick)="onClickShowSales(rowData)" />
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.UserRemark }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700">
+                {{ rowData.ProposedQty }}
+              </td>
+              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px]">
+                <div class="flex flex-col gap-y-2">
+                  <p-select [options]="dealerRemark" placeholder="Remark" [(ngModel)]="rowData.selectedRemark"
+                    optionLabel="remark" optionValue="Remarkid" appendTo="body"
+                    class="!w-[100px] text-[10px] !h-[33px] md:w-56" (onChange)="onRemarkChange(rowData, i)" />
+                  <input class="border px-2 py-1 rounded text-sm" *ngIf="rowData.showOtherInput" type="text"
+                    [(ngModel)]="rowData.customRemark" placeholder="Enter custom Feedback" />
+                </div>
+              </td>
+              <td class="p-3">
+                <input type="number" min="0" pInputText [(ngModel)]="rowData.qty" placeholder="Enter Qty"
+                  class="border rounded p-1 w-24 scale-75 text-center" />
+              </td>
+              <td class="p-3 text-center">
+                <p-button label="Submit" severity="success" (click)="submitRow(rowData)" class="py-1 text-white rounded"
+                  [disabled]="rowData.status == '1'" />
+              </td>
+              <td class="p-3 text-center">
+                <p-button icon="pi pi-eye" raised="true" [rounded]="true" (onClick)="onClickViewLog(rowData)" />
+              </td>
             </tr>
           </ng-template>
         </p-table>
-      </p-dialog>
-   
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog header="View Recent Log" [(visible)]="changelogDialog" class="w-auto h-auto">
+  <div class="p-text-secondary block mb-8">
+    <p-table [tableStyle]="{ 'min-width': '40rem' }" [scrollable]="true" [value]="dealerViewLog" [showGridlines]="true"
+      scrollHeight="400px">
+      <ng-template #header>
+        <tr>
+          <th class="min-w-[100px]">S.No</th>
+          <th class="min-w-[100px]">Feedback Date</th>
+          <th class="min-w-[100px]">Proposed Qty</th>
+          <th class="min-w-[100px]">Proposed Remark</th>
+          <th class="min-w-[100px]">Reviewed Qty</th>
+          <th class="min-w-[100px]">Reviewed Remark</th>
+          <th class="min-w-[100px]">Updated Date</th>
+          <th class="min-w-[100px]">Updated By</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-data let-i="rowIndex">
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td>{{ data.FeedbackDate | date : "dd-MMM-yy / h:mm a" : "UTC" }}</td>
+          <td>{{ data.ProposedQty }}</td>
+          <td>{{ data.UserRemark }}</td>
+          <td>{{ data.ApprovedQty }}</td>
+          <ng-container *ngIf="data.AdminRemark != 'Custom'; else showcustom">
+            <td>{{ data.AdminRemark }}</td>
+          </ng-container>
+          <ng-template #showcustom>
+            <td>{{ data.Customrem }}</td>
+          </ng-template>
+
+          <!-- <td>{{ data.AdminRemark }}</td> -->
+          <td>{{ data.AdminFBDate | date : "dd-MMM-yy / h:mm a" : "UTC" }}</td>
+          <td>{{ data.quantity }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-dialog>
+
+<!-- it is for error Message -->
+<p-dialog header="Message" [(visible)]="visible" [modal]="true" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '30vw' }" [draggable]="false" [resizable]="false">
+  <p class="text-lg font-semibold">
+    {{ Result }}
+  </p>
+</p-dialog>
+
+<p-dialog header="Message" [(visible)]="familyPartDataVisible" [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '70vw' }" [draggable]="false"
+  [resizable]="false">
+  <p-table [value]="familyPartData" showGridlines [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template #header>
+      <tr>
+        <th class="!text-[12px]">Part Number</th>
+        <th class="!text-[12px]">Latest Part Number</th>
+        <th class="!text-[12px]">Part Description</th>
+        <th class="!text-[12px]">Category</th>
+        <th class="!text-[12px]">landed Cost</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-Data>
+      <tr>
+        <td class="!text-[12px]">{{ Data.PartNumber1 }}</td>
+        <td class="!text-[12px]">{{ Data.LatestPartNumber }}</td>
+        <td class="!text-[12px]">{{ Data.PartDesc }}</td>
+        <td class="!text-[12px]">{{ Data.Category }}</td>
+        <td class="!text-[12px]">{{ Data.LandedCost }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-dialog>

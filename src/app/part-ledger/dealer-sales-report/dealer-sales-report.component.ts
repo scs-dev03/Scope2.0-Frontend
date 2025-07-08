@@ -461,7 +461,9 @@ export class DealerSalesReportComponent {
       this.globalBlockUiService.stopLoading()
       this.showupload = false
      fu.clear();})
-    this.adminSalesReportService.getSalesInfo(formData).subscribe((res:any)=>{
+
+     setTimeout(() => {
+      this.adminSalesReportService.getSalesInfo(formData).subscribe((res:any)=>{
       this.SalesInfoVisible = true
       this.exportVisible = true
       this.SalesInfoVisible = true
@@ -484,6 +486,9 @@ export class DealerSalesReportComponent {
 
     })
 
+      
+     }, 1500);
+    
   }
 
 
