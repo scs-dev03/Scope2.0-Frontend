@@ -422,6 +422,7 @@ export class DealerVonComponent {
           this.globalBlockUiService.stopLoading();
           this.visible = true;
           this.Result = res.message;
+          rowData.hidden = true;
         },
         (error: any) => {
           this.globalBlockUiService.stopLoading();
