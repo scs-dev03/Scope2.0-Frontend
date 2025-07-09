@@ -7,57 +7,150 @@
     >
       <br />
 
-      <div class="flex gap-4  flex-wrap">
+      <div class="flex gap-4 flex-wrap" [formGroup]="VechileOrderRequestInput">
+        <div>
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="on_label"
+              formControlName="VechileNumber"
+              autocomplete="off"
+              class="w-40 h-8"
+            />
+            <label class="text-xs" for="on_label">Vehicle Number</label>
+          </p-floatlabel>
+          <div
+            class="text-red-500 text-[10px]"
+            *ngIf="
+              VechileOrderRequestInput.get('VechileNumber')?.touched &&
+              VechileOrderRequestInput.get('VechileNumber')?.invalid
+            "
+          >
+            <span
+              *ngIf="VechileOrderRequestInput.get('VechileNumber')?.errors?.['required']"
+              >Vehicle Number is required.</span
+            >
+            <span
+              *ngIf="VechileOrderRequestInput.get('VechileNumber')?.errors?.['pattern']"
+              >Must be 10 letters/numbers
+            </span>
+          </div>
+        </div>
         <p-floatlabel variant="on">
-          <input pInputText id="on_label" autocomplete="off" class="w-40 h-8" />
-          <label class="text-xs" for="on_label">Vehicle Number</label>
-        </p-floatlabel>
-        <p-floatlabel variant="on">
-          <input pInputText id="on_label" autocomplete="off" class="w-40 h-8" />
+          <input
+            pInputText
+            id="on_label"
+            formControlName="VechileModel"
+            autocomplete="off"
+            class="w-40 h-8"
+          />
           <label class="text-xs" for="on_label">Vehicle Model</label>
         </p-floatlabel>
-        <p-floatlabel variant="on">
-          <input pInputText id="on_label" autocomplete="off" class="w-40 h-8" />
-          <label class="text-xs" for="on_label">Job Card Number</label>
-        </p-floatlabel>
-      </div>
-      <br>
 
-      <div class="flex gap-4  flex-wrap">
-        <p-floatlabel class="w-40" variant="on">
-          <p-select
-            inputId="on_label"
-            optionLabel="name"
-            class="w-40 h-8"
-          />
-          <label for="on_label" class="text-xs">Job Card Type</label>
-        </p-floatlabel>
-        <p-floatlabel class="w-40" variant="on">
-          <p-select
-            inputId="on_label"
-            optionLabel="name"
-            class="w-40 h-8"
-          />
-          <label for="on_label" class="text-xs">Select Advisor</label>
-        </p-floatlabel>
-        <p-floatlabel class="w-40" variant="on">
-          <p-select
-            inputId="on_label"
-            optionLabel="name"
-            class="w-40 h-8"
-          />
-          <label for="on_label" class="text-xs">Order Type</label>
-        </p-floatlabel>
-
+        <div>
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="on_label"
+              formControlName="JobCardNumber"
+              autocomplete="off"
+              class="w-40 h-8"
+            />
+            <label class="text-xs" for="on_label">Job Card Number</label>
+          </p-floatlabel>
+          <div
+            class="text-red-500 text-[10px]"
+            *ngIf="
+              VechileOrderRequestInput.get('JobCardNumber')?.touched &&
+              VechileOrderRequestInput.get('JobCardNumber')?.invalid
+            "
+          >
+            <span
+              *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['required']"
+              >Vehicle Number is required.</span
+            >
+            <span
+              *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['pattern']"
+              >Must be 15 letters/numbers
+            </span>
+          </div>
+        </div>
       </div>
-      <br>
+      <br />
+
+      <div class="flex gap-4 flex-wrap" [formGroup]="VechileOrderRequestInput">
+        <div>
+          <p-floatlabel class="w-40" variant="on">
+            <p-select
+              inputId="on_label"
+              optionLabel="name"
+              class="w-40 h-8"
+              formControlName="JobCardType"
+            />
+            <label for="on_label" class="text-xs">Job Card Type</label>
+          </p-floatlabel>
+          <div
+            class="text-red-500 text-[10px]"
+            *ngIf="VechileOrderRequestInput.get('JobCardType')?.touched"
+          >
+            <span
+              *ngIf="VechileOrderRequestInput.get('JobCardType')?.errors?.['required']"
+              >Job Card Type is required.</span
+            >
+          </div>
+        </div>
+
+        <div>
+          <p-floatlabel class="w-40" variant="on">
+            <p-select
+              inputId="on_label"
+              optionLabel="name"
+              class="w-40 h-8"
+              formControlName="Advisor"
+            />
+            <label for="on_label" class="text-xs">Select Advisor</label>
+          </p-floatlabel>
+          <div
+            class="text-red-500 text-[10px]"
+            *ngIf="VechileOrderRequestInput.get('Advisor')?.touched"
+          >
+            <span
+              *ngIf="VechileOrderRequestInput.get('Advisor')?.errors?.['required']"
+              >Advisor is required.</span
+            >
+          </div>
+        </div>
+        <div>
+          <p-floatlabel class="w-40" variant="on">
+            <p-select
+              inputId="on_label"
+              optionLabel="name"
+              class="w-40 h-8"
+              formControlName="OrderType"
+            />
+            <label for="on_label" class="text-xs">Order Type</label>
+          </p-floatlabel>
+          <div
+            class="text-red-500 text-[10px]"
+            *ngIf="VechileOrderRequestInput.get('OrderType')?.touched"
+          >
+            <span
+              *ngIf="VechileOrderRequestInput.get('OrderType')?.errors?.['required']"
+              >Order Type is required.</span
+            >
+          </div>
+        </div>
+      </div>
+      <br />
       <p class="text-md font-medium">Order Upload</p>
-      <div class="w-full max-w-full flex gap-5 flex-wrap items-center bg-gray-100 p-3 font-medium">
-         <p-button
-          label="Download Format"
+      <div
+        class="w-full max-w-full flex gap-5 flex-wrap items-center bg-gray-100 p-3 font-medium"
+      >
+        <p-button
+         
           size="small"
           icon="pi pi-download"
-          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+          [style]="{ 'background-color': '#008080', color: '#fff' }"
           (onClick)="SampleExcelDownload()"
           iconPos="right"
           class="text-xs"
@@ -71,7 +164,9 @@
           [maxFileSize]="1000000"
           mode="advanced"
           chooseLabel="Choose"
-          [chooseStyleClass]="'w-[84px] background-color: #008080, color: #fff h-[30px] !text-[12px]'"
+          [chooseStyleClass]="
+            'w-[84px] background-color: #008080, color: #fff h-[30px] !text-[12px]'
+          "
           uploadLabel="Upload"
           cancelLabel="Cancel"
           styleClass="w-auto"
@@ -91,49 +186,108 @@
       </div>
       <br />
 
-      <div class="flex flex-wrap gap-3" [formGroup]="AddPartWise">
-        <div class="flex flex-wrap items-center gap-2">
-          <label for="partnumber" class="text-sm mt-1 font-medium"
-            >Part Number :</label
+      <div [formGroup]="AddPartWise">
+        <div formArrayName="parts">
+          <!-- Loop through each part -->
+          <div
+            *ngFor="let part of parts.controls; let i = index"
+            [formGroupName]="i"
+            class="flex flex-wrap gap-3 mb-3"
           >
-          <input
-            type="text"
-            id="partnumber"
-            formControlName="PartNumber"
-            placeholder="Enter Part Number"
-            [pSize]="'small'"
-            pInputText
-            class="w-44 h-8"
-          />
+            <!-- Part Number Field -->
+            <div class="flex flex-col items-start gap-2">
+              <div>
+                <label for="partnumber-{{ i }}" class="text-sm mt-1 font-medium"
+                  >Part Number :</label
+                >
+                <input
+                  type="text"
+                  id="partnumber-{{ i }}"
+                  formControlName="PartNumber"
+                  placeholder="Enter Part Number"
+                  pInputText
+                  class="w-44 h-8 ml-2 !text-xs"
+                />
+              </div>
+              <div
+                *ngIf="part.get('PartNumber')?.touched"
+                class="text-red-500 text-[10px]"
+              >
+                <span *ngIf="part.get('PartNumber')?.errors?.['required']"
+                  >Part Number is required.</span
+                >
+              </div>
+            </div>
+
+            <!-- Quantity Field -->
+            <div class="flex flex-col items-start gap-2">
+              <div>
+                <label for="qty-{{ i }}" class="text-sm mt-1 font-medium"
+                  >Quantity :</label
+                >
+                <input
+                  type="text"
+                  id="qty-{{ i }}"
+                  formControlName="Quantity"
+                  placeholder="Enter Quantity"
+                  class="w-44 h-8 ml-2 !text-xs"
+                  pInputText
+                />
+              </div>
+              <div
+                *ngIf="part.get('Quantity')?.touched"
+                class="text-red-500 text-[10px]"
+              >
+                <span *ngIf="part.get('Quantity')?.errors?.['required']"
+                  >Quantity is required.</span
+                >
+              </div>
+            </div>
+
+            <!-- Remark Field -->
+            <div class="flex flex-col items-start gap-2">
+              <div>
+                <label for="remark-{{ i }}" class="text-sm mt-1 font-medium"
+                  >Remark :</label
+                >
+                <input
+                  type="text"
+                  id="remark-{{ i }}"
+                  formControlName="Remark"
+                  placeholder="Enter Remark"
+                  class="w-44 h-8 ml-2 !text-xs"
+                  pInputText
+                />
+              </div>
+              <div
+                *ngIf="part.get('Remark')?.touched"
+                class="text-red-500 text-[10px]"
+              >
+                <span *ngIf="part.get('Remark')?.errors?.['required']"
+                  >Remark is required.</span
+                >
+              </div>
+            </div>
+
+            <!-- Remove Button -->
+            <p-button 
+             *ngIf="parts.length > 1"
+              [style]="{ 'background-color': '#008080', color: '#fff' }"
+              icon="pi pi-trash"
+              aria-label="Save"
+              (onClick)="removePart(i)"
+            />
+
+            <p-button
+              [style]="{ 'background-color': '#008080', color: '#fff' }"
+              icon="pi pi-plus"
+              aria-label="Save"
+              (onClick)="addPart()"
+            />
+          </div>
         </div>
-        <div class="flex flex-wrap items-center gap-2">
-          <label for="qty" class="text-sm mt-1 font-medium"
-            >Quantity :</label
-          >
-          <input
-            type="text"
-            id="qty"
-            formControlName="Quantity"
-            placeholder="Enter Quantity"
-            [pSize]="'small'"
-            pInputText
-          />
-        </div>
-        <div class="flex flex-wrap items-center gap-2">
-          <label for="remark" class="text-sm mt-1 font-medium"
-            >Remark :</label
-          >
-          <input
-            type="text"
-            id="remark"
-            formControlName="Remark"
-            placeholder="Enter Remark"
-            [pSize]="'small'"
-            pInputText
-          />
-        </div>
-        <p-button  [style]="{ 'background-color': '#008080', 'color': '#fff'}" icon="pi pi-plus" aria-label="Save" />
       </div>
+
       <br />
 
       <div class="flex gap-2">
@@ -141,14 +295,14 @@
           label="Reset"
           size="small"
           icon="pi pi-undo"
-          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+          [style]="{ 'background-color': '#008080', color: '#fff' }"
           iconPos="right"
         />
         <p-button
           label="Save"
           size="small"
           icon="pi pi-check"
-          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+          [style]="{ 'background-color': '#008080', color: '#fff' }"
           iconPos="right"
         />
       </div>
