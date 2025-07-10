@@ -71,7 +71,7 @@ export class AdminVonComponent {
     private router: Router,
     private globalBlockUiService: GlobalBlockUiService,
     private sharedService: SharedServiceService
-  ) {}
+  ) { }
 
   // formgroup for filter
   adminFilterData = new FormGroup({
@@ -160,6 +160,9 @@ export class AdminVonComponent {
   // submitting filter values for fetching data
   onClickSubmitfilterData() {
     console.log(this.adminFilterData.value);
+    if (this.adminFilterData.get('partnumber')?.value === '') {
+      this.adminFilterData.get('partnumber')?.setValue(null);
+    }
 
     // validation for empty fields
     if (!this.adminFilterData.valid) {
@@ -284,7 +287,7 @@ export class AdminVonComponent {
     return [...data, totalObject];
   }
 
-  userid :any = localStorage.getItem('userid')
+  userid: any = localStorage.getItem('userid')
   submitAdminRow(rowData: any) {
     this.globalBlockUiService.startLoading();
     const validCustomRemarkRegex = /^(?![\s,@-]*$)(?!-?\d+$)[a-zA-Z0-9\s,@-]*$/;
@@ -739,7 +742,7 @@ export class AdminVonComponent {
         category: category,
         model: model,
         feedbackdate: feedbackdate,
-        feedbackid:feedbackid,
+        feedbackid: feedbackid,
         Proposed_QTY: ProposedQty,
         LatestSPMRemark: SPMRemark,
         ApprovedQty: '',
@@ -857,7 +860,7 @@ export class AdminVonComponent {
         },
       });
   }
-  
+
   // error handling yet to be done
   selectedFileName: any;
   onFileSelectDealer(event: any) {
@@ -877,7 +880,7 @@ export class AdminVonComponent {
     const formData = new FormData();
     formData.append('file', this.DealerExcel);
     formData.append('addedby', this.userid);
-    this.adminvonservice.uploadExcelDealer(formData ).subscribe(
+    this.adminvonservice.uploadExcelDealer(formData).subscribe(
       (res: any) => {
         this.Result = res.message;
         this.showupload = false;
@@ -918,31 +921,30 @@ export class AdminVonComponent {
         } else if (error.error.message && error.error.invalidRecords) {
           const partNumbersMessage = error.error.invalidRecords
             .map((rec: any) => {
-              return `PartNumber: ${rec.PartNumber}, MaxValue: ${
-                rec.MaxValue ?? 'Missing'
-              }`;
+              return `PartNumber: ${rec.PartNumber}, MaxValue: ${rec.MaxValue ?? 'Missing'
+                }`;
             })
             .join(' | ');
 
           this.Result = `${error.error.message}: ${partNumbersMessage}`;
           this.visible = true;
           this.globalBlockUiService.stopLoading();
-           this.selectedFileName = '';
-            fu.clear();
+          this.selectedFileName = '';
+          fu.clear();
         } else if (error.error.message && error.error.missingHeaders) {
           const missingHeadersMessage = error.error.missingHeaders.join(', ');
           this.Result = `${error.error.message}: ${missingHeadersMessage}`;
           this.visible = true;
-           this.selectedFileName = '';
+          this.selectedFileName = '';
           this.globalBlockUiService.stopLoading();
-            fu.clear();
+          fu.clear();
         } else {
           this.Result = error.error.message;
           this.visible = true;
           this.globalBlockUiService.stopLoading();
           fu.clear();
           this.selectedFileName = '';
-      
+
         }
       }
     );
@@ -961,7 +963,7 @@ export class AdminVonComponent {
 
   UploadExcelAdmin(fu: any) {
     this.globalBlockUiService.startLoading();
-    
+
 
     if (!this.AdminExcel) {
       console.error('Please select a file first!');
@@ -970,7 +972,7 @@ export class AdminVonComponent {
     const formData = new FormData();
     formData.append('file2', this.AdminExcel);
     formData.append('addedby', this.userid);
-    
+
     this.adminvonservice.AdminuploadExcel(formData).subscribe(
       (res: any) => {
         this.Result = res.message;

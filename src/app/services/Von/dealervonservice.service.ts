@@ -5,12 +5,16 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class DealervonserviceService {
+//   private apiurl: any =
+//   'https://scopeapi.sparecare.in/api/v1/von/';
+
+// private apiurlmaster: any =
+//   'https://scopeapi.sparecare.in/api/v1/master/';
   private apiurl: any =
-  'https://scopeapi.sparecare.in/api/v1/von/';
+  'http://web36.185.238.new.ocpwebserver.com/api/v1/von/';
 
 private apiurlmaster: any =
-  'https://scopeapi.sparecare.in/api/v1/master/';
-
+  'http://web36.185.238.new.ocpwebserver.com/api/v1/master/';
 //    private apiurl: any =
 //   'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/von/';
 
