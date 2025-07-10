@@ -554,7 +554,7 @@
               </td>
               <td
                 class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-blue-500 uppercase underline cursor-pointer"
-                *ngIf="rowData.Subpartcount > 0; else normalText"
+                *ngIf="rowData.subpart > 0; else normalText"
                 (click)="onclickPartNumber(rowData.partnumber)"
               >
                 {{ rowData.partnumber }}

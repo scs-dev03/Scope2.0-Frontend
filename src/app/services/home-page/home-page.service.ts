@@ -6,11 +6,16 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class HomePageService {
+//   private apiurl: any =
+//   'https://scopeapi.sparecare.in/api/v1/von/';
+
+// private apiurlmaster: any =
+//   'https://scopeapi.sparecare.in/api/v1/master/';
   private apiurl: any =
-  'https://scopeapi.sparecare.in/api/v1/von/';
+  'http://web36.185.238.new.ocpwebserver.com/api/v1/von/';
 
 private apiurlmaster: any =
-  'https://scopeapi.sparecare.in/api/v1/master/';
+  'http://web36.185.238.new.ocpwebserver.com/api/v1/master/';
 
 // private apiurlmaster: any =
 //   'http://localhost:3000/api/v1/master/';

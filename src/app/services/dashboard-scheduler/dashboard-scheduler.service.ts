@@ -6,13 +6,17 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DashboardSchedulerService {
-  private apiurl: any =
-  'https://scopeapi.sparecare.in/api/v1/dashboardscheduler/';
+//   private apiurl: any =
+//   'https://scopeapi.sparecare.in/api/v1/dashboardscheduler/';
+
+// private apiurlmaster: any =
+//   'https://scopeapi.sparecare.in/api/v1/';
+
+    private apiurl: any =
+  'http://web36.185.238.new.ocpwebserver.com/api/v1/von/';
 
 private apiurlmaster: any =
-  'https://scopeapi.sparecare.in/api/v1/';
-
-  
+  'http://web36.185.238.new.ocpwebserver.com/api/v1/master/';
 
 //  private apiurl: any =
 //   'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/dashboardscheduler/';

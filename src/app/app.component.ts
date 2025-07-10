@@ -104,6 +104,7 @@ export class AppComponent {
     this.userService.loadDataOnce();
     // localStorage.setItem('usertype','U');
     // localStorage.setItem('brandid','9');
+    // localStorage.setItem('dealerid','8');
     // localStorage.setItem('def_location','14')
     // localStorage.setItem('usertoken','0x02000000F5710E149B719043CB40E5BC2503861707D0B1F078C883021B904D312763A5D0')
     let userToken=localStorage.getItem('usertoken');

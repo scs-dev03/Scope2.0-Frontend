@@ -152,7 +152,8 @@
       </div>
 
       <p-button
-        label="Submit"
+       
+        icon="pi pi-check"
         severity="success"
         size="small"
         (onClick)="onSubmitAdminInputData()"
@@ -160,17 +161,20 @@
       />
       <p-button
         size="small"
+        pTooltip="Upload Excel" tooltipPosition="top"
+        
         icon="pi pi-upload"
         (onClick)="onClickShowUpload()"
         [style]="{ 'background-color': '#008080', color: '#fff' }"
-        label="Upload Excel"
+        
       />
       <p-button
         size="small"
+        pTooltip="Sample Excel Download" tooltipPosition="top"
         icon="pi pi-download"
         (onClick)="exportPartNumberExcel()"
         [style]="{ 'background-color': '#008080', color: '#fff' }"
-        label="Sample Format Download"
+        
       />
     </form>
   </div>
@@ -184,7 +188,7 @@
       class="!w-full"
     ></app-product-desctiption-table>
   </div>
-  <div class="flex flex-row justify-between w-full">
+  <div class="flex flex-row justify-between w-full" *ngIf="SalesInfoVisible">
     <div class="ml-10">
       <h1 class="font-semibold text-lg">Parts Sales Info</h1>
     </div>

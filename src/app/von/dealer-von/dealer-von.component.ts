@@ -161,6 +161,10 @@ export class DealerVonComponent {
 
   // fetching table data for showing table
   onSubmitfilterData() {
+
+    if (this.dealerFilterData.get('partnumber')?.value === '') {
+      this.dealerFilterData.get('partnumber')?.setValue(null);
+    }
     if (!this.dealerFilterData.valid) {
       this.dealerFilterData.markAllAsTouched();
     } else {
