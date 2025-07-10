@@ -8,6 +8,7 @@ import { PrimengModuleModule } from '../../shared/primeng-module/primeng-module.
 import { SharedModule } from '../../shared/shared.module';
 import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-update-password-while-create-user',
@@ -267,10 +268,10 @@ let password=this.updateForm.value.password
        // let link="http://web17.185.238.new.ocpwebserver.com/login";
        let link=""
        if(this.loggedInUser=='a'){
-        link='http://web13.185.238.new.ocpwebserver.com/uad_sc_wac/Login.aspx'
+        link=environment.frontendAdminUrl
        }
        else{
-        link='http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx'
+        link=environment.frontendUserUrl
        }
          
         this.updateForm.reset();
@@ -291,7 +292,7 @@ let password=this.updateForm.value.password
         this.messageService.add({severity:'success',life:3000,summary:'Your Password has been created succesfully!!',detail:'You can Login now!!'})
         // let link='http://103.30.72.109/login'
        // let link="http://web17.185.238.new.ocpwebserver.com/login";
-         let link="http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx"
+         let link=environment.frontendUserUrl;
         this.updateForm.reset();
         window.open(link, '_blank');
           this.isSubmitted=true;

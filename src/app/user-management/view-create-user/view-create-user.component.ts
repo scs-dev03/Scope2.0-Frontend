@@ -14,6 +14,7 @@ import * as XLSX from 'xlsx';
 import { SidebarService } from '../../services/sidebar.service';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { noWhitespaceValidator } from '../../shared/validators/noWhiteSpaceValidators';
+import { Table } from 'primeng/table';
 @Component({
   selector: 'app-view-create-user',
   imports: [SHARED_IMPORTS,PrimengModuleModule,SharedModule],
@@ -23,6 +24,7 @@ import { noWhitespaceValidator } from '../../shared/validators/noWhiteSpaceValid
 })
 export class ViewCreateUserComponent {
 
+  @ViewChild('table') table!: Table; 
   users:any = [
   ]
       visible: boolean = false;
@@ -30,6 +32,7 @@ export class ViewCreateUserComponent {
     ];
     isSidebarVisible:boolean=false;
     designationName:any;
+    globalFilterValue: string = '';
     roleName:any;
     businessVertical:any;
     isLoading:boolean=false;
@@ -43,11 +46,20 @@ export class ViewCreateUserComponent {
     showErrorMessage:any;
     emailArray:any=[];
     sidebarItems:any=[];
+     selectedBrandId:any=null;
+     selectedDealerId:any=null;
+     selectedLocationId:any=null;
      dataSubscription: Subscription|null=null;
      currentRoute:any;
     receivedData: any=[];
+    brands:any=[];
+    dealers:any=[];
+    locations:any=[];
+    showBDL:boolean=false;
+    selectedDesignationId:any;
      userType:any=localStorage.getItem('usertype');
     userPermissions:any=[];
+    allUsers:any=[];
     @ViewChild('dt') dt: any;
       statuses:any=[
         { name:'Active',id:1},
@@ -74,7 +86,10 @@ export class ViewCreateUserComponent {
       ){
       //  ^[0-9]{10}$
    this.editUserForm= this.fb.group({
-      // Define each form control with validators combined using Validator.compose
+      // Define each form control with validators combined using Validator.
+      brand:[''],
+      dealer:[''],
+      location:[[]],
       name: ['', Validators.compose([Validators.required,noWhitespaceValidator])],
       lastName:['',Validators.compose([Validators.required,noWhitespaceValidator])],
       designation: ['', Validators.required],
@@ -89,16 +104,42 @@ export class ViewCreateUserComponent {
    // console.log(this.currentRoute)
   }
     
+  onDesignationChange(){
+    // this.users=[]
+    // this.users=this.users.find((obj:any)=> obj.designationId==this.selectedDesignationId)
+    // console.log("designation changes ",this.users)
+    // let allUsers=this.users;
+     if (!this.selectedDesignationId) {
+    // No designation selected — show all users
+    this.users = [...this.allUsers];
+  } else {
+    // Filter by selected designation
+    this.users = this.allUsers.filter(
+      (user: any) => user.designationId === this.selectedDesignationId.toString()
+    );
+  }
+    
+
+ // console.log("users ",this.users)
+  }
+   onGlobalFilter(event: Event) {
+    const input = (event.target as HTMLInputElement).value;
+    this.table.filterGlobal(input, 'contains');
+  }
   
     showDialog(action:any,rowData?:any) {
     // console.log(rowData)
       this.actionName=action;
+      console.log(" action ",action,this.userType)
       if(this.actionName=='Add User'){
         this.viewUser();
         this.editUserForm.reset();
-        
+          this.editUserForm.get('brand')?.enable();
+        this.editUserForm.get('dealer')?.enable();
       }else{
+        
         this.rowId=rowData.userId;
+     //   console.log("rowDtaa ",rowData)
         let designationObj=this.designations.find((obj:any)=>{ return obj.id==rowData.designationId})
         let roleObj=this.roles.find((obj:any)=>{return obj.id==rowData.roleId})
         let verticalObj=this.associatedBusinesses.find((obj:any)=>{return obj.id==rowData.business_vertical})
@@ -108,6 +149,9 @@ export class ViewCreateUserComponent {
           name: rowData.vcFirstName,
           lastName:rowData.vcLastName,
           email: rowData.emailId,
+          brand:this.selectedBrandId,
+          dealer:this.selectedDealerId,
+          location: rowData.location?.map((loc:any) => loc.location_id),
           designation: designationObj ? designationObj.id : null,  // Patch the ID, not the name
           role: roleObj ? roleObj.id : null,  // Patch the ID, not the name
           associatedBusiness: verticalObj ? verticalObj.id : null,  // Patch the ID, not the name
@@ -116,7 +160,12 @@ export class ViewCreateUserComponent {
           status: statusObj?statusObj?.name:null,
           userType:rowData.type
         });
-  
+        if(this.actionName!='Add User'&& this.userType=='D' ){
+          this.editUserForm.get('brand')?.disable();
+        this.editUserForm.get('dealer')?.disable();
+
+        }
+     //   console.log("editUserForm ",this.editUserForm.value)
         Object.keys(this.editUserForm.controls).forEach((controleName:any)=>{
           this.editUserForm.get(controleName)?.markAsUntouched();
         })
@@ -125,9 +174,7 @@ export class ViewCreateUserComponent {
       this.showErrorMessage=''
       
       // console.log(rowData)
-  
-     
-  
+
       // console.log("edituser form ",this.editUserForm.value)
   }
       addUser(){
@@ -188,6 +235,29 @@ export class ViewCreateUserComponent {
 
       this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
         this.isSidebarVisible=visible
+      })
+
+      this.editUserForm.get('userType')?.valueChanges.subscribe((selectedUserType)=>{
+        const brand = this.editUserForm.get('brand');
+  const dealer = this.editUserForm.get('dealer');
+  const location = this.editUserForm.get('location');
+        if(selectedUserType=='D'){
+          this.showBDL=true;
+          brand?.setValidators([Validators.required]);
+              dealer?.setValidators([Validators.required]);
+              location?.setValidators([Validators.required]);
+          this.getBrands();
+        }
+        else{
+          brand?.clearValidators();
+          dealer?.clearValidators();
+          location?.clearValidators();
+          this.showBDL=false;
+        }
+        brand?.updateValueAndValidity();
+  dealer?.updateValueAndValidity();
+  location?.updateValueAndValidity();
+       // console.log("selected user Type ",selectedUserType)
       })
       }
   
@@ -250,6 +320,125 @@ export class ViewCreateUserComponent {
   return combinedResult;
 }
 
+ onBrandChange(event:any,action?:any){
+
+  // const newValue = event.value;
+  // this.selectedBrandId = newValue;
+  if(this.userType=='D' && action=='model'){{
+     this.selectedDealerId=null;
+    this.selectedLocationId=null;
+    this.selectedDesignationId=null;
+  //  console.log("brand id ",this.selectedBrandId)
+     this.utilitiesService.getDealers({brand_id:this.selectedBrandId}).subscribe((res:any)=>{
+     
+      if(res?.data?.error){
+        this.globalBlockUiService.stopLoading();
+        return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Dealers!'})
+      }
+      else{
+        this.dealers=res.data;
+        
+      }
+      this.users=[]
+    },(error:any)=>{
+      this.globalBlockUiService.stopLoading();
+    })
+  }
+   }
+else{
+   this.utilitiesService.getDealers({brand_id:this.editUserForm.value.brand}).subscribe((res:any)=>{
+     
+      if(res?.data?.error){
+        this.globalBlockUiService.stopLoading();
+        return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Dealers!'})
+      }
+      else{
+        this.dealers=res.data;
+      }
+    },(error:any)=>{
+      this.globalBlockUiService.stopLoading();
+    })
+
+}
+ }
+   onBDLSelection(){
+    this.viewUser();
+   }
+
+   locationSelection(){
+  //  console.log("users ",this.users[0].location[0].location_id,this.selectedLocationId)
+if (!this.selectedLocationId) {
+    // No designation selected — show all users
+    this.users = [...this.allUsers];
+  } else {
+  // Filter by selected location (check inside the array)
+  this.users = this.allUsers.filter(
+    (user: any) =>
+      user.location?.some(
+        (loc: any) => loc.location_id.toString() === this.selectedLocationId.toString()
+      )
+  );
+
+ // console.log("Filtered users:", this.users);
+}
+   }
+   getBrands(){
+
+    this.globalBlockUiService.startLoading();
+    this.utilitiesService.getBrands().subscribe((res:any)=>{
+     
+      this.globalBlockUiService.stopLoading();
+      if(res?.data?.error){
+        this.globalBlockUiService.stopLoading();
+        return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Brands!'})
+      }
+      this.brands=res.data;
+    },(error:any)=>{
+      this.globalBlockUiService.stopLoading();
+    })
+  }
+   onDealerChange(event:any,action?:any){
+    // console.log(this.slForm.value)
+    // this.globalBlockUiService.startLoading();
+   
+    
+    
+    if(this.userType=='D' && action=='model'){
+ 
+      this.utilitiesService.getLocations({dealer_id:this.selectedDealerId}).subscribe((res:any)=>{
+        this.locations=res.data;
+        this.users=[]
+        this.locations = this.locations.map((loc:any) => ({
+  ...loc,
+  location_id: Number(loc.location_id)
+}));
+        this.globalBlockUiService.stopLoading();
+        this.onBDLSelection();
+        // console.log(this.brands)
+        if(res?.data?.error){
+          this.globalBlockUiService.stopLoading();
+          return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Locations!'})
+        }
+      },(error:any)=>{
+        this.globalBlockUiService.stopLoading();
+      })
+    }
+   
+   else{
+         this.editUserForm?.get('location')?.setValue([]);
+     this.utilitiesService.getLocations({dealer_id:this.editUserForm.value.dealer}).subscribe((res:any)=>{
+        this.locations=res.data;
+        this.globalBlockUiService.stopLoading();
+        // console.log(this.brands)
+        if(res?.data?.error){
+          this.globalBlockUiService.stopLoading();
+          return this.messageService.add({severity:'error',life:4000,summary:'Error in fetching Locations!'})
+        }
+      },(error:any)=>{
+        this.globalBlockUiService.stopLoading();
+      })
+    }
+   }
       checkEmailAvailability() {
         this.showErrorMessage = '';
     
@@ -359,33 +548,41 @@ export class ViewCreateUserComponent {
       exportToExcel(): void {
   
         let data:any=[];
-        // this.users.forEach((item:any)=>{
-        //   data.push({
-        //     Name:item.name,
-        //   Role:item.roleName,
-        //   Designation:item.designationName,
-        //   'Email Id':item.emailId,
-        //   'Mobile No':item.mobileNo,
-        //   'Business Vertical':item.associatedBusiness
-        //   })
-          
-        // })
+      
 
-       // console.log("userType ",this.users,this.userType)
+        console.log("userType ",this.users,this.userType)
            const filteredUsers = this.users.filter((item: any) =>        
   item.type == this.userType
 );
 
+
 filteredUsers.forEach((item: any) => {
-  data.push({
+  console.log("item:", item);
+
+  // Base columns for every row
+  const row: any = {
     Name: item.name,
     Role: item.roleName,
     Designation: item.designationName,
     'Email Id': item.emailId,
     'Mobile No': item.mobileNo,
     'Business Vertical': item.associatedBusiness,
-    'User Type':item.type=='A'?'Admin':'User'
-  })})
+    'User Type': item.type === 'A' ? 'Admin' : 'User'
+  };
+
+  // For type 'D', add Brand, Dealer, Location
+  if (item.type === 'D') {
+    let brandObj=this.brands.find((obj:any)=>  {return this.selectedBrandId==obj.brand_id})
+    let dealerObj=this.dealers.find((obj:any)=>  {return this.selectedDealerId==obj.dealer_id})
+   row.Location = item.location?.map((loc: any) => loc.location_name).join(', ');
+    row.Brand = brandObj?.brand;
+    row.Dealer = dealerObj?.dealer_name;
+    
+  }
+
+  data.push(row);
+});
+
  // console.log("data ",data)
         const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data); // Convert JSON data to worksheet
         const wb: XLSX.WorkBook = XLSX.utils.book_new(); // Create a new workbook
@@ -405,47 +602,159 @@ filteredUsers.forEach((item: any) => {
       }
     
       viewUser(event?:any){
-         this.globalBlockUiService.startLoading();
+        
         //  localStorage.setItem('usertype','d');
        // console.log('user Type ',this.userType)
-        this.userService.viewUser({userType:this.userType}).subscribe((res:any)=>{
-           this.globalBlockUiService.stopLoading();
-           let userArray=[];
-
-          for(let item of res?.data){
-            //console.log(this.roles,this.associatedBusinesses,this.designations)
-            let designationObj=this.designations.find((obj:any)=> {return item.designationId==obj.id})
-           // console.log("designation ", item.designationId ,designationObj);
-            this.designationName=designationObj?.designation_name
-  
-            let businessVerticalObj=this.associatedBusinesses.find((obj:any)=>  { return item.business_vertical==obj.id})
-            // console.log("designation ",businessVerticalObj);
-            this.businessVertical=businessVerticalObj?.business_vertical
-  
-            let roleObj=this.roles.find((obj:any)=>  {return item.roleId==obj.id})
-            //console.log("designation ",roleObj);
-            this.roleName=roleObj?.role_name
-  
-            userArray.push({
-              ...item,
-              designationName:designationObj?.designation_name,
-              roleName:roleObj?.role_name,
-              associatedBusiness:businessVerticalObj?.business_vertical
-            
-          })
+        if(this.userType=='D'){
+          this.users=[];
           
+     // console.log("userType ",this.userType)
+          this.globalBlockUiService.startLoading();
+         this.getBrands();
+       //  console.log(this.selectedBrandId,this.selectedDealerId,this.selectedLocationId)
+
+          this.userService.viewUser({userType:this.userType,brandId:this.selectedBrandId,dealerId:this.selectedDealerId}).subscribe((res:any)=>{
+            this.globalBlockUiService.stopLoading();
+            let userArray=[];
+           
+            const userMap = new Map();
+           for(let item of res?.data){
+             //console.log(this.roles,this.associatedBusinesses,this.designations)
+             let designationObj=this.designations.find((obj:any)=> {return item.designationId==obj.id})
+            // console.log("designation ", item.designationId ,designationObj);
+             this.designationName=designationObj?.designation_name
+   
+             let businessVerticalObj=this.associatedBusinesses.find((obj:any)=>  { return item.business_vertical==obj.id})
+             // console.log("designation ",businessVerticalObj);
+             this.businessVertical=businessVerticalObj?.business_vertical
+   
+             let roleObj=this.roles.find((obj:any)=>  {return item.roleId==obj.id})
+             //console.log("designation ",roleObj);
+             this.roleName=roleObj?.role_name
+   
+            const locationObj = this.locations.find((loc: any) => loc.location_id == item.locationid);
+
+    const locationData = {
+      location_id: parseInt(item.locationid,10),
+      location_name: locationObj?.location_name || ''
+    };
+    //  const locationData = parseInt(item.locationid,10)
+    if (!userMap.has(item.userId)) {
+      userMap.set(item.userId, {
+        ...item,
+        location: [locationData],
+        designationName: designationObj?.designation_name,
+        roleName: roleObj?.role_name,
+        associatedBusiness: businessVerticalObj?.business_vertical
+      });
+    } else {
+      const existing = userMap.get(item.userId);
+      const alreadyExists = existing.location.some((loc: any) => loc.location_id == item.locationid);
+      if (!alreadyExists) {
+        existing.location.push(locationData);
+      }
+    }
+          //    userArray.push({
+          //      ...item,
+          //      designationName:designationObj?.designation_name,
+          //      roleName:roleObj?.role_name,
+          //      associatedBusiness:businessVerticalObj?.business_vertical
+             
+          //  })
+          }
+
+
+          userArray = Array.from(userMap.values());
+          userArray.forEach(user => {
+  const userId = user.userId;
+
+  // get the data from Map
+  const mapUser = userMap.get(userId);
+
+  // if (mapUser) {
+  //   console.log('Found user in map:', mapUser);
+
+  //   // Patch the form for this user
+  //   // this.editUserForm.patchValue({
+  //   //   location: mapUser.location
+  //   // });
+  // } else {
+  //   console.log('No user in map for ID', userId);
+  // }
+});
+
+          this.users = userArray;
+          this.allUsers = userArray;
+        
+
+       
+  // Patch the form
+
+
+  // console.log('Patching form for userId:',  'with locations:', locationIds);
+
+// this.editUserForm.patchValue({
+//   location: locationIds
+// });
+          this.dt?.clear()
+        //  console.log('Form control value', this.editUserForm.get('location')?.value);
+   
+        // console.log("users ",this.users)
+          
+         },(error:any)=>{
+           this.globalBlockUiService.stopLoading();
+         })
         }
-        this.users=userArray;
-        this.dt?.clear()
-       // console.log("users ",this.users)
-         
-        },(error:any)=>{
-          this.globalBlockUiService.stopLoading();
-        })
+       
+       else{
+        this.userType='A'
+        this.selectedBrandId=null;
+        this.selectedDealerId=null;
+        this.selectedLocationId=null;
+        this.selectedDesignationId=null;
+         this.globalBlockUiService.startLoading();
+        this.userService.viewUser({userType:this.userType}).subscribe((res:any)=>{
+            this.globalBlockUiService.stopLoading();
+            let userArray=[];
+ 
+           for(let item of res?.data){
+             //console.log(this.roles,this.associatedBusinesses,this.designations)
+             let designationObj=this.designations.find((obj:any)=> {return item.designationId==obj.id})
+            // console.log("designation ", item.designationId ,designationObj);
+             this.designationName=designationObj?.designation_name
+   
+             let businessVerticalObj=this.associatedBusinesses.find((obj:any)=>  { return item.business_vertical==obj.id})
+             // console.log("designation ",businessVerticalObj);
+             this.businessVertical=businessVerticalObj?.business_vertical
+   
+             let roleObj=this.roles.find((obj:any)=>  {return item.roleId==obj.id})
+             //console.log("designation ",roleObj);
+             this.roleName=roleObj?.role_name
+   
+             userArray.push({
+               ...item,
+               designationName:designationObj?.designation_name,
+               roleName:roleObj?.role_name,
+               associatedBusiness:businessVerticalObj?.business_vertical
+             
+           })
+           
+         }
+         this.users=userArray;
+         this.dt?.clear()
+        // console.log("users ",this.users)
+          
+         },(error:any)=>{
+           this.globalBlockUiService.stopLoading();
+         })
+       }
       }
   
+
+
       submit(){
   
+        // this.userId=293;
         if(this.editUserForm.valid){
        //   console.log(this.editUserForm.value)
            //let link="http://localhost:4200/core/update-user-password";
@@ -455,6 +764,7 @@ filteredUsers.forEach((item: any) => {
           if(this.actionName=='Add User'){
             
             this.globalBlockUiService.startLoading();
+           
             this.userService.createUser({...this.editUserForm.value,userId:this.userId,token:this.token,link:link}).subscribe((res:any)=>{
               this.globalBlockUiService.stopLoading();
               this.viewUser();
@@ -472,6 +782,8 @@ filteredUsers.forEach((item: any) => {
           }
           else{
             this.globalBlockUiService.startLoading();
+          //  console.log("edit user dealer id ",this.selectedDealerId,this.editUserForm.value)
+          
             this.userService.editUser({...this.editUserForm.value,userId:this.rowId,updatedBy:this.userId,token:this.token}).subscribe((res:any)=>{
               this.globalBlockUiService.stopLoading();
               this.viewUser();

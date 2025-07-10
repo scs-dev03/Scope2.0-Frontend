@@ -47,8 +47,104 @@
         <p-radiobutton name="User" value="D" [(ngModel)]="userType" inputId="dealer" (ngModelChange)="viewUser($event)" />
         <label for="dealer" class="ml-2 f-12 d-flex align-items-center mb-0">User</label>
     </div>
+    <div  *ngIf="userType=='D'" class="d-flex flex-row">
+
+     <div class="col p-2 d-flex flex-column" >
+              <span class="font-semibold">Brand</span>
+               <p-select   
+                [options]="brands" 
+                optionLabel="brand" 
+                optionValue="brand_id"
+                class="dropdown"
+                [filter]="true"
+                 appendTo="self"
+                [(ngModel)]="selectedBrandId"
+                filterPlaceholder="Select Brand.."
+                 (ngModelChange)="onBrandChange($event,'model')"
+                placeholder="Select Brand" />
+                <!-- <input type="text" pInputText formControlName="brand" *ngIf="actionName!='Add User'"  /> -->
+              <!-- Show error message only if the field is touched and invalid -->
+            </div>
+             <div class="col p-2 d-flex flex-column" >
+              <span class="font-semibold">Dealer</span>
+               <p-select 
+                [options]="dealers" 
+                optionLabel="dealer_name" 
+                optionValue="dealer_id"
+                [filter]="true"
+                class="dropdown"
+                  appendTo="self"
+                 [(ngModel)]="selectedDealerId"
+                filterPlaceholder="Select Dealer"
+                (ngModelChange)="onDealerChange($event,'model')"
+                placeholder="Select Dealer" >
+                 <ng-template let-option pTemplate="item">
+    <div class="truncate-text" [title]="option.dealer_name">
+      {{ option.dealer_name }}
+    </div>
+    </ng-template>
+              </p-select>
+              <!-- Show error message only if the field is touched and invalid -->
+                <!-- <input type="text" pInputText formControlName="dealer" *ngIf="actionName!='Add User'"  /> -->
+              
+            </div>
+
+             <div class="col p-2 d-flex flex-column" >
+              <span class="font-semibold">Location</span>
+               <p-select 
+                [options]="locations" 
+                optionLabel="location_name" 
+                optionValue="location_id"
+                 appendTo="self"
+                 class="dropdown"
+                [(ngModel)]="selectedLocationId"
+                 [filter]="true"
+                filterPlaceholder="Select Location"
+                (ngModelChange)="locationSelection()"
+                [showClear]="true"
+                placeholder="Select Location" />
+                 <!-- <input type="text" pInputText formControlName="location" *ngIf="actionName!='Add User'"  /> -->
+              <!-- Show error message only if the field is touched and invalid -->
+             
+            </div>
+            <div class="col-3 p-2 d-flex flex-column">
+              <span class="font-semibold">Designation</span>
+              
+              <p-select 
+                [options]="designations" 
+                optionLabel="designation_name" 
+               appendTo="self"
+               class="designation-dropdown"
+               [(ngModel)]="selectedDesignationId"
+               (onChange)="onDesignationChange()"
+                 [filter]="true"
+                 [showClear]="true"
+                filterPlaceholder="Select Designation"
+                optionValue="id"
+                placeholder="Select Designation"
+                >
+              <ng-template let-option pTemplate="item">
+    <div class="truncate-text" [title]="option.designation_name">
+      {{ option.designation_name }}
+    </div>
+  </ng-template></p-select>
+              <!-- Show error message only if the field is touched and invalid -->
+              
+            </div>
+            <div class="custom-input-wrapper mb-2 mt-2" style="width: 100%;">
+    <i class="pi pi-search"></i>
+   <input 
+      pInputText 
+      type="text" 
+      [(ngModel)]="globalFilterValue"
+      (input)="onGlobalFilter($event)" 
+      placeholder="Global Search" 
+      class="w-full custom-input"
+    />
+  </div>
         </div>
-        <div>
+        </div>
+        <div class="d-flex">
             <!-- *ngIf="userPermissions?.add1" in i tag -->
           <i class="pi pi-user cursor-pointer me-3"  style="font-size: 1.5rem !important;font-weight:bold " *ngIf="userPermissions?.add1" (click)="showDialog('Add User')"></i>
           <!-- *ngIf="userPermissions?.view1" in i tag -->
@@ -59,16 +155,17 @@
       <!-- [tableStyle]="{ 'min-width': '40rem' }" -->
       <!-- *ngIf="userPermissions?.view1"  bg-[#FDF5E6] -->
        <div class="card h-auto flex flex-col justify-start  rounded-lg " *ngIf="userPermissions?.view1" [ngClass]="isSidebarVisible?'w-[80vw] h-auto md:w-[72vw]':'w-[90vw]'" >
-         <p-table 
+         <p-table  #table
          [value]="users" 
          [paginator]="true"
+         [globalFilterFields]="['name', 'designationName', 'roleName','associatedBusiness','emailId','mobileNo']"
          [rows]="100"
          [rowsPerPageOptions]="[100,200, 300, 400, 500, 600,700,800,900,1000]"
          styleClass="p-datatable-gridlines" 
           dataKey="code"
           class="w-full !rounded-lg-border border-gray-200 shadow-md h-[75vh]"  
           responsiveLayout="scroll"
-          [scrollHeight]="'380px'"
+          [scrollHeight]="'68vh'"
            [scrollable]="true"
            [showCurrentPageReport]="true"
            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -81,11 +178,17 @@
                     field="name"
                     display="menu"
                   ></p-columnFilter></th>
+                   <th class="min-w-10rem" *ngIf="userType=='D'">Location <p-columnFilter
+                    class="table-input"
+                    field="location"
+                   display="menu"
+                  ></p-columnFilter></th>
                      <th class="min-w-10rem">Designation <p-columnFilter
                     class="table-input"
                     field="designationName"
                    display="menu"
                   ></p-columnFilter></th>
+                  
                      <th class="min-w-8rem">Role  <p-columnFilter
                     class="table-input"
                     field="roleName"
@@ -115,6 +218,7 @@
              <ng-template pTemplate="body" let-product>
                  <tr>
                      <td class="break-words whitespace-normal max-w-10rem">{{ product.name }}</td>
+                     <td class="break-words whitespace-normal max-w-10rem" *ngIf="userType=='D'">{{ product.location[0].location_name }}</td>
                      <td class="break-words whitespace-normal max-w-10rem">{{ product.designationName }}</td>
                      <td class="break-words whitespace-normal max-w-10rem">{{product.roleName}}</td>
                      <td class="break-words whitespace-normal max-w-10rem">{{ product.associatedBusiness }}</td>
@@ -139,12 +243,88 @@
 
 
 
-<p-dialog [header]="actionName" [modal]="true" [(visible)]="visible" [style]="{ width: '100vh' }" class="header edit-add-user">
+<p-dialog [header]="actionName" [modal]="true" [(visible)]="visible" [style]="{ width: '50vw' ,height:'100vh' }" class="header edit-add-user">
   <form [formGroup]="editUserForm">
     <div class="card1">
       <div class="row">
         <div class="col-12">
           <div class="row">
+             <div class="col-6 p-2 d-flex flex-column">
+              <span class="font-semibold">User Type</span>
+              <p-select 
+                [options]="userTypes" 
+                formControlName="userType"
+                optionLabel="name" 
+                optionValue="value"
+                appendTo="body"
+                placeholder="Select User Type" />
+              <div *ngIf="editUserForm.get('userType')?.touched && editUserForm.get('userType')?.invalid">
+                <small *ngIf="editUserForm.get('userType')?.hasError('required')" style="color: red; font-size: 12px;">User Type is required.</small>
+              </div>
+            </div>
+
+             <div class="col-6 p-2 d-flex flex-column" *ngIf="showBDL">
+              <span class="font-semibold">Brand</span>
+               <p-select  
+                [options]="brands" 
+                formControlName="brand"
+                optionLabel="brand" 
+                optionValue="brand_id"
+                [filter]="true"
+                appendTo="body"
+                filterPlaceholder="Select Brand.."
+                 (onChange)="onBrandChange($event)"
+
+                placeholder="Select Brand" />
+                <!-- <input type="text" pInputText formControlName="brand" *ngIf="actionName!='Add User'"  /> -->
+              <!-- Show error message only if the field is touched and invalid -->
+              <div *ngIf="editUserForm.get('brand')?.touched && editUserForm.get('brand')?.invalid">
+                <small *ngIf="editUserForm.get('brand')?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small>
+              </div>
+            </div>
+             <div class="col-6 p-2 d-flex flex-column" *ngIf="showBDL">
+              <span class="font-semibold">Dealer</span>
+               <p-select 
+                [options]="dealers" 
+                formControlName="dealer"
+                optionLabel="dealer_name" 
+                optionValue="dealer_id"
+                [filter]="true"
+                appendTo="body"
+                filterPlaceholder="Select Dealer"
+                (onChange)="onDealerChange($event)"
+                placeholder="Select Dealer" />
+              <!-- Show error message only if the field is touched and invalid -->
+                <!-- <input type="text" pInputText formControlName="dealer" *ngIf="actionName!='Add User'"  /> -->
+              <div *ngIf="editUserForm.get('dealer')?.touched && editUserForm.get('dealer')?.invalid">
+                <small *ngIf="editUserForm.get('dealer')?.hasError('required')" style="color: red; font-size: 12px;">Dealer is required.</small>
+              </div>
+            </div>
+
+             <div class="col-6 p-2 d-flex flex-column" *ngIf="showBDL">
+              <span class="font-semibold">Location</span>
+               <!-- <p-select *ngIf="actionName=='Edit User'"
+                [options]="locations" 
+                formControlName="location"
+                optionLabel="location_name" 
+                optionValue="location_id"
+               appendTo="body"
+                placeholder="Select Location" /> -->
+
+                <p-multiSelect 
+  [options]="locations" 
+  formControlName="location"
+  optionLabel="location_name" 
+  optionValue="location_id"
+  appendTo="body"
+  placeholder="Select Location">
+</p-multiSelect>
+                 <!-- <input type="text" pInputText formControlName="location" *ngIf="actionName!='Add User'"  /> -->
+              <!-- Show error message only if the field is touched and invalid -->
+              <div *ngIf="editUserForm.get('location')?.touched && editUserForm.get('location')?.invalid">
+                <small *ngIf="editUserForm.get('location')?.hasError('required')" style="color: red; font-size: 12px;">Location is required.</small>
+              </div>
+            </div>
             <!-- Name Field -->
             <div class="col-6 p-2 d-flex flex-column">
               <span class="font-semibold">First Name</span>
@@ -154,7 +334,7 @@
                 <small *ngIf="editUserForm.get('name')?.hasError('required')" style="color: red; font-size: 12px;">First Name is required.</small>
               </div>
                <small *ngIf="editUserForm.get('name')?.hasError('whitespace') && editUserForm.get('name')?.touched" class="text-red-500">
-  First Name cannot be empty or just spaces
+      First Name cannot be empty or just spaces
                </small>
             </div>
             
@@ -176,6 +356,7 @@
               <span class="font-semibold">Designation</span>
               <p-select 
                 [options]="designations" 
+                appendTo="body"
                 formControlName="designation"
                 optionLabel="designation_name" 
                 optionValue="id"
@@ -196,6 +377,7 @@
                 [options]="roles" 
                 formControlName="role"
                 optionLabel="role_name"
+                appendTo="body"
                 optionValue="id" 
                 placeholder="Enter Role" />
               <div *ngIf="editUserForm.get('role')?.touched && editUserForm.get('role')?.invalid">
@@ -236,6 +418,7 @@
                 formControlName="associatedBusiness"
                 optionLabel="business_vertical" 
                 optionValue="id"
+                appendTo="body"
                 placeholder="Enter Associated Business"
                 class="businessVertical-dropdown" />
               <div *ngIf="editUserForm.get('associatedBusiness')?.touched && editUserForm.get('associatedBusiness')?.invalid">
@@ -252,6 +435,7 @@
                 [options]="statuses" 
                 formControlName="status"
                 optionLabel="name" 
+                appendTo="body"
                 optionValue="name"
                 placeholder="Enter Status" />
               <div *ngIf="editUserForm.get('status')?.touched && editUserForm.get('status')?.invalid">
@@ -259,18 +443,7 @@
               </div>
             </div>
 
-            <div class="col-6 p-2 d-flex flex-column">
-              <span class="font-semibold">User Type</span>
-              <p-select 
-                [options]="userTypes" 
-                formControlName="userType"
-                optionLabel="name" 
-                optionValue="value"
-                placeholder="Select User Type" />
-              <div *ngIf="editUserForm.get('userType')?.touched && editUserForm.get('userType')?.invalid">
-                <small *ngIf="editUserForm.get('userType')?.hasError('required')" style="color: red; font-size: 12px;">User Type is required.</small>
-              </div>
-            </div>
+           
           </div>
           
           </div>
@@ -278,7 +451,7 @@
       </div>
     <!-- </div> -->
 
-    <div class="div-btn">
+    <div class="div-btn" [ngClass]="showBDL?'mt-[110px]':'mt-[35px]'">
       <p-button label="Cancel" class="btn text-white mr-5" (click)="visible = false"></p-button>
       <p-button label="Submit" class="btn text-white" (click)="submit()"></p-button>
     </div>

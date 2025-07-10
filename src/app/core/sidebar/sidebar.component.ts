@@ -11,6 +11,7 @@ import { SidebarService } from '../../services/sidebar.service';
 import { SharedServiceService } from '../../services/shared-service.service';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { take } from 'rxjs';
+import {environment} from '../../../../environments/environment'
 
 @Component({
   selector: 'app-sidebar',
@@ -32,6 +33,7 @@ export class SidebarComponent {
   isVisible: boolean = true;
   sidebarItems:any=[];
   userName:any;
+  profilePhoto:any;
   // sidebarItems = [
   //   {id: 1, value: "Mapping", children: [
   //       {id: 2, value: "Stock Upload Mapping", route: 'mapping/stock-upload',isActive: true},
@@ -99,27 +101,6 @@ filterItems() {
       this.menu?.toggle(event);
     }
     
-   
-  //  setActive(subItem: any, parentItem: any) {
-
-  //   // console.log(subItem);
-  //    // Reset the active state for all main menu items and submenus
-  //    this.sidebarItems.forEach((menuItem: any) => {
-  //      menuItem.isActive = false;  // Reset active state for all main items
-  //      menuItem?.subchildren.forEach((sub: any) => {
-  //        sub.isActive = false;  // Reset active state for all submenus
-  //      });
-  //    });
-   
-  //    // Set the clicked submenu item as active
-  //    subItem.isActive = true;
-   
-  //    // Also set the parent main menu item as active
-  //    parentItem.isActive = true;
-   
-  //    // Ensure that the parent submenu is opened
-  //    parentItem.isOpen = true;
-  //  }
 
   setActive(subItem: any, parentItem: any) {
     this.filteredItems.forEach(item => {
@@ -131,8 +112,6 @@ filterItems() {
     subItem.isActive = true;
   }
   
-
- 
 
   toggleChildren(item:any) {
     item.isExpanded = !item.isExpanded;
@@ -218,10 +197,10 @@ logOut(){
  //console.log(localStorage.getItem('usertype')=='A')
   if(localStorage.getItem('usertype')=='A')
   {
-window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uad_sc_wac/Login.aspx';
+window.location.href = environment.frontendAdminUrl;
   }else{
     
-    window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx';
+    window.location.href = environment.frontendUserUrl;
   }
    localStorage.clear();
    sessionStorage.clear();
@@ -232,8 +211,9 @@ getModulesOnTrigger(){
   this.sidebarService.getModules().subscribe((res:any)=>{
    this.userName=localStorage.getItem('username');
 // const cleaned = this.transformSidebarData(data);  // this will be dense, clean
-this.sidebarItems = res.data;
- //console.log("modules api in sidebar ",this.sidebarItems)
+this.sidebarItems = res.data.modules;
+ this.profilePhoto=environment.uploadedProfileUrl+res.data.profile;
+console.log("modules api trigger in sidebar ",this.sidebarItems)
 //  this.sidebarItems=this.transformData(this.sidebarItems)
 // this.filteredItems=this.transformData(this.sidebarItems);
   this.sharedService.updateSidebarData(this.sidebarItems)
@@ -249,10 +229,11 @@ getModules(){
   this.sidebarService.getModules().subscribe((res:any)=>{
    
 // const cleaned = this.transformSidebarData(data);  // this will be dense, clean
-this.sidebarItems = res.data;
-// console.log("modules api in sidebar ",this.sidebarItems)
-//  this.sidebarItems=this.transformData(this.sidebarItems)
-// this.filteredItems=this.transformData(this.sidebarItems);
+//console.log("res .data ",res.data)
+this.sidebarItems = res.data.modules;
+//console.log("sidebar items ",this.sidebarItems)
+  this.profilePhoto=environment.uploadedProfileUrl+res.data.profile;
+  //console.log("profilePhoto ",this.profilePhoto,"envir ",environment.uploadedProfileUrl)
   this.sharedService.updateSidebarData(this.sidebarItems)
   //console.log("sidebar items ",this.sidebarItems)
    this.globalBlockUiService.stopLoading();

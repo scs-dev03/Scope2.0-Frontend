@@ -92,6 +92,8 @@
   
   .user-profile .user-name {
     margin-top: 10px;
+        word-break: break-word;
+    width: 80px;
   }
   
   /* Toggle button */
@@ -234,5 +236,11 @@ li{
 
 :host ::ng-deep li.subsidebar.child.f-12.ms-3.menu-item a.active-item{
   background-color: red !important;
+}
+
+:host ::ng-deep img.profile-image.me-3{
+    border-radius: 100% !important;
+    height: 40px !important;
+    width: 40px !important;
 }
   

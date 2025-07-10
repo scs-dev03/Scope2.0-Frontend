@@ -79,8 +79,8 @@
                             <div class="!flex  !flex-row gap-6 !items-center ms-5" [ngClass]="visibleSidebar?'':''">
                                
                                 <div>
-                                    <p-fileupload #fu [customUpload]="true"  [showUploadButton]="false"
-                                    [showCancelButton]="false" class=" !line-clamp-3"  chooseLabel="Upload"  chooseIcon="pi pi-upload" name="demo[]"
+                                    <p-fileupload #fu [customUpload]="true"  [showUploadButton]="false" 
+                                    [showCancelButton]="false" class="upload-icon-only !line-clamp-3"  chooseLabel=" "  chooseIcon="pi pi-upload" name="demo[]"
                                     [auto]="false" accept=".xlsx,.csv,.xls" (onSelect)="onSelect($event)"  [multiple]="false" >
           
                                     <!-- Truncated file name with tooltip -->

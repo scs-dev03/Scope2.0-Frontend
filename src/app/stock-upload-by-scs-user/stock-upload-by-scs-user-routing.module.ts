@@ -7,11 +7,11 @@ const routes: Routes = [
 
   {
     path:'sl',component:SingleStockUploadComponent,
-    canActivate:[authGuard]
+   // canActivate:[authGuard]
   },
   {
     path:'ml',component:BulkStockUploadComponent,
-    canActivate:[authGuard]
+   // canActivate:[authGuard]
   },
 
 ];

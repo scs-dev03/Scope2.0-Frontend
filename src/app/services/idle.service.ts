@@ -1,5 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -56,10 +57,10 @@ export class IdleService {
     // Clear local/session storage if needed
     if(localStorage.getItem('usertype')=='A')
   {
-window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uad_sc_wac/Login.aspx';
+window.location.href = environment.frontendAdminUrl;
   }else{
     
-    window.location.href = 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Login.aspx';
+    window.location.href = environment.frontendUserUrl;
   }
    localStorage.clear();
    sessionStorage.clear();

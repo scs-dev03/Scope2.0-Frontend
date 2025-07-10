@@ -120,7 +120,7 @@ export class LandingScreenComponent {
   getModules(){
    
     this.sidebarService.getModules().subscribe((res:any)=>{
-      const data = res.data;
+      const data = res.data.modules;
   const cleaned = this.transformSidebarData(data);  // this will be dense, clean
  // console.log("cleaned ",cleaned)
   this.sidebarItems = cleaned;
