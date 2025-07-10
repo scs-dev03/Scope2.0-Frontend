@@ -13,7 +13,7 @@ export class DashboardSchedulerService {
 //   'https://scopeapi.sparecare.in/api/v1/';
 
     private apiurl: any =
-  'http://web36.185.238.new.ocpwebserver.com/api/v1/von/';
+  'http://web36.185.238.new.ocpwebserver.com/api/v1/dashboardscheduler/';
 
 private apiurlmaster: any =
   'http://web36.185.238.new.ocpwebserver.com/api/v1/master/';
