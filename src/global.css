@@ -1,6 +1,6 @@
 :root{
     --primary-color: #49505757;
-    --theme-color:#34495e !important;
+    --theme-color:rgb(0, 128, 128) !important;
     --theme2-color: #5a9fa3 !important;
     --secondary-color:#f2f2f2 !important;
     --tertiary-color:#2f667f !important

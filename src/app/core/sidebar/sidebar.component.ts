@@ -228,10 +228,11 @@ getModules(){
   this.sidebarService.getModules().subscribe((res:any)=>{
    
 // const cleaned = this.transformSidebarData(data);  // this will be dense, clean
-this.sidebarItems = res.data;
-//console.log("sidebar items ",this.sidebarItems)
-//this.profilePhoto=environment.uploadedProfileUrl+res.data[0].profile;
-
+console.log("res .data ",res.data)
+this.sidebarItems = res.data.modules;
+console.log("sidebar items ",this.sidebarItems)
+  this.profilePhoto=environment.uploadedProfileUrl+res.data.profile;
+  console.log("profilePhoto ",this.profilePhoto,"envir ",environment.uploadedProfileUrl)
   this.sharedService.updateSidebarData(this.sidebarItems)
   //console.log("sidebar items ",this.sidebarItems)
    this.globalBlockUiService.stopLoading();

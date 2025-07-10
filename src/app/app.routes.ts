@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './core/login/login.component';
 import { authGuard } from './auth.guard';
 import { PageNotFoundComponent } from './core/page-not-found/page-not-found.component';
+import { NoAccessComponent } from './core/no-access/no-access.component';
 
 export const routes: Routes = [
 
@@ -73,6 +74,10 @@ export const routes: Routes = [
         loadChildren:()=>import('../app/role-management/role-management.module').then(m=>m.RoleManagementModule),
         //  canLoad:[authGuard],
         //   canActivate:[authGuard]
+    },
+     {
+        path:'no-access',
+        component:NoAccessComponent
     },
     // {
     //     path: '**', redirectTo:'core/home',

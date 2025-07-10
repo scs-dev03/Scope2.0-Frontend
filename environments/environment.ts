@@ -2,7 +2,7 @@ export const environment = {
     production: false,
     
   //scope 2.0 live server backend
-  apiUrl:'https://scopeapi.sparecare.in/api/',
+ // apiUrl:'https://scopeapi.sparecare.in/api/',
 
 // apiUrl: 'http://localhost:3000/api/',
 
@@ -17,7 +17,7 @@ export const environment = {
    // apiUrl:'http://web10.185.238.new.ocpwebserver.com/api/',
 
       // scope 2.0 backend uat
-//      apiUrl:'http://web36.185.238.new.ocpwebserver.com/api/',
+     apiUrl:'http://web36.185.238.new.ocpwebserver.com/api/',
 
 
     //frontend UAT
@@ -31,11 +31,12 @@ export const environment = {
 
     //profile photo for Live server
 
-    uploadedProfileUrl:'https://scope.sparecare.in/Upload/Employee/',
+   // uploadedProfileUrl:'https://scope.sparecare.in/Upload/Employee/',
 
 
-    //profile photo for production server
-   //  uploadedUrl:''
+    //profile photo for uat server
+      uploadedProfileUrl:'http://web13.185.238.new.ocpwebserver.com/Upload/Employee/'
+    // uploadedProfileUrl:'D:/html/users/userweb13/Html/Upload/Employee/'
   };
 
 

@@ -22,7 +22,7 @@
     border: none !important;
   outline: none !important;
   /* background-color: rgba(0, 0, 255, 0.164); */
-  background-color: rgb(0 0 255 / 34%);
+ background-color: var(--theme-color) !important;
   padding: 8px;
   border-radius: 4px;
   z-index: auto;
@@ -90,11 +90,28 @@
  :host::ng-deep  button.p-ripple.p-button.p-component.p-button-secondary{
     border: none !important;
   outline: none !important;
-  background-color: rgb(12 98 182 / 69%) !important;
+ background-color: var(--theme-color) !important;
   color: white !important;
   /* background-color: rgb(0 0 255 / 34%); */
   padding: 3px !important;
   border-radius: 4px !important;
   z-index: auto !important;
   
+}
+
+::ng-deep .upload-icon-only .p-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+::ng-deep .upload-icon-only .p-button-label {
+  display: none !important;
+}
+
+::ng-deep .upload-icon-only .p-button-icon {
+  margin: 0 !important;
+  font-size: 1.2rem; /* Adjust icon size if needed */
 }
