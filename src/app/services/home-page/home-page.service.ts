@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,10 @@ export class HomePageService {
 // private apiurlmaster: any =
 //   'https://scopeapi.sparecare.in/api/v1/master/';
   private apiurl: any =
-  'http://web36.185.238.new.ocpwebserver.com/api/v1/';
-
-private apiurlmaster: any =
-  'http://web36.185.238.new.ocpwebserver.com/api/v1/master/';
+       `${environment.EnvApiUrlMaster}von/`;
+     
+     private apiurlmaster: any =
+       `${environment.EnvApiUrlMaster}master/`;
 
 // private apiurlmaster: any =
 //   'http://localhost:3000/api/v1/master/';

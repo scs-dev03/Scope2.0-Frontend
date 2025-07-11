@@ -33,8 +33,24 @@ export const environment = {
     //profile photo for Live server
    // uploadedProfileUrl:'https://scope.sparecare.in/Upload/Employee/',
     //profile photo for uat server
-      uploadedProfileUrl:'http://web13.185.238.new.ocpwebserver.com/Upload/Employee/'
-    // uploadedProfileUrl:'D:/html/users/userweb13/Html/Upload/Employee/'
+      uploadedProfileUrl:'http://web13.185.238.new.ocpwebserver.com/Upload/Employee/',
+    // uploadedProfileUrl:'D:/html/users/userweb13/Html/Upload/Employee/',
+
+
+
+
+    // Scope Diverter Redirect
+    DiverterAdmin: 'http://web13.185.238.new.ocpwebserver.com/uad_sc_wac/Home.aspx',
+    DiverterUser: 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Home.aspx',
+    // DiverterAdmin: 'https://scope.sparecare.in/UAD_SC_WAC/home.aspx',
+    // DiverterUser: 'https://scope.sparecare.in/UAD_SC_WAC/home.aspx',
+
+
+    //Ayush Module API Url
+    //EnvApiUrlMaster: 'http://web36.185.238.new.ocpwebserver.com/api/v1/',
+    //EnvApiUrlMaster: 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/',
+    //EnvApiUrlMaster: 'https://scopeapi.sparecare.in/api/v1/',
+    EnvApiUrlMaster: 'http://web10.185.238.new.ocpwebserver.com/api/v1/',
   };
 
 
