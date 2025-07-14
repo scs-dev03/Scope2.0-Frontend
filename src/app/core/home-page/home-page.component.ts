@@ -29,7 +29,7 @@ export class HomePageComponent {
     this.globalBlockUiService.startLoading();
 
     this.fetchUserinfo(localStorage.getItem('usertoken'), localStorage.getItem('usertype'));
-    
+
     this.fetchCardsData(
       localStorage.getItem('def_location'),
       localStorage.getItem('dealerid')
@@ -39,17 +39,17 @@ export class HomePageComponent {
     // });
 
     //console.log("init called ");
-      this.subscription=this.sharedService.locationIdForHomePage.subscribe((locationId:any)=>{
-    //  console.log("location id in home page ",locationId)
-      this.locationId=locationId;
+    this.subscription = this.sharedService.locationIdForHomePage.subscribe((locationId: any) => {
+      //  console.log("location id in home page ",locationId)
+      this.locationId = locationId;
       this.fetchCardsData(
-      this.locationId,
-      localStorage.getItem('dealerid')
-    );
+        this.locationId,
+        localStorage.getItem('dealerid')
+      );
     })
-    this.locationId=localStorage.getItem('def_location');
-    console.log("locationis ",this.locationId)
-     this.homeData.patchValue({
+    this.locationId = localStorage.getItem('def_location');
+    console.log("locationis ", this.locationId)
+    this.homeData.patchValue({
       locationId: this.locationId
     });
   }
@@ -57,8 +57,8 @@ export class HomePageComponent {
   constructor(
     private homepageservice: HomePageService,
     private globalBlockUiService: GlobalBlockUiService,
-    private sharedService:SharedServiceService
-  ) {}
+    private sharedService: SharedServiceService
+  ) { }
 
 
   locationData: any = [];
@@ -67,44 +67,44 @@ export class HomePageComponent {
   userInfo: any = [];
   filteredLocationData: any = [];
   snStockValue: any = {};
-  StockValue: any 
-  NonStockValue: any 
+  StockValue: any
+  NonStockValue: any
   chartDataLoaded = false;
   chart1: any
   rawData: any
   months: string[] = [];
-  locationId:any;
+  locationId: any;
   homeData = new FormGroup({
     locationId: new FormControl(),
   });
 
- 
+
   async fetchUserinfo(usertoken: any, usertype: any) {
     this.globalBlockUiService.startLoading();
     // console.log('fetch method',usertoken);
     // console.log('fetch method',usertype);
- //localStorage.setItem('brandid','9');
-   // localStorage.setItem('locationid','14');
-   //  localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
+    //localStorage.setItem('brandid','9');
+    // localStorage.setItem('locationid','14');
+    //  localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
     this.globalBlockUiService.startLoading();
-  //   usertoken='0x0200000046E3737AED5FE0B13F2E6D0710BC96ABB705BA29736DDB3ADE3CBC2F7260C908'
+    //   usertoken='0x0200000046E3737AED5FE0B13F2E6D0710BC96ABB705BA29736DDB3ADE3CBC2F7260C908'
     await this.homepageservice
       .getuserinfo({ token: usertoken, usertype: 'U' })
       .subscribe({
         next: (res: any) => {
           this.userInfo = res.Data;
           localStorage.setItem('def_location', res.Data[0]?.locationid);
-          
+
           //console.log(this.userInfo);
           this.filteredLocationData = this.userInfo.map((item: any) => ({
             locationid: item.locationid,
             location: item.location,
           }));
-         
+
           this.sharedService.updateModuleName('Home Page')
           this.sharedService.updateHomePageData(this.filteredLocationData)
 
-           this.locationId=localStorage.getItem('def_location')
+          this.locationId = localStorage.getItem('def_location')
           // console.log("location is imn 98 ",this.locationId) 
           //console.log(this.filteredLocationData);
           this.globalBlockUiService.stopLoading();
@@ -123,10 +123,10 @@ export class HomePageComponent {
       });
   }
 
-  
+
   onclickLocation() {
-   
-    console.log("locationId ",this.locationId)
+
+    console.log("locationId ", this.locationId)
 
     // this.fetchCardsData(
     //   this.homeData.value.locationId,
@@ -139,189 +139,289 @@ export class HomePageComponent {
   }
 
   ngOnDestroy() {
-  if (this.subscription) this.subscription.unsubscribe();
-}
-
-  fetchCardsData(locationId: any, dealerid: any) {
-    this.globalBlockUiService.startLoading();
-    this.homepageservice
-      .getcardsdata({ locationId: locationId, dealerid: dealerid })
-      .subscribe({
-        next: (res: any) => {
-          this.CardsData = res;  
-          console.log(this.CardsData);
-               
-          this.globalBlockUiService.stopLoading();
-          this.StockValue = res.SNStockValue[0]?.StockableValue;
-          this.NonStockValue = res.SNStockValue[0]?.NonStockableValue;
-               
-          this.chart1 = {
-           tooltip: {
-              trigger: 'item',
-              textStyle: {
-                fontSize: 10,  // Tooltip text size chhota
-              },
-              padding: 5,       // Tooltip padding kam
-              formatter: '{b}: {c}',  // Sirf naam aur value dikhao, percentage hata do agar zarurat na ho
-             
-            }, 
-            legend: {
-              top: '1%',
-              left: 'start',
-              textStyle: {
-              fontSize: 8, 
-            },
-            },
-            series: [
-              {
-                name: 'Access From',
-                type: 'pie',
-                radius: ['40%', '70%'],
-                center: ['50%', '60%'],
-                avoidLabelOverlap: false,
-                label: {
-                  show: false,
-                  position: 'center',
-                },
-                emphasis: {
-                  label: {
-                    show: true,
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                  },
-                },
-                labelLine: {
-                  show: false,
-                },
-                data: [
-                  {
-                    value: this.StockValue ,
-                    name: 'Stockable ',
-                    itemStyle: { color: '#91cc75' },
-                  },
-                  {
-                    value: this.NonStockValue,
-                    name: 'Non Stockable ',
-                    itemStyle: { color: '#ee6666' },
-                  },
-                ],
-              },
-            ],
-          };
-
-          this.rawData = this.CardsData.SixMonthSaleValue[0]
-          console.log(this.rawData);
-          
-
-          for (const key in this.rawData) {
-            const [month, type] = key.split('_').slice(0, 2); // ['Apr', '25']
-            const baseKey = `${month}_${type}`; // 'Apr_25'
-
-            if (!this.months.includes(baseKey)) {
-              this.months.push(baseKey);
-            }
-          }
-
-          console.log(this.months);
-          
-         
-          this.globalBlockUiService.stopLoading();
-        },
-        error: (err: any) => {
-          console.error('Error fetching location data:', err);
-
-          this.globalBlockUiService.stopLoading();
-        },
-      });
+    if (this.subscription) this.subscription.unsubscribe();
   }
 
-  chart2 = {
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'cross',
-      crossStyle: {
-        color: '#999'
-      }
-    }
-  },
-  legend: {
-    top: '1%',
-    left: 'start',
-    data: ['WS Sale', 'CS Sale', 'Purchase'],
-    textStyle: {
-    fontSize: 10, 
-    },
-  },
-  xAxis: [
-    {
-    textStyle: {
-      fontSize: 4, 
-    },
-      type: 'category',
-      data: ['Nov_24', 'Dec_24', 'Jan_25', 'Feb_25', 'Mar_25', 'Apr-25'],
-      axisPointer: {
-        type: 'shadow'
-      }
-    }
-  ],
-  yAxis: [
-    {
-    textStyle: {
-      fontSize: 10, 
-    },
-      type: 'value',
-      name: 'Sale',
-      min: 0,
-      max: 250,
-      interval: 50,
-      axisLabel: {
-        formatter: '{value}'
-      }
-    },
-    {
-    textStyle: {
-      fontSize: 10, 
-    },
-      type: 'value',
-      name: 'Purchase',
-      min: 0,
-      max: 250,
-      interval: 50,
-      axisLabel: {
-        formatter: '{value} '
-      }
-    }
-  ],
-  series: [
-    {
-      name: 'Workshop Sale',
-      type: 'bar',
-      tooltip: {
-       
+  chart2: any
+
+  fetchCardsData(locationId: any, dealerid: any) {
+  this.globalBlockUiService.startLoading();
+
+  this.homepageservice
+    .getcardsdata({ locationId, dealerid })
+    .subscribe({
+      next: (res: any) => {
+        this.CardsData = res;
+        console.log('raw API response:', this.CardsData);
+
+        // stop the loader as soon as possible
+        this.globalBlockUiService.stopLoading();
+
+        // 1) Pie chart data
+        this.StockValue    = res.SNStockValue[0]?.StockableValue  || 0;
+        this.NonStockValue = res.SNStockValue[0]?.NonStockableValue || 0;
+
+        this.chart1 = {
+          color: ['#34D399', '#EF4444'],
+          tooltip: {
+            trigger: 'item',
+            backgroundColor: 'rgba(0,0,0,0.75)',
+            padding: 4,
+            textStyle: { fontSize: 12, color: '#e8c200' },
+            formatter: '{b}: {c}\n{d}%'
+          },
+          legend: {
+            bottom: '2%',
+            left: 'center',
+            icon: 'circle',
+            itemWidth: 10,
+            itemHeight: 10,
+            textStyle: { fontSize: 12, color: '#4B5563' }
+          },
+          series: [{
+            name: 'Stock Type',
+            type: 'pie',
+            radius: ['40%', '70%'],
+            center: ['50%', '40%'],
+            avoidLabelOverlap: true,
+            label: {
+              show: true,
+              position: 'inside',
+              formatter: '{d}%',
+              fontSize: 14,
+              fontWeight: 'bold',
+              color: '#e8c200'
+            },
+            labelLine: { show: false },
+            emphasis: {
+              scale: true,
+              scaleSize: 8,
+              label: { show: true, fontSize: 16, fontWeight: 'bold', color: '#fff' }
+            },
+            data: [
+              { value: this.StockValue,    name: 'Stockable' },
+              { value: this.NonStockValue, name: 'Non-Stockable' }
+            ]
+          }]
+        };
+
+        // 2) reset & transform your 6-month arrays
+        this.month = [];
+        this.ws    = [];
+        this.cs    = [];
+        this.p     = [];
+
+        this.transformSixMonthData(res.SixMonthSaleValue[0]);
+        // at this point:
+        //   this.month = ["Nov '24", ..., "Apr '25"]
+        //   this.ws, this.cs, this.p are all length-matched arrays
+
+        // 3) Bar+line chart configuration
+        this.chart2 = {
+          color: ['#4F46E5', '#10B981', '#F59E0B'],
+          tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+          legend: {
+            itemGap: 10,
+            textStyle: { fontSize: 12, color: '#4B5563' },
+            data: ['Workshop Sale', 'Counter Sale', 'Purchase']
+          },
+          grid: {
+            top: '20%', left: '5%', right: '5%', bottom: '0%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            data: this.month,
+            axisLine: { lineStyle: { color: '#E5E7EB' } },
+            axisTick: { show: false },
+            axisLabel: { color: '#6B7280', fontSize: 12, rotate: 30 }
+          },
+          yAxis: [
+            {
+              type: 'value',
+              name: 'Sale',
+              nameLocation: 'middle',
+              nameRotate: 90,
+              nameGap: 35,
+              nameTextStyle: { fontSize: 12, color: '#4B5563' },
+              min: 0, max: 250, interval: 50,
+              axisLine: { lineStyle: { color: '#E5E7EB' } },
+              splitLine: { lineStyle: { type: 'dashed', color: '#F3F4F6' } },
+              axisLabel: { color: '#6B7280', fontSize: 12 }
+            },
+            {
+              type: 'value',
+              name: 'Purchase',
+              nameLocation: 'middle',
+              nameRotate: 90,
+              nameGap: 35,
+              nameTextStyle: { fontSize: 12, color: '#4B5563' },
+              position: 'right',
+              min: 0, max: 250, interval: 50,
+              axisLine: { lineStyle: { color: '#E5E7EB' } },
+              splitLine: { show: false },
+              axisLabel: { color: '#6B7280', fontSize: 12 }
+            }
+          ],
+          series: [
+            {
+              name: 'Workshop Sale',
+              type: 'bar',
+              barWidth: '28%',
+              itemStyle: { borderRadius: [4, 4, 0, 0] },
+              emphasis: { focus: 'series' },
+              data: this.ws
+            },
+            {
+              name: 'Counter Sale',
+              type: 'bar',
+              barWidth: '28%',
+              itemStyle: { borderRadius: [4, 4, 0, 0] },
+              emphasis: { focus: 'series' },
+              data: this.cs
+            },
+            {
+              name: 'Purchase',
+              type: 'line',
+              yAxisIndex: 1,
+              smooth: true,
+              symbol: 'circle',
+              symbolSize: 8,
+              lineStyle: { width: 3 },
+              emphasis: { focus: 'series' },
+              data: this.p
+            }
+          ]
+        };
       },
-      data: [
-        121.0, 144.9, 113.0, 140.2, 124.6, 93.68  ]
-    },
-    {
-      name: 'Counter Sale',
-      type: 'bar',
-      tooltip: {
-        
+      error: (err: any) => {
+        console.error('Error fetching cards data:', err);
+        this.globalBlockUiService.stopLoading();
       },
-      data: [
-        12, 5.8, 4.0, 9.54, 4.27, 19.79
-      ]
-    },
-    {
-      name: 'Purchase',
-      type: 'line',
-      yAxisIndex: 1,
-      tooltip: {
-        
-      },
-      data: [108, 140, 105, 126, 108, 77.4]
-    }
-  ]
-};
+    });
+}
+
+  month: string[] = [];
+  ws: number[] = [];
+  cs: number[] = [];
+  p: number[] = [];
+
+
+  private transformSixMonthData(raw: { [key: string]: number }): void {
+    const rx = /^(.+?)_(WS|CS|P)_Value$/;
+    Object.entries(raw).forEach(([key, value]) => {
+      const m = rx.exec(key);
+      if (!m) return;
+
+      const monthKey = m[1];   // ex: "Jun_25"
+      const type = m[2];   // "WS" | "CS" | "P"
+      const num = value;
+
+      // Month को "Jun '25" फॉर्मैट में कन्वर्ट करें
+      const [mon, yr] = monthKey.split('_');
+      const label = `${mon} '${yr}`;
+
+      // यदि पहले नहीं जोड़ा तो add करें
+      if (!this.month.includes(label)) {
+        this.month.push(label);
+      }
+
+      // type के हिसाब से value डालें
+      if (type === 'WS') {
+        this.ws.push(num);
+      } else if (type === 'CS') {
+        this.cs.push(num);
+      } else if (type === 'P') {
+        this.p.push(num);
+      }
+    });
+
+
+
+  }
+
+
+  // chart2 = {
+  //   color: ['#4F46E5', '#10B981', '#F59E0B'],
+  //   tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+  //   legend: {
+
+  //     itemGap: 10,
+  //     textStyle: { fontSize: 12, color: '#4B5563' },
+  //     data: ['Workshop Sale', 'Counter Sale', 'Purchase']
+  //   },
+  //   grid: {
+  //     top: '20%',
+  //     left: '5%',
+  //     right: '5%',
+  //     bottom: '0%',
+  //     containLabel: true
+  //   },
+  //   xAxis: {
+  //     type: 'category',
+  //     data: ['Nov \'24', 'Dec \'24', 'Jan \'25', 'Feb \'25', 'Mar \'25', 'Apr \'25'],
+  //     axisLine: { lineStyle: { color: '#E5E7EB' } },
+  //     axisTick: { show: false },
+  //     axisLabel: { color: '#6B7280', fontSize: 12, rotate: 30 }
+  //   },
+  //   yAxis: [
+  //     {
+  //       type: 'value',
+  //       name: 'Sale',
+  //       nameLocation: 'middle',
+  //       nameRotate: 90,
+  //       nameGap: 35,
+  //       nameTextStyle: { padding: [0, 0, 0, 0], fontSize: 12, color: '#4B5563' },
+  //       min: 0, max: 250, interval: 50,
+  //       axisLine: { lineStyle: { color: '#E5E7EB' } },
+  //       splitLine: { lineStyle: { type: 'dashed', color: '#F3F4F6' } },
+  //       axisLabel: { color: '#6B7280', fontSize: 12 }
+  //     },
+  //     {
+  //       type: 'value',
+  //       name: 'Purchase',
+  //       nameLocation: 'middle',
+  //       nameRotate: 90,
+  //       nameGap: 35,
+  //       nameTextStyle: { padding: [0, 0, 0, 0], fontSize: 12, color: '#4B5563' },
+  //       position: 'right',
+  //       min: 0, max: 250, interval: 50,
+  //       axisLine: { lineStyle: { color: '#E5E7EB' } },
+  //       splitLine: { show: false },
+  //       axisLabel: { color: '#6B7280', fontSize: 12 }
+  //     }
+  //   ],
+  //   series: [
+  //     {
+  //       name: 'Workshop Sale',
+  //       type: 'bar',
+  //       barWidth: '28%',
+  //       itemStyle: { borderRadius: [4, 4, 0, 0] },
+  //       emphasis: { focus: 'series' },
+  //       data: [121, 144.9, 113, 140.2, 124.6, 93.68]
+  //     },
+  //     {
+  //       name: 'Counter Sale',
+  //       type: 'bar',
+  //       barWidth: '28%',
+  //       itemStyle: { borderRadius: [4, 4, 0, 0] },
+  //       emphasis: { focus: 'series' },
+  //       data: [12, 5.8, 4, 9.54, 4.27, 19.79]
+  //     },
+  //     {
+  //       name: 'Purchase',
+  //       type: 'line',
+  //       yAxisIndex: 1,
+  //       smooth: true,
+  //       symbol: 'circle',
+  //       symbolSize: 8,
+  //       lineStyle: { width: 3 },
+  //       emphasis: { focus: 'series' },
+  //       data: [108, 140, 105, 126, 108, 77.4]
+  //     }
+  //   ]
+  // };
+
+
+
 }
