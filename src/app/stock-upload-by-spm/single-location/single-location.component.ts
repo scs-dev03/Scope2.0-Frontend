@@ -71,7 +71,7 @@ export class SingleLocationComponent {
   ngOnInit(){
   //  this.getLocations();
   this.dealerId=localStorage.getItem('dealerid');
-  //this.dealerId=20141;
+  
   // this.getBrands();  
    this.userService.allUserData$.subscribe((res:any)=>{
     this.users=res;
@@ -166,10 +166,11 @@ export class SingleLocationComponent {
         if(res?.mappingNotPresent){
           return this.messageService.add({severity:'error',life:4000,summary:'Brand Mapping is not available!'});
         }
-        if(res?.currentSumQuantity){
-          this.showTable=true;
-          this.currentUploadQuantity=res.currentSumQuantity
-        }
+        // if(res?.currentSumQuantity){
+        //   this.showTable=true;
+        //   this.currentUploadQuantity=res.currentSumQuantity
+        // }
+        this.currentUploadQuantity=res.currentSumQuantity
         if(res?.prevSumQuantity){
           this.showTable=true;
           this.prevUploadQuantity=res.prevUploadQuantity;

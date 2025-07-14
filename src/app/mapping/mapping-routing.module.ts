@@ -15,7 +15,7 @@ const routes: Routes = [
   {
     path:'dealer-location',
     component:DealerLocationMappingComponent,
-    canActivate:[authGuard]
+ //   canActivate:[authGuard]
   }
 ];
 

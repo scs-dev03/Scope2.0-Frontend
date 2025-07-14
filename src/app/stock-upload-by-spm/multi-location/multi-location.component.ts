@@ -121,7 +121,9 @@ blForm:FormGroup
       this.userService.allUserData$.subscribe((users:any)=>{
         this.users=users;
       })
+      // localStorage.setItem('dealerid',"20141");
       this.dealerId=localStorage.getItem('dealerid');
+     
       this.getLocations()
        this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible;

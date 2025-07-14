@@ -191,6 +191,7 @@ constructor(private sidebarService:SidebarService,private sharedService:SharedSe
 resetSidebarState(){
   this.getModulesOnTrigger();
 }
+
 logOut(){
  
  // localStorage.setItem('usertype','d')
@@ -212,8 +213,12 @@ getModulesOnTrigger(){
    this.userName=localStorage.getItem('username');
 // const cleaned = this.transformSidebarData(data);  // this will be dense, clean
 this.sidebarItems = res.data.modules;
- this.profilePhoto=environment.uploadedProfileUrl+res.data.profile;
-console.log("modules api trigger in sidebar ",this.sidebarItems)
+ if(res.data.profile==null|| res.data.profile==''){
+      this.profilePhoto=''
+    }else{
+      this.profilePhoto=environment.uploadedProfileUrl+res.data.profile;
+    }
+//console.log("modules api trigger in sidebar ",this.sidebarItems)
 //  this.sidebarItems=this.transformData(this.sidebarItems)
 // this.filteredItems=this.transformData(this.sidebarItems);
   this.sharedService.updateSidebarData(this.sidebarItems)
@@ -232,7 +237,11 @@ getModules(){
 //console.log("res .data ",res.data)
 this.sidebarItems = res.data.modules;
 //console.log("sidebar items ",this.sidebarItems)
-  this.profilePhoto=environment.uploadedProfileUrl+res.data.profile;
+    if(res.data.profile==null|| res.data.profile==''){
+      this.profilePhoto=''
+    }else{
+      this.profilePhoto=environment.uploadedProfileUrl+res.data.profile;
+    }
   //console.log("profilePhoto ",this.profilePhoto,"envir ",environment.uploadedProfileUrl)
   this.sharedService.updateSidebarData(this.sidebarItems)
   //console.log("sidebar items ",this.sidebarItems)

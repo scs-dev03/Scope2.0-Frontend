@@ -4,7 +4,7 @@ export const environment = {
   //scope 2.0 live server backend
  // apiUrl:'https://scopeapi.sparecare.in/api/',
 
-// apiUrl: 'http://localhost:3000/api/',
+apiUrl: 'http://localhost:3000/api/',
 
   // apiUrl: 'https://8bbmhgb4-3000.inc1.devtunnels.ms/api/'
      
@@ -17,7 +17,7 @@ export const environment = {
    // apiUrl:'http://web10.185.238.new.ocpwebserver.com/api/',
 
       // scope 2.0 backend uat
-     apiUrl:'http://web36.185.238.new.ocpwebserver.com/api/',
+    // apiUrl:'http://web36.185.238.new.ocpwebserver.com/api/',
 
     //logout url
     //frontend UAT
