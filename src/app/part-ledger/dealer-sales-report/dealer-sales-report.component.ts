@@ -112,7 +112,7 @@ export class DealerSalesReportComponent {
 
     this.DataTypeArray = this.DealerSalesReportInputData.value.DataType
   
-    console.log(this.DealerSalesReportInputData.value);
+    //console.log(this.DealerSalesReportInputData.value);
     
     
 
@@ -389,12 +389,6 @@ export class DealerSalesReportComponent {
       return `'${yyyy}-${mm}-${dd}'`;
           
   }
-    
-    
-    
-    
-    
-    
   
   changeInputType(event: FocusEvent, type: string) {
     const target = event.target as HTMLInputElement;
@@ -414,9 +408,13 @@ export class DealerSalesReportComponent {
 
 
   arrayOfString(partnumber: any){
+    
     this.partNumber = partnumber.split(',')
     .map((pn: string) => pn.replace(/[^a-zA-Z0-9/s]/g, '').toString())
     .filter((pn: string) => pn)
+
+    console.log("partnumber from aos"+this.partNumber);
+    
   }
 
 

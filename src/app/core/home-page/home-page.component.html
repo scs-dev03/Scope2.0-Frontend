@@ -1,5 +1,5 @@
 <div class="relative h-full w-full bg-[#c2dedb] overflow-auto">
-  <span class=" absolute right-0 text-xs p-2">All Data is from Category Spare parts</span>
+  <span class=" absolute right-0 text-xs p-2 text-red-600">*All Data is on Category Spare parts</span>
   <!-- <div class="h-16 flex w-full bg-white items-center justify-between px-4 py-2 relative"> -->
   <!-- Logo -->
   <!-- <div class="flex"> -->
@@ -35,7 +35,7 @@
     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4"
   >
     <!-- Inventory Value -->
-    <div class="bg-white shadow rounded-lg p-4 h-28 border border-gray-200">
+    <div class="bg-white shadow rounded-lg p-3 h-28 border border-gray-200">
       <div class="text-xl font-bold text-indigo-900">
         ₹{{ CardsData?.StockValue[0].stockvalue | indianCurrency }}
       </div>
@@ -43,7 +43,7 @@
     </div>
 
     <!-- PPNI Value -->
-    <div class="bg-white shadow rounded-lg p-4 h-28 border border-gray-200">
+    <div class="bg-white shadow rounded-lg p-3 h-28 border border-gray-200">
       <div class="text-xl font-bold text-indigo-900">
         ₹{{ CardsData?.PPNIValue[0].PPNIValue | indianCurrency }}
       </div>
@@ -51,7 +51,7 @@
     </div>
 
     <!-- Stockable Inventory -->
-    <div class="bg-white shadow rounded-lg p-4 h-28 border border-gray-200">
+    <div class="bg-white shadow rounded-lg p-3 h-28 border border-gray-200">
       <div class="text-xl font-bold text-indigo-900">
         ₹{{ CardsData?.SNStockValue[0].StockableValue | indianCurrency }}
       </div>
@@ -62,7 +62,7 @@
     </div>
 
     <!-- Non-Stockable Inventory -->
-    <div class="bg-white shadow rounded-lg p-4 h-28 border border-gray-200">
+    <div class="bg-white shadow rounded-lg p-3 h-28 border border-gray-200">
       <div class="text-xl font-bold text-indigo-900">
         ₹{{ CardsData?.SNStockValue[0].NonStockableValue | indianCurrency }}
       </div>
@@ -73,7 +73,7 @@
     </div>
 
     <!-- Last Order -->
-    <div class="bg-white shadow rounded-lg p-4 h-28 border border-gray-200">
+    <div class="bg-white shadow rounded-lg p-3 h-28 border border-gray-200">
       <div class="text-xl font-bold text-indigo-900">
         ₹{{ CardsData?.lastOrderDetails[0].Value | indianCurrency }}
       </div>

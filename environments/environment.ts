@@ -47,10 +47,10 @@ export const environment = {
 
 
     //Ayush Module API Url
-    //EnvApiUrlMaster: 'http://web36.185.238.new.ocpwebserver.com/api/v1/',
+    EnvApiUrlMaster: 'http://web36.185.238.new.ocpwebserver.com/api/v1/',
     //EnvApiUrlMaster: 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/',
     //EnvApiUrlMaster: 'https://scopeapi.sparecare.in/api/v1/',
-    EnvApiUrlMaster: 'http://web10.185.238.new.ocpwebserver.com/api/v1/',
+    //EnvApiUrlMaster: 'http://web10.185.238.new.ocpwebserver.com/api/v1/',
   };
 
 

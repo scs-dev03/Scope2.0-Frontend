@@ -15,10 +15,10 @@ export class AdminReportServiceService {
   // private apiurlmaster: any =
   //   'https://scopeapi.sparecare.in/api/v1/master/';
   private apiurl: any =
-       `${environment.EnvApiUrlMaster}von/`;
+       `${environment.EnvApiUrlMaster}salesview/`;
      
      private apiurlmaster: any =
-       `${environment.EnvApiUrlMaster}master/`;
+       `${environment.EnvApiUrlMaster}master/`;  
 //   private apiurl: any =
 //   'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/salesview/';
 
