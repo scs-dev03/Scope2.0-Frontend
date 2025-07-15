@@ -116,7 +116,7 @@ blForm:FormGroup
       // this.getLocations();
       this.getBrands();
       // this.dealerId=20210;
-      // localStorage.setItem('dealerid',"20141");
+    //   localStorage.setItem('dealerid',"20210");
       // localStorage.setItem('brandid',"33")
        
       this.userService.allUserData$.subscribe((users:any)=>{
@@ -124,7 +124,6 @@ blForm:FormGroup
       })
       // localStorage.setItem('dealerid',"20141");
       this.dealerId=localStorage.getItem('dealerid');
-     
       this.getLocations()
        this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible;

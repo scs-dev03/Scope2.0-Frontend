@@ -15,9 +15,10 @@ import { SidebarService } from '../../services/sidebar.service';
 export class LandingScreenComponent {
   constructor(private route: ActivatedRoute,
     private router: Router,  private homepageservice: HomePageService,private sidebarService:SidebarService,
-  private utilitiesService:UtilitiesService,private sharedService:SharedServiceService) {}
+  private utilitiesService:UtilitiesService,private sharedService:SharedServiceService) {
 
-  
+   // localStorage.clear();
+  }
   usertoken:any
   usertype:any 
   isloading:boolean = false
