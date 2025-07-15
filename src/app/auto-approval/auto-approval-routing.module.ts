@@ -14,6 +14,12 @@ const routes: Routes = [
     loadChildren: () => import('../auto-approval/create-order-request/create-order-request.module').then(m => m.CreateOrderRequestModule),
     // canLoad:[authGuard],
     // canActivate:[authGuard]
+  },
+  {
+    path: 'party',
+    loadChildren: () => import('../auto-approval/party-management/party-management.module').then(m => m.PartyManagementModule),
+    // canLoad:[authGuard],
+    // canActivate:[authGuard]
   }
 ];
 
