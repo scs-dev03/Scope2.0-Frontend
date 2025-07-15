@@ -171,7 +171,7 @@ export class HomePageComponent {
             icon: 'circle',
             itemWidth: 10,
             itemHeight: 10,
-            textStyle: { fontSize: 12, color: '#4B5563' }
+            textStyle: { fontSize: 12, color: '#A9A9A9' }
           },
           series: [{
             name: 'Stock Type',
@@ -185,7 +185,7 @@ export class HomePageComponent {
               formatter: '{d}%',
               fontSize: 14,
               fontWeight: 'bold',
-              color: '#e8c200'
+              color: '#A9A9A9'
             },
             labelLine: { show: false },
             emphasis: {
@@ -308,20 +308,20 @@ export class HomePageComponent {
       const m = rx.exec(key);
       if (!m) return;
 
-      const monthKey = m[1];   // ex: "Jun_25"
-      const type = m[2];   // "WS" | "CS" | "P"
+      const monthKey = m[1];   
+      const type = m[2];   
       const num = value;
 
-      // Month को "Jun '25" फॉर्मैट में कन्वर्ट करें
+      
       const [mon, yr] = monthKey.split('_');
       const label = `${mon} '${yr}`;
 
-      // यदि पहले नहीं जोड़ा तो add करें
+      
       if (!this.month.includes(label)) {
         this.month.push(label);
       }
 
-      // type के हिसाब से value डालें
+     
       if (type === 'WS') {
         this.ws.push(num);
       } else if (type === 'CS') {
