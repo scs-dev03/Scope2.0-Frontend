@@ -41,6 +41,7 @@ export class AdminpendingcountComponent {
         brandid: rowData.brandid,
         dealerid: rowData.dealerid,
         locationid: rowData.locationid
+       
       }
     });
   }
