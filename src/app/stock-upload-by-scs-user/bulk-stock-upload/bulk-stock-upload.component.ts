@@ -237,6 +237,10 @@ export class BulkStockUploadComponent {
         }
         if(res.length==0){
           this.mlForm.get('file')?.reset();
+           this.file=null;
+          this.fu?.clear();
+          this.selectedFile=null;
+          this.mlForm.reset();
           return this.messageService.add({severity:'success',detail:'No data is uploaded ',life:4000})
         }
         if(res[0]?.currentSumQuantity){

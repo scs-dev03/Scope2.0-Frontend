@@ -19,7 +19,6 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PageStateService } from './services/page-state.service';
 import { PageNotFoundComponent } from './core/page-not-found/page-not-found.component';
 import { IdleService } from './services/idle.service';
-import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -104,11 +103,11 @@ export class AppComponent {
     });
 
     this.userService.loadDataOnce();
-    localStorage.setItem('usertype','U');
-    localStorage.setItem('brandid','9');
-    localStorage.setItem('dealerid','8');
-    localStorage.setItem('def_location','14')
-    localStorage.setItem('usertoken','0x02000000F5710E149B719043CB40E5BC2503861707D0B1F078C883021B904D312763A5D0')
+    // localStorage.setItem('usertype','U');
+    // localStorage.setItem('brandid','9');
+    // localStorage.setItem('dealerid','8');
+    // localStorage.setItem('def_location','14')
+    // localStorage.setItem('usertoken','0x02000000F5710E149B719043CB40E5BC2503861707D0B1F078C883021B904D312763A5D0')
     let userToken=localStorage.getItem('usertoken');
 
     this.utilitiesService.getUserInfo({token:userToken}).subscribe((res:any)=>{
@@ -171,7 +170,7 @@ export class AppComponent {
   getModules(){
     this.isLoading=true;
     this.sidebarService.getModules().subscribe((res:any)=>{
-      this.sidebarItems=res.data;
+      this.sidebarItems=res.data.modules;
     //  console.log(res.data);
      this.isLoading=false;
       // this.transformData(this.sidebarItems)
@@ -191,10 +190,10 @@ export class AppComponent {
 
   redirectToLegacyScope(){
     if(localStorage.getItem('usertype') == 'A'){
-      window.location.href = environment.DiverterAdmin;
+      window.location.href = 'https://scope.sparecare.in/UAD_SC_WAC/home.aspx';
     }
     else{
-      window.location.href = environment.DiverterUser;
+      window.location.href = 'https://scope.sparecare.in/UAP_SC/home.aspx';
     }
 
   }

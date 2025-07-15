@@ -115,7 +115,8 @@ blForm:FormGroup
     ngOnInit(){
       // this.getLocations();
       this.getBrands();
-      // localStorage.setItem('dealerid',);
+      // this.dealerId=20210;
+      // localStorage.setItem('dealerid',"20141");
       // localStorage.setItem('brandid',"33")
        
       this.userService.allUserData$.subscribe((users:any)=>{
@@ -225,7 +226,7 @@ blForm:FormGroup
         this.locationSelected.add(selectedLocation); // Mark the location as selected
         
       }
-      this.getPartNotInMasterRecords();
+     // this.getPartNotInMasterRecords();
       
     }
     
@@ -260,7 +261,12 @@ blForm:FormGroup
       // Iterate through locations and append each file and location to FormData
       locations.forEach((location: any) => {
         if (location.file) {
-          this.formData.append('files[]', location.file, location.file.name); // Append file
+           const originalName = location.file.name;
+    const extension = originalName.substring(originalName.lastIndexOf('.'));
+    
+    // Custom filename — you can modify this logic
+    const renamedFile = `${location.location}_${originalName}_ml`;
+          this.formData.append('files[]', location.file,renamedFile); // Append file
         }
         if (location.location) {
           this.formData.append('location_id', location.location); // Append location ID
@@ -301,7 +307,7 @@ blForm:FormGroup
            }else{
             this.visible=true;
             let responseData=res;
-            this.getPartNotInMasterRecords();
+          //  this.getPartNotInMasterRecords();
          //   console.log("uploaded locations ",responseData)
             uploadedLocations[0].map((item: any) => {
          //    console.log("item ", item);
@@ -340,8 +346,6 @@ blForm:FormGroup
              
            });
 
-           
-           
            }
                  
           
@@ -443,7 +447,7 @@ let formData1 = new FormData();
              this.fileName=''
              this.resetBulkForm();
              this.messageService.add({severity:'success',detail:'Data Uploaded Succesfully!',life:4000});
-            this.getBulkPartNotInMasterRecords()
+         //   this.getBulkPartNotInMasterRecords()
          //   console.log("uploaded locations ",responseData)         
            }
                  
@@ -513,7 +517,7 @@ let formData1 = new FormData();
       
       let locationObj=this.locations.find((obj:any)=>obj.location_id==parseInt(item.location_id,10));
       let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
-    console.log("loc obj ",locationObj,this.locations)
+   // console.log("loc obj ",locationObj,this.locations)
       return{
         ...item,
         added_on: (item.added_on),

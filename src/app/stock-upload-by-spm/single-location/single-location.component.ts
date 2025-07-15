@@ -71,7 +71,7 @@ export class SingleLocationComponent {
   ngOnInit(){
   //  this.getLocations();
   this.dealerId=localStorage.getItem('dealerid');
-  
+  //this.dealerId=20210;
   // this.getBrands();  
    this.userService.allUserData$.subscribe((res:any)=>{
     this.users=res;
@@ -146,7 +146,7 @@ export class SingleLocationComponent {
        
        this.globalBlockUiService.startLoading();
       this.stockUploadService.uploadSingleLocationUpload(formData).subscribe((res:any)=>{
-        this.getPartNotInMaster();
+      //  this.getPartNotInMaster();
         this.getUploadedData();
         this.globalBlockUiService.stopLoading();
         if(res?.headerNotPresent){
@@ -208,7 +208,7 @@ export class SingleLocationComponent {
    }
 
    onLocationChange(event:any){
-    this.getPartNotInMaster();
+   // this.getPartNotInMaster();
     this.getUploadedData();
    }
 

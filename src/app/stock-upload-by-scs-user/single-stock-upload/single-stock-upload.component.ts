@@ -202,6 +202,14 @@ export class SingleStockUploadComponent {
           formData=new FormData();
           return this.messageService.add({severity:'error',life:4000,summary:'Brand Mapping is not available!!'});
         }
+        if(res?.error){
+          this.slForm.reset();
+          this.showTable=false;
+          this.file=null;
+          this.fu?.clear();
+          this.selectedFile=null;
+          this.messageService.add({severity:'error',detail:'Internal Server Error',life:4000});
+        }
 
         if(res?.data?.error){
           this.slForm.reset();
