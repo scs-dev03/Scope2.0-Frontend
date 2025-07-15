@@ -448,8 +448,11 @@ export class AdminSalesReportComponent {
 
   arrayOfString(partnumber: any){
     this.partNumber = partnumber.split(',')
-    .map((pn: string) => pn.replace(/[^a-zA-Z0-9/s]/g, '').toString())
+    .map((pn: string) => pn.replace(/[^a-zA-Z0-9/s]/g, '').toString().toUpperCase())
     .filter((pn: string) => pn)
+
+    console.log(this.partNumber);
+    
   }
 
 

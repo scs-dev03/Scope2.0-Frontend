@@ -81,11 +81,6 @@ export class HomePageComponent {
 
   async fetchUserinfo(usertoken: any, usertype: any) {
     this.globalBlockUiService.startLoading();
-    // console.log('fetch method',usertoken);
-    // console.log('fetch method',usertype);
-    //localStorage.setItem('brandid','9');
-    // localStorage.setItem('locationid','14');
-    //  localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
     this.globalBlockUiService.startLoading();
     //   usertoken='0x0200000046E3737AED5FE0B13F2E6D0710BC96ABB705BA29736DDB3ADE3CBC2F7260C908'
     await this.homepageservice
