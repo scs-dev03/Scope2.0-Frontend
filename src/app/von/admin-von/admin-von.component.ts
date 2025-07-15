@@ -39,6 +39,7 @@ export class AdminVonComponent {
           brand: Number(this.brandid),
           dealer: this.dealerid,
           location: this.locationid,
+          status: "0"
         });
 
         this.onClickSubmitfilterData();
