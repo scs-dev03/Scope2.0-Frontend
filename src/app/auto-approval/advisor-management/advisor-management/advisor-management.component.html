@@ -1,32 +1,22 @@
 <div class="min-w-full h-full bg-gray-100">
-  <h1 class="text-xl font-serif ml-2">Party Management</h1>
+  <h1 class="text-xl font-serif ml-2">Advisor Management</h1>
 
   <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
     <div
       class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-10 shadow-lg border-dashed border-2 bg-white rounded-md border-white"
     >
       <div class="flex flex-col w-44">
-        <label for="partyname" class="text-sm">Add Party Name :</label>
+        <label for="partyname" class="text-sm">Add Advisor :</label>
         <input
           pInputText
           id="partyname"
           class="text-xs h-8"
           [placeholder]="'Add Name Here'"
           aria-describedby="username-help"
-          [(ngModel)]="PartyName"
+          [(ngModel)]="Advisor"
         />
       </div>
-      <div class="flex flex-col w-44">
-        <label for="partycode" class="text-sm">Add Party Code :</label>
-        <input
-          pInputText
-          id="partycode"
-          class="text-xs h-8"
-          [placeholder]="'Add Name Here'"
-          aria-describedby="username-help"
-          [(ngModel)]="PartyCode"
-        />
-      </div>
+     
 
        <div class="flex items-end gap-3 flex-wrap w-auto justify-center">
         <p-button
@@ -58,7 +48,7 @@
         scrollHeight="600px"
         [showGridlines]="true"
         scrollDirection="both"
-        paginatorDropdownAppendTo="body"
+        [paginatorDropdownAppendTo]="'body'"
         class="!w-[90vw]"
         [tableStyle]="{ 'min-width': '50rem' }"
       >
@@ -72,19 +62,13 @@
             <th
               class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
             >
-              Party Name
+              Advisor
               <p-columnFilter type="text" field="" display="menu" />
             </th>
             <th
               class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
             >
-              Party Code
-            </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
-            >
-              
-            Status
+              Status
             </th>
             <th
               class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"

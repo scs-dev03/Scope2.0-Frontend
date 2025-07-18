@@ -20,6 +20,12 @@ const routes: Routes = [
     loadChildren: () => import('../auto-approval/party-management/party-management.module').then(m => m.PartyManagementModule),
     // canLoad:[authGuard],
     // canActivate:[authGuard]
+  },
+  {
+    path: 'advisor',
+    loadChildren: () => import('../auto-approval/advisor-management/advisor-management.module').then(m => m.AdvisorManagementModule),
+    // canLoad:[authGuard],
+    // canActivate:[authGuard]
   }
 ];
 
