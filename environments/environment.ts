@@ -2,9 +2,9 @@ export const environment = {
     production: false,
     
   //scope 2.0 live server backend
- //apiUrl:'https://scopeapi.sparecare.in/api/',
+ apiUrl:'https://scopeapi.sparecare.in/api/',
 
-   apiUrl: 'http://localhost:3000/api/',
+  // apiUrl: 'http://localhost:3000/api/',
 
   // apiUrl: 'https://8bbmhgb4-3000.inc1.devtunnels.ms/api/'
      
