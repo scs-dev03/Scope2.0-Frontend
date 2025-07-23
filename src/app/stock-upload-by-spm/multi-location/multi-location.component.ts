@@ -84,7 +84,7 @@ blForm:FormGroup
       this.mlForm.reset();
       this.blForm.reset();
       this.partNotInMasterData=[];
-      
+      this.initializeFormArray()
     }
      onSelectForBulk(event: any) {
     const fileControl = this.blForm.get('file'); // Get the file form control
@@ -116,9 +116,10 @@ blForm:FormGroup
       // this.getLocations();
       this.getBrands();
       // this.dealerId=20210;
-    //   localStorage.setItem('dealerid',"20210");
+      
+  //  localStorage.setItem('dealerid',"20141");
       // localStorage.setItem('brandid',"33")
-       
+    // this.userId=38
       this.userService.allUserData$.subscribe((users:any)=>{
         this.users=users;
       })
@@ -129,6 +130,7 @@ blForm:FormGroup
     this.visibleSidebar=visible;
    })
       this.userId=localStorage.getItem('userid');
+     //  this.userId=38
     }
     get locationControls() {
       return (this.mlForm.get('locations') as FormArray);
@@ -201,49 +203,70 @@ blForm:FormGroup
     // Handle location change (to validate duplicate location selection)
     onLocationChange(index: number) {
 
-      const locationControl = (this.mlForm.get('locations') as FormArray).at(index).get('location');
-      const selectedLocation = locationControl?.value;
+    //   const locationControl = (this.mlForm.get('locations') as FormArray).at(index).get('location');
+    //   const selectedLocation = locationControl?.value;
     
-      // Clear previous errors
-      locationControl?.setErrors(null);
+    //   // Clear previous errors
+    //   locationControl?.setErrors(null);
     
-      // Check if there was a previous location selected
-      const previousLocation = this.previousLocations[index];
+    //   // Check if there was a previous location selected
+    //   const previousLocation = this.previousLocations[index];
     
-      // If there was a previous location and it's different, remove it from the locationSelected set
-      if (previousLocation && previousLocation !== selectedLocation) {
-        this.locationSelected.delete(previousLocation);
-      }
+    //   // If there was a previous location and it's different, remove it from the locationSelected set
+    //   if (previousLocation && previousLocation !== selectedLocation) {
+    //     this.locationSelected.delete(previousLocation);
+    //   }
     
-      // Update previous location with the new one
-      this.previousLocations[index] = selectedLocation;
+    //   // Update previous location with the new one
+    //   this.previousLocations[index] = selectedLocation;
     
-      // Check for duplicate locations
-      if (this.locationSelected.has(selectedLocation)) {
-        locationControl?.setErrors({ duplicateLocation: true });
-      } else {
-        this.locationSelected.add(selectedLocation); // Mark the location as selected
+    //   // Check for duplicate locations
+    //   if (this.locationSelected.has(selectedLocation)) {
+    //     locationControl?.setErrors({ duplicateLocation: true });
+    //   } else {
+    //     this.locationSelected.add(selectedLocation); // Mark the location as selected
         
-      }
-     // this.getPartNotInMasterRecords();
+    //   }
+    //  // this.getPartNotInMasterRecords();
+    this.validateLocations();
       
     }
     
     
   
     // Validate that no location is selected twice
-    validateLocations() {
-      const locations = this.mlForm.get('locations')?.value;
-      const locationIds = locations.map((loc: any) => loc.location);
-  
-      // Find duplicate locations and set validation errors
-      locationIds.forEach((locationId:any, index:any) => {
-        const locationControl = (this.mlForm.get('locations') as FormArray).at(index).get('location');
-        if (locationIds.indexOf(locationId) !== index) {
-          locationControl?.setErrors({ duplicateLocation: true });
-        }
-      });
+ validateLocations() {
+  const formArray = this.mlForm.get('locations') as FormArray;
+  const locationIds = formArray.controls.map(control => control.get('location')?.value);
+
+  // Step 1: Clear all duplicateLocation errors, preserve others
+  formArray.controls.forEach(control => {
+    const locControl = control.get('location');
+    if (locControl) {
+      const currentErrors = locControl.errors;
+      if (currentErrors && currentErrors['duplicateLocation']) {
+        delete currentErrors['duplicateLocation'];
+        locControl.setErrors(Object.keys(currentErrors).length ? currentErrors : null);
+      }
     }
+  });
+
+  // Step 2: Mark duplicates
+  locationIds.forEach((id, idx) => {
+    if (!id) return;
+
+    const isDuplicate = locationIds.filter(l => l === id).length > 1;
+    if (isDuplicate) {
+      const locControl = formArray.at(idx).get('location');
+      if (locControl) {
+        const currentErrors = locControl.errors || {};
+        locControl.setErrors({ ...currentErrors, duplicateLocation: true });
+      }
+    }
+  });
+}
+
+
   
     // Handle the submit (upload)
     onUpload() {
@@ -292,8 +315,18 @@ blForm:FormGroup
           // }
           if(res?.mappingNotPresent){
             this.mlForm.reset();
+             this.formData=new FormData();
+          this.clearFileUploads();
             this.messageService.add({severity:'error',detail:'Brand Mapping is not available!!',life:4000});
           }
+           if(res?.isEmptyFile){
+             this.mlForm.reset();
+          this.file=null;
+          this.formData=new FormData();
+          this.clearFileUploads();
+          this.showTable=false;
+          return this.messageService.add({severity:'error',life:4000,summary:'File cannot be Blank!'});
+        }
           else{
             this.showTable=true;
             if (this.dataTable) {
@@ -307,7 +340,7 @@ blForm:FormGroup
             this.visible=true;
             let responseData=res;
           //  this.getPartNotInMasterRecords();
-         //   console.log("uploaded locations ",responseData)
+         //  console.log("uploaded locations ",responseData)
             uploadedLocations[0].map((item: any) => {
          //    console.log("item ", item);
              let locationObj = this.locations.find(
@@ -320,15 +353,18 @@ blForm:FormGroup
                (resp: any) => resp.locationId === locationId
              );
            
-             let statusMsg = '✅ Data uploaded successfully';
+             let statusMsg ='';
              if (responseData?.length > 0) {
                let obj = responseData.find(
                  (obj: any) => obj.locationId == item.location
                );
             //   console.log("obj ", obj);
            
-               if (obj) {
-                 statusMsg = '❌ Data not uploaded successfully';
+               if (obj.status) {
+                 statusMsg = `❌ Data not uploaded successfully.(${obj.log})`;
+               }
+               else{
+                statusMsg=obj.log
                }
              }
            
@@ -354,7 +390,7 @@ blForm:FormGroup
 
         },(error:any)=>{
           this.globalBlockUiService.stopLoading();
-          this.messageService.add({severity:'error',detail:'Error in uploading the file!!',life:4000});
+          this.messageService.add({key: 'upload-error',severity:'error',detail:'Error in uploading file.Please Contact Admin!',life:8000});
           this.formData=new FormData();
           // this.mlForm.get('locations')?.setValue(null);
           this.clearFileUploads();
@@ -406,6 +442,14 @@ let formData1 = new FormData();
           }
           return this.messageService.add({severity:'error',life:4000,summary:'Headers are not matched with the required fields!'})
         }
+         if(res?.isEmptyFile){
+             this.blForm.reset();
+          this.file=null;
+          this.formData=new FormData();
+          this.clearFileUploads();
+          this.showTable=false;
+          return this.messageService.add({severity:'error',life:4000,summary:'File cannot be Blank!'});
+        }
         if(res?.mappingNotPresent){
           this.blForm.reset();
           this.showTable=false
@@ -425,6 +469,13 @@ let formData1 = new FormData();
              this.resetBulkForm();
           return  this.messageService.add({severity:'error',detail:'Brand Mapping is not available!!',life:4000});
           }
+           if(res.length==0){
+          this.blForm.get('file')?.reset();
+           this.file=null;
+           this.resetBulkForm();
+          this.fu1?.clear();
+          return this.messageService.add({severity:'success',detail:'Inventory Location Does not exists or Parts Uploaded are not in master Please contact Admin or recheck File ',life:4000})
+        }
           else{
             this.showTable=true;
             if (this.dataTable) {
@@ -445,7 +496,13 @@ let formData1 = new FormData();
              this.file=null;
              this.fileName=''
              this.resetBulkForm();
-             this.messageService.add({severity:'success',detail:'Data Uploaded Succesfully!',life:4000});
+          //   console.log("inventory location ",res[0].inventoryLocationNotExist)
+             if(res[0]?.inventoryLocationNotExist.length>0){
+               this.messageService.add({severity:'success',detail:`Data Uploaded Succesfully! Inventory Location doesn't exist for ${res[0]?.inventoryLocationNotExist.join(', ')}`,life:10000});
+             }else{
+               
+               this.messageService.add({severity:'success',detail:'Data Uploaded Succesfully!',life:4000});
+             }
          //   this.getBulkPartNotInMasterRecords()
          //   console.log("uploaded locations ",responseData)         
            }
@@ -515,6 +572,7 @@ let formData1 = new FormData();
      this.records= this.records.map((item:any)=>{
       
       let locationObj=this.locations.find((obj:any)=>obj.location_id==parseInt(item.location_id,10));
+    //   console.log("locObj ",locationObj,item.location_id)
       let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
    // console.log("loc obj ",locationObj,this.locations)
       return{
@@ -527,6 +585,8 @@ let formData1 = new FormData();
        
      })
     })
+
+   // console.log("records for bulk ",this.records)
     }
     
     getRecords(){
@@ -547,6 +607,7 @@ let formData1 = new FormData();
       this.records = this.records.flat().map((item: any) => {
         // Find the location object based on location_id
         let locObj = this.locations.find((obj: any) => obj.location_id == item.location_id);
+      
         let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
         // Return the updated item with formatted date, locationName, and added_by
         return {

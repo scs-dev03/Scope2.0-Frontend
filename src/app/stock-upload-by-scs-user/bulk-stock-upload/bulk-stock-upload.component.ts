@@ -226,6 +226,11 @@ export class BulkStockUploadComponent {
           this.showTable=false;
           this.messageService.add({severity:'error',detail:'Dealer Location Mapping is not available for selected Dealer!',life:4000});
         }
+         if(res?.isEmptyFile){
+           this.mlForm.reset();
+          this.showTable=false;
+          return this.messageService.add({severity:'error',life:4000,summary:'File cannot be Blank!'});
+        }
         
         if(res?.error){
           this.mlForm.reset();
@@ -233,7 +238,7 @@ export class BulkStockUploadComponent {
           this.file=null;
           this.fu?.clear();
           this.selectedFile=null;
-          this.messageService.add({severity:'error',detail:'Error in uploading the file!',life:4000});
+          this.messageService.add({key: 'upload-error',severity:'error',detail:'Error in uploading file.Please Contact Admin!',life:8000});
         }
         if(res.length==0){
           this.mlForm.get('file')?.reset();
@@ -241,7 +246,7 @@ export class BulkStockUploadComponent {
           this.fu?.clear();
           this.selectedFile=null;
           this.mlForm.reset();
-          return this.messageService.add({severity:'success',detail:'No data is uploaded ',life:4000})
+          return this.messageService.add({severity:'success',detail:'Inventory Location Does not exists or Parts Uploaded are not in master Please contact Admin or recheck File ',life:4000})
         }
         if(res[0]?.currentSumQuantity){
           this.showTable=true;
@@ -260,12 +265,29 @@ export class BulkStockUploadComponent {
           this.prevCountRecords=res.prevCountRecords;
         }
         
+          if(res?.allPartsNotInMaster==0){
+          this.showTable=true;
+           this.getAllRecords();
+        this.fu?.clear();
+        this.file=null;
+        this.selectedFile=null;
+       
+        this.mlForm.get('file')?.reset();
+         return this.messageService.add({severity:'success',life:3000,summary:'The file you are uploading contains parts that are not present in the part master. Please recheck the parts or get them updated by the admin.!'});
+        }
         this.mlForm.get('file')?.reset();
         if(this.showTable){
           if (this.dataTable) {
             this.dataTable.reset(); // Reset the paginator after data changes
           }
-          this.messageService.add({severity:'success',detail:'Stock Uploaded Succesfully!',life:3000});
+          if(res?.allPartsNotInMaster!=0){
+            
+              if(res[0]?.inventoryLocationNotExist.length>0){
+               this.messageService.add({severity:'success',detail:`Stock Uploaded Succesfully! Inventory Location doesn't exist for ${res[0]?.inventoryLocationNotExist.join(', ')}`,life:10000});
+             }else{
+            this.messageService.add({severity:'success',detail:'Stock Uploaded Succesfully!',life:3000});
+             }
+          }
         }
         
        
@@ -278,7 +300,7 @@ export class BulkStockUploadComponent {
         this.file=null;
         this.selectedFile=null;
         this.globalBlockUiService.stopLoading();
-        this.messageService.add({severity:'error',summary:'Error in Uploading file!..',life:4000});
+        this.messageService.add({key: 'upload-error',severity:'error',summary:'Error in Uploading file.Please Contact Admin!',life:8000});
       })
        
     }
@@ -428,12 +450,13 @@ export class BulkStockUploadComponent {
      this.records= this.records.map((item:any)=>{
       let locationObj=this.locations.find((obj:any)=>obj.location_id==parseInt(item.location_id));
       let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
-    //  console.log("loc obj ",locationObj)
+    // console.log("loc obj ",item.operation)
       return{
         ...item,
         added_on: (item.added_on),
         locationName:locationObj?.location_name,
-        added_by:userObj?.vcFirstName+' '+userObj.vcLastName
+        added_by:userObj?.vcFirstName+' '+userObj.vcLastName,
+        operationType:item?.operation_type=='Single Upload for Older Days'?'Older Days':'Current Days'
       }
        
        

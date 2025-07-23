@@ -71,7 +71,8 @@ export class SingleLocationComponent {
   ngOnInit(){
   //  this.getLocations();
   this.dealerId=localStorage.getItem('dealerid');
-  //this.dealerId=20210;
+ // this.dealerId=20210;
+  //this.dealerId=20482;
   // this.getBrands();  
    this.userService.allUserData$.subscribe((res:any)=>{
     this.users=res;
@@ -161,10 +162,23 @@ export class SingleLocationComponent {
           this.fu?.clear();
           this.selectedFile=null;
           this.showTable=false;
-          this.messageService.add({severity:'error',detail:'Error in uploading the file!',life:4000});
+          this.messageService.add({key: 'upload-error',severity:'error',detail:'Error in uploading file. Please Contact Admin',life:8000});
         }
         if(res?.mappingNotPresent){
+           this.slForm.reset();
+          this.file=null;
+          this.fu?.clear();
+          this.selectedFile=null;
+          this.showTable=false;
           return this.messageService.add({severity:'error',life:4000,summary:'Brand Mapping is not available!'});
+        }
+         if(res?.isEmptyFile){
+           this.slForm.reset();
+          this.file=null;
+          this.fu?.clear();
+          this.selectedFile=null;
+          this.showTable=false;
+          return this.messageService.add({severity:'error',life:4000,summary:'File cannot be Blank!'});
         }
         // if(res?.currentSumQuantity){
         //   this.showTable=true;
@@ -184,11 +198,22 @@ export class SingleLocationComponent {
           this.prevCountRecords=res.prevCountRecords;
         }
         
+        if(res?.allPartsNotInMaster==0){
+          this.showTable=true;
+           this.getAllRecords();
+        this.fu?.clear();
+        this.file=null;
+        this.selectedFile=null;
+        this.slForm.get('file')?.reset();
+         return this.messageService.add({severity:'success',life:3000,summary:'The file you are uploading contains parts that are not present in the part master. Please recheck the parts or get them updated by the admin.!'});
+        }
         if(this.showTable){
           if (this.dataTable) {
             this.dataTable.reset(); // Reset the paginator after data changes
           }
-          this.messageService.add({severity:'success',life:3000,summary:'Stock uploaded successfully!'});
+          if(res?.allPartsNotInMaster!=0){
+            this.messageService.add({severity:'success',life:3000,summary:'Stock uploaded successfully!'});
+          }
         }
        
         this.getAllRecords();
@@ -201,7 +226,7 @@ export class SingleLocationComponent {
         this.globalBlockUiService.stopLoading();
         this.file=null;
         this.selectedFile=null;
-        this.messageService.add({severity:'error',summary:'Error in Uploading file!!..',life:4000});
+        this.messageService.add({key: 'upload-error',severity:'error',summary:'Error in Uploading file.Please Contact Admin!',life:4000});
       })
        
     }

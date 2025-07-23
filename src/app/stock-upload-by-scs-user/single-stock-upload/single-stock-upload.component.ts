@@ -202,6 +202,12 @@ export class SingleStockUploadComponent {
           formData=new FormData();
           return this.messageService.add({severity:'error',life:4000,summary:'Brand Mapping is not available!!'});
         }
+         if(res?.data?.isEmptyFile){
+            this.fu?.clear();
+          this.file=null;
+          formData=new FormData();
+          return this.messageService.add({severity:'error',life:4000,summary:'File cannot be Blank!'});
+        }
         if(res?.error){
           this.slForm.reset();
           this.showTable=false;
@@ -217,7 +223,7 @@ export class SingleStockUploadComponent {
           this.file=null;
           this.fu?.clear();
           this.selectedFile=null;
-          this.messageService.add({severity:'error',detail:'Error in uploading the file!',life:4000});
+          this.messageService.add({key: 'upload-error',severity:'error',detail:'Error in uploading file.Please Contact Admin!',life:8000});
         }
         if(res?.data?.currentSumQuantity){
           this.showTable=true;
@@ -236,11 +242,23 @@ export class SingleStockUploadComponent {
           this.prevCountRecords=res.prevCountRecords;
         }
         this.slForm.get('file')?.reset();
+          if(res?.data?.allPartsNotInMaster==0){
+          this.showTable=true;
+           this.getAllRecords();
+        this.fu?.clear();
+        this.file=null;
+        this.selectedFile=null;
+        formData=new FormData();
+        this.slForm.get('file')?.reset();
+         return this.messageService.add({severity:'success',life:3000,summary:'The file you are uploading contains parts that are not present in the part master. Please recheck the parts or get them updated by the admin.!'});
+        }
         if(this.showTable){
           if (this.dataTable) {
             this.dataTable.reset(); // Reset the paginator after data changes
           }
-          this.messageService.add({severity:'success',summary:'Stock uploaded succesfully!',life:3000})
+          if(res?.data?.allPartsNotInMaster!=0){
+            this.messageService.add({severity:'success',summary:'Stock uploaded succesfully!',life:3000})
+          }
         }
 
         this.getAllRecords();
@@ -257,7 +275,7 @@ export class SingleStockUploadComponent {
         this.file=null;
         this.slForm.get('file')?.reset();
         this.globalBlockUiService.stopLoading();
-        this.messageService.add({severity:'error',summary:'Error in Uploading file!!..',life:4000});
+        this.messageService.add({key: 'upload-error',severity:'error',summary:'Error in Uploading file!!..',life:4000});
       })
        
     }
@@ -423,7 +441,9 @@ export class SingleStockUploadComponent {
         brandName:brandObj?.brand,
         dealerName:dealerObj?.dealer_name,
         added_on: (item.added_on),
-        addedBy:this.addedBy
+        addedBy:this.addedBy,
+        stockDate:item.stockDate,
+         operationType:item?.operation_type=='Single Upload for Older Days'?'Older Days':'Current Days'
         }
       })
     })

@@ -1,5 +1,5 @@
 <p-toast></p-toast>
-
+<p-toast key="upload-error" position="top-center"></p-toast>
 <div class="body mt-2 ml-10">
     <!-- <span class="text-black text-2xl ">Single Stock Upload</span>    -->
                 <div class="d-flex">
@@ -147,7 +147,14 @@
                   <th style="font-size: 13px;" pSortableColumn="prevQuantitySum">
                    Previous Quantity Sum  <p-sortIcon field="prevQuantitySum"></p-sortIcon>
                   </th>
+                  
                   <th style="font-size: 13px;" pSortableColumn="quantitySum">Current Quantity Sum <p-sortIcon field="quantitySum"></p-sortIcon></th>
+                    <th style="font-size: 13px;" pSortableColumn="operationType">
+                   Operation Type  <p-sortIcon field="operationType"></p-sortIcon>
+                  </th>
+                   <th style="font-size: 13px;" pSortableColumn="stockDate">
+                   Stock Date  <p-sortIcon field="stockDate"></p-sortIcon>
+                  </th>
                   <th style="font-size: 13px;" pSortableColumn="added_on"> 
                      Added On <p-sortIcon field="added_on"></p-sortIcon>
                    </th>
@@ -176,6 +183,12 @@
                   </td>
                  <td style="font-size: 11px;">
                     {{rowData.quantitySum !=null ?rowData.quantitySum:0}}
+                 </td>
+                  <td style="font-size: 11px;">
+                    {{rowData.operationType}}
+                 </td>
+                  <td style="font-size: 11px;">
+                    {{ rowData.stockDate ? (rowData.stockDate | date: 'dd-MM-yyyy') : '-' }}
                  </td>
                  <td style="font-size: 11px;">
                     {{formatDate(rowData.added_on)}}
