@@ -35,7 +35,7 @@ constructor(private http: HttpClient) {}
 // }
 getDashboard(data: any): Observable<any> {
   return this.http.post(
-    `${this.apiurlmaster}getdashboard`,
+    `${this.apiurl}getdashboard`,
     data
   );
 }
