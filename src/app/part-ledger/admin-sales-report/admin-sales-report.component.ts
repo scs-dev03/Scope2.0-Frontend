@@ -514,15 +514,20 @@ export class AdminSalesReportComponent {
       },
       (error:any) => {
 
-        if(error.error.message){
-
+        if(error.error.Error){
+          this.Result = "Data for these Month Range is Not Available"
+          this.visible = true                               
         }
-        console.error("File upload failed:", error);
+        else{
         this.visible = true
         this.Result =  `${error.error.message +' Part Number: '+ error.error.unmatchedParts}`
         this.globalBlockUiService.stopLoading()
         this.showupload = false
-          fu.clear();
+        fu.clear();
+
+        }
+        
+       
 
     })
       

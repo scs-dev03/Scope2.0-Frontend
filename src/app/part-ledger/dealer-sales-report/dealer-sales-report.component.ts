@@ -290,6 +290,12 @@ export class DealerSalesReportComponent {
           console.log(this.SalesInfo);
         },
         error: (err:any) => {
+          let msg = err.error.Error
+
+          console.log(typeof(msg));
+          
+          
+          
           console.error('Error while fetching sales info:', err);
           this.globalBlockUiService.stopLoading();
           this.showMessage = true;
@@ -475,12 +481,20 @@ export class DealerSalesReportComponent {
        fu.clear();
       },
       (error:any) => {
-        console.error("File upload failed:", error);
+       
+        if(error.error.Error){
+          this.Result = "Data for these Month Range is Not Available"
+          this.visible = true
+                                                                        
+        }
+        else{
         this.visible = true
-        this.Result =  `${error.error.message +'Part Number: '+ error.error.unmatchedParts}`
+        this.Result =  `${error.error.message +' Part Number: '+ error.error.unmatchedParts}`
         this.globalBlockUiService.stopLoading()
         this.showupload = false
-          fu.clear();
+        fu.clear();
+
+        }
 
     })
 
