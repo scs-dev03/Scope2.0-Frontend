@@ -195,6 +195,5 @@ export class AppComponent {
     else{
       window.location.href = 'https://scope.sparecare.in/UAP_SC/home.aspx';
     }
-
   }
 }
