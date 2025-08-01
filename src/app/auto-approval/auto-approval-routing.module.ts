@@ -26,6 +26,13 @@ const routes: Routes = [
     loadChildren: () => import('../auto-approval/advisor-management/advisor-management.module').then(m => m.AdvisorManagementModule),
     // canLoad:[authGuard],
     // canActivate:[authGuard]
+  },
+  {
+    path: 'status',
+    loadChildren: () => import('../auto-approval/view-order-request/view-order-request.module').then(m => m.ViewOrderRequestModule),
+    // canLoad:[authGuard],
+    // canActivate:[authGuard]
+
   }
 ];
 
