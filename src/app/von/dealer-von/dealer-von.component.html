@@ -5,13 +5,13 @@
 
   <div class="flex w-auto flex-col">
     <!-- filter form -->
-    <div class="-mt-10">
+    <div class="">
       <form action="" [formGroup]="dealerFilterData"
-        class="flex flex-wrap py-5 justify-start items-center gap-2 w-auto scale-[0.9]">
+        class="flex flex-wrap p-2 justify-start items-center gap-3 w-auto ">
         <div class="flex flex-col">
           <p-floatlabel variant="on">
             <p-select formControlName="location" [options]="locationData" optionValue="locationid"
-              optionLabel="location" class="!w-28 !text-[10px]" scrollHeight="250px" scro [filter]="true"
+              optionLabel="location" class="!w-36 !text-[10px]" scrollHeight="250px" scro [filter]="true"
               filterBy="location" appendTo="body" [ngClass]="{
                 'ng-invalid ng-dirty':
                   dealerFilterData.get('location')?.touched &&
@@ -29,12 +29,12 @@
 
         <p-floatlabel variant="on">
           <p-select [options]="maxData" formControlName="max" optionLabel="name" optionValue="code"
-            class="!w-28 !text-[10px]" />
+            class="!w-36 !text-[10px]" />
           <label for="max" class="text-[10px]">MAX</label>
         </p-floatlabel>
         <p-floatlabel variant="on">
           <p-select [options]="partType" scrollHeight="150px" formControlName="parttype" optionLabel="Description"
-            optionValue="parttypeid" class="!w-28 !text-[10px]" appendTo="body" />
+            optionValue="parttypeid" class="!w-36 !text-[10px]" appendTo="body" />
           <label for="parttype" class="text-[10px]">Part Type</label>
         </p-floatlabel>
         <p-floatlabel variant="on">
@@ -44,19 +44,19 @@
         </p-floatlabel>
         <p-floatlabel variant="on">
           <p-select [options]="natureData" scrollHeight="150px" formControlName="nature" optionLabel="Description"
-            optionValue="tCode" class="!w-28 !text-[10px]" [filter]="true" filterBy="Description" appendTo="body" />
+            optionValue="tCode" class="!w-36 !text-[10px]" [filter]="true" filterBy="Description" appendTo="body" />
           <label for="nature" class="text-[10px]">Part Nature</label>
         </p-floatlabel>
         <p-floatlabel variant="on">
           <p-select [options]="modelData" scrollHeight="150px" formControlName="model" optionValue="ModelID"
-            optionLabel="Model" class="!w-28 !text-[10px]" appendTo="body" />
+            optionLabel="Model" class="!w-36 !text-[10px]" appendTo="body" />
 
           <label for="model" class="text-[10px]">Model</label>
         </p-floatlabel>
 
         <p-floatlabel variant="on">
           <p-select [options]="seasondata" formControlName="seasonal" optionLabel="Description" optionValue="tCode"
-            class="!w-28 !text-[10px]" appendTo="body" />
+            class="!w-36 !text-[10px]" appendTo="body" />
           <label for="seasonal" class="text-[10px]">Seasonal </label>
         </p-floatlabel>
         <div class="flex flex-col">
@@ -78,8 +78,18 @@
           </div>
         </div>
 
+
+        
+        <div *ngFor="let category of categories" class="flex flex-col ">
+          <label [for]="category.key" class=" text-[12px] -mt-2">{{
+            category.name
+            }}</label>
+          <p-radiobutton [inputId]="category.key" name="selectedCategory" [value]="category"
+            formControlName="selectedCategory" class="-mt-2" />
+        </div>
+<!-- 
         <div class="w-auto flex items-center">
-          <div *ngFor="let category of categories" class="field-checkbox">
+          <div *ngFor="let category of categories">
             <label [for]="category.key" class="ml-2 mt-1 text-[10px]">{{
               category.name
               }}</label>
@@ -97,7 +107,7 @@
               This field is required
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="flex flex-col">
           <p-floatlabel variant="on">
             <input formControlName="partnumber" pInputText id="parSearch" autocomplete="off"

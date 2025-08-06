@@ -7,11 +7,11 @@ import { authGuard } from '../auth.guard';
 const routes: Routes = [
   {
     path:'app-upload',component:UploadComponent,
-     canActivate:[authGuard]
+     //canActivate:[authGuard]
   },
   {
     path:'app-export',component:ExportComponent,
-    canActivate:[authGuard]
+    //canActivate:[authGuard]
   }
 ];
 

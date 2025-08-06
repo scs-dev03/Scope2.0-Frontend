@@ -10,7 +10,7 @@ import { CookieService } from 'ngx-cookie-service';
 export class AuthService {
 
   constructor(private router: Router,private http: HttpClient,
-    private cookieService:CookieService) { }
+  private cookieService:CookieService) { }
   private accessTokenKey = 'authToken';
   private refreshTokenKey = 'refreshToken';
 

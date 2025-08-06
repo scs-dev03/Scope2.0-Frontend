@@ -41,6 +41,10 @@ export class AdminVonComponent {
           location: this.locationid,
           status: "0"
         });
+        this.adminFilterData.patchValue({
+          max: '1',
+          status: '0',
+        });
 
         this.onClickSubmitfilterData();
       }
@@ -60,10 +64,7 @@ export class AdminVonComponent {
       { name: 'Unreviewed', code: '0' },
     ];
 
-    this.adminFilterData.patchValue({
-      max: '1',
-      status: '0',
-    });
+
   }
 
   constructor(

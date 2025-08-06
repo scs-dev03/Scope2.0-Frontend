@@ -1,15 +1,18 @@
-<div class="relative h-full w-full bg-gray-200 overflow-auto">
+<div class="relative h-auto w-full  overflow-auto">
   <!-- <app-loader [isloading]="isloading"></app-loader> -->
 
-  <div class="flex flex-wrap items-center justify-between h-[8vh] px-2">
+  <div class="flex flex-wrap items-start justify-between p-3">
     <!-- <div>
       <h1 class="text-3xl ml-10 font-semibold">Remark Creation</h1>
     </div> -->
 
-    <form
+    <div
+      class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-3 items-center  bg-white rounded shadow-sm"
+    >
+  <form
       action=""
       [formGroup]="adminRemarkInputData"
-      class="flex py-10 flex-wrap justify-center items-center gap-2 w-full"
+      class="flex  flex-wrap  items-center gap-2 w-full"
     >
     <div class="flex-col">
       <p-floatlabel variant="on">
@@ -18,8 +21,10 @@
           [options]="typeData"
           optionValue="code"
           showClear="true"
+          appendTo="body"
           optionLabel="name"
-          class="!w-40 !text-xs"
+          class="!w-40 h-8 !text-xs"
+          
           [ngClass]="{
             'p-invalid':
               adminRemarkInputData.get('type')?.invalid &&
@@ -49,9 +54,10 @@
           formControlName="brand"
           [options]="brandData"
           showClear="true"
+          appendTo="body"
           optionValue="bigid"
           optionLabel="vcbrand"
-          class="!w-40 !text-xs"
+          class="!w-40 h-8 !text-xs"
         />
         <label for="brand" class="text-xs !font-normal">Brand</label>
       </p-floatlabel>
@@ -63,7 +69,7 @@
           pTextarea
           [attr.aria-placeholder]="'Enter your name'"
           placeholder="Enter Remark"
-          class="h-11 w-72"
+          class="h-8 text-xs rounded-sm  p-2 w-72"
           formControlName="remarkInput"
         ></textarea>
         <div *ngIf="adminRemarkInputData.get('remarkInput')?.errors">
@@ -82,23 +88,26 @@
         </div>
       </div>
 
-      <div class="card flex justify-center">
+      <div class="">
         <p-button
           label="Submit"
+          size="small"
           [disabled]="adminRemarkInputData.invalid"
           (click)="onSubmitRemarkData()"
-          class="text-xs"
+          class=""
         />
       </div>
-      <div class="card flex justify-center">
+      <div class="">
         <p-button
           label="Show Table"
+          size="small"
           [disabled]="adminRemarkInputData.invalid"
           (click)="onclickShowTable()"
-          class="text-xs"
+          class=""
         />
       </div>
-    </form>
+    </form></div>
+    
 
     <div class="flex justify-center w-full mt-3 scale-[.8]" *ngIf="showtable">
       <div
