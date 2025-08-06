@@ -1,0 +1,220 @@
+<div class="min-w-full bg-gray-100">
+  <!-- <h1 class="text-xl font-serif ml-2">Order Status</h1> -->
+
+  <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
+    <div
+      class="min-w-full min-h-[15vh] flex-wrap flex-col p-2 gap-3 shadow-lg border-dashed border-2 bg-white rounded-md border-white"
+    >
+      <div class="flex gap-4 flex-wrap">
+        <p-floatlabel class="w-44 !h-8" variant="on">
+          <p-datepicker
+            size="small"
+            inputId="on_label"
+            class="w-44 !h-8"
+            dateFormat="mm/dd/yy"
+            iconDisplay="input"
+            [readonlyInput]="true"
+            [panelStyle]="{
+              position: 'absolute',
+              left: '0px',
+              top: '100%',
+              'z-index': '1000',
+              transform: 'scale(0.7)',
+              'transform-origin': 'top left'
+            }"
+          />
+          <label for="on_label" class="text-xs">From Date</label>
+        </p-floatlabel>
+        <p-floatlabel class="w-44 h-8" variant="on">
+          <p-datepicker
+            size="small"
+            inputId="on_label"
+            class="!w-44 !h-8"
+            dateFormat="mm/dd/yy"
+            iconDisplay="input"
+            [readonlyInput]="true"
+            [panelStyle]="{
+              position: 'absolute',
+              'z-index': '1201',
+              transform: 'scale(0.7)',
+              'transform-origin': 'top left'
+            }"
+          />
+          <label for="on_label" class="text-xs">To Date</label>
+        </p-floatlabel>
+
+        <p-floatlabel variant="on">
+          <p-select
+            [checkmark]="true"
+            optionLabel="name"
+            [showClear]="true"
+            size="small"
+            class="w-44 h-8"
+          />
+          <label for="parameters" class="text-xs">Brand</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+          <p-select
+            [checkmark]="true"
+            optionLabel="name"
+            [showClear]="true"
+            size="small"
+            class="w-44 h-8"
+          />
+          <label for="parameters" class="text-xs">Dealer</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+          <p-select
+            [checkmark]="true"
+            optionLabel="name"
+            [showClear]="true"
+            size="small"
+            class="w-44 h-8"
+          />
+          <label for="parameters" class="text-xs">Location</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+          <p-select
+            [checkmark]="true"
+            optionLabel="name"
+            [showClear]="true"
+            size="small"
+            class="w-44 h-8"
+          />
+          <label for="parameters" class="text-xs">User Type</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+          <p-select
+            [checkmark]="true"
+            optionLabel="name"
+            [showClear]="true"
+            size="small"
+            class="w-44 h-8"
+          />
+          <label for="parameters" class="text-xs">Event</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+          <p-select
+            [checkmark]="true"
+            optionLabel="name"
+            [showClear]="true"
+            size="small"
+            class="w-44 h-8"
+          />
+          <label for="parameters" class="text-xs">Module</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+          <p-select
+            [checkmark]="true"
+            optionLabel="name"
+            [showClear]="true"
+            size="small"
+            class="w-44 h-8"
+          />
+          <label for="parameters" class="text-xs">Page Name</label>
+        </p-floatlabel>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
+    <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+      <p-table
+        [scrollable]="true"
+        scrollHeight="600px"
+        [showGridlines]="true"
+        scrollDirection="both"
+        class="!w-[90vw]"
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template #header>
+          <tr class="">
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              S.No
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Log ID
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              User ID
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              User Type
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              User Name
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Event Type
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Event Description
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              IP Address
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Module Name
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Page Name
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              User Agent
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Log Date
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-rowData let-i="rowIndex">
+          <tr
+            class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+          >
+            <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.Dashboard }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <p-paginator
+            class="h-6 w-full text-sm"
+            (onPageChange)="onPageChange($event)"
+            [first]="first"
+            [rows]="rows"
+            [appendTo]="body"
+            pagginatordropdownappendto="body"
+            [totalRecords]="120"
+            [rowsPerPageOptions]="[10, 20, 30]"
+          />
+    </div>
+  </div>
+</div>

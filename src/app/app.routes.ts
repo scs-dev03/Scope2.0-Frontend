@@ -63,6 +63,12 @@ export const routes: Routes = [
         //  canActivate:[authGuard]
     },
     {
+        path: 'logs',
+        loadChildren: () => import('../app/logs-management/logs-management.module').then(m => m.LogsManagementModule),
+        //  canLoad:[authGuard],
+        //  canActivate:[authGuard]
+    },
+    {
         path:'user',
         loadChildren:()=>import('../app/user-management/user-management.module').then(m=>m.UserManagementModule),
         //  canLoad:[authGuard],
