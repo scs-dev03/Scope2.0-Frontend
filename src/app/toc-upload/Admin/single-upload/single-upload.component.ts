@@ -1,28 +1,29 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UtilitiesService } from '../../services/utilities.service';
-import { PrimengModuleModule } from '../../shared/primeng-module/primeng-module.module';
-import { SharedModule } from '../../shared/shared.module';
-import { CommonModule } from '@angular/common';
-import { StockUploadBySpmService } from '../../services/stock-upload-by-spm.service';
+import { UtilitiesService } from '../../../services/utilities.service';
+import { PrimengModuleModule } from '../../../shared/primeng-module/primeng-module.module';
+import { SharedModule } from '../../../shared/shared.module';
+import { CommonModule, DatePipe } from '@angular/common';
+import { StockUploadBySpmService } from '../../../services/stock-upload-by-spm.service';
 import * as XLSX from 'xlsx';
-import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { GlobalBlockUiService } from '../../../services/global-block-ui.service';
 import { MessageService } from 'primeng/api';
 import { FileUpload } from 'primeng/fileupload';
-import { StockUploadByUserService } from '../../services/stock-upload-by-user.service';
+import { StockUploadByUserService } from '../../../services/stock-upload-by-user.service';
 import { Table } from 'primeng/table';
-import { SidebarService } from '../../services/sidebar.service';
-import { UserService } from '../../services/user.service';
-import { SharedServiceService } from '../../services/shared-service.service';
+import { SidebarService } from '../../../services/sidebar.service';
+import { UserService } from '../../../services/user.service';
+import { SharedServiceService } from '../../../services/shared-service.service';
+import { TocService } from '../../../services/toc.service';
 @Component({
-  selector: 'app-single-stock-upload',
-  imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
-  providers:[MessageService],
-  templateUrl: './single-stock-upload.component.html',
-  styleUrl: './single-stock-upload.component.css'
+  selector: 'app-single-upload',
+ imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
+  providers:[MessageService,DatePipe],
+  templateUrl: './single-upload.component.html',
+  styleUrl: './single-upload.component.css'
 })
-export class SingleStockUploadComponent {
-  selectedFile:any;
+export class SingleUploadComponent {
+ selectedFile:any;
   isLoading:boolean=false;
   locations:any=[];
   file:any;
@@ -49,6 +50,7 @@ export class SingleStockUploadComponent {
   isDataPresentForPartNotInMaster:boolean=false
   min:any;
   max:any;
+  userName:any;
   visibleSidebar:boolean=false;
   @ViewChild('fu') fu:FileUpload|null=null;
   constructor(private utilitiesService:UtilitiesService,
@@ -59,7 +61,9 @@ export class SingleStockUploadComponent {
    private messageService:MessageService,
    private sidebarService:SidebarService,
    private userService:UserService,
-   private sharedService:SharedServiceService
+   private sharedService:SharedServiceService,
+   private tocService:TocService,
+   private datePipe:DatePipe
   ){
  
    this.slForm=this.fb.group({
@@ -75,6 +79,7 @@ export class SingleStockUploadComponent {
     // this.getLocations();
    this.getBrands();
 
+   this.userName=localStorage.getItem('username')
    this.max = new Date();
 
    // Set min date to three months ago
@@ -135,7 +140,7 @@ export class SingleStockUploadComponent {
   }
 
   onBrandChange(event:any){
-    this.getPartNotInMaster();
+    // this.getPartNotInMaster();
     this.utilitiesService.getDealers({brand_id:this.slForm.value.brand}).subscribe((res:any)=>{
       this.dealers=res.data;
     })
@@ -174,20 +179,20 @@ export class SingleStockUploadComponent {
      this.userId=localStorage.getItem('userid');
       
        let formData = new FormData();
-       formData.append('excelFile', this.file, this.fileName);
+       formData.append('files[]', this.file, this.fileName);
        formData.append('location_id', locationId.toString());
-       formData.append('user_id', this.userId?.toString());
+       formData.append('updatedBy', this.userName?.toString());
        formData.append('dealer_id', this.slForm.value.dealer.toString());
        formData.append('brand_id', this.slForm.value.brand.toString());
        formData.append('date',this.slForm.value.date.toString())
        this.globalBlockUiService.startLoading();
-      this.stockUploadServiceByUser.uploadSingleStockUpload(formData).subscribe((res:any)=>{
-        this.getUploadedData();
-        this.getPartNotInMaster();
+      this.tocService.uploadToc(formData).subscribe((res:any)=>{
+        // this.getUploadedData();
+        // this.getPartNotInMaster();
         // this.slForm.reset();
         this.globalBlockUiService.stopLoading();
         // console.log("res ",res)
-        if(res?.data?.headerNotPresent){
+        if(res?.headerNotPresent){
           this.fu?.clear();
           this.file=null;
           this.selectedFile=null;
@@ -196,13 +201,13 @@ export class SingleStockUploadComponent {
           }
           return this.messageService.add({severity:'error',life:4000,summary:'Headers are not matched with the required fields!'})
         }
-        if(res?.data?.mappingNotPresent){
+        if(res?.mappingNotPresent){
           this.fu?.clear();
           this.file=null;
           formData=new FormData();
           return this.messageService.add({severity:'error',life:4000,summary:'Brand Mapping is not available!!'});
         }
-         if(res?.data?.isEmptyFile){
+         if(res?.isEmptyFile){
             this.fu?.clear();
           this.file=null;
           formData=new FormData();
@@ -217,32 +222,10 @@ export class SingleStockUploadComponent {
           this.messageService.add({severity:'error',detail:'Internal Server Error',life:4000});
         }
 
-        if(res?.data?.error){
-          this.slForm.reset();
-          this.showTable=false;
-          this.file=null;
-          this.fu?.clear();
-          this.selectedFile=null;
-          this.messageService.add({key: 'upload-error',severity:'error',detail:'Error in uploading file.Please Contact Admin!',life:8000});
-        }
-        if(res?.data?.currentSumQuantity){
-          this.showTable=true;
-          this.currentUploadQuantity=res.currentSumQuantity
-        }
-        if(res?.data?.prevSumQuantity){
-          this.showTable=true;
-          this.prevUploadQuantity=res.prevUploadQuantity;
-        }
-        if(res?.data?.currentRecords){
-          this.showTable=true;
-          this.currentCountRecords=res.currentRecords;
-        }
-        if(res?.data?.prevRecords){
-          this.showTable=true;
-          this.prevCountRecords=res.prevCountRecords;
-        }
+        
         this.slForm.get('file')?.reset();
-          if(res?.data?.allPartsNotInMaster==0){
+         this.showTable=true;
+          if(res?.allPartsNotInMaster==0){
           this.showTable=true;
            this.getAllRecords();
         this.fu?.clear();
@@ -256,8 +239,8 @@ export class SingleStockUploadComponent {
           if (this.dataTable) {
             this.dataTable.reset(); // Reset the paginator after data changes
           }
-          if(res?.data?.allPartsNotInMaster!=0){
-            this.messageService.add({severity:'success',summary:'Stock uploaded succesfully!',life:3000})
+          if(res?.allPartsNotInMaster!=0){
+            this.messageService.add({severity:'success',summary:'TOC uploaded successfully!',life:3000})
           }
         }
 
@@ -406,10 +389,11 @@ export class SingleStockUploadComponent {
           ['Brand']:brandObj?.brand,
           ['Dealer']:dealerObj?.dealer_name,
           ['Location']: this.locationName,
-          ['Previous Records']: item.prevStockUploadCount !=null ?item.prevStockUploadCount :0,
-          ['Current Records']: item.stockUploadCount !=null ?item.stockUploadCount:0,
-          ['Previous Sum Quantity']: item.prevQuantitySum !=null ?item.prevQuantitySum :0,
-          ['Current Sum Quantity']: item.quantitySum !=null ?item.quantitySum:0 ,
+          ['Previous Records']: item.prevRecordsCount !=null ?item.prevRecordsCount :0,
+          ['Current Records']: item.currentRecordsCount !=null ?item.currentRecordsCount:0,
+          ['Previous Sum Quantity']: item.prevSumQuantity !=null ?item.prevSumQuantity :0,
+          ['Current Sum Quantity']: item.currentSumQuantity !=null ?item.currentSumQuantity:0 ,
+          ['TOC Date ']: this.datePipe.transform(item.tocDate,'dd-MM-yyyy'),
           ['Added On ']: this.formatDate(item.added_on),
           ['Added By ']:item.addedBy
          
@@ -428,7 +412,7 @@ export class SingleStockUploadComponent {
    getAllRecords(){
 
     let locObj=this.locations.find((obj:any)=> obj.location_id==this.slForm.value.location)
-    this.stockUploadServiceByUser.getAllRecords({location_id:this.slForm.value.location,dealer_id:this.slForm.value.dealer,brand_id:this.slForm.value.brand}).subscribe((res:any)=>{
+    this.tocService.getRecords({locations:[{locationId:this.slForm.value.location}],dealer_id:this.slForm.value.dealer,brand_id:this.slForm.value.brand}).subscribe((res:any)=>{
       this.records=res.data;
       let brandObj=this.brands.find((obj:any)=> obj.brand_id==this.slForm.value.brand)
       let dealerObj=this.dealers.find((obj:any)=>obj.dealer_id==this.slForm.value.dealer)
@@ -437,16 +421,16 @@ export class SingleStockUploadComponent {
       //console.log("brands ",brandObj,this.brands)
       
      this.records= this.records.map((item:any)=>{
-      let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
+      let userObj=this.users.find((obj:any)=>obj.userId==item.userId)
       this.addedBy=userObj?.vcFirstName+' '+userObj?.vcLastName
         return{
           ...item,
         brandName:brandObj?.brand,
         dealerName:dealerObj?.dealer_name,
-        added_on: (item.added_on),
+        added_on: (item.addedOn),
         addedBy:this.addedBy,
-        stockDate:item.stockDate,
-         operationType:item?.operation_type=='Single Upload for Older Days'?'Older Days':'Current Days'
+        tocDate:item.tocDate,
+        //  operationType:item?.operation_type=='Single Upload for Older Days'?'Older Days':'Current Days'
         }
       })
     })

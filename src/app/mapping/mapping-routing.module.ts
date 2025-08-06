@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { StockUploadMappingComponent } from './stock-upload-mapping/stock-upload-mapping.component';
 import { DealerLocationMappingComponent } from './dealer-location-mapping/dealer-location-mapping.component';
 import { authGuard } from '../auth.guard';
+import { TocMappingComponent } from './toc-mapping/toc-mapping.component';
 
 const routes: Routes = [
 
@@ -15,6 +16,11 @@ const routes: Routes = [
   {
     path:'dealer-location',
     component:DealerLocationMappingComponent,
+ //   canActivate:[authGuard]
+  },
+  {
+    path:'toc',
+    component:TocMappingComponent,
  //   canActivate:[authGuard]
   }
 ];

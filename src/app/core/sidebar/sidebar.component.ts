@@ -167,7 +167,7 @@ filterItems() {
   //  console.log('Received from shared service:', res);
     if (res && res.loaded) {
      // console.log("shared service ",res.loaded)
-      this.sidebarItems = Array.from(res.items);
+      this.sidebarItems = Array.from(res?.items);
      this.transformData(this.sidebarItems);
      
    // console.log("sidebar items ",this.sidebarItems)

@@ -42,7 +42,7 @@
 .add-mapping-card{
     border:none;
     /* background-color: antiquewhite; */
-    /* background-color: var(--primary-color); */
+    background-color: var(--primary-color);
     border-radius: 6px;
 }
 

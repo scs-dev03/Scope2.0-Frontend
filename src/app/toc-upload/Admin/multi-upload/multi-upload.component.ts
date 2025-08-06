@@ -1,26 +1,28 @@
 import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { PrimengModuleModule } from '../../shared/primeng-module/primeng-module.module';
-import { SharedModule } from '../../shared/shared.module';
+import { PrimengModuleModule } from '../../../shared/primeng-module/primeng-module.module';
+import { SharedModule } from '../../../shared/shared.module';
 import { FileUpload } from 'primeng/fileupload';
-import { UtilitiesService } from '../../services/utilities.service';
+import { UtilitiesService } from '../../../services/utilities.service';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { StockUploadBySpmService } from '../../services/stock-upload-by-spm.service';
-import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { StockUploadBySpmService } from '../../../services/stock-upload-by-spm.service';
+import { GlobalBlockUiService } from '../../../services/global-block-ui.service';
 import { MessageService } from 'primeng/api';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import * as XLSX from 'xlsx';
 import { Table } from 'primeng/table';
-import { UserService } from '../../services/user.service';
-import { SidebarService } from '../../services/sidebar.service';
-import { SharedServiceService } from '../../services/shared-service.service';
-import { StockUploadByUserService } from '../../services/stock-upload-by-user.service';
+import { UserService } from '../../../services/user.service';
+import { SidebarService } from '../../../services/sidebar.service';
+import { SharedServiceService } from '../../../services/shared-service.service';
+import { StockUploadByUserService } from '../../../services/stock-upload-by-user.service';
+import { TocService } from '../../../services/toc.service';
 @Component({
-  selector: 'app-multi-location',
-  imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
-  templateUrl: './multi-location.component.html',
-  styleUrl: './multi-location.component.css'
+  selector: 'app-multi-upload',
+   imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
+  providers:[MessageService,DatePipe],
+  templateUrl: './multi-upload.component.html',
+  styleUrl: './multi-upload.component.css'
 })
-export class MultiLocationComponent {
+export class MultiUploadComponent {
 
   @ViewChild('dataTable') dataTable: Table | undefined;
   showTable:boolean=false;
@@ -47,9 +49,12 @@ dealerId:any;
 moduleType:any='multi'
 file:any;
 fileName:any;
+min:any;
+max:any;
 blForm:FormGroup
 fileUploadVisible: boolean[] = [];
-
+userName:any;
+brandId:any;
 
  isDataPresentPartNotInMaster:boolean=false;
         locationSelected: Set<number> = new Set(); // To track selected locations
@@ -64,54 +69,29 @@ fileUploadVisible: boolean[] = [];
      private userService:UserService,
      private sidebarService:SidebarService,
      private sharedService:SharedServiceService,
-     private stockUploadServiceBySCSUser:StockUploadByUserService
+     private tocService:TocService,
+     private datePipe:DatePipe
+     
     ){
 
      
         this.mlForm = this.fb.group({
           locations: this.fb.array([]),
-          brand:[''],
-          dealer:['']
+          brand:['',Validators.required],
+          dealer:['',Validators.required],
+          date:['',Validators.required],
         });
         // this.addLocation(); // Initially add one location entry
 
         this.blForm=this.fb.group({
           file:['',Validators.required]
         })
-       this.sharedService.updateModuleName('Multi Location / Bulk Stock Upload')
+       this.sharedService.updateModuleName('Multi Location')
       
     }
 
-    onRadioButtonChange(event:any){
-      this.showTable=false;
-      this.mlForm.reset();
-      this.blForm.reset();
-      this.partNotInMasterData=[];
-      this.initializeFormArray()
-    }
-     onSelectForBulk(event: any) {
-    const fileControl = this.blForm.get('file'); // Get the file form control
-    
-    // Check if exactly one file is selected
-    if (event.files && event.files.length === 1) {
-      const file = event.files[0]; // Get the first selected file
-      
-      // If a file is selected, update the form control with the new file
-      fileControl?.setValue(file);
-      
-      // Set class variables for further use (e.g., for displaying the file name)
-      this.file = file;
-      this.fileName = file.name;
-    } else {
-      // If no file or more than one file is selected, reset the form control
-      fileControl?.setValue(null);
-      this.file = null;
-      this.fileName = '';
-    }
-  
-    // Trigger form control validation to ensure the validation state is updated
-    fileControl?.updateValueAndValidity();
-  }
+   
+ 
     onPageChange(event: any) {
       this.first = event.first; // Track current page number
     }
@@ -120,7 +100,7 @@ fileUploadVisible: boolean[] = [];
       this.getBrands();
       // this.dealerId=20210;
       
-   //localStorage.setItem('dealerid',"20141");
+  //  localStorage.setItem('dealerid',"20141");
       // localStorage.setItem('brandid',"33")
     // this.userId=38
       this.userService.allUserData$.subscribe((users:any)=>{
@@ -128,12 +108,20 @@ fileUploadVisible: boolean[] = [];
       })
       // localStorage.setItem('dealerid',"20141");
       this.dealerId=localStorage.getItem('dealerid');
-      this.getLocations()
+      this.brandId=localStorage.getItem('brandid')
+       this.max = new Date();
+
+   // Set min date to three months ago
+   this.min = new Date();
+   this.min.setMonth(this.max.getMonth() - 3);
+      
        this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible;
    })
       this.userId=localStorage.getItem('userid');
      //  this.userId=38
+
+     this.userName=localStorage.getItem('username')
     }
     get locationControls() {
       return (this.mlForm.get('locations') as FormArray);
@@ -161,17 +149,6 @@ fileUploadVisible: boolean[] = [];
       this.locationControls.push(locationGroup);
     }
 
-    // initializeFormArray() {
-    //   this.locationControls.clear(); // Clear any existing form groups
-    
-    //   // Always start with only ONE form group
-    //   this.locationControls.push(
-    //     this.fb.group({
-    //       location: ['', Validators.required],
-    //       file: [null, Validators.required]
-    //     })
-    //   );
-    // }
 
     initializeFormArray() {
   this.locationControls.clear();
@@ -205,13 +182,7 @@ getLocationName(id: number): string {
      // this.locationAdd--;
     }
   
-    // Handle file selection
-    // onFileSelect(event: any, index: number) {
-    //   const file = event.files[0]; // Only take the first file selected
-    //   const locationGroup = (this.mlForm.get('locations') as FormArray).at(index);
-    //   locationGroup.patchValue({ file: file });
-    //   // console.log(locationGroup)
-    // }
+
    onFileSelect(event: any, index: number) {
   const file = event.files?.[0];
   if (file) {
@@ -235,37 +206,7 @@ getLocationName(id: number): string {
       // }
      
     }
-    // Handle location change (to validate duplicate location selection)
-    // onLocationChange(index: number) {
 
-    // //   const locationControl = (this.mlForm.get('locations') as FormArray).at(index).get('location');
-    // //   const selectedLocation = locationControl?.value;
-    
-    // //   // Clear previous errors
-    // //   locationControl?.setErrors(null);
-    
-    // //   // Check if there was a previous location selected
-    // //   const previousLocation = this.previousLocations[index];
-    
-    // //   // If there was a previous location and it's different, remove it from the locationSelected set
-    // //   if (previousLocation && previousLocation !== selectedLocation) {
-    // //     this.locationSelected.delete(previousLocation);
-    // //   }
-    
-    // //   // Update previous location with the new one
-    // //   this.previousLocations[index] = selectedLocation;
-    
-    // //   // Check for duplicate locations
-    // //   if (this.locationSelected.has(selectedLocation)) {
-    // //     locationControl?.setErrors({ duplicateLocation: true });
-    // //   } else {
-    // //     this.locationSelected.add(selectedLocation); // Mark the location as selected
-        
-    // //   }
-    // //  // this.getPartNotInMasterRecords();
-    // this.validateLocations();
-      
-    // }
 
     onLocationChange(index: number) {
   const control = this.locationControls.at(index).get('location');
@@ -326,10 +267,6 @@ getLocationName(id: number): string {
   
     // Handle the submit (upload)
     onUpload() {
-     
-    
-      // let dealerId=20295;
-  
 
 
       const filesSelected = this.locationControls.controls.some(control => control.get('file')?.value);
@@ -345,27 +282,7 @@ getLocationName(id: number): string {
   }
       if (this.mlForm.valid) {
         this.globalBlockUiService.startLoading();
-        // const formData = new FormData();
-
-    //      const locations = this.mlForm.get('locations')?.value;
-    // //    console.log("locations ",locations)
-    //   // Iterate through locations and append each file and location to FormData
-    //   locations.forEach((location: any) => {
-    //     if (location.file) {
-    //        const originalName = location.file.name;
-    // const extension = originalName.substring(originalName.lastIndexOf('.'));
-    
-    // // Custom filename — you can modify this logic
-    // const renamedFile = ${location.location}_${originalName}_ml;
-    //       this.formData.append('files[]', location.file,renamedFile); // Append file
-    //     }
-    //     if (location.location) {
-    //       this.formData.append('location_id', location.location); // Append location ID
-    //     }
-    //     this.formData.append('user_id', this.userId.toString());
-        
-    //     this.formData.append('dealer_id', this.dealerId.toString());
-    //   });
+      
  const locations = this.mlForm.get('locations')?.value;
 
 // Clear previous FormData if needed
@@ -391,19 +308,17 @@ locations.forEach((location: any) => {
 
 // Append global values only once if at least one file is present
 if (fileCount > 0) {
-  this.formData.append('user_id', this.userId.toString());
+  this.formData.append('updatedBy', this.userName.toString());
   this.formData.append('dealer_id', this.dealerId.toString());
-
+this.formData.append('brand_id', this.brandId.toString());
   // Proceed with API call
-  console.log("FormData ready to submit:", this.formData);
+ // console.log("FormData ready to submit:", this.formData);
   // Example:
   // this.http.post('your-endpoint', this.formData).subscribe(...);
 } 
 
 
-    
-
-        this.stockUploadService.uploadMultiLocation(this.formData).subscribe((res:any)=>{
+        this.tocService.uploadToc(this.formData).subscribe((res:any)=>{
           let uploadedLocations=[];
           uploadedLocations.push(locations);
           this.globalBlockUiService.stopLoading();
@@ -435,8 +350,10 @@ if (fileCount > 0) {
             this.visible=true;
             let responseData=res;
           //  this.getPartNotInMasterRecords();
-         //  console.log("uploaded locations ",responseData)
-            uploadedLocations[0].map((item: any) => {
+          //  console.log("uploaded locations ",uploadedLocations)
+           let filteredLocations=uploadedLocations[0].filter((obj:any)=>obj.file);
+          // console.log(filteredLocations)
+            filteredLocations.map((item: any) => {
          //    console.log("item ", item);
              let locationObj = this.locations.find(
                (obj: any) => obj.location_id == parseInt(item.location, 10)
@@ -453,17 +370,13 @@ if (fileCount > 0) {
                let obj = responseData.find(
                  (obj: any) => obj.locationId == item.location
                );
-              // console.log("obj ", obj);
-              // if(obj==undefined){
-              //   statusMsg='This time,you have not uploaded the data for this location!'
-              // }
-            //  else
-               if (obj?.status==true) {
+             
+               if (obj?.status) {
                  statusMsg = `❌ Data not uploaded successfully.(${obj.log})`;
                }
-               else{
-                statusMsg=obj?.log
-               }
+              else{
+                statusMsg = `✅ Data uploaded successfully.`;
+              }
              }
            
              // Only push if not already added
@@ -480,10 +393,11 @@ if (fileCount > 0) {
            });
 
            }
-                 
-          
+                
           this.formData=new FormData();
           this.clearFileUploads();
+          // this.mlForm?.get('locations')?.reset();
+          
           }
 
         },(error:any)=>{
@@ -497,6 +411,9 @@ if (fileCount > 0) {
 
       }
       else{
+        Object.keys(this.mlForm.controls).forEach((control:any)=>{
+          this.mlForm.get(control)?.markAsTouched();
+        })
         const locations = this.mlForm.get('locations') as FormArray;
 
         if (locations && locations.controls.length > 0) {
@@ -516,147 +433,12 @@ if (fileCount > 0) {
       }        
     }
 
-    onBulkUpload(){
-let formData1 = new FormData();
-      if(this.blForm.invalid){
-        Object.keys(this.blForm.controls).forEach(controlName => {
-          this.blForm.get(controlName)?.markAllAsTouched()
-        });
-      }
-      else{
-         
-       formData1.append('excelFile', this.file, this.fileName);
-       formData1.append('dealer_id', localStorage?.getItem('dealerid')?.toString()??'');
-      
-       formData1.append('brand_id', localStorage?.getItem('brandid')?.toString()??'');
-       formData1.append('user_id', this.userId.toString());
-         this.globalBlockUiService.startLoading();
-        this.stockUploadService.uploadBulkStock(formData1).subscribe((res:any)=>{
-     this.globalBlockUiService.stopLoading();
-      if(res?.headerNotPresent){
-          this.resetBulkForm();
-          if(res?.data?.missingFields){
-            return this.messageService.add({severity:'error',life:4000,summary:`Required Fields for Quantity are not present ${res?.data?.missingFields}!`})
-          }
-          return this.messageService.add({severity:'error',life:4000,summary:'Headers are not matched with the required fields!'})
-        }
-         if(res?.isEmptyFile){
-             this.blForm.reset();
-          this.file=null;
-          this.formData=new FormData();
-          this.clearFileUploads();
-          this.showTable=false;
-          return this.messageService.add({severity:'error',life:4000,summary:'File cannot be Blank!'});
-        }
-        if(res?.mappingNotPresent){
-          this.blForm.reset();
-          this.showTable=false
-           this.resetBulkForm();
-         return this.messageService.add({severity:'error',detail:'Brand Mapping is not available!',life:4000});
-        }
-        if(res?.dealerLocationMappingNotPresent){
-          this.blForm.reset();
-          this.showTable=false;
-           this.resetBulkForm();
-          return this.messageService.add({severity:'error',detail:'Dealer Location Mapping is not available for selected Dealer!',life:4000});
-        }
-        
-      if(res?.mappingNotPresent){
-            this.blForm.reset();
-            this.fu1?.clear();
-             this.resetBulkForm();
-          return  this.messageService.add({severity:'error',detail:'Brand Mapping is not available!!',life:4000});
-          }
-           if(res.length==0){
-          this.blForm.get('file')?.reset();
-           this.file=null;
-           this.resetBulkForm();
-          this.fu1?.clear();
-          return this.messageService.add({severity:'success',detail:'Inventory Location Does not exists or Parts Uploaded are not in master Please contact Admin or recheck File ',life:4000})
-        }
-          else{
-            this.showTable=true;
-            if (this.dataTable) {
-              this.dataTable.reset(); // Reset the paginator after data changes
-            }
-           this.getBulkRecords();
-
-           if(res?.error){
-             this.blForm.reset();
-             this.fu1?.clear();
-             this.file=null;
-             this.fileName=''
-             formData1=new FormData();
-            return this.messageService.add({severity:'error',life:4000,detail:'Error is uploaded File!'});
-           }else{
-            // this.visible=true;
-            let responseData=res;
-             this.file=null;
-             this.fileName=''
-             this.resetBulkForm();
-          //   console.log("inventory location ",res[0].inventoryLocationNotExist)
-             if(res[0]?.inventoryLocationNotExist.length>0){
-               this.messageService.add({severity:'success',detail:`Data Uploaded Succesfully! Inventory Location doesn't exist for ${res[0]?.inventoryLocationNotExist.join(', ')}`,life:10000});
-             }else{
-               
-               this.messageService.add({severity:'success',detail:'Data Uploaded Succesfully!',life:4000});
-             }
-         //   this.getBulkPartNotInMasterRecords()
-         //   console.log("uploaded locations ",responseData)         
-           }
-                 
-          
-           formData1=new FormData();
-           this.blForm.reset();
-           this.resetBulkForm();
-            this.file=null;
-             this.fileName=''
-          this.clearFileUploads();
-          }
-        },(error:any)=>{
-
-          this.fu1?.clear()
-           this.globalBlockUiService.stopLoading();
-           this.resetBulkForm();
-            this.file=null;
-             this.fileName=''
-           formData1=new FormData();
-            this.blForm.reset();
-        })
-      }
-    }
-
-    resetBulkForm(){
-      this.file=null;
-      this.fileName=''
-      this.blForm.reset();
-      this.showUploader = false;
-  setTimeout(() => this.showUploader = true, 10);
-    }
+    
 
     clearResponse() {
       this.response = [];
     }
    
-    // clearFileUploads() {
-    //   if (this.fu && this.fu.toArray().length > 0 && this.locationControls.controls.length > 0) {
-    //     this.locationControls.controls.forEach((locationControl, index) => {
-    //       const fileControl = locationControl.get('file');
-    //       if (fileControl) {
-    //         fileControl.setValue(null);
-    //         fileControl.markAsPristine();
-    //         fileControl.markAsUntouched();
-    //       }
-    
-    //       const fileUpload = this.fu?.toArray()[index];
-    //       if (fileUpload) {
-    //         fileUpload.clear();       // Clear internal state
-    //         fileUpload.files = [];    // Ensure files array is cleared
-    //       }
-    //     });
-    //   }
-    // }
-
     clearFileUploads() {
  if (this.fu && this.fu.toArray().length > 0 && this.locationControls.controls.length > 0) {
   // console.log("sjdfhjsd")
@@ -703,39 +485,7 @@ let formData1 = new FormData();
       });
 
 
-    }
-
-
-    getBulkRecords(){
-
-      this.globalBlockUiService.startLoading();
-        this.stockUploadServiceBySCSUser.getAllBulkRecords({dealer_id:localStorage.getItem('dealerid'),added_by:this.userId}).subscribe((res:any)=>{
-          this.globalBlockUiService.stopLoading();
-          this.records=[];
-          this.records=res.data;
-      // console.log("locations ",this.locations)
-      this.addedOn=res.data.added_on;
-    
-     this.records= this.records.map((item:any)=>{
-      
-      let locationObj=this.locations.find((obj:any)=>obj.location_id==parseInt(item.location_id,10));
-    //   console.log("locObj ",locationObj,item.location_id)
-      let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
-   // console.log("loc obj ",locationObj,this.locations)
-      return{
-        ...item,
-        added_on: (item.added_on),
-        locationName:locationObj?.location_name,
-        added_by:userObj?.vcFirstName+' '+userObj.vcLastName
-      }
-       
-       
-     })
-    })
-
-   // console.log("records for bulk ",this.records)
-    }
-    
+    } 
     getRecords(){
     
       const locations = this.mlForm.get('locations')?.value;
@@ -746,9 +496,16 @@ let formData1 = new FormData();
 const filteredLocations = allLocations
   .filter((loc: any) => loc.file && typeof loc.file == 'object' && loc.file instanceof File)
   // .map((loc: any) => loc.location); // Only extract location_id
-      this.stockUploadService.getRecordsMultiLocation({locations:filteredLocations}).subscribe((res:any)=>{
+
+  let locationIds=[]
+  for(let i=0;i<filteredLocations?.length;i++){
+    locationIds.push({locationId:filteredLocations[i].location});
+  }
+      this.tocService.getRecords({dealerId:this.dealerId,locations:locationIds}).subscribe((res:any)=>{
         this.records=[];
         this.records=res.data;
+         let brandObj=this.brands.find((obj:any)=> obj.brand_id==this.mlForm.value.brand)
+      let dealerObj=this.dealers.find((obj:any)=>obj.dealer_id==this.mlForm.value.dealer)
         this.globalBlockUiService.stopLoading();
        
       this.addedOn=res.data.added_on;
@@ -758,16 +515,18 @@ const filteredLocations = allLocations
 
       this.records = this.records.flat().map((item: any) => {
         // Find the location object based on location_id
-        let locObj = this.locations.find((obj: any) => obj.location_id == item.location_id);
+        let locObj = this.locations.find((obj: any) => obj.location_id == item.locationId);
       
-        let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
+        let userObj=this.users.find((obj:any)=>obj.userId==item.userId)
         // Return the updated item with formatted date, locationName, and added_by
         return {
           ...item,
-          added_on: (item.added_on),  // Format the added_on date
+           brandName:brandObj?.brand,
+        dealerName:dealerObj?.dealer_name,
+          added_on: (item.addedOn),  // Format the added_on date
           locationName: locObj?.location_name || '',  // Default locationName if not found
-          added_by:  userObj?.vcFirstName +' '+userObj?.vcLastName  // Ensure added_by is always set, defaulting to empty string if undefined
-       
+          added_by:  userObj?.vcFirstName +' '+userObj?.vcLastName , // Ensure added_by is always set, defaulting to empty string if undefined
+           tocDate:item.tocDate
         };
       });
   
@@ -775,25 +534,8 @@ const filteredLocations = allLocations
       // console.log("records ",this.records)
       },(error:any)=>{
         this.globalBlockUiService.stopLoading();
-        // this.messageService.add({severity:'error',detail:'Error in uploading the file!!',life:300000});
+         this.messageService.add({severity:'error',detail:'Internal Server Error!!',life:300000});
       })
-    }
-
-    getBulkPartNotInMasterRecords(){
-      this.globalBlockUiService.startLoading();
- this.stockUploadService.getPartNotInMasterForBulk({brand_id:localStorage.getItem('brandid')}).subscribe((res:any)=>{
-      this.globalBlockUiService.stopLoading();
-      this.partNotInMasterData=[];
-      this.partNotInMasterData=res.data;
-      if(this.partNotInMasterData.length>0){
-        this.isDataPresentPartNotInMaster=true;
-      }else{
-        this.isDataPresentPartNotInMaster=false;
-      }
-    },(error:any)=>{
-      this.globalBlockUiService.stopLoading();
-      this.messageService.add({severity:'error',summary:'Error in getting the part not in master !',life:4000})
-    });
     }
 
    selectLocation(index: number, locationId: any) {
@@ -809,7 +551,7 @@ const filteredLocations = allLocations
         this.globalBlockUiService.stopLoading();
         this.locations=res.data;
         this.initializeFormArray(); 
-         this.initializeFormArray();
+       //  this.initializeFormArray();
         // console.log(this.brands)
       },(error:any)=>{
         this.globalBlockUiService.stopLoading();
@@ -847,12 +589,19 @@ const filteredLocations = allLocations
   }
     exportTableData(){
 
+       let brandObj=this.brands.find((obj:any)=> obj.brand_id==this.mlForm.value.brand)
+    let dealerObj=this.dealers.find((obj:any)=>obj.dealer_id==this.mlForm.value.dealer)
+
+   // console.log(brandObj,dealerObj,this.mlForm.value.brand,this.mlForm.value.dealer)
        const modifiedData = this.records.map((item: any) => ({
+              ['Brand']:brandObj?.brand,
+                ['Dealer']:dealerObj?.dealer_name,
                 ['Location']: item.locationName,
-                ['Previous Records']: item.prevStockUploadCount !=null?item.prevStockUploadCount:0 ,
-                ['Current Records']: item.stockUploadCount !=null?item.stockUploadCount :0,
-                ['Previous Sum Quantity']: item.prevQuantitySum !=null ?item.prevQuantitySum:0,
-                ['Current Sum Quantity']: item.quantitySum  !=null ?item.quantitySum:0,
+                ['Previous Records']: item.prevRecordsCount !=null?item.prevRecordsCount:0 ,
+                ['Current Records']: item.currentRecordsCount !=null?item.currentRecordsCount :0,
+                ['Previous Sum Quantity']: item.prevSumQuantity !=null ?item.prevSumQuantity:0,
+                ['Current Sum Quantity']: item.currentSumQuantity  !=null ?item.currentSumQuantity:0,
+                 ['TOC Date ']: this.datePipe.transform(item.tocDate,'dd-MM-yyyy'),
                 ['Added On ']: this.formatDate(item.added_on),
                 ['Added By ']:item.added_by
                
@@ -975,7 +724,7 @@ const filteredLocations = allLocations
     this.utilitiesService.getLocations({dealer_id:this.mlForm.value.dealer}).subscribe((res:any)=>{
       this.locations=res.data;
       // this.updateFormArray();
-     
+        this.initializeFormArray(); 
       this.globalBlockUiService.stopLoading();
       if(res?.data?.error){
         this.globalBlockUiService.stopLoading();
@@ -984,49 +733,6 @@ const filteredLocations = allLocations
     },(error:any)=>{
       this.globalBlockUiService.stopLoading();
     })
-    }
-
-    getBulkUploadedData(){
-
-      this.stockUploadServiceBySCSUser.getUploadedData({dealer_id:localStorage.getItem('dealerid'),user_id:this.userId}).subscribe((blob:any)=>{
-      const link = document.createElement('a');
-      const url = window.URL.createObjectURL(blob);
-
-      // Set the file name and trigger the download
-      link.href = url;
-      link.download = 'uploaded_data.zip'; // You can set a dynamic file name here
-      link.click();
-
-      // Cleanup the object URL after download
-      window.URL.revokeObjectURL(url);
-          this.globalBlockUiService.stopLoading();
-          this.messageService.add({severity:'success',detail:'File is generated succesfully for Uploaded Data',life:3000})
-    },(error:any)=>{
-      this.globalBlockUiService.stopLoading();
-      this.messageService.add({severity:'error',detail:'Error in downloading the file',life:4000});
-    }) 
-    }
-
-    getPartNotInMasterBulk(){
-      this.stockUploadService.getPartNotInMasterForBulk({dealer_id:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
-         this.partNotInMasterData=res.data;
-          if(this.partNotInMasterData.length==0){
-            this.isDataPresentPartNotInMaster=false;
-          }
-          else{
-            this.isDataPresentPartNotInMaster=true;
-             if(this.partNotInMasterData?.length>0){
-      const ws = XLSX.utils.json_to_sheet(this.partNotInMasterData);
-          
-              // Create a workbook and append the worksheet
-              const wb = XLSX.utils.book_new();
-              XLSX.utils.book_append_sheet(wb, ws, 'Table Data');
-          
-              // Write the workbook to a file and trigger download
-              XLSX.writeFile(wb, 'part_not_in_master_data.xlsx');
-    }
-          }
-          this.globalBlockUiService.stopLoading();
-      })
+    
     }
 }

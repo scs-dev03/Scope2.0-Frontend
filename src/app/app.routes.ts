@@ -75,6 +75,10 @@ export const routes: Routes = [
         //  canLoad:[authGuard],
         //   canActivate:[authGuard]
     },
+    {
+        path:'toc',
+        loadChildren:()=>import('../app/toc-upload/toc-upload.module').then(m=>m.TOCUploadModule)
+    },
      {
         path:'no-access',
         component:NoAccessComponent

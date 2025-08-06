@@ -78,4 +78,8 @@ export class UtilitiesService {
   getUserInfo(data:any){
     return this.http.post(`${this.url}user/user-details`,data);
   }
+
+  getUploadTypes():Observable<any>{
+    return this.http.get(`${this.url}utilities/uploadTypes`);
+  }
 }

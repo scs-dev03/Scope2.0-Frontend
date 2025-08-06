@@ -1,28 +1,32 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UtilitiesService } from '../../services/utilities.service';
-import { PrimengModuleModule } from '../../shared/primeng-module/primeng-module.module';
-import { SharedModule } from '../../shared/shared.module';
-import { CommonModule } from '@angular/common';
-import { StockUploadBySpmService } from '../../services/stock-upload-by-spm.service';
+import { UtilitiesService } from '../../../services/utilities.service';
+import { PrimengModuleModule } from '../../../shared/primeng-module/primeng-module.module';
+import { SharedModule } from '../../../shared/shared.module';
+import { CommonModule, DatePipe } from '@angular/common';
+import { StockUploadBySpmService } from '../../../services/stock-upload-by-spm.service';
 import * as XLSX from 'xlsx';
-import { GlobalBlockUiService } from '../../services/global-block-ui.service';
+import { GlobalBlockUiService } from '../../../services/global-block-ui.service';
 import { MessageService } from 'primeng/api';
 import { FileUpload } from 'primeng/fileupload';
-import { StockUploadByUserService } from '../../services/stock-upload-by-user.service';
+import { StockUploadByUserService } from '../../../services/stock-upload-by-user.service';
 import { Table } from 'primeng/table';
 import { setActiveConsumer } from '@angular/core/primitives/signals';
-import { SidebarService } from '../../services/sidebar.service';
-import {UserService } from '../../services/user.service'
-import { SharedServiceService } from '../../services/shared-service.service';
+import { SidebarService } from '../../../services/sidebar.service';
+import {UserService } from '../../../services/user.service'
+import { SharedServiceService } from '../../../services/shared-service.service';
+import { TocService } from '../../../services/toc.service';
+
 @Component({
-  selector: 'app-bulk-stock-upload',
+  selector: 'app-admin-bulk-upload',
   imports: [PrimengModuleModule,SharedModule,CommonModule,ReactiveFormsModule,FormsModule],
-  templateUrl: './bulk-stock-upload.component.html',
-  styleUrl: './bulk-stock-upload.component.css'
+  providers:[MessageService,DatePipe],
+  templateUrl: './admin-bulk-upload.component.html',
+  styleUrl: './admin-bulk-upload.component.css'
 })
-export class BulkStockUploadComponent {
- selectedFile:any;
+export class AdminBulkUploadComponent {
+
+  selectedFile:any;
   isLoading:boolean=false;
   locations:any=[];
   file:any;
@@ -45,6 +49,7 @@ export class BulkStockUploadComponent {
   dealers:any=[];
   min:any;
   max:any;
+  userName:any;
   @ViewChild('dataTable') dataTable: Table | undefined;
   isDataPresentForPartNotInMaster:boolean=false;
   isDataPresentForPreviousUpload:boolean=false;
@@ -60,7 +65,9 @@ export class BulkStockUploadComponent {
    private stockUploadServiceBySCSUser:StockUploadByUserService,
    private sidebarService:SidebarService,
    private userService: UserService,
-   private sharedService:SharedServiceService
+   private sharedService:SharedServiceService,
+   private tocService:TocService,
+   private datePipe:DatePipe
   ){
  
    this.mlForm=this.fb.group({
@@ -82,7 +89,7 @@ export class BulkStockUploadComponent {
    this.min.setMonth(this.max.getMonth() - 3);
   //  this.userId=this.users[0].id;
   this.userId=localStorage.getItem('userid');
-
+  this.userName=localStorage.getItem('username');
    this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible;
    })
@@ -91,7 +98,7 @@ export class BulkStockUploadComponent {
     this.users=users;
    })
 
-    this.sharedService.updateModuleName('Bulk Stock Upload')
+    this.sharedService.updateModuleName('Bulk TOC Upload')
   }
  
   getBrands(){
@@ -199,14 +206,17 @@ export class BulkStockUploadComponent {
        formData.append('excelFile', this.file, this.fileName);
        formData.append('dealer_id', dealerId.toString());
        formData.append('brand_id', this.mlForm.value.brand.toString());
-       formData.append('user_id',  this.userId.toString());
+       formData.append('updatedBy',  this.userName.toString());
        formData.append('date',this.mlForm.value.date.toString())
       //  console.log("formData ",formData)
        this.globalBlockUiService.startLoading();
-      this.stockUploadServiceBySCSUser.bulkStockUpload(formData).subscribe((res:any)=>{
+      this.tocService.uploadBulkToc(formData).subscribe((res:any)=>{
         this.getAllRecords();
         this.getPartNotInMaster();
         this.globalBlockUiService.stopLoading();
+           this.file=null;
+          this.fu?.clear();
+          this.selectedFile=null;
         if(res?.headerNotPresent){
           this.fu?.clear();
           this.file=null;
@@ -219,16 +229,25 @@ export class BulkStockUploadComponent {
         if(res?.mappingNotPresent){
           this.mlForm.reset();
           this.showTable=false
+             this.file=null;
+          this.fu?.clear();
+          this.selectedFile=null;
           this.messageService.add({severity:'error',detail:'Brand Mapping is not available!',life:4000});
         }
         if(res?.dealerLocationMappingNotPresent){
           this.mlForm.reset();
           this.showTable=false;
+             this.file=null;
+          this.fu?.clear();
+          this.selectedFile=null;
           this.messageService.add({severity:'error',detail:'Dealer Location Mapping is not available for selected Dealer!',life:4000});
         }
          if(res?.isEmptyFile){
            this.mlForm.reset();
           this.showTable=false;
+             this.file=null;
+          this.fu?.clear();
+          this.selectedFile=null;
           return this.messageService.add({severity:'error',life:4000,summary:'File cannot be Blank!'});
         }
         
@@ -248,23 +267,7 @@ export class BulkStockUploadComponent {
           this.mlForm.reset();
           return this.messageService.add({severity:'success',detail:'Inventory Location Does not exists or Parts Uploaded are not in master Please contact Admin or recheck File ',life:4000})
         }
-        if(res[0]?.currentSumQuantity){
-          this.showTable=true;
-          this.currentUploadQuantity=res.currentSumQuantity
-        }
-        if(res[0]?.prevSumQuantity){
-          this.showTable=true;
-          this.prevUploadQuantity=res.prevUploadQuantity;
-        }
-        if(res[0]?.currentRecords){
-          this.showTable=true;
-          this.currentCountRecords=res.currentRecords;
-        }
-        if(res[0]?.prevRecords){
-          this.showTable=true;
-          this.prevCountRecords=res.prevCountRecords;
-        }
-        
+        this.showTable=true;
           if(res?.allPartsNotInMaster==0){
           this.showTable=true;
            this.getAllRecords();
@@ -283,9 +286,9 @@ export class BulkStockUploadComponent {
           if(res?.allPartsNotInMaster!=0){
 
               if(res[0]?.inventoryLocationNotExist.length>0){
-               this.messageService.add({severity:'success',detail:`Stock Uploaded Succesfully! Inventory Location doesn't exist for ${res[0]?.inventoryLocationNotExist.join(', ')}`,life:10000});
+               this.messageService.add({severity:'success',detail:`TOC Uploaded Succesfully! Inventory Location doesn't exist for ${res[0]?.inventoryLocationNotExist.join(', ')}`,life:10000});
              }else{
-            this.messageService.add({severity:'success',detail:'Stock Uploaded Succesfully!',life:3000});
+            this.messageService.add({severity:'success',detail:'TOC Uploaded Succesfully!',life:3000});
              }
           }
         }
@@ -420,12 +423,17 @@ export class BulkStockUploadComponent {
  
    exportTableData(){
  
+      let brandObj=this.brands.find((obj:any)=> obj.brand_id==this.mlForm.value.brand)
+    let dealerObj=this.dealers.find((obj:any)=>obj.dealer_id==this.mlForm.value.dealer)
       const modifiedData = this.records.map((item: any) => ({
+        ['Brand']:brandObj?.brand,
+          ['Dealer']:dealerObj?.dealer_name,
           ['Location']: item.locationName,
-          ['Previous Records']: item.prevStockUploadCount !=null?item.prevStockUploadCount:0 ,
-          ['Current Records']: item.stockUploadCount !=null ?item.stockUploadCount:0,
-          ['Previous Sum Quantity']: item.prevQuantitySum !=null? item.prevQuantitySum:0,
-          ['Current Sum Quantity']: item.quantitySum !=null? item.quantitySum:0,
+          ['Previous Records']: item.prevRecordsCount !=null?item.prevRecordsCount:0 ,
+          ['Current Records']: item.currentRecordsCount !=null ?item.currentRecordsCount:0,
+          ['Previous Sum Quantity']: item.prevSumQuantity !=null? item.prevSumQuantity:0,
+          ['Current Sum Quantity']: item.currentSumQuantity !=null? item.currentSumQuantity:0,
+           ['TOC Date ']: this.datePipe.transform(item.tocDate,'dd-MM-yyyy'),
           ['Added On ']: this.formatDate(item.added_on),
           ['Added By ']:item.added_by
         
@@ -442,21 +450,25 @@ export class BulkStockUploadComponent {
 
    getAllRecords(){
 
-    this.stockUploadServiceBySCSUser.getAllBulkRecords({dealer_id:this.mlForm.value.dealer,date:this.mlForm.value.date,added_by:this.userId}).subscribe((res:any)=>{
+    this.tocService.getRecords({dealerId:this.mlForm.value.dealer,date:this.mlForm.value.date,added_by:this.userId}).subscribe((res:any)=>{
       this.records=res.data;
       // console.log("locations ",this.locations)
       this.addedOn=res.data.added_on;
-    
+       let brandObj=this.brands.find((obj:any)=> obj.brand_id==this.mlForm.value.brand)
+      let dealerObj=this.dealers.find((obj:any)=>obj.dealer_id==this.mlForm.value.dealer)
      this.records= this.records.map((item:any)=>{
-      let locationObj=this.locations.find((obj:any)=>obj.location_id==parseInt(item.location_id));
-      let userObj=this.users.find((obj:any)=>obj.userId==item.added_by)
+      let locationObj=this.locations.find((obj:any)=>obj.location_id==parseInt(item.locationId));
+      let userObj=this.users.find((obj:any)=>obj.userId==item.userId)
     // console.log("loc obj ",item.operation)
       return{
         ...item,
-        added_on: (item.added_on),
+        added_on: (item.addedOn),
+          brandName:brandObj?.brand,
+        dealerName:dealerObj?.dealer_name,
         locationName:locationObj?.location_name,
-        added_by:userObj?.vcFirstName+' '+userObj.vcLastName,
-        operationType:item?.operation_type=='Bulk Upload for Older Days'?'Older Days':'Current Days'
+        added_by:userObj?.vcFirstName+' '+userObj?.vcLastName,
+        // operationType:item?.operation_type=='Bulk Upload for Older Days'?'Older Days':'Current Days'
+        tocDate:item.tocDate
       }
        
        
@@ -483,6 +495,4 @@ export class BulkStockUploadComponent {
     // Combine and return the formatted string as 'DD-MM-YYYY HH:MM:SS'
     return `${day}-${month}-${year} ${hours}:${minutes}`;
   }
-
- 
 }

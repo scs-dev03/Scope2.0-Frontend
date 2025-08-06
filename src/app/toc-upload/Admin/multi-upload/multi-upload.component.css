@@ -18,18 +18,7 @@
   outline: none !important;
 }
 
-::ng-deep button.p-ripple.p-paginator-page.ng-star-inserted.p-paginator-page-selected {
-    background-color: #007bff7d !important;
-    color: white !important; /* Change text color */
-  
-    font-weight: bold !important;
-    border-radius: 5px;
-    border: none;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    height:30px !important;
-    font-size: 12px !important;
-    z-index:auto !important;
-  }
+
 :host ::ng-deep p-button.pb-3{
     display: flex;
     justify-content: center;
@@ -42,7 +31,7 @@
 .add-mapping-card{
     border:none;
     /* background-color: antiquewhite; */
-    /* background-color: var(--primary-color); */
+    background-color: var(--primary-color);
     border-radius: 6px;
 }
 
@@ -54,39 +43,21 @@
 }
 
 :host ::ng-deep .disabled {
-    /* pointer-events: none;  */
+    /* pointer-events: none; Prevents clicking on the element */
     color: red; /* Optional: Change color to indicate it's disabled */
-   /* background-color: darkred; */
+    /* background-color: darkred; */
     cursor: not-allowed; /* Changes the cursor to indicate it's disabled */
   }
 
-:host ::ng-deep .remove-btn{
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    color: white;
-    font-size: 20px;
-    background-color:rgb(23 128 189 / 42%);
-    border:none;
-    z-index: auto !important;
+:host ::ng-deep .datepicker-collapse input.p-inputtext.p-component {
+    width: 15rem !important;
+    padding: 7px !important
 }
 
-:host ::ng-deep .add-btn{
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    color: white;
-    font-size: 18px;
-    background-color: rgb(23 128 189 / 42%);
-    border:none !important;
-    z-index: auto !important;
-}
+/* :host ::ng-deep {
+    width: 25vw !important;
+
+} */
 
 ::ng-deep button.p-ripple.p-paginator-page.ng-star-inserted.p-paginator-page-selected {
     background-color: #007bff7d !important; /* Change background color */
@@ -96,10 +67,19 @@
     border: none;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
- :host ::ng-deep  button.p-ripple.p-button.p-component.p-button-secondary{
+
+  .dropdown{
+    width: 10rem;
+
+}
+.dropdown-collapse{
+    width: 15rem;
+}
+
+:host ::ng-deep button.p-ripple.p-button.p-component.p-button-secondary{
     border: none !important;
   outline: none !important;
- background-color: var(--theme-color);
+   background-color: var(--theme-color) !important;
   color: white !important;
   /* background-color: rgb(0 0 255 / 34%); */
   padding: 3px !important;
@@ -107,10 +87,11 @@
   z-index: auto !important;
   
 }
-:host ::ng-deep input.p-inputtext.p-component.p-select-filter{
-    font-size: 12px !important;
-}
 
+:host ::ng-deep .p-inputtext{
+    padding: 5px !important;
+    font-size: 12px !important;
+  }
 
 ::ng-deep .upload-icon-only .p-button {
   display: flex;
@@ -128,9 +109,3 @@
   margin: 0 !important;
   font-size: 1.2rem; /* Adjust icon size if needed */
 }
-
-::ng-deep .p-fileupload-basic{
-    display: flex !important;
-    justify-content: flex-start !important;
-}
-  
