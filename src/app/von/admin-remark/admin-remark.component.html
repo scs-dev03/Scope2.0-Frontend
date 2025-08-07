@@ -1,4 +1,4 @@
-<div class="relative h-auto w-full  overflow-auto">
+<div class="relative h-auto w-full overflow-auto">
   <!-- <app-loader [isloading]="isloading"></app-loader> -->
 
   <div class="flex flex-wrap items-start justify-between p-3">
@@ -7,111 +7,106 @@
     </div> -->
 
     <div
-      class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-3 items-center  bg-white rounded shadow-sm"
+      class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-3 items-center bg-white rounded shadow-sm"
     >
-  <form
-      action=""
-      [formGroup]="adminRemarkInputData"
-      class="flex  flex-wrap  items-center gap-2 w-full"
-    >
-    <div class="flex-col">
-      <p-floatlabel variant="on">
-        <p-select
-          formControlName="type"
-          [options]="typeData"
-          optionValue="code"
-          showClear="true"
-          appendTo="body"
-          optionLabel="name"
-          class="!w-40 h-8 !text-xs"
-          
-          [ngClass]="{
-            'p-invalid':
+      <form
+        action=""
+        [formGroup]="adminRemarkInputData"
+        class="flex flex-wrap items-center gap-2 w-full"
+      >
+        <div class="flex-col">
+          <p-floatlabel variant="on">
+            <p-select
+              formControlName="type"
+              [options]="typeData"
+              optionValue="code"
+              showClear="true"
+              appendTo="body"
+              optionLabel="name"
+              class="!w-40 h-8 !text-xs"
+              [ngClass]="{
+                'p-invalid':
+                  adminRemarkInputData.get('type')?.invalid &&
+                  adminRemarkInputData.get('type')?.touched
+              }"
+              inputId="type"
+            />
+            <label for="type" class="text-xs !font-normal">Type</label>
+          </p-floatlabel>
+
+          <!-- Validation message -->
+          <div
+            *ngIf="
               adminRemarkInputData.get('type')?.invalid &&
               adminRemarkInputData.get('type')?.touched
-          }"
-          inputId="type"
-        />
-        <label for="type" class="text-xs !font-normal">Type</label>
-      </p-floatlabel>
-
-      <!-- Validation message -->
-      <div
-        *ngIf="
-          adminRemarkInputData.get('type')?.invalid &&
-          adminRemarkInputData.get('type')?.touched
-        "
-        class="text-red-500 text-[10px] mt-1"
-      >
-        Type is required.
-      </div>
-
-    </div>
-      
-
-      <p-floatlabel variant="on">
-        <p-select
-          formControlName="brand"
-          [options]="brandData"
-          showClear="true"
-          appendTo="body"
-          optionValue="bigid"
-          optionLabel="vcbrand"
-          class="!w-40 h-8 !text-xs"
-        />
-        <label for="brand" class="text-xs !font-normal">Brand</label>
-      </p-floatlabel>
-
-      <div class="card flex flex-col justify-center">
-        <textarea
-          rows="5"
-          cols="30"
-          pTextarea
-          [attr.aria-placeholder]="'Enter your name'"
-          placeholder="Enter Remark"
-          class="h-8 text-xs rounded-sm  p-2 w-72"
-          formControlName="remarkInput"
-        ></textarea>
-        <div *ngIf="adminRemarkInputData.get('remarkInput')?.errors">
-          <div
-            class="text-red-500 text-xs"
-            *ngIf="adminRemarkInputData.get('remarkInput')?.errors?.['maxLength']"
+            "
+            class="text-red-500 text-[10px] mt-1"
           >
-            Maximum 50 characters allowed.
-          </div>
-          <div
-            *ngIf="adminRemarkInputData.get('remarkInput')?.errors?.['invalidCharacters']"
-            class="text-red-500 text-xs"
-          >
-            Only alphanumeric characters "," "-" and " " are allowed.
+            Type is required.
           </div>
         </div>
-      </div>
 
-      <div class="">
-        <p-button
-          label="Submit"
-          size="small"
-          [disabled]="adminRemarkInputData.invalid"
-          (click)="onSubmitRemarkData()"
-          class=""
-        />
-      </div>
-      <div class="">
-        <p-button
-          label="Show Table"
-          size="small"
-          [disabled]="adminRemarkInputData.invalid"
-          (click)="onclickShowTable()"
-          class=""
-        />
-      </div>
-    </form></div>
-    
+        <p-floatlabel variant="on">
+          <p-select
+            formControlName="brand"
+            [options]="brandData"
+            showClear="true"
+            appendTo="body"
+            optionValue="bigid"
+            optionLabel="vcbrand"
+            class="!w-40 h-8 !text-xs"
+          />
+          <label for="brand" class="text-xs !font-normal">Brand</label>
+        </p-floatlabel>
 
-    <div class="flex justify-center w-full mt-3 scale-[.8]" *ngIf="showtable">
+        <div class="card flex flex-col justify-center">
+          <textarea
+            rows="5"
+            cols="30"
+            pTextarea
+            [attr.aria-placeholder]="'Enter your name'"
+            placeholder="Enter Remark"
+            class="h-8 text-xs rounded-sm p-2 w-72"
+            formControlName="remarkInput"
+          ></textarea>
+          <div *ngIf="adminRemarkInputData.get('remarkInput')?.errors">
+            <div
+              class="text-red-500 text-xs"
+              *ngIf="adminRemarkInputData.get('remarkInput')?.errors?.['maxLength']"
+            >
+              Maximum 50 characters allowed.
+            </div>
+            <div
+              *ngIf="adminRemarkInputData.get('remarkInput')?.errors?.['invalidCharacters']"
+              class="text-red-500 text-xs"
+            >
+              Only alphanumeric characters "," "-" and " " are allowed.
+            </div>
+          </div>
+        </div>
+
+        <div class="">
+          <p-button
+            label="Submit"
+            size="small"
+            [disabled]="adminRemarkInputData.invalid"
+            (click)="onSubmitRemarkData()"
+            class=""
+          />
+        </div>
+        <div class="">
+          <p-button
+            label="Show Table"
+            size="small"
+            [disabled]="adminRemarkInputData.invalid"
+            (click)="onclickShowTable()"
+            class=""
+          />
+        </div>
+      </form>
+      <div class="flex justify-center w-full" *ngIf="showtable">
       <div
-        class="!w-auto h-auto md:w-[120vw] flex items-center justify-center p-3 bg-gray-50 rounded-lg shadow-lg mb-5"
+        class="!w-auto h-auto  flex items-center justify-center p-3 bg-gray-50 rounded-lg shadow-lg mb-5"
       >
         <div class="p-text-secondary mb-8">
           <p-table
@@ -172,6 +167,7 @@
           </p-table>
         </div>
       </div>
+    </div>
     </div>
   </div>
 
