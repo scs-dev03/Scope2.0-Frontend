@@ -308,4 +308,156 @@
       </div>
     </div>
   </div>
+  <br>
+  <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2" >
+    <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+      <p-table
+        [scrollable]="true"
+        scrollHeight="600px"
+        [showGridlines]="true"
+        scrollDirection="both"
+        class="!w-[90vw]"
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template #header>
+          <tr class="">
+            <th
+              class="!px-1 flex-auto !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px] !min-h-[22px]"
+            >
+              S.No
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Vehivle Number
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+            >
+              Vehicle Model
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+            >
+              Advisor Name
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+            >
+              Floor Supervisor
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Part Number
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Latest Part Number
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Substitution
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Part Description
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              MOQ
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Quantity
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Price
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Stock as on
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Group Stock
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Non Moving Check
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              OOQ
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Order Type
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Order Value
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Open Jobline with Open JC
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Order Date
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Action
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Order Remark
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-rowData let-i="rowIndex">
+          <tr
+            class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+          >
+            <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.Dashboard }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      
+      <!-- <p-paginator
+          class="h-6 w-full text-sm"
+          (onPageChange)="onPageChange($event)"
+          [first]="first"
+          [rows]="rows"
+          [appendTo]="body"
+          pagginatordropdownappendto="body"
+          [totalRecords]="120"
+          [rowsPerPageOptions]="[10, 20, 30]"
+        /> -->
+    </div>
+  </div>
 </div>
