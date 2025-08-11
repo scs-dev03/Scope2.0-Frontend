@@ -251,8 +251,9 @@
         header="Rule Output Condition"
         [modal]="true"
         [(visible)]="visible"
-        [style]="{ width: '40rem', height: '70%' }"
+        [style]="{ width: '40rem', height: '80%' }"
       >
+      
         <span class="p-text-secondary block mb-8 text-lg font-semibold"
           >If Success</span
         >
@@ -263,7 +264,7 @@
             optionLabel="label"
             optionValue="value"
             placeholder="Select a Action "
-            class="w-full "
+            class="w-full h-8 md:w-48 "
           />
 
           <input pInputText id="success" pSize="small" class="flex-auto" autocomplete="off" />
@@ -279,7 +280,7 @@
             optionLabel="label"
             optionValue="value"
             placeholder="Select a Action "
-            class="w-full md:w-56"
+            class="w-full h-8 md:w-48"
           />
           <input
             pInputText
@@ -292,10 +293,11 @@
         <div class="flex justify-end gap-2">
           <p-button
             label="Cancel"
+            size="small"
             severity="secondary"
             (click)="visible = false"
           />
-          <p-button label="Save" (click)="visible = false" />
+          <p-button label="Save" size="small" (click)="visible = false" />
         </div>
       </p-dialog>
 

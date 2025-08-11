@@ -7,6 +7,7 @@ import { UpdatePasswordWhileCreateUserComponent } from './update-password-while-
 import { HomePageComponent } from './home-page/home-page.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { authGuard } from '../auth.guard';
+import { DropZoneComponent } from './drop-zone/drop-zone.component';
 
 
 const routes: Routes = [
@@ -15,7 +16,10 @@ const routes: Routes = [
     path: 'landing',
     component: LandingScreenComponent,
   },
-
+  {
+    path: 'upload',
+    component: DropZoneComponent
+  },
   {
     path: 'redirect',
     component: ScopeRedirectComponent,
@@ -28,7 +32,7 @@ const routes: Routes = [
 },
 {
     path: 'home',
-    //component: HomePageComponent,
+    component: HomePageComponent,
     //canActivate:[authGuard]
   },
   // {
