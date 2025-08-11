@@ -1,5 +1,0 @@
-:host ::ng-deep .p-datepicker .p-inputtext {
-  width: 100% !important;
-  height: 2rem !important; /* h-8 = 32px = 2rem */
-  font-size: 0.875rem;     /* text-sm */
-}

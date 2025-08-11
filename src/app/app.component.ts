@@ -2,7 +2,7 @@ import { Component, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { CoreModule } from './core/core.module';
 import { SidebarComponent } from "./core/sidebar/sidebar.component";
-import { HeaderComponent } from "./core/header/header.component";
+
 import { CommonModule } from '@angular/common';
 import { PrimengModuleModule } from './shared/primeng-module/primeng-module.module';
 import { SharedModule } from './shared/shared.module';
@@ -22,7 +22,7 @@ import { IdleService } from './services/idle.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CoreModule, SidebarComponent, HeaderComponent, CommonModule, SharedModule, PrimengModuleModule, SHARED_IMPORTS, ReactiveFormsModule],
+  imports: [RouterOutlet, CoreModule, SidebarComponent, CommonModule, SharedModule, PrimengModuleModule, SHARED_IMPORTS, ReactiveFormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -104,11 +104,11 @@ export class AppComponent {
     });
 
     this.userService.loadDataOnce();
-    // localStorage.setItem('usertype','U');
-    // localStorage.setItem('brandid','9');
-    // localStorage.setItem('dealerid','8');
-    // localStorage.setItem('def_location','14')
-    //  localStorage.setItem('usertoken','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
+    localStorage.setItem('usertype','U');
+    localStorage.setItem('brandid','9');
+    localStorage.setItem('dealerid','8');
+    localStorage.setItem('def_location','14')
+     localStorage.setItem('usertoken','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
     let userToken = localStorage.getItem('usertoken');
 
     this.utilitiesService.getUserInfo({ token: userToken }).subscribe((res: any) => {
