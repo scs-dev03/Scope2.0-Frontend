@@ -4,12 +4,6 @@ import { authGuard } from '../auth.guard';
 
 const routes: Routes = [
   {
-    path: 'rule',
-    loadChildren: () => import('../auto-approval/rule-management/rule-management.module').then(m => m.RuleManagementModule),
-    //  canLoad:[authGuard],
-    //  canActivate:[authGuard]
-  },
-  {
     path: 'order',
     loadChildren: () => import('../auto-approval/create-order-request/create-order-request.module').then(m => m.CreateOrderRequestModule),
     // canLoad:[authGuard],
