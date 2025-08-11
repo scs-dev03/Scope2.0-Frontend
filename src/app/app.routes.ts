@@ -31,6 +31,12 @@ export const routes: Routes = [
          canLoad:[authGuard],
          canActivate:[authGuard]
     },
+    {
+        path:'auto',
+        loadChildren:()=> import('../app/auto-approval/auto-approval.module').then(m=>m.AutoApprovalModule),
+        //  canLoad:[authGuard],
+        //  canActivate:[authGuard]
+    },
 
     {
         path:'stock-upload',
@@ -62,6 +68,12 @@ export const routes: Routes = [
         loadChildren:()=>import('../app/lead-time/lead-time.module').then(m=>m.LeadTimeModule),
           // canLoad:[authGuard],
           // canActivate:[authGuard]
+    },
+    {
+        path: 'logs',
+        loadChildren: () => import('../app/logs-management/logs-management.module').then(m => m.LogsManagementModule),
+        //  canLoad:[authGuard],
+        //  canActivate:[authGuard]
     },
     {
         path:'user',

@@ -35,7 +35,6 @@ export class SharedServiceService {
   }
 
   updateModuleName(data:any){
-
     this.headerData.next(data);
   }
 

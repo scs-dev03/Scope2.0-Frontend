@@ -18,18 +18,18 @@ import { SharedServiceService } from '../../services/shared-service.service';
 export class AdminpendingcountComponent {
 
   ngOnInit(): void {
-    
+
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.fetchpendingcount();
-     this.sharedService.updateModuleName('Admin Pending Count')
-    
+    this.sharedService.updateModuleName('Admin Pending Count')
+
   }
 
-   constructor(private adminvonservice: AdminvonserviceService, 
-    private router: Router,private globalBlockUiService:GlobalBlockUiService,
-    private sharedService:SharedServiceService
-  ) {}
+  constructor(private adminvonservice: AdminvonserviceService,
+    private router: Router, private globalBlockUiService: GlobalBlockUiService,
+    private sharedService: SharedServiceService
+  ) { }
 
 
   pendingcount: any = []
@@ -46,23 +46,23 @@ export class AdminpendingcountComponent {
     });
   }
 
-   fetchpendingcount(){
+  fetchpendingcount() {
     this.globalBlockUiService.startLoading()
-    this.adminvonservice.getPendingCount().subscribe((res:any)=>{
+    this.adminvonservice.getPendingCount().subscribe((res: any) => {
       this.pendingcount = res.Data
       this.globalBlockUiService.stopLoading()
     })
-   }
+  }
 
 
 
-   sidebarvisible: boolean = false;
-    
-   
+  sidebarvisible: boolean = false;
 
-    onClickSidebar(){
-        this.sidebarvisible = true
-        console.log(this.sidebarvisible);
-        
-    }
+
+
+  onClickSidebar() {
+    this.sidebarvisible = true
+    console.log(this.sidebarvisible);
+
+  }
 }

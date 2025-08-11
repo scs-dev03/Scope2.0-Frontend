@@ -25,14 +25,27 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
+import { TagModule } from 'primeng/tag';
+import { BadgeModule } from 'primeng/badge';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { ProgressBarModule } from 'primeng/progressbar';
+// For dynamic progressbar demo
+
+
+
 
 const modules=[
+  TagModule,
+  BadgeModule,
+  ProgressBarModule,
+  OverlayBadgeModule,
   MultiSelectModule,
   ButtonModule,
   SelectModule,
   TableModule,
   DialogModule,
   FileUploadModule,
+  RadioButtonModule,
     SidebarModule,
     InputTextModule,
     DatePickerModule,

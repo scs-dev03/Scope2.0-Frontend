@@ -1,0 +1,463 @@
+<div class="min-w-full h-full bg-gray-100">
+  <h1 class="text-xl font-serif ml-2">Vehicle Order Request</h1>
+
+  <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
+    <div
+      class="min-w-full min-h-[15vh] flex-wrap flex-col p-2 gap-3 shadow-lg border-dashed border-2 bg-white rounded-md border-white"
+    >
+      <br />
+
+      <div class="flex gap-4 flex-wrap" [formGroup]="VechileOrderRequestInput">
+        <div>
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="on_label"
+              formControlName="VechileNumber"
+              autocomplete="off"
+              class="w-40 h-8"
+            />
+            <label class="text-xs" for="on_label">Vehicle Number</label>
+          </p-floatlabel>
+          <div
+            class="text-red-500 text-[10px]"
+            *ngIf="
+              VechileOrderRequestInput.get('VechileNumber')?.touched &&
+              VechileOrderRequestInput.get('VechileNumber')?.invalid
+            "
+          >
+            <span
+              *ngIf="VechileOrderRequestInput.get('VechileNumber')?.errors?.['required']"
+              >Vehicle Number is required.</span
+            >
+            <span
+              *ngIf="VechileOrderRequestInput.get('VechileNumber')?.errors?.['pattern']"
+              >Must be 10 letters/numbers
+            </span>
+          </div>
+        </div>
+        <p-floatlabel variant="on">
+          <input
+            pInputText
+            id="on_label"
+            formControlName="VechileModel"
+            autocomplete="off"
+            class="w-40 h-8"
+          />
+          <label class="text-xs" for="on_label">Vehicle Model</label>
+        </p-floatlabel>
+
+        <div>
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="on_label"
+              formControlName="JobCardNumber"
+              autocomplete="off"
+              class="w-40 h-8"
+            />
+            <label class="text-xs" for="on_label">Job Card Number</label>
+          </p-floatlabel>
+          <div
+            class="text-red-500 text-[10px]"
+            *ngIf="
+              VechileOrderRequestInput.get('JobCardNumber')?.touched &&
+              VechileOrderRequestInput.get('JobCardNumber')?.invalid
+            "
+          >
+            <span
+              *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['required']"
+              >Vehicle Number is required.</span
+            >
+            <span
+              *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['pattern']"
+              >Must be 15 letters/numbers
+            </span>
+          </div>
+        </div>
+      </div>
+      <br />
+
+      <div class="flex gap-4 flex-wrap" [formGroup]="VechileOrderRequestInput">
+        <div>
+          <p-floatlabel class="w-40" variant="on">
+            <p-select
+              inputId="on_label"
+              optionLabel="name"
+              class="w-40 h-8"
+              formControlName="JobCardType"
+            />
+            <label for="on_label" class="text-xs">Job Card Type</label>
+          </p-floatlabel>
+          <div
+            class="text-red-500 text-[10px]"
+            *ngIf="VechileOrderRequestInput.get('JobCardType')?.touched"
+          >
+            <span
+              *ngIf="VechileOrderRequestInput.get('JobCardType')?.errors?.['required']"
+              >Job Card Type is required.</span
+            >
+          </div>
+        </div>
+
+        <div>
+          <p-floatlabel class="w-40" variant="on">
+            <p-select
+              inputId="on_label"
+              optionLabel="name"
+              class="w-40 h-8"
+              formControlName="Advisor"
+            />
+            <label for="on_label" class="text-xs">Select Advisor</label>
+          </p-floatlabel>
+          <div
+            class="text-red-500 text-[10px]"
+            *ngIf="VechileOrderRequestInput.get('Advisor')?.touched"
+          >
+            <span
+              *ngIf="VechileOrderRequestInput.get('Advisor')?.errors?.['required']"
+              >Advisor is required.</span
+            >
+          </div>
+        </div>
+        <div>
+          <p-floatlabel class="w-40" variant="on">
+            <p-select
+              inputId="on_label"
+              optionLabel="name"
+              class="w-40 h-8"
+              formControlName="OrderType"
+            />
+            <label for="on_label" class="text-xs">Order Type</label>
+          </p-floatlabel>
+          <div
+            class="text-red-500 text-[10px]"
+            *ngIf="VechileOrderRequestInput.get('OrderType')?.touched"
+          >
+            <span
+              *ngIf="VechileOrderRequestInput.get('OrderType')?.errors?.['required']"
+              >Order Type is required.</span
+            >
+          </div>
+        </div>
+      </div>
+      <br />
+      <p class="text-md font-medium">Order Upload</p>
+      <div
+        class="w-full max-w-full flex gap-5 flex-wrap items-center bg-gray-100 p-3 font-medium"
+      >
+        <p-button
+         
+          size="small"
+          icon="pi pi-download"
+          [style]="{ 'background-color': '#008080', color: '#fff' }"
+          (onClick)="SampleExcelDownload()"
+          iconPos="right"
+          class="text-xs"
+        />
+        <p-fileupload
+          name="demo[]"
+          url="https://www.primefaces.org/cdn/api/upload.php"
+          [multiple]="true"
+          accept="xlxs/*"
+          class="text-xs"
+          [maxFileSize]="1000000"
+          mode="advanced"
+          chooseLabel="Choose"
+          [chooseStyleClass]="
+            'w-[84px] background-color: #008080, color: #fff h-[30px] !text-[12px]'
+          "
+          uploadLabel="Upload"
+          cancelLabel="Cancel"
+          styleClass="w-auto"
+        >
+          <!-- <ng-template #empty>
+            <div class="text-gray-500 text-sm">
+              Drag and drop files here to upload.
+            </div>
+          </ng-template> -->
+        </p-fileupload>
+      </div>
+      <br />
+      <p-divider />
+
+      <div class="flex justify-start bg-white">
+        <p class="text-md font-medium">Add Part Wise</p>
+      </div>
+      <br />
+
+      <div [formGroup]="AddPartWise">
+        <div formArrayName="parts">
+          <!-- Loop through each part -->
+          <div
+            *ngFor="let part of parts.controls; let i = index"
+            [formGroupName]="i"
+            class="flex flex-wrap gap-3 mb-3"
+          >
+            <!-- Part Number Field -->
+            <div class="flex flex-col items-start gap-2">
+              <div>
+                <label for="partnumber-{{ i }}" class="text-sm mt-1 font-medium"
+                  >Part Number :</label
+                >
+                <input
+                  type="text"
+                  id="partnumber-{{ i }}"
+                  formControlName="PartNumber"
+                  placeholder="Enter Part Number"
+                  pInputText
+                  class="w-44 h-8 ml-2 !text-xs"
+                />
+              </div>
+              <div
+                *ngIf="part.get('PartNumber')?.touched"
+                class="text-red-500 text-[10px]"
+              >
+                <span *ngIf="part.get('PartNumber')?.errors?.['required']"
+                  >Part Number is required.</span
+                >
+              </div>
+            </div>
+
+            <!-- Quantity Field -->
+            <div class="flex flex-col items-start gap-2">
+              <div>
+                <label for="qty-{{ i }}" class="text-sm mt-1 font-medium"
+                  >Quantity :</label
+                >
+                <input
+                  type="text"
+                  id="qty-{{ i }}"
+                  formControlName="Quantity"
+                  placeholder="Enter Quantity"
+                  class="w-44 h-8 ml-2 !text-xs"
+                  pInputText
+                />
+              </div>
+              <div
+                *ngIf="part.get('Quantity')?.touched"
+                class="text-red-500 text-[10px]"
+              >
+                <span *ngIf="part.get('Quantity')?.errors?.['required']"
+                  >Quantity is required.</span
+                >
+              </div>
+            </div>
+
+            <!-- Remark Field -->
+            <div class="flex flex-col items-start gap-2">
+              <div>
+                <label for="remark-{{ i }}" class="text-sm mt-1 font-medium"
+                  >Remark :</label
+                >
+                <input
+                  type="text"
+                  id="remark-{{ i }}"
+                  formControlName="Remark"
+                  placeholder="Enter Remark"
+                  class="w-44 h-8 ml-2 !text-xs"
+                  pInputText
+                />
+              </div>
+              <div
+                *ngIf="part.get('Remark')?.touched"
+                class="text-red-500 text-[10px]"
+              >
+                <span *ngIf="part.get('Remark')?.errors?.['required']"
+                  >Remark is required.</span
+                >
+              </div>
+            </div>
+
+            <!-- Remove Button -->
+            <p-button 
+             *ngIf="parts.length > 1"
+              [style]="{ 'background-color': '#008080', color: '#fff' }"
+              icon="pi pi-trash"
+              aria-label="Save"
+              (onClick)="removePart(i)"
+            />
+
+            <p-button
+              [style]="{ 'background-color': '#008080', color: '#fff' }"
+              icon="pi pi-plus"
+              aria-label="Save"
+              (onClick)="addPart()"
+            />
+          </div>
+        </div>
+      </div>
+
+      <br />
+
+      <div class="flex gap-2">
+        <p-button
+          label="Reset"
+          size="small"
+          icon="pi pi-undo"
+          [style]="{ 'background-color': '#008080', color: '#fff' }"
+          iconPos="right"
+        />
+        <p-button
+          label="Save"
+          size="small"
+          icon="pi pi-check"
+          [style]="{ 'background-color': '#008080', color: '#fff' }"
+          iconPos="right"
+        />
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2" >
+    <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+      <p-table
+        [scrollable]="true"
+        scrollHeight="600px"
+        [showGridlines]="true"
+        scrollDirection="both"
+        class="!w-[90vw]"
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template #header>
+          <tr class="">
+            <th
+              class="!px-1 flex-auto !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px] !min-h-[22px]"
+            >
+              S.No
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Vehivle Number
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+            >
+              Vehicle Model
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+            >
+              Advisor Name
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+            >
+              Floor Supervisor
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Part Number
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Latest Part Number
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Substitution
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Part Description
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              MOQ
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Quantity
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Price
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Stock as on
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Group Stock
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Non Moving Check
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              OOQ
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Order Type
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Order Value
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Open Jobline with Open JC
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Order Date
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Action
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Order Remark
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-rowData let-i="rowIndex">
+          <tr
+            class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+          >
+            <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.Dashboard }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      
+      <!-- <p-paginator
+          class="h-6 w-full text-sm"
+          (onPageChange)="onPageChange($event)"
+          [first]="first"
+          [rows]="rows"
+          [appendTo]="body"
+          pagginatordropdownappendto="body"
+          [totalRecords]="120"
+          [rowsPerPageOptions]="[10, 20, 30]"
+        /> -->
+    </div>
+  </div>
+</div>

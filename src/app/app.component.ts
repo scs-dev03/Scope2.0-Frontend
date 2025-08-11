@@ -22,29 +22,29 @@ import { IdleService } from './services/idle.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CoreModule, SidebarComponent, HeaderComponent,CommonModule,SharedModule,PrimengModuleModule,SHARED_IMPORTS,ReactiveFormsModule],
+  imports: [RouterOutlet, CoreModule, SidebarComponent, HeaderComponent, CommonModule, SharedModule, PrimengModuleModule, SHARED_IMPORTS, ReactiveFormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'stock-upload-frontend';
-  visibleSidebar:boolean=true;
-  isLoading:boolean=false;
-  blocked:boolean=false;
+  visibleSidebar: boolean = true;
+  isLoading: boolean = false;
+  blocked: boolean = false;
   isLoginPage = false;
   @ViewChild('blockUI') blockUI!: BlockUI;
   @ViewChild('sidebar') sidebar!: SidebarComponent;
-   token:any;
-   sidebarItems:any=[];
-   usertype:any;
-   moduleName:any;
-    filteredLocationData: any = [];
-    locationId:any;
-    homeData:FormGroup;
-    isHomePage:boolean=false;
-    is404Page:boolean=false;
+  token: any;
+  sidebarItems: any = [];
+  usertype: any;
+  moduleName: any;
+  filteredLocationData: any = [];
+  locationId: any;
+  homeData: FormGroup;
+  isHomePage: boolean = false;
+  is404Page: boolean = false;
   constructor(private globalBlockUIService: GlobalBlockUiService,
-    private router:Router, private route: ActivatedRoute,
+    private router: Router, private route: ActivatedRoute,
     private renderer: Renderer2,
     public sidebarService: SidebarService,
     private utilitiesService:UtilitiesService,
@@ -53,8 +53,9 @@ export class AppComponent {
   //  private idleService:IdleService,
   private userService:UserService) {
     this.homeData = new FormGroup({
-    locationId: new FormControl(),
-  })}
+      locationId: new FormControl(),
+    })
+  }
 
   ngOnInit() {
     //  localStorage.setItem('userid',"293")
@@ -63,40 +64,40 @@ export class AppComponent {
     this.globalBlockUIService.loading$.subscribe((loading:any)=>{
       this.isLoading=loading;
     })
-   
-   
-   this.homeData.patchValue({
-    locationId:localStorage.getItem('def_location')
-   })
-  
+
+
+    this.homeData.patchValue({
+      locationId: localStorage.getItem('def_location')
+    })
+
 
     this.router.events
-    .pipe(filter((event:any) => event instanceof NavigationEnd))
-    .subscribe((event: NavigationEnd) => {
-      const url = event.urlAfterRedirects;
-      this.isLoginPage = 
-        url.includes('/login') ||
-        url.includes('/core/update-user-password');
+      .pipe(filter((event: any) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        const url = event.urlAfterRedirects;
+        this.isLoginPage =
+          url.includes('/login') ||
+          url.includes('/core/update-user-password');
 
-    this.isHomePage=url.includes('/core/home')
-    const currentComponent = this.getCurrentComponent(this.route);
-        this.is404Page  = currentComponent === PageNotFoundComponent;
-       // console.log("isPage ",this.is404Page,currentComponent)
-        
-    });
+        this.isHomePage = url.includes('/core/home')
+        const currentComponent = this.getCurrentComponent(this.route);
+        this.is404Page = currentComponent === PageNotFoundComponent;
+        // console.log("isPage ",this.is404Page,currentComponent)
+
+      });
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd && event.urlAfterRedirects === '/core/home') {
         this.sharedService.triggerSidebarReset();
       }
     });
 
-    
-    this.sharedService.homePageData.pipe(take(2)).subscribe((filteredLocationData:any)=>{
-      this.filteredLocationData=filteredLocationData
 
-    //  console.log("filteredLocationData",filteredLocationData)
+    this.sharedService.homePageData.pipe(take(2)).subscribe((filteredLocationData: any) => {
+      this.filteredLocationData = filteredLocationData
+
+      //  console.log("filteredLocationData",filteredLocationData)
     })
-    
+
     this.route.queryParams.subscribe(params => {
       const token = params['token'];
       // console.log('Received token:', token);
@@ -107,17 +108,17 @@ export class AppComponent {
     // localStorage.setItem('brandid','9');
     // localStorage.setItem('dealerid','8');
     // localStorage.setItem('def_location','14')
-    // localStorage.setItem('usertoken','0x02000000F5710E149B719043CB40E5BC2503861707D0B1F078C883021B904D312763A5D0')
-    let userToken=localStorage.getItem('usertoken');
+    //  localStorage.setItem('usertoken','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
+    let userToken = localStorage.getItem('usertoken');
 
-    this.utilitiesService.getUserInfo({token:userToken}).subscribe((res:any)=>{
-      localStorage.setItem('userid',res.data[0]?.userId)
-      localStorage.setItem('username',res.data[0]?.username)
+    this.utilitiesService.getUserInfo({ token: userToken }).subscribe((res: any) => {
+      localStorage.setItem('userid', res.data[0]?.userId)
+      localStorage.setItem('username', res.data[0]?.username)
     })
 
-    this.sharedService.moduleName.subscribe((header:any)=>{
+    this.sharedService.moduleName.subscribe((header: any) => {
       //console.log("header ",header)
-      this.moduleName=header;
+      this.moduleName = header;
     })
   }
 
@@ -126,7 +127,7 @@ export class AppComponent {
       route = route.firstChild;
     }
     return route.snapshot.routeConfig?.component;
-  
+
   }
 
   updateLoaderHeight() {
@@ -157,7 +158,7 @@ export class AppComponent {
     this.updateLoaderHeight();
     window.addEventListener('resize', () => this.updateLoaderHeight());
   }
-  
+
   ngAfterContentChecked() {
     this.updateLoaderHeight(); // Adjust height when content updates
   }
@@ -175,14 +176,14 @@ export class AppComponent {
      this.isLoading=false;
       // this.transformData(this.sidebarItems)
       // this.sharedService.updateSidebarData(this.sidebarItems);
-    },(error:any)=>{
+    }, (error: any) => {
       // this.globalBlockUiService.stopLoading();
-      this.isLoading=false;
+      this.isLoading = false;
     })
   }
-  
-  onClickLocation(){
-  // console.log("location id in app component ",this.homeData,this.homeData.value.locationId)
+
+  onClickLocation() {
+    // console.log("location id in app component ",this.homeData,this.homeData.value.locationId)
     this.sharedService.updateLocationIdForHomePageData(this.homeData.value.locationId);
   }
 
