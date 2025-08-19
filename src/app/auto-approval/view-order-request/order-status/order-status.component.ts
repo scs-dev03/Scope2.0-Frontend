@@ -116,5 +116,13 @@ export class OrderStatusComponent {
     
   }
 
+  MaxOrPending: boolean = true;
+
+  onClickToggle(event: any) {
+    this.MaxOrPending = event.checked;
+    console.log(this.MaxOrPending);
+  }
+
+
 
 }

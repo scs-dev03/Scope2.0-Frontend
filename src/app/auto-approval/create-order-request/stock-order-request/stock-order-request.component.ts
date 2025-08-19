@@ -8,6 +8,7 @@ import * as FileSaver from 'file-saver';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { PrimeNG } from 'primeng/config';
 import { MessageService } from 'primeng/api';
+import { PaginatorState } from 'primeng/paginator';
 
 @Component({
   selector: 'app-stock-order-request',
@@ -18,6 +19,7 @@ import { MessageService } from 'primeng/api';
 export class StockOrderRequestComponent {
 
   AddPartWise: FormGroup
+  visible:boolean = false;
 
   constructor(private fb: FormBuilder, private config: PrimeNG, private messageService: MessageService) {
     this.AddPartWise = this.fb.group({
@@ -28,6 +30,15 @@ export class StockOrderRequestComponent {
 
 
   }
+
+  
+    first: number = 0;
+    rows: number = 10;
+  
+    onPageChange(event: PaginatorState) {
+      this.first = event.first ?? 0;
+      this.rows = event.rows ?? 10;
+    }
 
 
   private createPart(): FormGroup {
@@ -74,7 +85,7 @@ export class StockOrderRequestComponent {
 
 
   OnClickAdd() {
-    console.log(this.AddPartWise.value);
+    this.visible = true;
   }
 
  

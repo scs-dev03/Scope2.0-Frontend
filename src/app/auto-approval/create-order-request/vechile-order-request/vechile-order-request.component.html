@@ -75,6 +75,62 @@
             </span>
           </div>
         </div>
+        <div>
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="on_label"
+              formControlName="JobCardNumber"
+              autocomplete="off"
+              class="w-40 h-8"
+            />
+            <label class="text-xs" for="on_label">Advance</label>
+          </p-floatlabel>
+          <div
+            class="text-red-500 text-[10px]"
+            *ngIf="
+              VechileOrderRequestInput.get('JobCardNumber')?.touched &&
+              VechileOrderRequestInput.get('JobCardNumber')?.invalid
+            "
+          >
+            <span
+              *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['required']"
+              >Vehicle Number is required.</span
+            >
+            <span
+              *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['pattern']"
+              >Must be 15 letters/numbers
+            </span>
+          </div>
+        </div>
+        <div>
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="on_label"
+              formControlName="JobCardNumber"
+              autocomplete="off"
+              class="w-40 h-8"
+            />
+            <label class="text-xs" for="on_label">Estimate</label>
+          </p-floatlabel>
+          <div
+            class="text-red-500 text-[10px]"
+            *ngIf="
+              VechileOrderRequestInput.get('JobCardNumber')?.touched &&
+              VechileOrderRequestInput.get('JobCardNumber')?.invalid
+            "
+          >
+            <span
+              *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['required']"
+              >Vehicle Number is required.</span
+            >
+            <span
+              *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['pattern']"
+              >Must be 15 letters/numbers
+            </span>
+          </div>
+        </div>
       </div>
       <br />
 
@@ -301,6 +357,7 @@
         <p-button
           label="Save"
           size="small"
+          (onClick)="OnClickAdd()"
           icon="pi pi-check"
           [style]="{ 'background-color': '#008080', color: '#fff' }"
           iconPos="right"
@@ -341,11 +398,7 @@
             >
               Advisor Name
             </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
-            >
-              Floor Supervisor
-            </th>
+           
             <th
               class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
             >
@@ -448,7 +501,7 @@
         </ng-template>
       </p-table>
       
-      <!-- <p-paginator
+      <p-paginator
           class="h-6 w-full text-sm"
           (onPageChange)="onPageChange($event)"
           [first]="first"
@@ -457,7 +510,59 @@
           pagginatordropdownappendto="body"
           [totalRecords]="120"
           [rowsPerPageOptions]="[10, 20, 30]"
-        /> -->
+        />
     </div>
   </div>
 </div>
+
+
+<p-dialog
+  header="⚠️ Important Info"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '30rem' }"
+  [closable]="false"
+>
+ 
+  <div class="flex justify-between items-center mb-4">
+    <span class="text-gray-500 text-sm">
+      The following parts are <span class="font-semibold text-teal-500">not available in Master</span>:
+    </span>
+    <p-button 
+      icon="pi pi-download" 
+      [size]="'small'" 
+      [rounded]="true" 
+      [text]="true" 
+      [raised]="true" 
+      class="!text-blue-600 hover:!bg-blue-50 transition-colors"
+    />
+  </div>
+
+  <!-- Content Box (scrollable if long list) -->
+  <div class="bg-teal-50 border-l-4 border-teal-400 rounded-md p-4 mb-6 shadow-sm max-h-40 overflow-y-auto">
+    <h4 class="text-sm font-semibold text-gray-700 mb-2">Part Numbers:</h4>
+    <p class="text-gray-800 text-base leading-relaxed">
+      9782228, 3434432, 44G4533, 9782228, 3434432, 44G4533, 9782228, 3434432, 44G4533,
+      9782228, 3434432, 44G4533, 9782228, 3434432, 44G4533
+    </p>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex justify-end gap-3 mt-6">
+    <p-button 
+      label="Skip For Now" 
+      severity="secondary" 
+      size="small" 
+      icon="pi pi-arrow-right" 
+      class="!rounded-lg !shadow-sm hover:!shadow-md transition-all"
+      (click)="visible = false" 
+    />
+    <p-button 
+      label="Fill Details" 
+      icon="pi pi-align-left" 
+      size="small" 
+      class="!bg-blue-600 !border-blue-600 !rounded-lg !shadow-sm hover:!bg-blue-700 hover:!shadow-md transition-all"
+      (click)="visible = false" 
+    />
+  </div>
+</p-dialog>

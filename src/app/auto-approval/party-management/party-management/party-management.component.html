@@ -3,7 +3,7 @@
 
   <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
     <div
-      class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-10 shadow-lg border-dashed border-2 bg-white rounded-md border-white"
+      class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-5 shadow-lg border-dashed border-2 bg-white rounded-md border-white"
     >
       <div class="flex flex-col w-44">
         <label for="partyname" class="text-sm">Add Party Name :</label>
@@ -48,6 +48,15 @@
           (onClick)="onClickShowTable()"
         />
 
+        <p-button
+          size="small"
+          icon="pi pi-download"
+          [style]="{ 'background-color': '#008080', color: '#fff' }"
+          iconPos="right"
+          class="text-xs"
+          (onClick)="SampleExcelDownload()"
+        />
+
         <p-fileupload
           #fu
           mode="basic"
@@ -60,6 +69,8 @@
           
         />
         <p-button label="Upload" size="small"  severity="secondary" />
+
+        
       </div>
     </div>
   </div>

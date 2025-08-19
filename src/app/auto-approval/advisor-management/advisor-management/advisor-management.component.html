@@ -3,36 +3,65 @@
 
   <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
     <div
-      class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-10 shadow-lg border-dashed border-2 bg-white rounded-md border-white"
+      class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-2 shadow-lg border-dashed border-2 bg-white rounded-md border-white"
     >
-      <div class="flex flex-col w-44">
+      <div class="flex flex-col w-[132px]">
         <label for="partyname" class="text-sm">Add Advisor :</label>
         <input
           pInputText
           id="partyname"
           class="text-xs h-8"
-          [placeholder]="'Add Name Here'"
+          [placeholder]="'Add Name'"
           aria-describedby="username-help"
           [(ngModel)]="Advisor"
         />
       </div>
-     
+      <div class="flex flex-col w-[132px]">
+        <label for="partyname" class="text-sm">Phone Number</label>
+        <input
+          pInputText
+          id="partyname"
+          class="text-xs h-8"
+          [placeholder]="'Phone Number'"
+          aria-describedby="username-help"
+          [(ngModel)]="Advisor"
+        />
+      </div>
+      <div class="flex flex-col w-[132px]">
+        <label for="partyname" class="text-sm">Email</label>
+        <input
+          pInputText
+          id="partyname"
+          class="text-xs h-8"
+          [placeholder]="'Email Number'"
+          aria-describedby="username-help"
+          [(ngModel)]="Advisor"
+        />
+      </div>
 
-       <div class="flex items-end gap-3 flex-wrap w-auto justify-center">
+      <div class="flex items-end gap-3 flex-wrap w-auto justify-center">
         <p-button
           label="Save"
           size="small"
           icon="pi pi-check"
-          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+          [style]="{ 'background-color': '#008080', color: '#fff' }"
           iconPos="right"
           class="text-xs"
           (onClick)="onclickSave()"
         />
-         <p-button
+        <p-button
+          size="small"
+          icon="pi pi-download"
+          [style]="{ 'background-color': '#008080', color: '#fff' }"
+          iconPos="right"
+          class="text-xs"
+          (onClick)="SampleExcelDownload()"
+        />
+        <p-button
           label="View Table"
           size="small"
           icon="pi pi-table"
-          [style]="{ 'background-color': '#008080', 'color': '#fff'}"
+          [style]="{ 'background-color': '#008080', color: '#fff' }"
           iconPos="right"
           class="text-xs"
           (onClick)="onClickShowTable()"
@@ -46,14 +75,15 @@
           url="https://www.primefaces.org/cdn/api/upload.php"
           accept="image/*"
           maxFileSize="1000000"
-          
         />
-        <p-button label="Upload" size="small"  severity="secondary" />
-       </div>
-       
+        <p-button label="Upload" size="small" severity="secondary" />
+      </div>
     </div>
   </div>
-  <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2" *ngIf="showtable">
+  <div
+    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+    *ngIf="showtable"
+  >
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
         [scrollable]="true"
@@ -87,7 +117,6 @@
             >
               Action
             </th>
-            
           </tr>
         </ng-template>
 
