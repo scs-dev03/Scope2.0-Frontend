@@ -105,4 +105,8 @@ export class AdminvonserviceService {
     return this.http.post(`${this.apiurl}aupload`,data)
   }
 
+  getFullMaxAdmin(data:any){
+    return this.http.post(`${this.apiurl}viewadmin`,data)
+  }
+
 }

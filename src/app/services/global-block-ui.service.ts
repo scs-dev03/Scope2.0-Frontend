@@ -13,14 +13,17 @@ export class GlobalBlockUiService {
   constructor() {}
   private loadingSubject = new BehaviorSubject<boolean>(false);  // Initial value is false
   loading$ = this.loadingSubject.asObservable();  // Observable to subscribe to
+  loadercount = 0;
 
   // Method to start loading (set isLoading to true)
   startLoading() {
+    this.loadercount++
     this.loadingSubject.next(true);
   }
 
   // Method to stop loading (set isLoading to false)
   stopLoading() {
+    this.loadercount--;
     this.loadingSubject.next(false);
   }
 }

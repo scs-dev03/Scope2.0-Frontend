@@ -1,12 +1,12 @@
 <div class="min-w-full h-full bg-gray-100">
-  <h1 class="text-2xl font-serif ml-2">View Rules</h1>
+  <!-- <h1 class="text-2xl font-serif ml-2">View Rules</h1> -->
   <div class="min-w-full !min-h-[100px] flex items-center justify-start px-2">
     <div
       class="min-w-full min-h-[50px] flex flex-wrap p-2 gap-3 border-dashed border-2 bg-gray-50 border-gray-200"
     >
-      <p-select placeholder="Category" class="w-44" />
-      <p-select placeholder="Status" class="w-44" />
-      <p-select placeholder="Nature" class="w-44" />
+      <p-select [filter]="true" placeholder="Category" class="w-44" />
+      <p-select [filter]="true" placeholder="Status" class="w-44" />
+      <p-select [filter]="true" placeholder="Nature" class="w-44" />
     </div>
   </div>
 
@@ -14,10 +14,10 @@
     <div
       class="min-w-full min-h-[50px] flex flex-wrap p-2 gap-3 border-dashed border-2 bg-gray-50 border-gray-200"
     >
-      <p-select placeholder="Brand" class="w-44" />
-      <p-select placeholder="Dealer" class="w-44" />
-      <p-select placeholder="Location" class="w-44" />
-      <p-select placeholder="Rule Name" class="w-44" />
+      <p-select [filter]="true" placeholder="Brand" class="w-44" />
+      <p-select [filter]="true" placeholder="Dealer" class="w-44" />
+      <p-select [filter]="true" placeholder="Location" class="w-44" />
+      <p-select [filter]="true" placeholder="Rule Name" class="w-44" />
       <p-button size="small" icon="pi pi-eye" label="View"/>
       <p-button size="small" icon="pi pi-download" label="Export" />
       <p-button size="small" icon="pi pi-download" label="Upload" />

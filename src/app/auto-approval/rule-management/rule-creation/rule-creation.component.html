@@ -1,5 +1,5 @@
 <div class="min-w-full h-full bg-gray-100">
-  <h1 class="text-2xl font-serif ml-2">Rule Creation</h1>
+  <!-- <h1 class="text-2xl font-serif ml-2">Rule Creation</h1> -->
   <div class="flex flex-wrap gap-4 p-2">
     <div class="flex items-center">
       <p-radiobutton
@@ -39,9 +39,9 @@
   </div>
 
   <div class="p-2 gap-3 flex" [formGroup]="LocationSpecificName">
-    <p-select formControlName = "brand"  optionLabel="name" size="small" placeholder="Select a Brand" class="w-44 " />
-    <p-select formControlName = "dealer"  optionLabel="name" size="small" placeholder="Select a Dealer" class="w-44 " />
-    <p-select formControlName = "location"  optionLabel="name" size="small" placeholder="Select a Location" class="w-44 " />
+    <p-select [filter]="true" [filter]="true" formControlName = "brand"  optionLabel="name" size="small" placeholder="Select a Brand" class="w-44 " />
+    <p-select [filter]="true" [filter]="true" formControlName = "dealer"  optionLabel="name" size="small" placeholder="Select a Dealer" class="w-44 " />
+    <p-select [filter]="true" [filter]="true" formControlName = "location"  optionLabel="name" size="small" placeholder="Select a Location" class="w-44 " />
   </div>
   <br>
 
@@ -70,7 +70,7 @@
           class="min-h-auto flex flex-wrap items-center justify-start p-2 gap-2 border bg-gray-50 border-gray-200"
         >
           <p-floatlabel variant="on">
-            <p-select
+            <p-select [filter]="true" [filter]="true"
               size="small"
               [options]="parametersNumeric"
               formControlName="selectedBucket"
@@ -82,7 +82,7 @@
           </p-floatlabel>
 
           <p-floatlabel variant="on">
-            <p-select
+            <p-select [filter]="true" [filter]="true"
               size="small"
               [options]="parametersNumeric"
               formControlName="selectedParameter"
@@ -94,7 +94,7 @@
           </p-floatlabel>
 
           <p-floatlabel variant="on">
-            <p-select
+            <p-select [filter]="true" [filter]="true"
               size="small"
               [options]="operators"
               formControlName="selectedOperator"
@@ -141,7 +141,7 @@
       <!-- second rule window -->
     </div>
   </div>
-  <br /><br /><br />
+  <br />
   <div class="min-w-full !min-h-[100px] flex items-center p-2">
     <div
       class="min-w-full min-h-[150px] flex-col flex-wrap p-2 border-dashed border-2 bg-gray-50 border-gray-200"
@@ -153,7 +153,7 @@
           class="min-h-auto flex flex-wrap items-center justify-start p-2 gap-x-2 gap-y-4 border bg-gray-50 border-gray-200"
         >
           <p-floatlabel variant="on">
-            <p-select
+            <p-select [filter]="true" [filter]="true"
               size="small"
               [options]="parametersNumeric"
               formControlName="bucket"
@@ -165,7 +165,7 @@
           </p-floatlabel>
 
           <p-floatlabel variant="on">
-            <p-select
+            <p-select [filter]="true" [filter]="true"
               size="small"
               [options]="parametersNumeric"
               formControlName="parameter"
@@ -177,7 +177,7 @@
           </p-floatlabel>
 
           <p-floatlabel variant="on">
-            <p-select
+            <p-select [filter]="true" [filter]="true"
               size="small"
               [options]="parametersNumeric"
               formControlName="keyword"
@@ -188,7 +188,7 @@
             <label for="operator" class="text-sm">Keyword</label>
           </p-floatlabel>
           <p-floatlabel variant="on">
-            <p-select
+            <p-select [filter]="true" [filter]="true"
               size="small"
               [options]="operators"
               formControlName="operator"
@@ -259,7 +259,7 @@
         >
         <div class="flex items-center gap-4 mb-4">
           <label for="success" class="text-sm w-24">Remark for Success</label>
-          <p-select
+          <p-select [filter]="true" [filter]="true"
             [options]="ActionList"
             optionLabel="label"
             optionValue="value"
@@ -268,6 +268,14 @@
           />
 
           <input pInputText id="success" pSize="small" class="flex-auto" autocomplete="off" />
+
+          <p-select [filter]="true" [filter]="true"
+           
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Parameters"
+            class="w-full h-8 md:w-48 "
+          />
         </div>
         <span class="p-text-secondary block mb-8 text-lg font-semibold"
           >If Failure</span
@@ -275,9 +283,10 @@
 
         <div class="flex items-center gap-4 mb-8">
           <label for="faileur" class="text-sm w-24">Remark for Failure</label>
-          <p-select
+          <p-select [filter]="true" [filter]="true"
             [options]="ActionList"
             optionLabel="label"
+            appendTo="body"
             optionValue="value"
             placeholder="Select a Action "
             class="w-full h-8 md:w-48"
@@ -289,10 +298,19 @@
             class="flex-auto"
             autocomplete="off"
           />
+
+           <p-select [filter]="true" [filter]="true"
+            optionLabel="label"
+            
+            optionValue="value"
+            placeholder="Parameters"
+            class="w-full h-8 md:w-48 "
+          />
         </div>
         <div class="flex justify-end gap-2">
           <p-button
             label="Cancel"
+            class="!h-8"
             size="small"
             severity="secondary"
             (click)="visible = false"

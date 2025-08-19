@@ -257,6 +257,14 @@
         (onClick)="exportToExcel()"
         [style]="{ 'background-color': '#008080', color: '#fff' }"
       />
+      <p-button
+        label="Clear"
+        icon="pi pi-filter-slash"
+        size="small"
+        [disabled]="exportVisible"
+        (onClick)="clearTable()"
+        [style]="{ 'background-color': '#008080', color: '#fff' }"
+      />
     </div>
   </div>
   <div
@@ -264,6 +272,7 @@
     *ngIf="SalesInfoVisible"
   >
     <app-product-sale-info
+      #productSaleInfo
       [SalesInfo]="SalesInfo[0]"
       class="!w-full"
       [DataTypeArray]="DataTypeArray"

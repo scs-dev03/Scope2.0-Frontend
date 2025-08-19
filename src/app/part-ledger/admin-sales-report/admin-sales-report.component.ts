@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { PrimengModuleModule } from '../../shared/primeng-module/primeng-module.module';
 import { SharedModule } from '../../shared/shared.module';
 import * as XLSX from 'xlsx';
@@ -13,17 +13,20 @@ import { CommonModule } from '@angular/common';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { SharedServiceService } from '../../services/shared-service.service';
 import FileSaver from 'file-saver';
+import { Table } from 'primeng/table';
 @Component({
   selector: 'app-admin-sales-report',
-  imports: [PrimengModuleModule, SharedModule,SHARED_IMPORTS,CommonModule, ProductDesctiptionTableComponent, ProductSaleInfoComponent, TotalsumComponent],
+  imports: [PrimengModuleModule, SharedModule, SHARED_IMPORTS, CommonModule, ProductDesctiptionTableComponent, ProductSaleInfoComponent, TotalsumComponent],
   templateUrl: './admin-sales-report.component.html',
   styleUrl: './admin-sales-report.component.css'
 })
 export class AdminSalesReportComponent {
 
+  @ViewChild('productSaleInfo') productSaleInfo!: ProductSaleInfoComponent;
+
   minDate: Date | undefined;
   maxDate: Date | undefined;
-  ngOnInit(){
+  ngOnInit() {
     this.DataType = [
       { "id": 0, "name": "WorkshopSale" },
       { "id": 1, "name": "Counter" },
@@ -42,13 +45,13 @@ export class AdminSalesReportComponent {
       { "id": 14, "name": "CoDlrPurchase" },
       { "id": 15, "name": "StockAdjustmentIn" },
       { "id": 16, "name": "OEMPurchase" },
-      { "id": 17, "name": "idk" }, 
+      { "id": 17, "name": "idk" },
       { "id": 18, "name": "Others" }
     ]
     this.fetchBrandAdminData();
-    
-     this.sharedService.updateModuleName('Parts Ledger')
-    
+
+    this.sharedService.updateModuleName('Parts Ledger')
+
     this.minDate = new Date(2023, 4, 1); // Month is zero-based (4 = May)
 
     // Setting the maximum date to the last day of the current month
@@ -56,14 +59,18 @@ export class AdminSalesReportComponent {
     this.maxDate = new Date(today.getFullYear(), today.getMonth(), 0);
   }
 
+  clearTable() {
+    this.productSaleInfo.clearFilters();
+  }
+
   AdminSalesReportInputData: FormGroup = new FormGroup({
-    BrandID: new FormControl(null,[Validators.required]),
-    DealerID: new FormControl(null,[Validators.required]),
+    BrandID: new FormControl(null, [Validators.required]),
+    DealerID: new FormControl(null, [Validators.required]),
     LocationID: new FormControl(),
-    FormDate: new FormControl('',[Validators.required]),
-    ToDate: new FormControl('',[Validators.required]),
-    DataType: new FormControl('',[Validators.required]),
-    PartNumber: new FormControl('',[Validators.required])
+    FormDate: new FormControl('', [Validators.required]),
+    ToDate: new FormControl('', [Validators.required]),
+    DataType: new FormControl('', [Validators.required]),
+    PartNumber: new FormControl('', [Validators.required])
   });
 
   updateFromDate: any = '';
@@ -71,10 +78,10 @@ export class AdminSalesReportComponent {
 
 
   onSelectionChangeBrandData() {
-   
+
     this.fetchDealerAdminData(this.AdminSalesReportInputData.value.BrandID);
     console.log(this.AdminSalesReportInputData.value)
-    
+
   }
 
   onSelectionChangeDealerData() {
@@ -85,8 +92,8 @@ export class AdminSalesReportComponent {
 
 
   constructor(private adminSalesReportService: AdminReportServiceService,
-    private globalBlockUiService:GlobalBlockUiService,
-  private sharedService:SharedServiceService) {}
+    private globalBlockUiService: GlobalBlockUiService,
+    private sharedService: SharedServiceService) { }
 
 
   AdminSalesReportData: any = []
@@ -105,67 +112,67 @@ export class AdminSalesReportComponent {
   Result: any
   visible: boolean = false
   exportVisible: boolean = true
-  SalesInfoVisible : boolean = false
+  SalesInfoVisible: boolean = false
 
   istotal: boolean = false
-  
+
 
   async onSubmitAdminInputData() {
 
     this.DataTypeArray = this.AdminSalesReportInputData.value.DataType
-  
+
     console.log(this.AdminSalesReportInputData.value);
-    
-    
+
+
 
     if (this.AdminSalesReportInputData.invalid) {
       this.AdminSalesReportInputData.markAllAsTouched();
-      
-    } 
-    else{
+
+    }
+    else {
       this.excel = 0
       this.arrayOfString(this.AdminSalesReportInputData.value.PartNumber)
-      if(this.partNumber.length> 100){
+      if (this.partNumber.length > 100) {
         this.visible = true
         this.Result = "Limit Exceed Part Number Can't be can't be more than 100"
         console.log("Limit Exceed Part Number Can't be can't be more than 100");
-        
+
       }
-      else{
-          this.fetchPartDescription(
+      else {
+        this.fetchPartDescription(
           this.AdminSalesReportInputData.value.BrandID.toString(),
           this.partNumber,
           this.excel.toString()
-          );
-          this.onClickShowSaleinfo()
-          this.onclicktotal()
+        );
+        this.onClickShowSaleinfo()
+        this.onclicktotal()
 
       }
-    }    
     }
-  
-    onClickShowSaleinfo() {
-      this.DataTypeArray = this.AdminSalesReportInputData.value.DataType
-      this.arrayOfString(this.AdminSalesReportInputData.value.PartNumber)
-      this.excel = 0
-      if (
-        this.AdminSalesReportInputData.value.LocationID === '' ||
-        this.AdminSalesReportInputData.value.LocationID === 'All Location'
-      ) {
-        this.AdminSalesReportInputData.value.LocationID = null;
-      }
-      //console.log(this.AdminSalesReportInputData.value.LocationID);
-      
-      this.fetchSalesInfo(
-        
-        this.AdminSalesReportInputData.value.BrandID.toString(),
-        this.AdminSalesReportInputData.value.DealerID,
-        this.AdminSalesReportInputData.value.LocationID,
-        this.partNumber,
-        this.getLastDateOfMonthForFrom(this.AdminSalesReportInputData.value.FormDate).toString(),
-        this.getLastDateOfMonthForTo(this.AdminSalesReportInputData.value.ToDate).toString(),
-        this.excel.toString()
-      ); 
+  }
+
+  onClickShowSaleinfo() {
+    this.DataTypeArray = this.AdminSalesReportInputData.value.DataType
+    this.arrayOfString(this.AdminSalesReportInputData.value.PartNumber)
+    this.excel = 0
+    if (
+      this.AdminSalesReportInputData.value.LocationID === '' ||
+      this.AdminSalesReportInputData.value.LocationID === 'All Location'
+    ) {
+      this.AdminSalesReportInputData.value.LocationID = null;
+    }
+    //console.log(this.AdminSalesReportInputData.value.LocationID);
+
+    this.fetchSalesInfo(
+
+      this.AdminSalesReportInputData.value.BrandID.toString(),
+      this.AdminSalesReportInputData.value.DealerID,
+      this.AdminSalesReportInputData.value.LocationID,
+      this.partNumber,
+      this.getLastDateOfMonthForFrom(this.AdminSalesReportInputData.value.FormDate).toString(),
+      this.getLastDateOfMonthForTo(this.AdminSalesReportInputData.value.ToDate).toString(),
+      this.excel.toString()
+    );
   }
   fetchBrandAdminData() {
     this.globalBlockUiService.startLoading();
@@ -174,7 +181,7 @@ export class AdminSalesReportComponent {
         this.BrandData = res;
         this.globalBlockUiService.stopLoading();
       },
-      error: (err:any) => {
+      error: (err: any) => {
         console.error('Error while fetching brand data:', err);
         this.globalBlockUiService.stopLoading();
         this.visible = true
@@ -184,8 +191,8 @@ export class AdminSalesReportComponent {
       }
     });
   }
-  
-  
+
+
   fetchDealerAdminData(brandid: any) {
     this.globalBlockUiService.startLoading();
     this.adminSalesReportService
@@ -199,17 +206,17 @@ export class AdminSalesReportComponent {
           });
           this.globalBlockUiService.stopLoading();
         },
-        error: (err:any) => {
+        error: (err: any) => {
           console.error('Error while fetching dealer data:', err);
           this.globalBlockUiService.stopLoading();
-           this.visible = true
-        this.Result = 'Please contact IT Admin'
+          this.visible = true
+          this.Result = 'Please contact IT Admin'
           // Optionally show toast or UI message
           // this.toastr.error('Failed to load dealer data. Please try again.');
         }
       });
   }
-  
+
 
   fetchLocationAdminData(dealerid: any) {
     this.globalBlockUiService.startLoading();
@@ -223,17 +230,17 @@ export class AdminSalesReportComponent {
           );
           this.globalBlockUiService.stopLoading();
         },
-        error: (err:any) => {
+        error: (err: any) => {
           console.error('Error while fetching location data:', err);
           this.globalBlockUiService.stopLoading();
-           this.visible = true
-           this.Result = 'Please contact IT Admin'
+          this.visible = true
+          this.Result = 'Please contact IT Admin'
           // Optional: Show UI alert or toast
           // this.toastr.error('Failed to load location data. Please try again.');
         }
       });
   }
-  
+
 
   fetchPartDescription(brandid: any, partnumber: any, excel: any) {
     this.showMessage = false;
@@ -246,7 +253,7 @@ export class AdminSalesReportComponent {
           this.globalBlockUiService.stopLoading();
           // console.log(this.PartDetail);
         },
-        error: (err:any) => {
+        error: (err: any) => {
           console.error('Error while fetching part description:', err);
           this.globalBlockUiService.stopLoading();
           this.showMessage = true; // if you want to show an error message on UI
@@ -259,7 +266,7 @@ export class AdminSalesReportComponent {
   }
 
   fetchSalesInfo(
-    BrandID:any,
+    BrandID: any,
     Dealerid: any,
     Locationid: any,
     partnumber: any,
@@ -270,11 +277,11 @@ export class AdminSalesReportComponent {
 
     this.showMessage = false;
     this.globalBlockUiService.startLoading();
-    
-  
+
+
     this.adminSalesReportService
       .getSalesInfo({
-        Brandid:BrandID,
+        Brandid: BrandID,
         Dealerid: Dealerid,
         Locationid: Locationid,
         PartNumber: partnumber,
@@ -288,35 +295,35 @@ export class AdminSalesReportComponent {
           this.SalesInfoVisible = true;
           this.exportVisible = false
           this.globalBlockUiService.stopLoading();
-        
+
           console.log(this.SalesInfo);
         },
-        error: (err:any) => {
+        error: (err: any) => {
           console.error('Error while fetching sales info:', err);
           this.globalBlockUiService.stopLoading();
           this.showMessage = true;
           this.exportVisible = true;
           this.visible = true
-          this.Result = 'No Data Available for this Location' 
+          this.Result = 'No Data Available for this Location'
           // Optional: Toast or user-friendly alert
           // this.toastr.error('Failed to load sales info. Please try again.');
         }
       });
   }
-  
- 
+
+
 
   exportToExcel() {
     const flatData = [...this.SalesInfo[0]];
     const salesData = [...this.SalesInfo[1]];
-    
-    
+
+
     const reorderedData = flatData.map(item => ({
       Partnumber: item.Partnumber,
       LocationName: item.Location,
       Month: item.Months,
       ClosingStocks: item.ClosingStocks,
-      WorkshopSale: item.WorkshopSale, 
+      WorkshopSale: item.WorkshopSale,
       Counter: item.Counter,
       StockTransferOut: item.StockTransferOut,
       AdjustmentOut: item.AdjustmentOut,
@@ -342,7 +349,7 @@ export class AdminSalesReportComponent {
       LocationName: item.Location,
       Month: item.Months,
       ClosingStocks: item.ClosingStocks,
-      WorkshopSale: item.WorkshopSale, 
+      WorkshopSale: item.WorkshopSale,
       Counter: item.Counter,
       StockTransferOut: item.StockTransferOut,
       AdjustmentOut: item.AdjustmentOut,
@@ -364,7 +371,7 @@ export class AdminSalesReportComponent {
     }));
     // Convert JSON to worksheet
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(reorderedData);
-    const TotalSales: XLSX.WorkSheet = XLSX.utils.json_to_sheet(recoredTotal); 
+    const TotalSales: XLSX.WorkSheet = XLSX.utils.json_to_sheet(recoredTotal);
     const partDetailsData = this.PartDetail.map((item: { partnumber: any; LatestPartno: any; partdesc: any; moq: any; category: any; landedcost: any; mrp: any; dateadded: any; }) => ({
       PartNumber: item.partnumber,
       Latest_Part_Number: item.LatestPartno,
@@ -374,71 +381,72 @@ export class AdminSalesReportComponent {
       landedcost: item.landedcost,
       mrp: item.mrp
     }));
-    console.log("this is part details",partDetailsData);
-    
+    console.log("this is part details", partDetailsData);
+
 
     const partDetailsWorksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(partDetailsData);
 
     // Create a workbook
     const workbook: XLSX.WorkBook = {
-      Sheets: { SalesInfo: worksheet,
+      Sheets: {
+        SalesInfo: worksheet,
         PartDetails: partDetailsWorksheet,
         Total_Sales: TotalSales
-       },
-      SheetNames: ['PartDetails','SalesInfo','Total_Sales'],
+      },
+      SheetNames: ['PartDetails', 'SalesInfo', 'Total_Sales'],
     };
     // Write the workbook
     XLSX.writeFile(workbook, `Salesview.xlsx`);
   }
 
-  getLastDateOfMonthForFrom(inputDateStr:any) {
+  getLastDateOfMonthForFrom(inputDateStr: any) {
     console.log(this.AdminSalesReportInputData.value.FormDate);
-    
+
     const date = new Date(inputDateStr);
-      // Get the year and month from the date
-      const year = date.getFullYear();
-      const month = date.getMonth()+1; // 0-based
-      // Last day of the month = day 0 of next month
-      const lastDay = new Date(year, month, 0);
-      // Format to yyyy-mm-dd
-      const yyyy = lastDay.getFullYear();
-      const mm = String(lastDay.getMonth()+1).padStart(2, '0');
-      const dd = String(lastDay.getDate()).padStart(2, '0');
-      return `'${yyyy}-${mm}-${dd}'`;
+    // Get the year and month from the date
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // 0-based
+    // Last day of the month = day 0 of next month
+    const lastDay = new Date(year, month, 0);
+    // Format to yyyy-mm-dd
+    const yyyy = lastDay.getFullYear();
+    const mm = String(lastDay.getMonth() + 1).padStart(2, '0');
+    const dd = String(lastDay.getDate()).padStart(2, '0');
+    return `'${yyyy}-${mm}-${dd}'`;
 
   }
-  getLastDateOfMonthForTo(inputDateStr:any) {
+  getLastDateOfMonthForTo(inputDateStr: any) {
     console.log(this.AdminSalesReportInputData.value.ToDate);
     const date = new Date(inputDateStr);
-      // Get the year and month from the date
-      const year = date.getFullYear();
-      const month = date.getMonth()+1; // 0-based
-      // Last day of the month = day 0 of next month
-      const lastDay = new Date(year, month, 0);
-      // Format to yyyy-mm-dd
-      const yyyy = lastDay.getFullYear();
-      const mm = String(lastDay.getMonth()+1 ).padStart(2, '0');
-      const dd = String(lastDay.getDate()).padStart(2, '0');
-      return `'${yyyy}-${mm}-${dd}'`;
-          
+    // Get the year and month from the date
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // 0-based
+    // Last day of the month = day 0 of next month
+    const lastDay = new Date(year, month, 0);
+    // Format to yyyy-mm-dd
+    const yyyy = lastDay.getFullYear();
+    const mm = String(lastDay.getMonth() + 1).padStart(2, '0');
+    const dd = String(lastDay.getDate()).padStart(2, '0');
+    return `'${yyyy}-${mm}-${dd}'`;
+
   }
-    
-    
-    
-    
-    
-    
-  
+
+
+
+
+
+
+
   changeInputType(event: FocusEvent, type: string) {
     const target = event.target as HTMLInputElement;
     target.type = type;
   }
 
-  onclicktotal(){
-    if(this.istotal===false){
+  onclicktotal() {
+    if (this.istotal === false) {
       this.istotal = true
     }
-    
+
   }
 
   refreshPage(): void {
@@ -446,23 +454,23 @@ export class AdminSalesReportComponent {
   }
 
 
-  arrayOfString(partnumber: any){
+  arrayOfString(partnumber: any) {
     this.partNumber = partnumber.split(',')
-    .map((pn: string) => pn.replace(/[^a-zA-Z0-9/s]/g, '').toString().toUpperCase())
-    .filter((pn: string) => pn)
+      .map((pn: string) => pn.replace(/[^a-zA-Z0-9/s]/g, '').toString().toUpperCase())
+      .filter((pn: string) => pn)
 
     console.log(this.partNumber);
-    
+
   }
 
 
   showupload: boolean = false
-  onClickShowUpload(){
+  onClickShowUpload() {
     this.showupload = true
   }
 
-  partsExcel:any
-  selectedFileName:any
+  partsExcel: any
+  selectedFileName: any
 
   onFileSelect(event: any) {
     this.globalBlockUiService.startLoading()
@@ -473,93 +481,94 @@ export class AdminSalesReportComponent {
     }
   }
 
-  UploadPartNumber(fu: any){
-   this.globalBlockUiService.startLoading()
-   this.DataTypeArray = this.AdminSalesReportInputData.value.DataType
-   const formData = new FormData();
-   formData.append("file", this.partsExcel);
-   formData.append('Brandid', this.AdminSalesReportInputData.value.BrandID);
-   formData.append('Dealerid', this.AdminSalesReportInputData.value.DealerID);
-   formData.append('Locationid', this.AdminSalesReportInputData.value.LocationID);
-   formData.append('from', this.getLastDateOfMonthForFrom(this.AdminSalesReportInputData.value.FormDate).toString());
-   formData.append('to', this.getLastDateOfMonthForTo(this.AdminSalesReportInputData.value.ToDate).toString());
-   formData.append('excel', '1');   
+  UploadPartNumber(fu: any) {
+    this.globalBlockUiService.startLoading()
+    this.DataTypeArray = this.AdminSalesReportInputData.value.DataType
+    const formData = new FormData();
+    formData.append("file", this.partsExcel);
+    formData.append('Brandid', this.AdminSalesReportInputData.value.BrandID);
+    formData.append('Dealerid', this.AdminSalesReportInputData.value.DealerID);
+    formData.append('Locationid', this.AdminSalesReportInputData.value.LocationID);
+    formData.append('from', this.getLastDateOfMonthForFrom(this.AdminSalesReportInputData.value.FormDate).toString());
+    formData.append('to', this.getLastDateOfMonthForTo(this.AdminSalesReportInputData.value.ToDate).toString());
+    formData.append('excel', '1');
 
-    this.adminSalesReportService.getPartDescription(formData).subscribe((res:any)=>{
+    this.adminSalesReportService.getPartDescription(formData).subscribe((res: any) => {
       this.globalBlockUiService.stopLoading()
       this.PartDetail = res
       this.showupload = false
       this.partsExcel = null
     },
-    (error:any) => {
-      console.error("File upload failed:", error);
-      this.globalBlockUiService.stopLoading()
-      this.showupload = false
-     fu.clear();})
-
-
-     setTimeout(() => {
-      this.adminSalesReportService.getSalesInfo(formData).subscribe((res:any)=>{
-      this.SalesInfoVisible = true
-      this.exportVisible = true
-      this.SalesInfoVisible = true
-      this.SalesInfo = res.Data
-      this.showupload = false
-      this.exportVisible = false
-      //this.istotal = false
-      fu.clear(); 
-      this.partsExcel = undefined
-      this.onclicktotal()
-      this.globalBlockUiService.stopLoading()
-      },
-      (error:any) => {
-
-        if(error.error.Error){
-          this.Result = "Data for these Month Range is Not Available"
-          this.visible = true                               
-        }
-        else{
-        this.visible = true
-        this.Result =  `${error.error.message +' Part Number: '+ error.error.unmatchedParts}`
+      (error: any) => {
+        console.error("File upload failed:", error);
         this.globalBlockUiService.stopLoading()
         this.showupload = false
         fu.clear();
+      })
 
-        }
-        
-       
 
-    })
-      
-     },1500 );
+    setTimeout(() => {
+      this.adminSalesReportService.getSalesInfo(formData).subscribe((res: any) => {
+        this.SalesInfoVisible = true
+        this.exportVisible = true
+        this.SalesInfoVisible = true
+        this.SalesInfo = res.Data
+        this.showupload = false
+        this.exportVisible = false
+        //this.istotal = false
+        fu.clear();
+        this.partsExcel = undefined
+        this.onclicktotal()
+        this.globalBlockUiService.stopLoading()
+      },
+        (error: any) => {
+
+          if (error.error.Error) {
+            this.Result = "Data for these Month Range is Not Available"
+            this.visible = true
+          }
+          else {
+            this.visible = true
+            this.Result = `${error.error.message + ' Part Number: ' + error.error.unmatchedParts}`
+            this.globalBlockUiService.stopLoading()
+            this.showupload = false
+            fu.clear();
+
+          }
+
+
+
+        })
+
+    }, 1500);
 
   }
 
 
   exportPartNumberExcel(): void {
-  const partNumbers = [
-    { PartNumber: '12345-AB' },
-    { PartNumber: '67890-CD' },
-    { PartNumber: '11223-EF' },
-    { PartNumber: '44556-GH' },
-    { PartNumber: '77889-IJ' }
-  ];
+    const partNumbers = [
+      { PartNumber: '12345-AB' },
+      { PartNumber: '67890-CD' },
+      { PartNumber: '11223-EF' },
+      { PartNumber: '44556-GH' },
+      { PartNumber: '77889-IJ' }
+    ];
 
-  // Step 1: Create worksheet
-  const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(partNumbers);
+    // Step 1: Create worksheet
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(partNumbers);
 
-  // Step 2: Create workbook
-  const workbook: XLSX.WorkBook = {
-    Sheets: { 'PartNumbers': worksheet },
-    SheetNames: ['PartNumbers']
-  };
+    // Step 2: Create workbook
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'PartNumbers': worksheet },
+      SheetNames: ['PartNumbers']
+    };
 
-  // Step 3: Write workbook buffer
-  const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    // Step 3: Write workbook buffer
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 
-  // Step 4: Save to file
-  const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-  FileSaver.saveAs(data, 'PartNumberExport.xlsx');
-}
+    // Step 4: Save to file
+    const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    FileSaver.saveAs(data, 'PartNumberExport.xlsx');
+  }
 
 }

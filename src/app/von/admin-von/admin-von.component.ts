@@ -161,20 +161,52 @@ export class AdminVonComponent {
 
   // submitting filter values for fetching data
   onClickSubmitfilterData() {
-    console.log(this.adminFilterData.value);
-    if (this.adminFilterData.get('partnumber')?.value === '') {
-      this.adminFilterData.get('partnumber')?.setValue(null);
+  console.log(this.adminFilterData.value);
+
+  // Set partnumber to null if empty
+  if (this.adminFilterData.get('partnumber')?.value === '') {
+    this.adminFilterData.get('partnumber')?.setValue(null);
+  }
+
+  // Dealer field validation based on MaxOrPending
+  if (this.MaxOrPending === false) {
+    this.adminFilterData.get('dealer')?.setValidators(Validators.required);
+  } else {
+    this.adminFilterData.get('dealer')?.clearValidators();
+  }
+  this.adminFilterData.get('dealer')?.updateValueAndValidity();
+
+  // Form validation check
+  if (!this.adminFilterData.valid) {
+    this.adminFilterData.markAllAsTouched();
+  } else {
+    // Default category if not selected
+    if (!this.adminFilterData.value.selectedCategory) {
+      this.adminFilterData.patchValue({
+        selectedCategory: { name: 'Both', key: '2' },
+      });
     }
 
-    // validation for empty fields
-    if (!this.adminFilterData.valid) {
-      this.adminFilterData.markAllAsTouched();
+    if (this.MaxOrPending === false) {
+      // ✅ Call fetchAdminFullMax
+      this.fetchAdminFullMax(
+        this.adminFilterData.value.brand,
+        this.adminFilterData.value.dealer,
+        this.adminFilterData.value.location,
+        this.adminFilterData.value.status,
+        this.adminFilterData.value.fromrange,
+        this.adminFilterData.value.torange,
+        this.adminFilterData.value.partnumber,
+        this.adminFilterData.value.max,
+        this.adminFilterData.value.seasonal,
+        this.adminFilterData.value.model,
+        this.adminFilterData.value.nature,
+        this.adminFilterData.value.fromrate,
+        this.adminFilterData.value.torate,
+        this.adminFilterData.value.parttype
+      );
     } else {
-      if (!this.adminFilterData.value.selectedCategory) {
-        this.adminFilterData.patchValue({
-          selectedCategory: { name: 'Both', key: '2' },
-        });
-      }
+      // ✅ Call fetchAdminPendingView
       this.fetchAdminPendingView(
         this.adminFilterData.value.brand,
         this.adminFilterData.value.dealer,
@@ -193,6 +225,8 @@ export class AdminVonComponent {
       );
     }
   }
+}
+
   formattedKeys: any;
   wsCsKeys: any;
 
@@ -1014,4 +1048,71 @@ export class AdminVonComponent {
     this.sidebarvisible = true;
     console.log(this.sidebarvisible);
   }
+
+  MaxOrPending: boolean = true;
+
+  onClickToggle(event: any) {
+    this.MaxOrPending = event.checked;
+    console.log(this.MaxOrPending);
+  }
+
+  fetchAdminFullMax(brandid: any,
+    dealerid: any,
+    locationid: any,
+    status: any,
+    r1: any,
+    r2: any,
+    partnumber: any,
+    flag: any,
+    seasonalid: any,
+    modelid: any,
+    natureid: any,
+    l1: any,
+    l2: any,
+    parttype: any) {
+      this.globalBlockUiService.startLoading();
+      this.adminvonservice.getFullMaxAdmin({
+         brandid: brandid,
+        dealerid: dealerid,
+        locationid: locationid,
+        status: status,
+        r1: r1,
+        r2: r2,
+        partnumber: partnumber,
+        flag: flag,
+        seasonalid: seasonalid,
+        modelid: modelid,
+        natureid: natureid,
+        l1: l1,
+        l2: l2,
+        parttype: parttype,
+        pageno:1,
+        pagesize:1000000
+      }).subscribe({
+        next: (res:any) =>{
+          if(!res.Data || res.Data.length === 0){
+             this.Result = 'No Data Available';
+            this.visible = true;
+            this.globalBlockUiService.stopLoading();
+            this.onClickCloseSales();
+          }
+          else{
+            this.AdminPeningView = res.Data;
+            this.onClickCloseSales();
+            this.globalBlockUiService.stopLoading()
+            this.onClickCloseSales()
+            
+          }
+        },
+        error: (err:any)=>{
+           this.Result = 'Something is not well Please Contact IT Admin';
+          this.visible = true;
+          this.globalBlockUiService.stopLoading();
+          this.onClickCloseSales();
+
+        },
+      })
+
+  }
+
 }

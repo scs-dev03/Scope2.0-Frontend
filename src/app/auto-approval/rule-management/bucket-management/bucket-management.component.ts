@@ -4,6 +4,7 @@ import { SHARED_IMPORTS } from '../../../shared/shared-imports/shared-module';
 import { PrimengModuleModule } from '../../../shared/primeng-module/primeng-module.module';
 import { PaginatorState } from 'primeng/paginator';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { SharedServiceService } from '../../../services/shared-service.service';
 
 @Component({
   selector: 'app-bucket-management',
@@ -15,11 +16,16 @@ export class BucketManagementComponent {
 
   BucketForm: FormGroup
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private sharedService: SharedServiceService) {
     this.BucketForm = this.fb.group({
       BucketName: (''),
       ParameterName: ('')
     })
+  }
+    ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    this.sharedService.updateModuleName('Bucket Master');
   }
 
   visible: boolean = false;

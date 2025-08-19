@@ -1,5 +1,5 @@
 <div class="min-w-full h-full bg-gray-100">
-  <h1 class="text-2xl font-serif ml-2">Bucket Master</h1>
+  <!-- <h1 class="text-2xl font-serif ml-2">Bucket Master</h1> -->
   <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
     <div [formGroup]="BucketForm"
       class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-3 items-center border-dashed border-2 bg-gray-50 border-gray-200">
@@ -75,7 +75,7 @@
   [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '50vw' }" [draggable]="false"
   [resizable]="false">
   <div class="flex gap-2">
-    <p-select appendTo="body" optionLabel="name" placeholder="Select Bucket" class="w-full md:w-56" />
+    <p-select [filter]="true" [filter]="true" appendTo="body" optionLabel="name" placeholder="Select Bucket" class="w-full md:w-56" />
 
     <p-floatlabel variant="on">
       <p-multiselect optionLabel="name" class="!flex-auto" id="parameters" size="small" appendTo="body"

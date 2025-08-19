@@ -4,6 +4,7 @@ import { Form, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '
 import { CommonModule } from '@angular/common';
 import { SHARED_IMPORTS } from '../../../shared/shared-imports/shared-module';
 import { SharedModule } from 'primeng/api';
+import { SharedServiceService } from '../../../services/shared-service.service';
 
 @Component({
   selector: 'app-rule-creation',
@@ -19,6 +20,7 @@ export class RuleCreationComponent {
     this.AlphaNumericRule.disable()
     this.onRuleTypeChange();
     this.LocationSpecificName.disable()
+    this.sharedService.updateModuleName('Rule Creation');
   }
 
   NumericRule: FormGroup;
@@ -27,7 +29,7 @@ export class RuleCreationComponent {
 
   visible: boolean = false
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private sharedService: SharedServiceService) {
     this.NumericRule = this.fb.group({
       selectedBucket: [''],
       selectedParameter: [''],
@@ -104,7 +106,6 @@ export class RuleCreationComponent {
     { label: 'Ordervalue', value: 'p3' },
     { label: 'Advancevalue', value: 'p3' },
     { label: 'NDP', value: 'p3' },
-    { label: 'Days for which open job line to be considered to calculate free stock for self or for trasnfer', value: 'p3' },
     { label: 'Allowed Price for Stockable ', value: 'p3' },
     { label: 'Allowed Price for Non-Stockable', value: 'p3' },
     { label: 'Allowed Price for Non-Moving', value: 'p3' },

@@ -104,17 +104,27 @@ export class AppComponent {
     });
 
     this.userService.loadDataOnce();
-    localStorage.setItem('usertype','U');
-    localStorage.setItem('brandid','9');
-    localStorage.setItem('dealerid','8');
-    localStorage.setItem('def_location','14')
-     localStorage.setItem('usertoken','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
+     //localStorage.setItem('usertype','A');
+    // localStorage.setItem('brandid','9');
+    // localStorage.setItem('dealerid','8');
+    // localStorage.setItem('def_location','14')
+      //localStorage.setItem('usertoken','0x020000004A93E1F810D29DD8C86209A5FD6FB4E5A28C171D578D439E195DA48046553B5B930AD2F6B471A43B463E9B654EA70804')
     let userToken = localStorage.getItem('usertoken');
 
-    this.utilitiesService.getUserInfo({ token: userToken }).subscribe((res: any) => {
-      localStorage.setItem('userid', res.data[0]?.userId)
-      localStorage.setItem('username', res.data[0]?.username)
-    })
+   this.utilitiesService
+  .getUserInfo({ token: userToken })
+  .pipe(take(1))
+  .subscribe({
+    next: (res: any) => {
+      const user = Array.isArray(res?.data) ? res.data[0] : res?.data;
+      if (!user) return;
+
+      localStorage.setItem('userid', String(user.userId ?? ''));
+      localStorage.setItem('username', user.username ?? '');
+      this.globalBlockUIService.stopLoading()
+    },
+    error: (err) => this.globalBlockUIService.stopLoading()
+  });
 
     this.sharedService.moduleName.subscribe((header: any) => {
       //console.log("header ",header)

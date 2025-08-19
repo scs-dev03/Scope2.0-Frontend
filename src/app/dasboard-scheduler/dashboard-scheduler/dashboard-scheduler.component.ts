@@ -12,7 +12,7 @@ import { SharedServiceService } from '../../services/shared-service.service';
 
 @Component({
   selector: 'app-dashboard-scheduler',
-  imports: [SHARED_IMPORTS,PrimengModuleModule,SharedModule,LoaderComponent],
+  imports: [SHARED_IMPORTS,PrimengModuleModule,SharedModule],
   templateUrl: './dashboard-scheduler.component.html',
   styleUrl: './dashboard-scheduler.component.css',
   providers: [DatePipe]

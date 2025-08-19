@@ -26,21 +26,21 @@ export class AdminRemarkComponent {
       { name: 'User', code: 'U' },
     ];
     this.fetchBrandData();
-     this.sharedService.updateModuleName('Remark Creation')
-    
+    this.sharedService.updateModuleName('Remark Creation')
+
   }
 
   clear(table: Table) {
-        table.clear();
-        
-    }
+    table.clear();
+
+  }
 
   constructor(private adminvonservice: AdminvonserviceService,
-    private sharedService:SharedServiceService,private globalblockui : GlobalBlockUiService
-  ) {}
+    private sharedService: SharedServiceService, private globalblockui: GlobalBlockUiService
+  ) { }
 
   adminRemarkInputData = new FormGroup({
-    type: new FormControl(null,[Validators.required]),
+    type: new FormControl(null, [Validators.required]),
     brand: new FormControl(),
     remarkInput: new FormControl('', [Validators.maxLength(50), this.allowedCharactersValidator()]),
   });
@@ -49,13 +49,13 @@ export class AdminRemarkComponent {
   brandData: any = [];
   remarkData: any = []
   isloading: boolean = false;
-  showtable:boolean = false;
+  showtable: boolean = false;
   Result: any;
   visible: any;
 
   onSubmitRemarkData() {
     console.log(this.adminRemarkInputData.value);
-    
+
     this.remarkCreation(
       this.adminRemarkInputData.value.remarkInput,
       this.adminRemarkInputData.value.brand,
@@ -63,11 +63,11 @@ export class AdminRemarkComponent {
       this.adminRemarkInputData.value.type
     );
 
-    
+
   }
-  onclickShowTable(){
+  onclickShowTable() {
     this.showtable = true
-    this.FetchViewRemark(this.adminRemarkInputData.value.brand,this.adminRemarkInputData.value.type)
+    this.FetchViewRemark(this.adminRemarkInputData.value.brand, this.adminRemarkInputData.value.type)
   }
   allowedCharactersValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -76,7 +76,7 @@ export class AdminRemarkComponent {
       return isValid ? null : { 'invalidCharacters': { value: control.value } };
     };
   }
-  
+
 
   fetchBrandData() {
     this.globalblockui.startLoading()
@@ -87,60 +87,60 @@ export class AdminRemarkComponent {
     });
   }
 
- remarkCreation(remark: any, brandid: any, addedby: any, usertype: any) {
-  this.globalblockui.startLoading();
+  remarkCreation(remark: any, brandid: any, addedby: any, usertype: any) {
+    this.globalblockui.startLoading();
 
-  this.adminvonservice
-    .newRemarkCreation({
-      remark: remark,
-      brandid: brandid,
-      addedby: localStorage.getItem('userid'),
-      usertype: usertype,
-    })
-    .subscribe({
-      next: (res: any) => {
-        this.adminRemarkInputData.get('remarkInput')?.setValue(''); // better than direct object update
-        this.visible = true;
-        this.Result = res.message;
-        this.globalblockui.stopLoading();
-      },
-      error: (err) => {
-        this.globalblockui.stopLoading();
-        if(err.error.message){
-          this.Result = err.error.message
-          this.visible = true
+    this.adminvonservice
+      .newRemarkCreation({
+        remark: remark,
+        brandid: brandid,
+        addedby: localStorage.getItem('userid'),
+        usertype: usertype,
+      })
+      .subscribe({
+        next: (res: any) => {
+          this.adminRemarkInputData.get('remarkInput')?.setValue(''); // better than direct object update
+          this.visible = true;
+          this.Result = res.message;
+          this.globalblockui.stopLoading();
+        },
+        error: (err) => {
+          this.globalblockui.stopLoading();
+          if (err.error.message) {
+            this.Result = err.error.message
+            this.visible = true
+          }
+          else if (err.error.Error) {
+
+            this.Result = err.error.Error
+            this.visible = true
+          }
+
         }
-        else if(err.error.Error){
-          
-          this.Result = err.error.Error
-          this.visible = true
-        }
-        
-      }
-    });
-}
+      });
+  }
 
 
-  FetchViewRemark(brandid: any,usertype:any){
+  FetchViewRemark(brandid: any, usertype: any) {
     this.isloading = true;
     this.adminvonservice.getViewRemark({
-      brandid:brandid,usertype:usertype
-    }).subscribe((res:any)=>{
+      brandid: brandid, usertype: usertype
+    }).subscribe((res: any) => {
       this.remarkData = res.Data
       this.isloading = false;
     })
   }
 
 
-  
-  
-sidebarvisible: boolean = false;
-    
-   
 
-onClickSidebar(){
+
+  sidebarvisible: boolean = false;
+
+
+
+  onClickSidebar() {
     this.sidebarvisible = true
     console.log(this.sidebarvisible);
-    
-}
+
+  }
 }

@@ -2,7 +2,7 @@ export const environment = {
     production: false,
     
   //scope 2.0 live server backend
- apiUrl:'https://scopeapi.sparecare.in/api/',
+// apiUrl:'https://scopeapi.sparecare.in/api/',
 
   // apiUrl: 'http://localhost:3000/api/',
 
@@ -17,7 +17,7 @@ export const environment = {
    // apiUrl:'http://web10.185.238.new.ocpwebserver.com/api/',
 
       // scope 2.0 backend uat
-  // apiUrl:'http://web36.185.238.new.ocpwebserver.com/api/',
+   apiUrl:'http://web36.185.238.new.ocpwebserver.com/api/',
 
     //logout url
     //frontend UAT
@@ -26,8 +26,8 @@ export const environment = {
 
     //logout
     //frontend Live
-     frontendAdminUrl:'https://scope.sparecare.in/UAD_SC_WAC/Login.aspx',
-     frontendUserUrl:'https://scope.sparecare.in/UAP_SC/Login.aspx',
+     frontendAdminUrl:'http://web13.185.238.new.ocpwebserver.com/UAD_SC_WAC/Login.aspx',
+     frontendUserUrl:'http://web13.185.238.new.ocpwebserver.com/UAP_SC/Login.aspx',
 
 
     //profile photo for Live server
@@ -47,9 +47,9 @@ export const environment = {
 
 
     //Ayush Module API Url
-    //EnvApiUrlMaster: 'http://web36.185.238.new.ocpwebserver.com/api/v1/',
+    EnvApiUrlMaster: 'http://web36.185.238.new.ocpwebserver.com/api/v1/',
     //EnvApiUrlMaster: 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/',
-    EnvApiUrlMaster: 'https://scopeapi.sparecare.in/api/v1/',
+    //EnvApiUrlMaster: 'https://scopeapi.sparecare.in/api/v1/',
     //EnvApiUrlMaster: 'http://web10.185.238.new.ocpwebserver.com/api/v1/',
   };
 

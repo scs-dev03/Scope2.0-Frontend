@@ -116,7 +116,9 @@
 >
   <div class="bg-gray-50 w-full rounded-lg shadow-lg overflow-hidden">
     <p-table
+      #dt
       [scrollable]="true"
+      [loading]="loading"
       scrollHeight="600px"
       [value]="SalesInfo"
       [paginator]="true"

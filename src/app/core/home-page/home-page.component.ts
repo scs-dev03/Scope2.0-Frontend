@@ -290,7 +290,7 @@ export class HomePageComponent {
         };
       },
       error: (err: any) => {
-        console.error('Error fetching cards data:', err);
+        //console.error('Error fetching cards data:', err);
         this.globalBlockUiService.stopLoading();
       },
     });
