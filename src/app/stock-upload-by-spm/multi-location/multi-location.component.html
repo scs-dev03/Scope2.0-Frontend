@@ -60,12 +60,12 @@
                       </div>
                     
                         <div class="add-mapping-card w-[70vw] h-auto  !gap-6 p-3" [ngClass]="visibleSidebar?'w-[70vw]':'w-[90vw]'">
-                            <div formArrayName="locations" *ngFor="let locationControl of locationControls.controls; let i = index">
+                            <!-- <div formArrayName="locations" *ngFor="let locationControl of locationControls.controls; let i = index"> -->
                                   
-                              <div [formGroupName]="i" class="location-container">
+                              <!-- <div [formGroupName]="i" class="location-container">
                                 <div class="!flex !flex-row gap-6 my-4">
                                     <!-- Location Selection -->
-                                    <div>
+                                    <!-- <div>
                                         <p-select 
                                             [options]="locations"
                                             formControlName="location"
@@ -81,10 +81,10 @@
                                             <small *ngIf="locationControls.controls[i].get('location')?.hasError('required')" style="color: red; font-size: 12px;">Location is required.</small>
                                             <small *ngIf="locationControls.controls[i].get('location')?.hasError('duplicateLocation')" style="color: red; font-size: 12px;">Cannot select the same location twice.</small>
                                         </div>
-                                    </div>
+                                    </div> -->
                             
                                     <!-- File Upload -->
-                                    <div class="!flex !justify-center !items-center !flex-col">
+                                    <!-- <div class="!flex !justify-center !items-center !flex-col">
                                       <p-fileUpload
                                       #fu
                                       class="upload-icon-only"
@@ -111,29 +111,80 @@
                                     </p-fileUpload>
                                     
                                         <!-- File Validation Error -->
-                                        <div *ngIf="locationControls.controls[i].get('file')?.touched && locationControls.controls[i].get('file')?.invalid" class="error-message">
+                                        <!-- <div *ngIf="locationControls.controls[i].get('file')?.touched && locationControls.controls[i].get('file')?.invalid" class="error-message">
                                             <small *ngIf="locationControls.controls[i].get('file')?.hasError('required')" style="color: red; font-size: 12px;">File is required.</small>
                                         </div>
-                                    </div>
+                                    </div> --> 
                             
                                     <!-- Add/Remove Buttons -->
-                                    <button *ngIf="i > 0" type="button" (click)="removeLocation(i)" class="remove-btn mt-1">-</button>
-                                    <button type="button" (click)="addLocation()" class="add-btn">+</button>
-                                </div>
-                            </div>
-                            
-                           
-                    
-                            
+                                    <!-- <button *ngIf="i > 0" type="button" (click)="removeLocation(i)" class="remove-btn mt-1">-</button>
+                                    <button type="button" (click)="addLocation()" class="add-btn">+</button> -->
+                                <!-- </div>
+                            </div>  -->
+
+                            <div formArrayName="locations">
+  <div
+    *ngFor="let group of locationControls.controls; let i = index"
+    [formGroupName]="i"
+    class="flex flex-row gap-2 my-2 border-b pb-2"
+  >
+ <div class="row col-12">
+     <div class="col-3">
+         <!-- Show Location Name -->
+    <span class="font-semibold text-gray-700">
+      {{ getLocationName(group.get('location')?.value) }}
+    </span>
+     </div>
+  <div class="d-flex flex-col col-7" >
+    <!-- File Upload for this location -->
+     <div *ngIf="fileUploadVisible[i]">
+      
+   
+    <p-fileUpload #fu
+      name="file"
+      mode="basic"
+      chooseLabel="Upload File"
+      [auto]="false"
+      [multiple]="false"
+      [customUpload]="true"
+      accept=".xlsx,.xls,.csv"
+      [showUploadButton]="false"
+      [showCancelButton]="false"
+      (onSelect)="onFileSelect($event, i)"
+    >
+      <ng-template let-file pTemplate="file">
+        <div
+          class="truncate-file-name"
+          [title]="file.name"
+          style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+        >
+          {{ file.name.length > 10 ? (file.name | slice: 0: 10) + '...' : file.name }}
+        </div>
+      </ng-template>
+    </p-fileUpload>
+   
+  </div>
+    <!-- Validation Error -->
+    <div *ngIf="group.get('file')?.touched && group.get('file')?.invalid">
+      <small class="text-red-600">File is required for this location.</small>
+    </div>
+     </div>
+     
+ </div>
+  
+   
+  </div>
+</div>
+                  
                         </div>
-                        <div class="d-flex">
+                        <div class="d-flex mt-2 justify-center">
                           <p-button label="Submit" (onClick)="onUpload()" severity="secondary" />
                           <!-- [disabled]="!showTable" -->
                           <!-- <p-button label="Get Uploaded Data" class="" (onClick)="exportUploadedData()" severity="secondary" class="ms-3" /> -->
                           <i class='bx bx-export f-20 d-flex align-items-center bx-rotate-180 ms-3' pTooltip="Get Uploaded Data"    (click)="exportUploadedData()" severity="secondary" ></i>
                         </div>
                             
-                          </div>
+                          <!-- </div> -->
                     </form>
                     
                     
@@ -269,8 +320,11 @@
           <p-dialog header="Data Upload Summary" [modal]="true" [(visible)]="visible" 
           [style]="{ width: '25rem' }" (onHide)="clearResponse()">
             <ng-container *ngIf="response && response.length">
-              <div *ngFor="let item of response" style="margin-bottom: 1rem;">
-                <strong>{{ item.locationName }}</strong>: {{ item.status }}
+              <div *ngFor="let item of response" style="margin-bottom: 1rem;" >
+                <div  *ngIf="item.status !== undefined">
+                  <strong>{{ item.locationName }}</strong>: {{ item.status }}
+
+                </div>
               </div>
             </ng-container>
         </p-dialog>         

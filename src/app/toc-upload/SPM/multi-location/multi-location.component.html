@@ -1,0 +1,182 @@
+<p-toast></p-toast>
+<p-toast key="upload-error" position="top-center"></p-toast>
+<div class="body mt-2 ml-10">
+   <!-- <span class="text-black text-2xl ">Multi Location Stock Upload</span>   -->
+
+    <div class="ml-3">            
+           </div>
+                <div class="d-flex" >
+                    <form [formGroup]="mlForm">
+                        <!-- [ngClass]="showTable ? 'cursor-pointer' : 'disabled'" -->
+
+                        <div class="d-flex justify-end">
+                            <!-- <span class="btn-view mb-2" [ngClass]="isDataPresentPartNotInMaster?'cursor-pointer':'disabled'"  (click)="exportToExcel()">Part Not In Master Export</span> -->
+                            <!-- <i class='bx bx-export mb-2 f-20 bx-rotate-180' [ngClass]="isDataPresentPartNotInMaster?'cursor-pointer':'disabled'" pTooltip="Part Not In Master Export" (click)="exportToExcel()"></i> -->
+                        </div>
+                        <div class="!flex !flex-row !gap-6 ps-3 pb-3 !items-center">
+                         
+                      </div>
+                    
+                        <div class="add-mapping-card w-[70vw] h-auto  !gap-6 p-3" [ngClass]="visibleSidebar?'w-[70vw]':'w-[90vw]'">
+    
+
+                            <div formArrayName="locations">
+  <div
+    *ngFor="let group of locationControls.controls; let i = index"
+    [formGroupName]="i"
+    class="flex flex-row gap-2 my-2 border-b pb-2"
+  >
+ <div class="row col-12">
+     <div class="col-3">
+         <!-- Show Location Name -->
+    <span class="font-semibold text-gray-700">
+      {{ getLocationName(group.get('location')?.value) }}
+    </span>
+     </div>
+  <div class="d-flex flex-col col-7" >
+    <!-- File Upload for this location -->
+     <div *ngIf="fileUploadVisible[i]">
+      
+   
+    <p-fileUpload #fu
+      name="file"
+      mode="basic"
+      chooseLabel="Upload File"
+      [auto]="false"
+      [multiple]="false"
+      [customUpload]="true"
+      accept=".xlsx,.xls,.csv"
+      [showUploadButton]="false"
+      [showCancelButton]="false"
+      (onSelect)="onFileSelect($event, i)"
+    >
+      <ng-template let-file pTemplate="file">
+        <div
+          class="truncate-file-name"
+          [title]="file.name"
+          style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+        >
+          {{ file.name.length > 10 ? (file.name | slice: 0: 10) + '...' : file.name }}
+        </div>
+      </ng-template>
+    </p-fileUpload>
+   
+  </div>
+    <!-- Validation Error -->
+    <div *ngIf="group.get('file')?.touched && group.get('file')?.invalid">
+      <small class="text-red-600">File is required for this location.</small>
+    </div>
+     </div>
+     
+ </div>
+  
+   
+  </div>
+</div>
+                  
+                        </div>
+                        <div class="d-flex mt-2 justify-center">
+                          <p-button label="Submit" (onClick)="onUpload()" severity="secondary" />
+                          <!-- [disabled]="!showTable" -->
+                          <!-- <p-button label="Get Uploaded Data" class="" (onClick)="exportUploadedData()" severity="secondary" class="ms-3" /> -->
+                          <i class='bx bx-export f-20 d-flex align-items-center bx-rotate-180 ms-3' pTooltip="Get Uploaded Data"    (click)="exportUploadedData()" severity="secondary" ></i>
+                        </div>
+                            
+                          <!-- </div> -->
+                    </form>
+                    
+                    
+                </div>
+
+               
+            </div>
+            <div
+            class="card   h-auto  p-3 bg-gray-50 rounded-lg shadow-lg mb-5  mt-4 "
+            *ngIf="showTable" [ngClass]="visibleSidebar?'w-[70vw]':'w-[90vw]'"
+            >
+            <div class="d-flex justify-between">
+              <span class="text-black text-lg ">TOC Upload History</span>
+              <i class="bx bx-export font-bold mb-3 cursor-pointer bx-rotate-180" style="font-size: 18px;" (click)="exportTableData()"></i>
+            </div>
+            <p-table #dataTable
+              [scrollable]="true"
+              scrollHeight="400px"
+              [value]="records"
+              styleClass="mt-4"
+              [paginator]="true"
+              [rows]="10"
+              [first]="first"
+              [rowsPerPageOptions]="[10,20, 30, 40, 50, 100]"
+              [showGridlines]="true"
+              [scrollHeight]="'400px'"
+              [scrollable]="true"
+              (onPageChange)="onPageChange($event)"
+              class="bg-white  !rounded-lg border border-gray-200 shadow-md"
+              [showCurrentPageReport]="true"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                        
+            >
+              <ng-template #header let-item>
+                <tr>
+                 
+                  <th style="font-size: 13px;" >Location</th>
+                  <th style="font-size: 13px;" pSortableColumn="prevStockUploadCount" >
+                    Previous Records <p-sortIcon field="prevStockUploadCount"></p-sortIcon>
+                  </th>
+                 
+                  <th style="font-size: 13px;" pSortableColumn="stockUploadCount" >
+                    Current Records <p-sortIcon field="stockUploadCount"></p-sortIcon>
+                   
+                  </th>
+                  <th style="font-size: 13px;" pSortableColumn="prevQuantitySum">
+                   Previous Quantity Sum   <p-sortIcon field="prevQuantitySum"></p-sortIcon>
+                  </th>
+                  <th style="font-size: 13px;" pSortableColumn="quantitySum">Current Quantity Sum <p-sortIcon field="quantitySum"></p-sortIcon> </th>
+                  <th style="font-size: 13px;" pSortableColumn="added_on">
+                     Added On <p-sortIcon field="added_on"></p-sortIcon>
+                   </th>
+                   <th style="font-size: 13px;" pSortableColumn="added_by">Added By <p-sortIcon field="added_by"></p-sortIcon></th>
+                  
+                </tr>
+              </ng-template>
+              <ng-template #body let-rowData let-i="rowIndex">
+                <tr>
+                  <td style="font-size: 11px;">{{rowData.locationName}}</td>
+                 
+                  <td style="font-size: 11px;">
+                      {{rowData.prevRecordsCount !=null ?rowData.prevRecordsCount:0}}
+                  </td>
+                  <td style="font-size: 11px;">
+                      {{rowData.currentRecordsCount !=null ?rowData.currentRecordsCount:0}}
+                     
+                  </td>
+             
+                  <td style="font-size: 11px;">
+                     {{rowData.prevSumQuantity !=null ?rowData.prevSumQuantity:0}}
+                  </td>
+                 <td style="font-size: 11px;">
+                    {{rowData.currentSumQuantity !=null?rowData.currentSumQuantity:0}}
+                 </td>
+                 <td style="font-size: 11px;">
+                    {{formatDate(rowData.addedOn)}}
+                 </td>
+                 <td style="font-size: 11px;">
+                    {{rowData.added_by}}
+                 </td>
+                 
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+
+          <p-dialog header="Data Upload Summary" [modal]="true" [(visible)]="visible" 
+          [style]="{ width: '25rem' }" (onHide)="clearResponse()">
+            <ng-container *ngIf="response && response.length">
+              <div *ngFor="let item of response" style="margin-bottom: 1rem;" >
+                <div  *ngIf="item.status !== undefined">
+                  <strong>{{ item.locationName }}</strong>: {{ item.status }}
+
+                </div>
+              </div>
+            </ng-container>
+        </p-dialog>         
