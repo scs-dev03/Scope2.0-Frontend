@@ -1,11 +1,11 @@
-<!-- <div class="h-full"> -->
-
-<!-- <p-sidebar [(visible)]="isVisible" *ngIf="isVisible"  position="left" [baseZIndex]="10000" [dismissible]="false" [showCloseIcon]="false"  mode="overlay"  > -->
-<!-- Logo Section -->
-<!-- <button (click)="closeSidebar()">Close</button> -->
-<div class="sidebar ">
+<div class="sidebar">
   <div class="logo-section ms-4">
-    <img src="Scs-logo.png" alt="Logo" class="sidebar-logo cursor-pointer" [routerLink]="['/core/home']" />
+    <img
+      src="Scs-logo.png"
+      alt="Logo"
+      class="sidebar-logo cursor-pointer"
+      [routerLink]="['/core/home']"
+    />
   </div>
 
   <!-- Search Section -->
@@ -18,7 +18,6 @@
       (input)="filterItems()"
       class="sidebar-search"
     />
-    <!-- <ng-template pTemplate="append"> -->
     <i class="pi pi-search"></i>
     <!-- Search icon on the right -->
     <!-- </ng-template> -->
@@ -26,81 +25,55 @@
 
   <!-- Menu Items Section -->
   <ul class="menu-items">
-    <!-- <li
+    <li
       *ngFor="let item of filteredItems"
-      class="menu-item"
-      routerLinkActive="active"
+      [class.active]="item.isActive"
+      class="f-13"
     >
-      <a [routerLink]="item.route" *ngIf="!item.children">{{ item.value }}</a>
-
-       Parent item with toggle for children -->
-      <!-- <div
-        *ngIf="item.children"
-        (click)="toggleChildren(item)"
-        class="parent-item"
+      <!-- Main Menu Item -->
+      <a
+        class="menu-item submenu-title cursor-pointer text-balance line-clamp-1 full-name"
+        [routerLink]="item.module_route"
+        *ngIf="item.subchildren.length >= 1"
+        routerLinkActive="active"
+        (click)="toggleSubMenu(item)"
+        [ngClass]="item.isActive ? 'active-item' : ''"
       >
+        <!-- Chevron Icon -->
         <i
-          [class]="
-            item.isExpanded ? 'pi pi-chevron-down f-12' : 'pi pi-chevron-right f-12'
+          class="icon"
+          [ngClass]="
+            item.isOpen ? 'bx bx-chevron-up f-12' : 'bx bx-chevron-down f-12'
           "
         ></i>
-        {{ item.value }}
-      </div>
-
-     
-      <ul *ngIf="item.isExpanded">
-        <li *ngFor="let child of item?.children" class="menu-item child ms-3">
-          <a
-            [routerLink]="child.route"
-            (click)="setActive(child, item)"
-            routerLinkActive="active"
-            [ngClass]="child.isActive ? 'active-item' : ''"
-            [ngClass]="child.isActive ? 'active-item' : ''"
-            >{{ child.value }}</a
-          >
-        </li>
-      </ul>
-    </li>  -->
-
-
-    <li *ngFor="let item of filteredItems" [class.active]="item.isActive" class="f-13">
-        
-      <!-- Main Menu Item -->
-      <a 
-        class="menu-item submenu-title cursor-pointer text-balance line-clamp-1 full-name" 
-        [routerLink]="item.module_route"  *ngIf="item.subchildren.length>=1"
-        routerLinkActive="active" 
-        (click)="toggleSubMenu(item)" 
-        [ngClass]="item.isActive ? 'active-item' : ''">
-        
-        <!-- Chevron Icon -->
-        <i class="icon" [ngClass]="item.isOpen ? 'bx bx-chevron-up f-12' : 'bx bx-chevron-down f-12'"></i>
         {{ item.parentModuleName }}
-       
       </a>
-      
-      <a 
-        class="ml-3  submenu-title cursor-pointer text-balance line-clamp-1 full-name menu-item" 
-        [routerLink]="item.module_route"  *ngIf="item.subchildren.length==0"
-        routerLinkActive="active" 
-        (click)="toggleSubMenu(item)" 
-        [ngClass]="item.isActive ? 'active-item' : ''">
-        
+
+      <a
+        class="ml-3 submenu-title cursor-pointer text-balance line-clamp-1 full-name menu-item"
+        [routerLink]="item.module_route"
+        *ngIf="item.subchildren.length == 0"
+        routerLinkActive="active"
+        (click)="toggleSubMenu(item)"
+        [ngClass]="item.isActive ? 'active-item' : ''"
+      >
         <!-- Chevron Icon -->
         {{ item.parentModuleName }}
-       
       </a>
       <!-- Submenu -->
       <ul *ngIf="item.isOpen" class="submenu">
-       
-        <li *ngFor="let subItem of item.subchildren" class="subsidebar  child  f-12 ms-7 menu-item">
+        <li
+          *ngFor="let subItem of item.subchildren"
+          class="subsidebar child f-12 ms-7 menu-item"
+        >
           <!-- <i class='bx bx-circle f-8'></i> -->
-          <a 
-            [routerLink]="subItem.module_route" 
-            routerLinkActive="active" 
-            (click)="setActive(subItem, item)" 
-            [ngClass]="subItem.isActive ? 'active-item' : ''">
-            {{ subItem?.module_name}}
+          <a
+            [routerLink]="subItem.module_route"
+            routerLinkActive="active"
+            (click)="setActive(subItem, item)"
+            [ngClass]="subItem.isActive ? 'active-item' : ''"
+          >
+            {{ subItem?.module_name }}
           </a>
         </li>
       </ul>
@@ -109,30 +82,23 @@
 
   <!-- User Profile Section -->
   <div class="user-profile d-flex flex-row justify-between me-5 pe-3">
-    <div class="flex flex-row mt-2 align-center" >
-      <!-- <img src="man_4140048.png" height="40px" width="40px" class="me-3" /> -->
-      <img [src]="profilePhoto!='' && profilePhoto?profilePhoto: '/man_4140048.png'"  class="profile-image me-3 h-[40px] w-[40px] rounded-full" />
-      <p class="user-name f-12 d-flex align-items-center">{{userName}}</p>
+    <div class="flex flex-row mt-2 align-center">
+      <img
+        [src]="
+          profilePhoto != '' && profilePhoto ? profilePhoto : '/man_4140048.png'
+        "
+        class="profile-image me-3 h-[40px] w-[40px] rounded-full"
+      />
+      <p class="user-name f-12 d-flex align-items-center">{{ userName }}</p>
     </div>
-    
-    <div
-   
-    class="cursor-pointer pi pi-ellipsis-v mt-2"
-    (click)="onButtonClick($event)"
-  ></div>
 
-<div class="flex h-full p-1  align-items-center me-4  ">
-  <!-- <button
-    icon="pi pi-ellipsis-v"
-    class="cursor-pointer pi pi-ellipsis-v"
-    (onClick)="onButtonClick($event)"
-  ></button> -->
-  <p-tieredmenu #menu [model]="items" [appendTo]="'body'" [popup]="true" />
+    <div
+      class="cursor-pointer pi pi-ellipsis-v mt-2"
+      (click)="onButtonClick($event)"
+    ></div>
+
+    <div class="flex h-full p-1 align-items-center me-4">
+      <p-tieredmenu #menu [model]="items" [appendTo]="'body'" [popup]="true" />
+    </div>
+  </div>
 </div>
-</div>
-</div>
-<!-- </p-sidebar> -->
-<!-- </div> -->
-<!-- Button to toggle the sidebar -->
-<!-- <button pButton icon="pi pi-bars" icon="bx bx-upload" (click)="visibleSidebar = true"></button> 
-   -->

@@ -1,4 +1,4 @@
-import { Component, Renderer2, ViewChild } from '@angular/core';
+import { Component, EnvironmentInjector, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { CoreModule } from './core/core.module';
 import { SidebarComponent } from "./core/sidebar/sidebar.component";
@@ -19,6 +19,9 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PageStateService } from './services/page-state.service';
 import { PageNotFoundComponent } from './core/page-not-found/page-not-found.component';
 import { IdleService } from './services/idle.service';
+import { MenuItem } from 'primeng/api';
+import { environment } from '../../environments/environment';
+import { TieredMenu } from 'primeng/tieredmenu';
 
 @Component({
   selector: 'app-root',
@@ -27,11 +30,16 @@ import { IdleService } from './services/idle.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+
+  @ViewChild('menu') menu:TieredMenu |null=  null;
   title = 'stock-upload-frontend';
+  
+  
   visibleSidebar: boolean = true;
   isLoading: boolean = false;
   blocked: boolean = false;
   isLoginPage = false;
+  UserName: string = ''
   @ViewChild('blockUI') blockUI!: BlockUI;
   @ViewChild('sidebar') sidebar!: SidebarComponent;
   token: any;
@@ -47,22 +55,41 @@ export class AppComponent {
     private router: Router, private route: ActivatedRoute,
     private renderer: Renderer2,
     public sidebarService: SidebarService,
-    private utilitiesService:UtilitiesService,
-    private sharedService:SharedServiceService,
-    private pageStateService:PageStateService,
-  //  private idleService:IdleService,
-  private userService:UserService) {
+    private utilitiesService: UtilitiesService,
+    private sharedService: SharedServiceService,
+    private pageStateService: PageStateService,
+    //  private idleService:IdleService,
+    private userService: UserService) {
     this.homeData = new FormGroup({
       locationId: new FormControl(),
     })
+
+    this.UserName = localStorage.getItem('username') ?? ''
   }
 
+
+  items: MenuItem[] = [
+    {
+      label: 'Logout',
+      icon: 'pi pi-sign-out',
+      command:()=>this.logOut()
+,
+     
+    },
+    
+    
+  ];
+
+
+
+
   ngOnInit() {
+    
     //  localStorage.setItem('userid',"293")
-    this.is404Page=this.pageStateService.is404;
-   // console.log(this.is404Page)
-    this.globalBlockUIService.loading$.subscribe((loading:any)=>{
-      this.isLoading=loading;
+    this.is404Page = this.pageStateService.is404;
+    // console.log(this.is404Page)
+    this.globalBlockUIService.loading$.subscribe((loading: any) => {
+      this.isLoading = loading;
     })
 
 
@@ -70,6 +97,7 @@ export class AppComponent {
       locationId: localStorage.getItem('def_location')
     })
 
+    
 
     this.router.events
       .pipe(filter((event: any) => event instanceof NavigationEnd))
@@ -85,6 +113,8 @@ export class AppComponent {
         // console.log("isPage ",this.is404Page,currentComponent)
 
       });
+
+
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd && event.urlAfterRedirects === '/core/home') {
         this.sharedService.triggerSidebarReset();
@@ -104,27 +134,27 @@ export class AppComponent {
     });
 
     this.userService.loadDataOnce();
-     //localStorage.setItem('usertype','A');
-    // localStorage.setItem('brandid','9');
-    // localStorage.setItem('dealerid','8');
-    // localStorage.setItem('def_location','14')
-      //localStorage.setItem('usertoken','0x020000004A93E1F810D29DD8C86209A5FD6FB4E5A28C171D578D439E195DA48046553B5B930AD2F6B471A43B463E9B654EA70804')
+    // localStorage.setItem('usertype', 'A');
+    // localStorage.setItem('brandid', '9');
+    // localStorage.setItem('dealerid', '8');
+    // localStorage.setItem('def_location', '14')
+    // localStorage.setItem('usertoken', '0x020000004A93E1F810D29DD8C86209A5FD6FB4E5A28C171D578D439E195DA48046553B5B930AD2F6B471A43B463E9B654EA70804')
     let userToken = localStorage.getItem('usertoken');
 
-   this.utilitiesService
-  .getUserInfo({ token: userToken })
-  .pipe(take(1))
-  .subscribe({
-    next: (res: any) => {
-      const user = Array.isArray(res?.data) ? res.data[0] : res?.data;
-      if (!user) return;
+    this.utilitiesService
+      .getUserInfo({ token: userToken })
+      .pipe(take(1))
+      .subscribe({
+        next: (res: any) => {
+          const user = Array.isArray(res?.data) ? res.data[0] : res?.data;
+          if (!user) return;
 
-      localStorage.setItem('userid', String(user.userId ?? ''));
-      localStorage.setItem('username', user.username ?? '');
-      this.globalBlockUIService.stopLoading()
-    },
-    error: (err) => this.globalBlockUIService.stopLoading()
-  });
+          localStorage.setItem('userid', String(user.userId ?? ''));
+          localStorage.setItem('username', user.username ?? '');
+          this.globalBlockUIService.stopLoading()
+        },
+        error: (err) => this.globalBlockUIService.stopLoading()
+      });
 
     this.sharedService.moduleName.subscribe((header: any) => {
       //console.log("header ",header)
@@ -175,15 +205,15 @@ export class AppComponent {
 
   toggleSidebar() {
     this.visibleSidebar = !this.visibleSidebar;
-    this.sidebarService.toggle();
+    //this.sidebarService.toggle();
   }
 
-  getModules(){
-    this.isLoading=true;
-    this.sidebarService.getModules().subscribe((res:any)=>{
-      this.sidebarItems=res.data.modules;
-    //  console.log(res.data);
-     this.isLoading=false;
+  getModules() {
+    this.isLoading = true;
+    this.sidebarService.getModules().subscribe((res: any) => {
+      this.sidebarItems = res.data.modules;
+      //  console.log(res.data);
+      this.isLoading = false;
       // this.transformData(this.sidebarItems)
       // this.sharedService.updateSidebarData(this.sidebarItems);
     }, (error: any) => {
@@ -197,14 +227,44 @@ export class AppComponent {
     this.sharedService.updateLocationIdForHomePageData(this.homeData.value.locationId);
   }
 
-  
 
-  redirectToLegacyScope(){
-    if(localStorage.getItem('usertype') == 'A'){
-      window.location.href = 'https://scope.sparecare.in/UAD_SC_WAC/home.aspx';
+
+  redirectToLegacyScope() {
+    if (localStorage.getItem('usertype') == 'A') {
+      window.location.href = environment.DiverterAdmin ;
     }
-    else{
-      window.location.href = 'https://scope.sparecare.in/UAP_SC/home.aspx';
+    else {
+      window.location.href = environment.DiverterUser;
     }
   }
+
+
+  
+
+  logOut() {
+
+
+    if (localStorage.getItem('usertype') == 'A') {
+      window.location.href = environment.frontendAdminUrl;
+    } else {
+
+      window.location.href = environment.frontendUserUrl;
+    }
+    localStorage.clear();
+    sessionStorage.clear();
+  }
+
+
+
+  
+
+  onButtonClick(event: any) {
+    console.log('Button clicked');
+    this.menu?.toggle(event);
+  }
+
+
+
+
+
 }

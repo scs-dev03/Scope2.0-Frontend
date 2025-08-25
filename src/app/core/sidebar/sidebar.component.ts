@@ -137,17 +137,7 @@ filterItems() {
   }
 
   ngOnInit(){
-  this.items = [
-  //   {
-  //     label: 'Update Profile',
-  //     icon: 'pi pi-user',
-    
-  // },
-  // {
-  //   label: 'Settings',
-  //   icon: ' pi pi-cog',
-  
-  // },   
+  this.items = [   
     {
         label: 'Log Out',
         icon: 'pi pi-sign-out',
@@ -194,8 +184,7 @@ resetSidebarState(){
 
 logOut(){
  
- // localStorage.setItem('usertype','d')
- //console.log(localStorage.getItem('usertype')=='A')
+
   if(localStorage.getItem('usertype')=='A')
   {
 window.location.href = environment.frontendAdminUrl;
@@ -291,21 +280,19 @@ transformData(data: any)
         view1: item.view1
       });
     }
-  });
+  }
+  
+
+);
 
   const combinedResult = [...Object.values(groupedData), ...directParents];
-  // const cleanedGroupedData = Object.values(groupedData).filter(item => item && typeof item === 'object');
-  // const cleanedDirectParents = directParents.filter(item => item && typeof item === 'object');
-  
-  // const combinedResult = [...cleanedGroupedData, ...cleanedDirectParents];
-  
-  //console.log("combined result in sidebar",groupedData)
-  //console.log("combined Result ",combinedResult)
   this.sidebarItems = combinedResult;
-  //console.log("sidebar ",this.sidebarItems)
-  //this.sendDataToUser(this.sidebarItems);
+
   this.filteredItems = [...this.sidebarItems];
  // console.log("filtered items in sidebar",this.filteredItems)
+
+ console.log();
+ 
   return combinedResult;
 }
 

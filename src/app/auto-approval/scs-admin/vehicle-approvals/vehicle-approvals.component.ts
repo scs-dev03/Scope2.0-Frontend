@@ -1,22 +1,22 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { SharedModule } from 'primeng/api';
-import { PrimengModuleModule } from '../../../shared/primeng-module/primeng-module.module';
-import { SHARED_IMPORTS } from '../../../shared/shared-imports/shared-module';
 import { PaginatorState } from 'primeng/paginator';
 import { SharedServiceService } from '../../../services/shared-service.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { PrimengModuleModule } from '../../../shared/primeng-module/primeng-module.module';
+import { SHARED_IMPORTS } from '../../../shared/shared-imports/shared-module';
 
 @Component({
-  selector: 'app-all-approvals',
+  selector: 'app-vehicle-approvals',
   imports: [SHARED_IMPORTS, PrimengModuleModule, SharedModule],
-  templateUrl: './all-approvals.component.html',
-  styleUrl: './all-approvals.component.css'
+  templateUrl: './vehicle-approvals.component.html',
+  styleUrl: './vehicle-approvals.component.css'
 })
-export class AllApprovalsComponent {
+export class VehicleApprovalsComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.sharedService.updateModuleName('All Approvals Stock Order')
+    this.sharedService.updateModuleName('All Approvals Vehicle Order')
 
   }
 
@@ -94,5 +94,6 @@ tableColumns = [
 
 // Initially all columns selected
 selectedColumns: string[] = this.tableColumns.map(c => c.field);
+
 
 }

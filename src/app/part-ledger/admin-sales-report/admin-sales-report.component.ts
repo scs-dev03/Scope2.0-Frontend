@@ -292,7 +292,7 @@ export class AdminSalesReportComponent {
       .subscribe({
         next: (res: any) => {
           this.SalesInfo = res.Data;
-          this.SalesInfoVisible = true;
+          
           this.exportVisible = false
           this.globalBlockUiService.stopLoading();
 
@@ -494,7 +494,7 @@ export class AdminSalesReportComponent {
     formData.append('excel', '1');
 
     this.adminSalesReportService.getPartDescription(formData).subscribe((res: any) => {
-      this.globalBlockUiService.stopLoading()
+      
       this.PartDetail = res
       this.showupload = false
       this.partsExcel = null
@@ -509,9 +509,9 @@ export class AdminSalesReportComponent {
 
     setTimeout(() => {
       this.adminSalesReportService.getSalesInfo(formData).subscribe((res: any) => {
-        this.SalesInfoVisible = true
+
         this.exportVisible = true
-        this.SalesInfoVisible = true
+
         this.SalesInfo = res.Data
         this.showupload = false
         this.exportVisible = false

@@ -1,224 +1,120 @@
-<!-- 
-<app-header></app-header>
-<div class="container flex flex-row space-x-4">
-  <app-sidebar class="w-1/4"></app-sidebar> 
-  
-  <div class="flex-1">
-    <router-outlet></router-outlet> 
-  </div>
-</div> -->
-<!-- <app-header></app-header>  -->
+<div class="max-w-full h-full bg-white flex flex-col overflow-auto">
+  <header
+    class="sticky top-0 z-50 bg-white shadow-md backdrop-blur-sm border-b border-slate-200"
+  >
+    <div class="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+      <div class="h-12 flex items-center justify-between gap-3">
+        <!-- Left: menu + module name -->
+        <div class="flex items-center gap-2">
+          <!-- LOGO SLOT (animates away) -->
+          <div
+            class="overflow-hidden flex-shrink-0 transition-all duration-300 ease-in-out"
+            [style.maxWidth.px]="visibleSidebar ? 180 : 0"
+            [style.opacity]="visibleSidebar ? 1 : 0"
+            [style.marginRight]="visibleSidebar ? '0.75rem' : '0'"
+            [style.transform]="
+              visibleSidebar ? 'translateX(-8px) scale(0.98)' : 'none'
+            "
+          >
+            <img
+              src="Scs-logo.png"
+              alt="Logo"
+              [routerLink]="['/core/home']"
+              class="h-16 w-auto block"
+            />
+          </div>
 
-<!-- 
-<div class="flex flex-col">
+          <!-- Sidebar toggle -->
+          <button
+            *ngIf="!isLoginPage"
+            type="button"
+            pButton
+            (click)="toggleSidebar()"
+            [icon]="visibleSidebar ? 'pi pi-arrow-left' : 'pi pi-bars'"
+            class="-ml-4 h-10 w-10 !rounded-xl !bg-teal-600 !border-0 text-white shadow hover:!bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+            aria-label="Toggle sidebar"
+          ></button>
 
-  <div class="flex flex-row flex-1">
-    <app-sidebar class="w-1/4"></app-sidebar> 
-    
-   
-    <div class="flex-1">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</div> -->
-
-<!-- <div class="flex flex-row w-full "> -->
-<!-- w-1/4 added in ngclass of app-sidebar-->
-<!-- <div class="row flex-row">
-     <div class="col-2">
-      <app-sidebar 
-      #sidebar
-      
-      [ngClass]="{ ' sidebar card bg-gray-50 rounded-lg shadow-sm ': visibleSidebar, 'w-0': !visibleSidebar }"
-      class="transition-all duration-300 h-[100vh] fixed"
-    ></app-sidebar> 
-     </div>
-     <div class="col ">
-     
-        <img src="Background_image.png" alt="Background Image"  class="w-[100vw]  h-[100vh] img-fluid fixed -z-50">
-        <div class="d-flex justify-content-center align-items-center">
-         
-          <router-outlet></router-outlet>
+          <!-- Module name -->
+          <span
+            *ngIf="!isLoginPage"
+            class="text-xl sm:text-xl font-semibold tracking-tight text-slate-800 transition-all duration-300"
+          >
+            {{ moduleName }}
+          </span>
         </div>
-        
-   
-     </div>
-  
- 
 
- 
- 
-</div>  -->
-<!-- inset-0 img-fluid fixed -z-50  -->
+        <!-- Right: home page actions -->
+        <div class="flex items-center gap-3">
+          <button
+            type="button"
+            (click)="redirectToLegacyScope()"
+            class="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-3.5 py-2 text-sm font-medium text-white shadow hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3ZM19 19H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7Z"
+              />
+            </svg>
+          </button>
 
-<!-- right code -->
-<!-- <img src="Background_image.png" alt="Background Image" class="w-[100vw] h-[100vh]  img-fluid fixed -z-50 "> -->
-<!-- <p-blockUI #blockUI [blocked]="blocked" [style]="{ 'z-index': '9999',  'width': '100vw', 'height': '100vh' }" class="" [ngClass]="isLoading?'loader absolute inset-0  bg-opacity-30 -z-50 flex items-center justify-center':''">
-  <div class="d-flex !justify-center !align-items-center">
-    <i class="bx bx-loader-circle fa-spin custom-icon fa-spinner"></i>
-  </div>
- 
-</p-blockUI> -->
+          <div class="h-12 w-auto flex items-center">
+            <p-button icon="pi pi-bell" [rounded]="true" [text]="true" />
+            <p-avatar
+              
+              image="https://scope.sparecare.in/upload/Employee/2578734-asda.jpg"
+              class="mr-2"
+              shape="circle"
+            />
+            <div class="h-12 w-auto flex justify-center items-center gap-3">
+              <p class="text-sm font-semibold text-slate-800">
+                {{ UserName }}
+              </p>
 
-<!-- <div class="w-full h-full flex flex-row">
- 
-  <div class="w-auto h-auto" *ngIf="!isLoginPage">
-    <app-sidebar
-      #sidebar
-      [ngClass]="{ 'sidebar card bg-gray-50 rounded-lg shadow-sm': visibleSidebar, 'w-0': !visibleSidebar }"
-      class="transition-all duration-300 h-[100vh] "
-    ></app-sidebar>
-  </div>
-  <div>
-    
-    <div class="w-auto h-auto ">
-      <router-outlet></router-outlet>
+              <p-button
+                icon="pi pi-ellipsis-v"
+                [rounded]="true"
+                [text]="true"
+                (click)="onButtonClick($event)"
+              />
+
+              <p-tieredMenu #menu [model]="items || []" [popup]="true"></p-tieredMenu>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div> -->
+  </header>
 
-<!-- <div class="row flex-row">
- 
-  <div class="col-3" *ngIf="!isLoginPage">
-    <app-sidebar
-      #sidebar
-      [ngClass]="{ 'sidebar card bg-gray-50 rounded-lg shadow-sm': visibleSidebar, 'w-0': !visibleSidebar }"
-      class="transition-all duration-300 h-[100vh] fixed"
-    ></app-sidebar>
-  </div>
-  <div class="col-9">
-    
-    <div class="d-flex  align-items-center">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</div> -->
-
-<!-- <div class="d-flex"> -->
-<!-- Sidebar -->
-<!-- <div
-    *ngIf="!isLoginPage"
-    [ngClass]="{
-      'w-[18%]': visibleSidebar,
-      'w-0 overflow-hidden': !visibleSidebar
-    }"
-    class="transition-all duration-300 h-screen bg-gray-50 shadow fixed"
-  >
-    <app-sidebar #sidebar></app-sidebar>
-  </div> -->
-
-<!-- Main Content -->
-<!-- <div
-    [ngClass]="{
-      'ml-[18%]': visibleSidebar,
-      'ml-0': !visibleSidebar
-    }"
-    class="flex-1 transition-all duration-300"
-  > -->
-<!-- Toggle Button -->
-<!-- <button
-      (click)="toggleSidebar()"
-      class="m-2 p-2 bg-blue-500 text-white rounded" [ngClass]="visibleSidebar?'bx bx-menu':'bx bx-right-arrow-alt'"
+  <div class="flex h-full overflow-hidden bg-">
+    <!-- Sidebar -->
+    <div
+      *ngIf="!isLoginPage"
+      [ngClass]="{
+        'w-[20%]': visibleSidebar,
+        'w-0 overflow-hidden': !visibleSidebar
+      }"
+      class="transition-all duration-300 h-full bg-white shadow-md flex-shrink-0"
     >
-      
-    </button> -->
-<!-- {{ visibleSidebar ? 'Hide Sidebar' : 'Show Sidebar' }} -->
-<!-- Page Content -->
-<!-- <div class="p-4 pt-0 h-full w-full" >
-      <router-outlet></router-outlet>
+      <app-sidebar></app-sidebar>
     </div>
-  </div>
-</div> -->
 
-<!-- <div class="d-flex"> -->
-<!-- Sidebar -->
-<!-- <div
-    *ngIf="!isLoginPage"
-    [ngClass]="{
-      'w-[18%] sm:w-[18%] md:w-[18%] lg:w-[18%] xl:w-[18%]': visibleSidebar,
-      'w-0 overflow-hidden': !visibleSidebar
-    }"
-    class="transition-all duration-300 h-full bg-gray-50 shadow flex-shrink-0"
-  >
-    <app-sidebar></app-sidebar>
-  </div> -->
-
-<!-- Main Content -->
-<!-- <div
-    [ngClass]="{
-      'ml-[18%] sm:ml-[24%] md:ml-[24%] lg:ml-[24%] xl:ml-[24%]': visibleSidebar,
-      'ml-0': !visibleSidebar
-    }"
-    class="flex-1 transition-all duration-300"
-  > -->
-<!-- Toggle Button -->
-<!-- <button
-      (click)="toggleSidebar()"
-      class="m-2 p-2 bg-blue-500 text-white rounded" [ngClass]="visibleSidebar?'bx bx-menu':'bx bx-right-arrow-alt'"
+    <!-- Main Content -->
+    <div
+      class="flex-1 bg-white transition-all duration-300 overflow-y-auto overflow-x-hidden relative"
+      [ngClass]="{ 'bg-white': is404Page, }"
     >
-      
-    </button> -->
-<!-- {{ visibleSidebar ? 'Hide Sidebar' : 'Show Sidebar' }} -->
-<!-- Page Content -->
-<!-- <div class="" [ngClass]="!visibleSidebar?'px-4 pt-0 ':'p-0'" >
+      <!-- Main Content -->
       <router-outlet></router-outlet>
     </div>
-  </div>
-</div> -->
-
-<!-- 
-<app-header></app-header>
-<div class="container flex flex-row space-x-4">
-  <app-sidebar class="w-1/4"></app-sidebar> 
-  
-  <div class="flex-1">
-    <router-outlet></router-outlet> 
   </div>
 </div>
-<app-header></app-header>  -->
 
-<!-- 
-<div class="flex flex-col">
-
-  <div class="flex flex-row flex-1">
-    <app-sidebar class="w-1/4"></app-sidebar> 
-    
-   
-    <div class="flex-1">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</div> -->
-
-<!-- <div class="flex flex-row w-full "> -->
-<!-- w-1/4 added in ngclass of app-sidebar-->
-<!-- <div class="row flex-row">
-     <div class="col-2">
-      <app-sidebar 
-      #sidebar
-      
-      [ngClass]="{ ' sidebar card bg-gray-50 rounded-lg shadow-sm ': visibleSidebar, 'w-0': !visibleSidebar }"
-      class="transition-all duration-300 h-[100vh] fixed"
-    ></app-sidebar> 
-     </div>
-     <div class="col ">
-     
-        <img src="Background_image.png" alt="Background Image"  class="w-[100vw]  h-[100vh] img-fluid fixed -z-50">
-        <div class="d-flex justify-content-center align-items-center">
-         
-          <router-outlet></router-outlet>
-        </div>
-        
-   
-     </div>
-  
- 
-
- 
- 
-</div>  -->
-<!-- inset-0 img-fluid fixed -z-50  -->
-<!-- <img src="Background_image.png" alt="Background Image" class="w-[100vw] h-[100vh]  img-fluid fixed -z-50 "> -->
 <p-blockUI
   #blockUI
   [blocked]="blocked"
@@ -234,111 +130,3 @@
     <i class="bx bx-loader-circle fa-spin custom-icon fa-spinner"></i>
   </div>
 </p-blockUI>
-<!-- <div class="w-full h-full flex flex-row">
- 
-  <div class="w-auto h-auto" *ngIf="!isLoginPage">
-    <app-sidebar
-      #sidebar
-      [ngClass]="{ 'sidebar card bg-gray-50 rounded-lg shadow-sm': visibleSidebar, 'w-0': !visibleSidebar }"
-      class="transition-all duration-300 h-[100vh] "
-    ></app-sidebar>
-  </div>
-  <div>
-    
-    <div class="w-auto h-auto ">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</div> -->
-
-<!-- <div class="row flex-row">
- 
-  <div class="col-3" *ngIf="!isLoginPage">
-    <app-sidebar
-      #sidebar
-      [ngClass]="{ 'sidebar card bg-gray-50 rounded-lg shadow-sm': visibleSidebar, 'w-0': !visibleSidebar }"
-      class="transition-all duration-300 h-[100vh] fixed"
-    ></app-sidebar>
-  </div>
-  <div class="col-9">
-    
-    <div class="d-flex  align-items-center">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</div> -->
-
-<div class="flex h-screen overflow-hidden bg-[#f6f6f6]">
-  <!-- Sidebar -->
-  <div
-    *ngIf="!isLoginPage"
-    [ngClass]="{
-      'w-[20%]': visibleSidebar,
-      'w-0 overflow-hidden': !visibleSidebar
-    }"
-    class="transition-all duration-300 h-full bg-gray-50 shadow flex-shrink-0"
-  >
-    <app-sidebar></app-sidebar>
-  </div>
-
-  <!-- Main Content -->
-  <div
-    class="flex-1 transition-all duration-300 overflow-y-auto overflow-x-hidden relative"
-    [ngClass]="{ 'bg-white': is404Page, 'bg-gray-100': !is404Page }"
-  >
-    
-    <div
-      class="d-flex"
-      [ngClass]="isHomePage ? ' d-flex justify-between align-items-center' : ''"
-    >
-      <div class="d-flex">
-        <button
-          *ngIf="!isLoginPage"
-          (click)="toggleSidebar()"
-          [ngClass]="[
-            'ml-2 my-2 absolute top-4 left-4 z-50 p-2 bg-blue-500 text-white rounded border-0 ',
-            visibleSidebar ? 'bx bx-menu' : 'bx bx-right-arrow-alt'
-          ]"
-          [style]="{ 'background-color': '#008080', color: '#fff' }"
-        ></button>
-        <span
-          *ngIf="!isLoginPage"
-          class="text-2xl font-serif m-2"
-          >{{ moduleName }}</span
-        >
-      </div>
-
-      <div
-        class="h-16 flex items-center justify-between px-4 py-2 relative"
-        [hidden]="!isHomePage"
-      >
-        <ul
-          class="md:flex flex-col md:flex-row absolute md:static top-14 left-0 w-full md:w-auto md:bg-transparent md:space-x-4 gap-4 px-4 py-2 md:py-0 z-50 shadow-md md:shadow-none"
-        >
-          <li class="">
-            <p-button
-              icon="pi pi-external-link"
-              size="small"
-              (onClick)="redirectToLegacyScope()"
-              [style]="{ 'background-color': '#008080', color: '#fff' }"
-            />
-          </li>
-          <form [formGroup]="homeData" class="card flex justify-center">
-            <p-select
-              formControlName="locationId"
-              [options]="filteredLocationData"
-              optionLabel="location"
-              optionValue="locationid"
-              placeholder="Select Location"
-              (onChange)="onClickLocation()"
-              class="w-44 h-9"
-            />
-          </form>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Main Content -->
-    <router-outlet></router-outlet>
-  </div>
-</div>
