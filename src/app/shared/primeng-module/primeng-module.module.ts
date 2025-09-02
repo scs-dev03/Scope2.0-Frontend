@@ -29,12 +29,15 @@ import { TagModule } from 'primeng/tag';
 import { BadgeModule } from 'primeng/badge';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { TabsModule } from 'primeng/tabs';
+
 // For dynamic progressbar demo
 
 
 
 
 const modules=[
+  TabsModule,
   TagModule,
   BadgeModule,
   ProgressBarModule,

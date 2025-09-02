@@ -13,7 +13,7 @@ export class HomePageService {
 // private apiurlmaster: any =
 //   'https://scopeapi.sparecare.in/api/v1/master/';
   private apiurl: any =
-       `${environment.EnvApiUrlMaster}von/`;
+       `${environment.EnvApiUrlMaster}`;
      
      private apiurlmaster: any =
        `${environment.EnvApiUrlMaster}master/`;

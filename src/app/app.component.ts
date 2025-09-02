@@ -18,6 +18,9 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PageStateService } from './services/page-state.service';
 import { PageNotFoundComponent } from './core/page-not-found/page-not-found.component';
 import { IdleService } from './services/idle.service';
+import { environment } from '../../environments/environment';
+import { TieredMenu } from 'primeng/tieredmenu';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-root',
@@ -26,14 +29,18 @@ import { IdleService } from './services/idle.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+
+  @ViewChild('menu') menu:TieredMenu |null=  null;
   title = 'stock-upload-frontend';
   visibleSidebar: boolean = true;
   isLoading: boolean = false;
   blocked: boolean = false;
+  UserName: string = ''
   isLoginPage = false;
   @ViewChild('blockUI') blockUI!: BlockUI;
   @ViewChild('sidebar') sidebar!: SidebarComponent;
   token: any;
+  profilePhoto!: any;
   sidebarItems: any = [];
   usertype: any;
   moduleName: any;
@@ -54,7 +61,27 @@ export class AppComponent {
     this.homeData = new FormGroup({
       locationId: new FormControl(),
     })
+
+
+        this.UserName = localStorage.getItem('username') ?? ''
+
   }
+
+
+
+
+    items: MenuItem[] = [
+    {
+      label: 'Logout',
+      icon: 'pi pi-sign-out',
+      command:()=>this.logOut()
+,
+     
+    },
+    
+    
+  ];
+
 
   ngOnInit() {
     //  localStorage.setItem('userid',"293")
@@ -63,6 +90,15 @@ export class AppComponent {
     this.globalBlockUIService.loading$.subscribe((loading:any)=>{
       this.isLoading=loading;
     })
+
+
+   setTimeout(() => {
+
+     this.sharedService.profilePhoto$.subscribe(photo => {
+    this.profilePhoto = photo;
+  });
+    
+   }, 2000);
 
 
     this.homeData.patchValue({
@@ -107,7 +143,7 @@ export class AppComponent {
     localStorage.setItem('brandid','9');
     localStorage.setItem('dealerid','8');
     localStorage.setItem('def_location','14')
-     localStorage.setItem('usertoken','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
+    localStorage.setItem('usertoken','0x020000000EE805BE4592C1109A318B596DB2C02A299B12063C8441D4E352C2743E003AC3')
     let userToken = localStorage.getItem('usertoken');
 
     this.utilitiesService.getUserInfo({ token: userToken }).subscribe((res: any) => {
@@ -188,12 +224,36 @@ export class AppComponent {
 
   
 
-  redirectToLegacyScope(){
-    if(localStorage.getItem('usertype') == 'A'){
-      window.location.href = 'https://scope.sparecare.in/UAD_SC_WAC/home.aspx';
+  redirectToLegacyScope() {
+    if (localStorage.getItem('usertype') == 'A') {
+      window.location.href = environment.DiverterAdmin ;
     }
-    else{
-      window.location.href = 'https://scope.sparecare.in/UAP_SC/home.aspx';
+    else {
+      window.location.href = environment.DiverterUser;
     }
+  }
+
+
+
+  logOut() {
+
+
+    if (localStorage.getItem('usertype') == 'A') {
+      window.location.href = environment.frontendAdminUrl;
+    } else {
+
+      window.location.href = environment.frontendUserUrl;
+    }
+    localStorage.clear();
+    sessionStorage.clear();
+  }
+
+
+
+  
+
+  onButtonClick(event: any) {
+    console.log('Button clicked');
+    this.menu?.toggle(event);
   }
 }

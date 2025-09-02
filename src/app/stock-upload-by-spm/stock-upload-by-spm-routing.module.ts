@@ -7,11 +7,11 @@ import { authGuard } from '../auth.guard';
 const routes: Routes = [
 {
     path:'sl',component:SingleLocationComponent,
- // canActivate:[authGuard]
+   canActivate:[authGuard]
 },
 {
   path:'ml',component:MultiLocationComponent,
-//canActivate:[authGuard]
+  canActivate:[authGuard]
 }
 
 

@@ -42,6 +42,9 @@ getModel(data: any){
 getNature(){
   return this.http.get(`${this.apiurlmaster}nature`)
 }
+// getdelarTableView(data:any){
+//   return this.http.post(`${this.apiurl}viewuser`,data)
+// }
 getdelarTableView(data:any){
   return this.http.post(`${this.apiurl}viewuser`,data)
 }

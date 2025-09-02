@@ -1,0 +1,95 @@
+<div class="min-w-full bg-gray-100">
+    <!-- <h1 class="text-2xl font-serif ml-2">Dashboard</h1> -->
+    <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
+        <div
+            class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-3 items-center rounded bg-gray-50 ">
+            
+            <p-floatlabel variant="on">
+                <p-select optionLabel="name" size="small" class="w-44 h-8" />
+                <label for="parameters" class="text-xs">Select Location</label>
+            </p-floatlabel>
+
+            <!-- From Date -->
+            <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
+                <p-datepicker inputId="fromDate" size="small" dateFormat="mm/dd/yy" iconDisplay="input"
+                    [readonlyInput]="true" [panelStyle]="{
+            position: 'absolute',
+            left: '0px',
+            top: '100%',
+            'z-index': '1000',
+            transform: 'scale(0.7)',
+            'transform-origin': 'top left'
+          }" class="w-full !h-8" [styleClass]="'w-full sm:w-44 md:w-52 lg:w-[185px]'" />
+                <label for="fromDate" class="text-xs">From Date</label>
+            </p-floatlabel>
+
+            <!-- To Date -->
+            <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
+                <p-datepicker inputId="toDate" size="small" dateFormat="mm/dd/yy" iconDisplay="input"
+                    [readonlyInput]="true" [panelStyle]="{
+            position: 'absolute',
+            'z-index': '1201',
+            transform: 'scale(0.7)',
+            'transform-origin': 'top left'
+          }" class="w-full !h-8" [styleClass]="'w-full sm:w-44 md:w-52 lg:w-[185px]'" />
+                <label for="toDate" class="text-xs">To Date</label>
+            </p-floatlabel>
+
+            <p-floatlabel variant="on">
+                <p-multiselect [size]="'small'" optionLabel="name" class="!w-44 !h-8" id="parameters" size="small" />
+                <label for="parameters" class="text-xs"> Order Type</label>
+            </p-floatlabel>
+
+             <p-floatlabel variant="on">
+                <p-select optionLabel="name" size="small" class="w-44 h-8" />
+                <label for="parameters" class="text-xs">Pending Since</label>
+            </p-floatlabel>
+
+            <p-button size="small" label="View" [style]="{ 'background-color': '#008080', color: '#fff' }" icon="pi pi-eye"
+                iconPos="left" />
+        </div>
+    </div>
+
+    <div class="min-w-full flex justify-center items-center flex-wrap gap-5 p-2 mt-2 ">
+        <div
+            class="w-52 h-32 bg-yellow-100 border border-slate-200 rounded-xl shadow-sm flex flex-col items-center justify-center text-center hover:shadow-[0_30px_80px_rgba(2,6,23,0.25)]
+         transition-all duration-300 hover:-translate-y-0.5">
+            <div class="text-4xl font-semibold text-slate-900 tabular-nums">42</div>
+            <div class="mt-1 text-[15px] uppercase tracking-wide text-slate-500">
+                Not in master
+            </div>
+        </div>
+        <div
+            class="w-52 h-32 bg-red-200 border border-slate-200 rounded-xl shadow-sm flex flex-col items-center justify-center text-center hover:shadow-[0_30px_80px_rgba(2,6,23,0.25)]
+         transition-all duration-300 hover:-translate-y-0.5">
+            <div class="text-4xl font-semibold text-slate-900 tabular-nums">30</div>
+            <div class="mt-1 text-[15px] uppercase tracking-wide text-slate-500">
+                Rejected
+            </div>
+        </div>
+        <div
+            class="w-52 h-32 bg-green-200 border border-slate-200 rounded-xl shadow-sm flex flex-col items-center justify-center text-center hover:shadow-[0_30px_80px_rgba(2,6,23,0.25)]
+         transition-all duration-300 hover:-translate-y-0.5">
+            <div class="text-4xl font-semibold text-slate-900 tabular-nums">500</div>
+            <div class="mt-1 text-[15px] uppercase tracking-wide text-slate-500">
+                Approved
+            </div>
+        </div>
+        <div
+            class="w-52 h-32 bg-blue-200 border border-slate-200 rounded-xl shadow-sm flex flex-col items-center justify-center text-center hover:shadow-[0_30px_80px_rgba(2,6,23,0.25)]
+         transition-all duration-300 hover:-translate-y-0.5">
+            <div class="text-4xl font-semibold text-slate-900 tabular-nums">89</div>
+            <div class="mt-1 text-[15px] uppercase tracking-wide text-slate-500">
+                Pending
+            </div>
+        </div>
+        <div
+            class="w-52 h-32 bg-violet-200 border border-slate-200 rounded-xl shadow-sm flex flex-col items-center justify-center text-center hover:shadow-[0_30px_80px_rgba(2,6,23,0.25)]
+         transition-all duration-300 hover:-translate-y-0.5">
+            <div class="text-4xl font-semibold text-slate-900 tabular-nums">39</div>
+            <div class="mt-1 text-[15px] uppercase tracking-wide text-slate-500">
+                Pending At Internal Approver
+            </div>
+        </div>
+    </div>
+</div>

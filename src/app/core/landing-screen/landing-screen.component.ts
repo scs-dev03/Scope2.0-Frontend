@@ -14,17 +14,17 @@ import { SidebarService } from '../../services/sidebar.service';
 })
 export class LandingScreenComponent {
   constructor(private route: ActivatedRoute,
-    private router: Router,  private homepageservice: HomePageService,private sidebarService:SidebarService,
-  private utilitiesService:UtilitiesService,private sharedService:SharedServiceService) {
+    private router: Router, private homepageservice: HomePageService, private sidebarService: SidebarService,
+    private utilitiesService: UtilitiesService, private sharedService: SharedServiceService) {
 
-   // localStorage.clear();
+    // localStorage.clear();
   }
-  usertoken:any
-  usertype:any 
-  isloading:boolean = false
+  usertoken: any
+  usertype: any
+  isloading: boolean = false
 
- sidebarItems:any;
- 
+  sidebarItems: any;
+
 
   ngOnInit() {
 
@@ -32,106 +32,101 @@ export class LandingScreenComponent {
       this.usertoken = params['usertoken'];
       this.usertype = params['usertype'];
     });
-    
-    if(this.usertype === 'd'){
-      localStorage.setItem('usertype', 'U' )
-     // console.log(localStorage.getItem('usertype'));
+
+    if (this.usertype === 'd') {
+      localStorage.setItem('usertype', 'U')
+      // console.log(localStorage.getItem('usertype'));
     }
-    else if(this.usertype == 'a'){
-      localStorage.setItem('usertype', 'A' )
-     // console.log(localStorage.getItem('usertype'));
+    else if (this.usertype == 'a') {
+      localStorage.setItem('usertype', 'A')
+      // console.log(localStorage.getItem('usertype'));
     }
 
     // console.log('User Token in ngoinint :', this.usertoken);
     // console.log('User Type  in ngoinint :  ',this.usertype);
 
     localStorage.setItem('usertoken', this.usertoken)
-    localStorage.setItem('userType',this.usertype)
-  //  console.log("token is ",this.usertoken);
-    
+    localStorage.setItem('userType', this.usertype)
+    //  console.log("token is ",this.usertoken);
+
     this.fetchUserinfo(this.usertype)
     // this.getUserId();
-  
-    
+
+
   }
 
-  getUserId(){
-   
-    this.utilitiesService.getUserInfo({token:this.usertoken}).subscribe((res:any)=>{
+  getUserId() {
 
-      localStorage.setItem('userid',res?.data[0]?.userId);
-      localStorage.setItem('username',res.data[0]?.username)
+    this.utilitiesService.getUserInfo({ token: this.usertoken }).subscribe((res: any) => {
+
+      localStorage.setItem('userid', res?.data[0]?.userId);
+      localStorage.setItem('username', res.data[0]?.username)
       this.getModules();
     })
   }
 
 
-  fetchUserinfo(usertype:any){
+  fetchUserinfo(usertype: any) {
     // console.log('fetch method',usertoken);
     // console.log('fetch method',usertype);
-    
+
     this.isloading = true;
     //localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
     //let usertoken1='0x0200000046E3737AED5FE0B13F2E6D0710BC96ABB705BA29736DDB3ADE3CBC2F7260C908'
-   // let usertype1='U'
-   let usertoken1=localStorage.getItem('usertoken');
-   
+    // let usertype1='U'
+    let usertoken1 = this.usertoken
+
     this.homepageservice.getuserinfo({ token: usertoken1, usertype: usertype }).subscribe({
       next: (res: any) => {
-      //  console.log(res.Data);
-          //  localStorage.setItem('userId',res.Data[0].userId);
+        //  console.log(res.Data);
+        //  localStorage.setItem('userId',res.Data[0].userId);
         if (usertype == 'd') {
           localStorage.setItem('brandid', res.Data[0].BrandID);
           localStorage.setItem('userid', res.Data[0].bintid_pk);
           localStorage.setItem('dealerid', res.Data[0].dealerid);
           localStorage.setItem('username', res.Data[0].username);
-          localStorage.setItem('def_location',res.Data[0].locationid)
-          localStorage.setItem('userid',res?.Data[0]?.userId);
-          
+          localStorage.setItem('def_location', res.Data[0].locationid)
+          localStorage.setItem('userid', res?.Data[0]?.userId);
+
         }
-    
-        if (usertype == 'a') {
-          localStorage.setItem('username', res.Data[0].username);
-          localStorage.setItem('userid', res.Data[0].bintid_pk);
-          // localStorage.setItem('userId', res.Data[0].bintid_pk);
-          localStorage.setItem('designation', res.Data[0].designation);
-        }
-        
+
+
         this.isloading = false;
-       
-        
-       // this.getUserId();
-       this.getModules();
-       
+
+
+        // this.getUserId();
+        this.getModules();
+        this.goToHomePage();
+
       },
       error: (err) => {
-      //  console.error('Error fetching user info:', err);
+        //  console.error('Error fetching user info:', err);
         this.isloading = false;
-    
+
         // Optional: show user-friendly message
         alert('Something went wrong while fetching user info. Please try again.');
-    
+
         // You could also use a snackbar/toast service instead of alert
       }
     });
-   
-    
+
+
   }
 
-  getModules(){
-   
-    this.sidebarService.getModules().subscribe((res:any)=>{
+  getModules() {
+
+    this.sidebarService.getModules().subscribe((res: any) => {
       const data = res.data.modules;
-  const cleaned = this.transformSidebarData(data);  // this will be dense, clean
- // console.log("cleaned ",cleaned)
-  this.sidebarItems = cleaned;
-  //console.log("landing screen ",res.data);
+      const cleaned = this.transformSidebarData(data);  // this will be dense, clean
+      // console.log("cleaned ",cleaned)
+      this.sidebarItems = cleaned;
+      //console.log("landing screen ",res.data);
       this.sharedService.updateSidebarData(this.sidebarItems);
-      
-     //  this.sharedService.hasSidebarDataLoaded=true;
-     
-     this.goToHomePage();
-    },(error:any)=>{
+
+      //  this.sharedService.hasSidebarDataLoaded=true;
+
+      this.goToHomePage();
+    }, (error: any) => {
       // this.globalBlockUiService.stopLoading();
     })
   }
@@ -139,10 +134,10 @@ export class LandingScreenComponent {
   transformSidebarData(data: any[]): any[] {
     const groupedData: { [key: string]: any } = {};
     const directParents: any[] = [];
-  
+
     data.forEach((item) => {
       const parent = item.parentModuleName;
-  
+
       if (!parent || parent.toLowerCase() === 'null') {
         // Direct parent (no group)
         directParents.push({
@@ -165,7 +160,7 @@ export class LandingScreenComponent {
             subchildren: []
           };
         }
-  
+
         groupedData[parent].subchildren.push({
           module_name: item.module_name,
           module_route: item.module_route,
@@ -177,18 +172,18 @@ export class LandingScreenComponent {
         });
       }
     });
-  
+
     const finalResult = [...Object.values(groupedData), ...directParents];
     return finalResult;
   }
 
-  goToHomePage(){
-    
+  goToHomePage() {
+
     this.router.navigate(['core/home']
-    //   {
-    //    queryParams: { token:this.usertoken }
-    // }
-  );
-    
+      //   {
+      //    queryParams: { token:this.usertoken }
+      // }
+    );
+
   }
 }

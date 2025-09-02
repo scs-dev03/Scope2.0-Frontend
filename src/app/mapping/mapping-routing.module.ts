@@ -9,13 +9,13 @@ const routes: Routes = [
   {
     path:'stock-upload',
     component:StockUploadMappingComponent,
-  //  canActivate:[authGuard]
+    canActivate:[authGuard]
   },
 
   {
     path:'dealer-location',
     component:DealerLocationMappingComponent,
- //   canActivate:[authGuard]
+    canActivate:[authGuard]
   }
 ];
 

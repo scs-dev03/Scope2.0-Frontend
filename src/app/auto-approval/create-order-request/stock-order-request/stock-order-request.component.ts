@@ -141,4 +141,44 @@ export class StockOrderRequestComponent {
         return `${formattedSize} ${sizes[i]}`;
     }
 
+    visibleConfig: boolean = false;
+    showDialogconfig() {
+    this.visibleConfig = true;
+  }
+  // Table headers list
+tableColumns = [
+  { field: 'sno', header: 'S.No' },
+  { field: 'partNumber', header: 'Part Number' },
+  { field: 'latestPartNumber', header: 'Latest Part Number' },
+  { field: 'substituition', header: 'Substituition' },
+  { field: 'lastUpdated', header: 'Last Updated' },
+  { field: 'category', header: 'Category' },
+  { field: 'partDescription', header: 'Part Description' },
+  { field: 'moq', header: 'MOQ' },
+  { field: 'qty', header: 'Qty' },
+  { field: 'price', header: 'Price' },
+  { field: 'originalStock', header: 'Original Stock' },
+  { field: 'stockAsOnDate', header: 'Stock as on Date' },
+  { field: 'groupStock', header: 'Group Stock' },
+  { field: 'latestGroupStock', header: 'Latest Group Stock' },
+  { field: 'nonMovingCheck', header: 'Non Moving Check' },
+  { field: 'sixMonthCS', header: '6 Month CS' },
+  { field: 'sixMonthWS', header: '6 Month WS' },
+  { field: 'sixMonthCSBrand', header: '6 Month CS Brand' },
+  { field: 'sixMonthWSBrand', header: '6 Month WS Brand' },
+  { field: 'maxValue', header: 'Max Value' },
+  { field: 'ooq', header: 'OOQ' },
+  { field: 'orderDate', header: 'Order Date' },
+  { field: 'orderValue', header: 'Order Value' },
+  { field: 'orderRemarks', header: 'Order Remarks' },
+  { field: 'reOrderRemark', header: 'Re Order Remark' },
+  { field: 'autoApprovalLogs', header: 'Auto Approval Logs' },
+  { field: 'remarksDropdown', header: 'Remarks Dropdown' },
+  { field: 'actionFields', header: 'Action Fields' }
+];
+
+// Initially all columns selected
+selectedColumns: string[] = this.tableColumns.map(c => c.field);
+
+
 }

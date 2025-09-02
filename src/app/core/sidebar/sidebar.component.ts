@@ -241,6 +241,7 @@ this.sidebarItems = res.data.modules;
       this.profilePhoto=''
     }else{
       this.profilePhoto=environment.uploadedProfileUrl+res.data.profile;
+      this.sharedService.setProfilePhoto(this.profilePhoto);
     }
   //console.log("profilePhoto ",this.profilePhoto,"envir ",environment.uploadedProfileUrl)
   this.sharedService.updateSidebarData(this.sidebarItems)

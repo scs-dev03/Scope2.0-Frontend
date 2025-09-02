@@ -7,7 +7,7 @@ const routes: Routes = [
    {
     path: 'dvon',
     component: DealerVonComponent,
-    // canActivate: [authGuard]
+    canActivate: [authGuard]
   }
 ];
 

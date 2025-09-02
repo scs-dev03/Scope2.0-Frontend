@@ -312,7 +312,7 @@ export class DealerVonComponent {
 
         } else {
           this.visible = true;
-          this.Result = 'No Data Available';
+          this.Result = "Max Not Uploaded for this Part"
         }
 
         this.fetchDealerRemark(

@@ -204,10 +204,11 @@
   </div>
   <div
     class="w-full h-auto flex justify-start items-center !p-4"
-    *ngIf="SalesInfoVisible"
+    
   >
     <app-product-sale-info
       [SalesInfo]="SalesInfo[0]"
+      [isLoading]="isLoading"
       class="!w-full"
       [DataTypeArray]="DataTypeArray"
     ></app-product-sale-info>

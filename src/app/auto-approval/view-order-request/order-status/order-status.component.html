@@ -3,11 +3,11 @@
 
   <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
     <div
-      class="min-w-full min-h-[15vh] flex-wrap items-center justify-center flex-col p-2 gap-3 shadow-lg bg-white rounded-md">
+      class="min-w-full min-h-[15vh] flex-wrap items-center justify-center flex-col p-2 gap-3 shadow-lg bg-white rounded-md"
+    >
       <div class="flex flex-wrap gap-4" [formGroup]="OrderStatusInput">
         <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
-          <p-select
-            [checkmark]="true"
+          <p-multiselect
             [showClear]="true"
             size="small"
             class="w-full h-8"
@@ -146,9 +146,7 @@
           <div class="flex gap-2 items-center justify-center">
             <span
               class="text-xs text-gray-400"
-              [ngClass]="
-                !MaxOrPending ? ' font-semibold' : 'text-gray-400'
-              "
+              [ngClass]="!MaxOrPending ? ' font-semibold' : 'text-gray-400'"
               >Pending</span
             >
             <p-toggleswitch
@@ -180,26 +178,30 @@
         </p-floatlabel>
 
         <!-- Table Column -->
-        <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
-          <p-multiselect
-            formControlName="TableFilter"
-            optionLabel="header"
-            [options]="ColummnData"
-            [showClear]="true"
-            size="small"
-            class="w-full h-8"
-          />
-          <label class="text-xs">Table Column</label>
-        </p-floatlabel>
+         
+        <div class="flex h-8 gap-4  justify-center items-center">
+          <p-checkbox inputId="ingredient1" name="pizza" value="Cheese" />
+          <label for="ingredient1" class="mt-2"> View Group Data </label>
+        </div>
       </div>
 
-      <div class="flex w-full mt-2 gap-2">
+      <div class="flex w-full mt-4 gap-2">
         <p-button
           label="View Order Status"
           size="small"
           (onClick)="onClickView()"
         />
+        
         <p-button size="small" icon="pi pi-download" />
+        
+        <p-button
+          size="small"
+          icon="pi pi-sliders-h"
+          label="Configure Table"
+          [raised]="true"
+          (onClick)="showDialog()"
+          severity="secondary"
+        />
       </div>
     </div>
   </div>
@@ -207,7 +209,7 @@
 
   <div
     class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
-    *ngIf="visible"
+    *ngIf="visibleTable"
   >
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
@@ -393,6 +395,16 @@
             <th
               class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
             >
+              Advance/Estimate 
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              View Receipt
+            </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
               SCS Approval
             </th>
             <th
@@ -430,6 +442,11 @@
             >
               Re-Order
             </th>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+            >
+              Re-Submit
+            </th>
           </tr>
         </ng-template>
 
@@ -460,3 +477,64 @@
     </div>
   </div>
 </div>
+
+<p-dialog
+  header="⚙️ Configure Table Columns"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '95vw' }"
+  [style]="{ width: '40vw' }"
+  [contentStyle]="{ 'max-height': '60vh', 'overflow-y': 'auto' }"
+  [draggable]="true"
+
+  [resizable]="false"
+
+
+>
+  <!-- Content -->
+  <div class="grid grid-cols-2 gap-3 p-2">
+    <div
+      class="flex items-center bg-gray-50 hover:bg-gray-100 rounded-lg px-3 py-2 transition"
+      *ngFor="let col of tableColumns"
+    >
+      <p-checkbox
+        [inputId]="col.field"
+        name="columns"
+        [value]="col.field"
+        [(ngModel)]="selectedColumns"
+        binary="true"
+      />
+      <label
+        [for]="col.field"
+        class="ml-2 mt-2 text-sm text-gray-700 cursor-pointer select-none"
+      >
+        {{ col.header }}
+      </label>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3 mt-3">
+      <button
+        pButton
+        label="Save as Default"
+        severity="info"
+        class="p-button-outlined p-button-sm"
+        (click)="visible=false"
+      ></button>
+      <button
+        pButton
+        label="Cancel"
+        class="p-button-outlined p-button-sm"
+        (click)="visible=false"
+      ></button>
+      <button
+        pButton
+        label="Apply for Now"
+        class="p-button-sm"
+        
+      ></button>
+    </div>
+  </ng-template>
+</p-dialog>

@@ -147,7 +147,7 @@ export class HomePageComponent {
     .subscribe({
       next: (res: any) => {
         this.CardsData = res;
-        console.log('raw API response:', this.CardsData);
+        //console.log('raw API response:', this.CardsData);
 
         // stop the loader as soon as possible
         this.globalBlockUiService.stopLoading();

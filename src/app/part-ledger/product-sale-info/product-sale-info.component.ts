@@ -12,5 +12,6 @@ import { SHARED_IMPORTS } from '../../shared/shared-imports/shared-module';
 export class ProductSaleInfoComponent {
 
   @Input() SalesInfo: any = []
-  @Input() DataTypeArray: any = []    
+  @Input() DataTypeArray: any = []  
+  @Input() isLoading: boolean = false;  
 }
