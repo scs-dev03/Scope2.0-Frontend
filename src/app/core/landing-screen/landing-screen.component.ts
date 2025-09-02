@@ -31,13 +31,12 @@ export class LandingScreenComponent {
     this.route.queryParams.subscribe(params => {
       this.usertoken = params['usertoken'];
       this.usertype = params['usertype'];
+      // this.usertoken = 'dayKxo7bWm4:APA91bFIskDAjpGwlMlymh6BQxv6qJtWOgh6k3duRYHUS5fDujP5mwCMHtazI6wmXiZzoNTrWypaEy0GqVj1Ud-sdUVr4vNBFb5594D-cAPC8ZozzbSHwyYWCk22hM89j8pJKWqmLryY';
+      // this.usertype = 'a';
     });
     
-    if(this.usertype === 'd'){
-      localStorage.setItem('usertype', 'U' )
-     // console.log(localStorage.getItem('usertype'));
-    }
-    else if(this.usertype == 'a'){
+    
+    if(this.usertype == 'a'){
       localStorage.setItem('usertype', 'A' )
      // console.log(localStorage.getItem('usertype'));
     }
@@ -67,29 +66,17 @@ export class LandingScreenComponent {
 
 
   fetchUserinfo(usertype:any){
-    // console.log('fetch method',usertoken);
-    // console.log('fetch method',usertype);
     
     this.isloading = true;
-    //localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
-    //let usertoken1='0x0200000046E3737AED5FE0B13F2E6D0710BC96ABB705BA29736DDB3ADE3CBC2F7260C908'
+    //let usertoken1='0x020000009479FC4863747E2DDF85514497DC6F42E63841CE394B28B7AFB6DADD9AC116C5'
    // let usertype1='U'
-   let usertoken1=localStorage.getItem('usertoken');
+    let usertoken1= this.usertoken
    
     this.homepageservice.getuserinfo({ token: usertoken1, usertype: usertype }).subscribe({
       next: (res: any) => {
       //  console.log(res.Data);
           //  localStorage.setItem('userId',res.Data[0].userId);
-        if (usertype == 'd') {
-          localStorage.setItem('brandid', res.Data[0].BrandID);
-          localStorage.setItem('userid', res.Data[0].bintid_pk);
-          localStorage.setItem('dealerid', res.Data[0].dealerid);
-          localStorage.setItem('username', res.Data[0].username);
-          localStorage.setItem('def_location',res.Data[0].locationid)
-          localStorage.setItem('userid',res?.Data[0]?.userId);
-          
-        }
-    
+            
         if (usertype == 'a') {
           localStorage.setItem('username', res.Data[0].username);
           localStorage.setItem('userid', res.Data[0].bintid_pk);

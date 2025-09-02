@@ -2,7 +2,6 @@ import { Component, EnvironmentInjector, Renderer2, ViewChild } from '@angular/c
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { CoreModule } from './core/core.module';
 import { SidebarComponent } from "./core/sidebar/sidebar.component";
-
 import { CommonModule } from '@angular/common';
 import { PrimengModuleModule } from './shared/primeng-module/primeng-module.module';
 import { SharedModule } from './shared/shared.module';
@@ -31,10 +30,9 @@ import { TieredMenu } from 'primeng/tieredmenu';
 })
 export class AppComponent {
 
-  @ViewChild('menu') menu:TieredMenu |null=  null;
+  @ViewChild('menu') menu: TieredMenu | null = null;
   title = 'stock-upload-frontend';
-  
-  
+
   visibleSidebar: boolean = true;
   isLoading: boolean = false;
   blocked: boolean = false;
@@ -46,6 +44,7 @@ export class AppComponent {
   sidebarItems: any = [];
   usertype: any;
   moduleName: any;
+  profilePhoto!: any;
   filteredLocationData: any = [];
   locationId: any;
   homeData: FormGroup;
@@ -72,19 +71,19 @@ export class AppComponent {
     {
       label: 'Logout',
       icon: 'pi pi-sign-out',
-      command:()=>this.logOut()
-,
-     
+      command: () => this.logOut()
+      ,
+
     },
-    
-    
+
+
   ];
 
 
 
 
   ngOnInit() {
-    
+
     //  localStorage.setItem('userid',"293")
     this.is404Page = this.pageStateService.is404;
     // console.log(this.is404Page)
@@ -97,7 +96,14 @@ export class AppComponent {
       locationId: localStorage.getItem('def_location')
     })
 
-    
+    setTimeout(() => {
+      this.sharedService.profilePhoto$.subscribe(photo => {
+      this.profilePhoto = photo;
+    });
+      
+    }, 2000);
+
+
 
     this.router.events
       .pipe(filter((event: any) => event instanceof NavigationEnd))
@@ -135,10 +141,7 @@ export class AppComponent {
 
     this.userService.loadDataOnce();
     // localStorage.setItem('usertype', 'A');
-    // localStorage.setItem('brandid', '9');
-    // localStorage.setItem('dealerid', '8');
-    // localStorage.setItem('def_location', '14')
-    // localStorage.setItem('usertoken', '0x020000004A93E1F810D29DD8C86209A5FD6FB4E5A28C171D578D439E195DA48046553B5B930AD2F6B471A43B463E9B654EA70804')
+    localStorage.setItem('usertoken', '0x02000000A1A10E0E3C3F02614A152D6D6C1ABAE100872B2C19AF91D870591BEEBBC69AD9E55280B12158FC00E3E22D95C7B72B1A')
     let userToken = localStorage.getItem('usertoken');
 
     this.utilitiesService
@@ -182,16 +185,6 @@ export class AppComponent {
       this.blockUI.el.nativeElement.style.width = `${viewportWidth}px`;
     }
 
-    // if(this.sidebar){
-    //   const contentHeight = document.documentElement.scrollHeight; // Full page height
-    //   const viewportHeight = window.innerHeight; // Viewport height
-    //   const viewportWidth = window.innerWidth; // Full screen width
-
-    //   const newHeight = contentHeight > viewportHeight ? `${contentHeight}px` : '100vh';
-
-    //   this.blockUI.el.nativeElement.style.height = newHeight;
-    //   this.blockUI.el.nativeElement.style.width = `${viewportWidth}px`;
-    // }
   }
 
   ngAfterViewInit() {
@@ -228,21 +221,16 @@ export class AppComponent {
   }
 
 
-
   redirectToLegacyScope() {
     if (localStorage.getItem('usertype') == 'A') {
-      window.location.href = environment.DiverterAdmin ;
+      window.location.href = environment.DiverterAdmin;
     }
     else {
       window.location.href = environment.DiverterUser;
     }
   }
 
-
-  
-
   logOut() {
-
 
     if (localStorage.getItem('usertype') == 'A') {
       window.location.href = environment.frontendAdminUrl;
@@ -256,15 +244,9 @@ export class AppComponent {
 
 
 
-  
-
   onButtonClick(event: any) {
     console.log('Button clicked');
     this.menu?.toggle(event);
   }
-
-
-
-
 
 }

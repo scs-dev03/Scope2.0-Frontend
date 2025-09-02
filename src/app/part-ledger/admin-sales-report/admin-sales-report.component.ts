@@ -104,9 +104,10 @@ export class AdminSalesReportComponent {
   DataType: any = []
   PartDetail: any = [];
   SalesInfo: any = [];
+  isLoading: boolean = false;
   partNumber: any = [];
   DataTypeArray: any = [];
-  isloading: boolean = false;
+
   showMessage: boolean = false;
   excel: any
   Result: any
@@ -277,6 +278,8 @@ export class AdminSalesReportComponent {
 
     this.showMessage = false;
     this.globalBlockUiService.startLoading();
+    this.SalesInfoVisible = true;
+    this.isLoading = true;
 
 
     this.adminSalesReportService
@@ -292,9 +295,10 @@ export class AdminSalesReportComponent {
       .subscribe({
         next: (res: any) => {
           this.SalesInfo = res.Data;
-          
+
           this.exportVisible = false
           this.globalBlockUiService.stopLoading();
+          this.isLoading = false;
 
           console.log(this.SalesInfo);
         },
@@ -303,6 +307,7 @@ export class AdminSalesReportComponent {
           this.globalBlockUiService.stopLoading();
           this.showMessage = true;
           this.exportVisible = true;
+          this.isLoading = false;
           this.visible = true
           this.Result = 'No Data Available for this Location'
           // Optional: Toast or user-friendly alert
@@ -481,68 +486,81 @@ export class AdminSalesReportComponent {
     }
   }
 
-  UploadPartNumber(fu: any) {
-    this.globalBlockUiService.startLoading()
-    this.DataTypeArray = this.AdminSalesReportInputData.value.DataType
-    const formData = new FormData();
-    formData.append("file", this.partsExcel);
-    formData.append('Brandid', this.AdminSalesReportInputData.value.BrandID);
-    formData.append('Dealerid', this.AdminSalesReportInputData.value.DealerID);
-    formData.append('Locationid', this.AdminSalesReportInputData.value.LocationID);
-    formData.append('from', this.getLastDateOfMonthForFrom(this.AdminSalesReportInputData.value.FormDate).toString());
-    formData.append('to', this.getLastDateOfMonthForTo(this.AdminSalesReportInputData.value.ToDate).toString());
-    formData.append('excel', '1');
-
-    this.adminSalesReportService.getPartDescription(formData).subscribe((res: any) => {
-      
-      this.PartDetail = res
-      this.showupload = false
-      this.partsExcel = null
-    },
-      (error: any) => {
-        console.error("File upload failed:", error);
-        this.globalBlockUiService.stopLoading()
-        this.showupload = false
-        fu.clear();
-      })
-
-
-    setTimeout(() => {
-      this.adminSalesReportService.getSalesInfo(formData).subscribe((res: any) => {
-
-        this.exportVisible = true
-
-        this.SalesInfo = res.Data
-        this.showupload = false
-        this.exportVisible = false
-        //this.istotal = false
-        fu.clear();
-        this.partsExcel = undefined
-        this.onclicktotal()
-        this.globalBlockUiService.stopLoading()
-      },
-        (error: any) => {
-
-          if (error.error.Error) {
-            this.Result = "Data for these Month Range is Not Available"
-            this.visible = true
-          }
-          else {
-            this.visible = true
-            this.Result = `${error.error.message + ' Part Number: ' + error.error.unmatchedParts}`
-            this.globalBlockUiService.stopLoading()
-            this.showupload = false
-            fu.clear();
-
-          }
-
-
-
-        })
-
-    }, 1500);
-
+UploadPartNumber(fu: any) {
+  // PartNumber ka validation hamesha hata do
+   this.isLoading  = true;
+  const partNumberCtrl = this.AdminSalesReportInputData.get('PartNumber');
+  if (partNumberCtrl) {
+    partNumberCtrl.clearValidators();
+    partNumberCtrl.updateValueAndValidity({ emitEvent: false });
   }
+
+  if (this.AdminSalesReportInputData.invalid) {
+    this.AdminSalesReportInputData.markAllAsTouched();
+    return; // yahan return kar do taki neeche ka code invalid form pe na chale
+  }
+
+  this.globalBlockUiService.startLoading();
+  this.DataTypeArray = this.AdminSalesReportInputData.value.DataType;
+
+  const formData = new FormData();
+  formData.append("file", this.partsExcel);
+  formData.append('Brandid', this.AdminSalesReportInputData.value.BrandID);
+  formData.append('Dealerid', this.AdminSalesReportInputData.value.DealerID);
+  formData.append('Locationid', this.AdminSalesReportInputData.value.LocationID);
+  formData.append('from', this.getLastDateOfMonthForFrom(this.AdminSalesReportInputData.value.FormDate).toString());
+  formData.append('to', this.getLastDateOfMonthForTo(this.AdminSalesReportInputData.value.ToDate).toString());
+  formData.append('excel', '1');
+
+  this.adminSalesReportService.getPartDescription(formData).subscribe(
+    (res: any) => {
+      this.PartDetail = res;
+      this.showupload = false;
+      this.partsExcel = null;
+       this.globalBlockUiService.stopLoading();
+    
+    },
+    (error: any) => {
+      console.error("File upload failed:", error);
+      this.globalBlockUiService.stopLoading();
+      this.showupload = false;
+      fu.clear();
+    }
+  );
+
+  setTimeout(() => {
+    this.adminSalesReportService.getSalesInfo(formData).subscribe(
+      (res: any) => {
+        this.exportVisible = true;
+        this.SalesInfo = res.Data;
+        this.showupload = false;
+        this.exportVisible = false;
+        fu.clear();
+        this.partsExcel = undefined;
+        this.SalesInfoVisible = true;
+        this.onclicktotal();
+        
+        this.isLoading = false;
+      },
+      (error: any) => {
+        if (error.error.Error) {
+          this.Result = "Data for these Month Range is Not Available";
+          this.visible = true;
+          this.isLoading = false;
+        } else {
+          this.visible = true;
+          this.Result = `${error.error.message + ' Part Number: ' + error.error.unmatchedParts}`;
+          
+          this.showupload = false;
+          fu.clear();
+          this.isLoading = false;
+        }
+      }
+    );
+  }, 1500);
+  this.isLoading = false;
+}
+
 
 
   exportPartNumberExcel(): void {

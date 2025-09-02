@@ -6,6 +6,10 @@ import { BehaviorSubject, Subject } from 'rxjs';
 })
 export class SharedServiceService {
 
+  private  photoSource  = new BehaviorSubject<any>('');
+  profilePhoto$ = this.photoSource.asObservable();
+
+
   private sidebarDataSource = new BehaviorSubject<any>(null); // Holds the data
   sidebarData = this.sidebarDataSource.asObservable(); // Expose observable for components
   hasSidebarDataLoaded = false;
@@ -45,5 +49,9 @@ export class SharedServiceService {
   updateLocationIdForHomePageData(data:any){
     // console.log("✅ SharedService received locationId:", data);
     this.getLocationIdForHomePageDataSource.next(data);
+  }
+
+   setProfilePhoto(photo: string){
+    this.photoSource.next(photo);
   }
 }

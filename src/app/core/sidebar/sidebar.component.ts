@@ -11,29 +11,30 @@ import { SidebarService } from '../../services/sidebar.service';
 import { SharedServiceService } from '../../services/shared-service.service';
 import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 import { take } from 'rxjs';
-import {environment} from '../../../../environments/environment'
+import { environment } from '../../../../environments/environment'
+
 
 @Component({
   selector: 'app-sidebar',
-  imports: [PrimengModuleModule,SharedModule,FormsModule,ReactiveFormsModule,CommonModule,RouterModule],
-  providers:[],
+  imports: [PrimengModuleModule, SharedModule, FormsModule, ReactiveFormsModule, CommonModule, RouterModule],
+  providers: [],
   templateUrl: './sidebar.component.html',
-  encapsulation:ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None,
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
- 
-  @ViewChild('menu') menu:TieredMenu |null=  null;
-  @Input() visible: boolean = false; 
+
+  @ViewChild('menu') menu: TieredMenu | null = null;
+  @Input() visible: boolean = false;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   items: MenuItem[] | undefined;
   visibleSidebar: boolean = true;
   searchQuery: string = '';
-  activeIndex:any;
+  activeIndex: any;
   isVisible: boolean = true;
-  sidebarItems:any=[];
-  userName:any;
-  profilePhoto:any;
+  sidebarItems: any = [];
+  userName: any;
+  profilePhoto: any;
   // sidebarItems = [
   //   {id: 1, value: "Mapping", children: [
   //       {id: 2, value: "Stock Upload Mapping", route: 'mapping/stock-upload',isActive: true},
@@ -46,88 +47,88 @@ export class SidebarComponent {
   //      {id: 12, value: "Bulk Upload", route: 'stock-upload/ml',isActive: false}
   //   ], isExpanded: false}
   // ];
-  
-    filteredItems: any[] = [...this.sidebarItems]; // Initially, all items are visible
 
-    // Function to filter items based on the search query
-filterItems() {
-  const query = this.searchQuery?.trim().toLowerCase();
+  filteredItems: any[] = [...this.sidebarItems]; // Initially, all items are visible
 
-  if (!query) {
-    // Reset all items and collapse
-    this.filteredItems = this.sidebarItems.map((item: any) => ({
-      ...item,
-      isOpen: false
-    }));
-    return;
+  // Function to filter items based on the search query
+  filterItems() {
+    const query = this.searchQuery?.trim().toLowerCase();
+
+    if (!query) {
+      // Reset all items and collapse
+      this.filteredItems = this.sidebarItems.map((item: any) => ({
+        ...item,
+        isOpen: false
+      }));
+      return;
+    }
+
+    this.filteredItems = this.sidebarItems
+      .map((item: any) => {
+        const matchesParent = item?.parentModuleName?.toLowerCase().includes(query);
+
+        const filteredChildren = item.subchildren?.filter((child: any) =>
+          child.module_name?.toLowerCase().includes(query)
+        ) || [];
+
+        if (matchesParent || filteredChildren.length > 0) {
+          return {
+            ...item,
+            isOpen: true,  // 👈 Expand this item
+            subchildren: filteredChildren.length > 0 ? filteredChildren : item.subchildren
+          };
+        }
+
+        return null;
+      })
+      .filter((item: any) => item !== null);
   }
 
-  this.filteredItems = this.sidebarItems
-    .map((item: any) => {
-      const matchesParent = item?.parentModuleName?.toLowerCase().includes(query);
+  openSidebar() {
+    this.isVisible = true;
+  }
 
-      const filteredChildren = item.subchildren?.filter((child: any) =>
-        child.module_name?.toLowerCase().includes(query)
-      ) || [];
+  toggleSidebar() {
+    this.visible = !this.visible;
+    this.visibleChange.emit(this.visible);  // Notify the parent about the visibility change
+  }
+  // Method to close the sidebar
+  closeSidebar() {
+    this.isVisible = false;
+  }
 
-      if (matchesParent || filteredChildren.length > 0) {
-        return {
-          ...item,
-          isOpen: true,  // 👈 Expand this item
-          subchildren: filteredChildren.length > 0 ? filteredChildren : item.subchildren
-        };
-      }
+  onButtonClick(event: any) {
+    console.log('Button clicked');
+    this.menu?.toggle(event);
+  }
 
-      return null;
-    })
-    .filter((item: any) => item !== null);
-}
- 
-    openSidebar() {
-      this.isVisible = true;
-    }
-  
-    toggleSidebar() {
-      this.visible = !this.visible;
-      this.visibleChange.emit(this.visible);  // Notify the parent about the visibility change
-    }
-    // Method to close the sidebar
-    closeSidebar() {
-      this.isVisible = false;
-    }
-
-    onButtonClick(event: any) {
-      console.log('Button clicked');
-      this.menu?.toggle(event);
-    }
-    
 
   setActive(subItem: any, parentItem: any) {
     this.filteredItems.forEach(item => {
       item.isActive = false;
-      item.subchildren?.forEach((sub:any) => sub.isActive = false);
+      item.subchildren?.forEach((sub: any) => sub.isActive = false);
     });
-  
+
     parentItem.isActive = true;
     subItem.isActive = true;
   }
-  
 
-  toggleChildren(item:any) {
+
+  toggleChildren(item: any) {
     item.isExpanded = !item.isExpanded;
-  
+
     // When expanding, reset the active state of child items
     if (item.isExpanded) {
-      item.children.forEach((child:any) => child.isActive = false);  // Reset active state of children
+      item.children.forEach((child: any) => child.isActive = false);  // Reset active state of children
     }
   }
-  
+
   // Function to set an active child item
-  setActiveChild(child:any) {
+  setActiveChild(child: any) {
     // Deactivate all children in the sidebar
-    this.sidebarItems.forEach((item:any) => {
+    this.sidebarItems.forEach((item: any) => {
       if (item.children) {
-        item.children.forEach((childItem:any) => {
+        item.children.forEach((childItem: any) => {
           if (childItem !== child) {
             childItem.isActive = false;  // Deactivate other children
           }
@@ -136,183 +137,181 @@ filterItems() {
     });
   }
 
-  ngOnInit(){
-  this.items = [   
-    {
+  ngOnInit() {
+    this.items = [
+      {
         label: 'Log Out',
         icon: 'pi pi-sign-out',
-        command:()=>this.logOut()
-    },
-    {
+        command: () => this.logOut()
+      },
+      {
         separator: true
-    },
- 
-   
-  ]
-  this.userName=localStorage.getItem('username');
-  
-  this.sharedService.sidebarData
-  .pipe(take(2))// ensure it only runs once
-  .subscribe((res: any) => {
-  //  console.log('Received from shared service:', res);
-    if (res && res.loaded) {
-     // console.log("shared service ",res.loaded)
-      this.sidebarItems = Array.from(res.items);
-     this.transformData(this.sidebarItems);
-     
-   // console.log("sidebar items ",this.sidebarItems)
-    } else {
-      console.warn('Sidebar data not loaded');
-    }
-  });
-    
-  this.getModules();
-     this.sharedService.sidebarResetTrigger.subscribe(() => {
+      },
+
+
+    ]
+    this.userName = localStorage.getItem('username');
+
+    this.sharedService.sidebarData
+      .pipe(take(2))// ensure it only runs once
+      .subscribe((res: any) => {
+        //  console.log('Received from shared service:', res);
+        if (res && res.loaded) {
+          // console.log("shared service ",res.loaded)
+          this.sidebarItems = Array.from(res.items);
+          this.transformData(this.sidebarItems);
+
+          // console.log("sidebar items ",this.sidebarItems)
+        } else {
+          console.warn('Sidebar data not loaded');
+        }
+      });
+
+    this.getModules();
+    this.sharedService.sidebarResetTrigger.subscribe(() => {
       this.resetSidebarState(); // Custom function to reset UI (NOT API)
     });
-}
-
-constructor(private sidebarService:SidebarService,private sharedService:SharedServiceService,
-  private globalBlockUiService:GlobalBlockUiService,
- 
-  private router :Router
-){}
-   
-resetSidebarState(){
-  this.getModulesOnTrigger();
-}
-
-logOut(){
- 
-
-  if(localStorage.getItem('usertype')=='A')
-  {
-window.location.href = environment.frontendAdminUrl;
-  }else{
-    
-    window.location.href = environment.frontendUserUrl;
   }
-   localStorage.clear();
-   sessionStorage.clear();
-}
 
-getModulesOnTrigger(){
-  this.globalBlockUiService.startLoading();
-  this.sidebarService.getModules().subscribe((res:any)=>{
-   this.userName=localStorage.getItem('username');
-// const cleaned = this.transformSidebarData(data);  // this will be dense, clean
-this.sidebarItems = res.data.modules;
- if(res.data.profile==null|| res.data.profile==''){
-      this.profilePhoto=''
-    }else{
-      this.profilePhoto=environment.uploadedProfileUrl+res.data.profile;
-    }
-//console.log("modules api trigger in sidebar ",this.sidebarItems)
-//  this.sidebarItems=this.transformData(this.sidebarItems)
-// this.filteredItems=this.transformData(this.sidebarItems);
-  this.sharedService.updateSidebarData(this.sidebarItems)
-  this.transformData(this.sidebarItems)
-   this.globalBlockUiService.stopLoading();
-  },(error:any)=>{
-     this.globalBlockUiService.stopLoading();
-  })
-}
-getModules(){
-   
-  this.globalBlockUiService.startLoading();
-  this.sidebarService.getModules().subscribe((res:any)=>{
-   
-// const cleaned = this.transformSidebarData(data);  // this will be dense, clean
-//console.log("res .data ",res.data)
-this.sidebarItems = res.data.modules;
-//console.log("sidebar items ",this.sidebarItems)
-    if(res.data.profile==null|| res.data.profile==''){
-      this.profilePhoto=''
-    }else{
-      this.profilePhoto=environment.uploadedProfileUrl+res.data.profile;
-    }
-  //console.log("profilePhoto ",this.profilePhoto,"envir ",environment.uploadedProfileUrl)
-  this.sharedService.updateSidebarData(this.sidebarItems)
-  //console.log("sidebar items ",this.sidebarItems)
-   this.globalBlockUiService.stopLoading();
-  },(error:any)=>{
-     this.globalBlockUiService.stopLoading();
-  })
-}
+  constructor(private sidebarService: SidebarService, private sharedService: SharedServiceService,
+    private globalBlockUiService: GlobalBlockUiService,
 
-transformData(data: any)
- {
-  const groupedData: { [key: string]: any } = {};
-  const directParents: any[] = [];
-  //console.log("type of sidebar ",typeof data,data)
-  data?.forEach((item: any) => {
-    const parentName = item.parentModuleName;
+    private router: Router
+  ) { }
 
-    // ✅ Handle missing, "null", or NULL strings as direct parent
-    if (!parentName || parentName.toLowerCase?.() === 'null') {
-      directParents.push({
-        parentModuleName: item.module_name,
-        module_route: item.module_route,
-        add1: item.add1,
-        delete1: item.delete1,
-        edit1: item.edit1,
-        isActive: item.isActive,
-        view1: item.view1,
-        subchildren: [],     // still keep subchildren key to simplify UI logic
-        isOpen: false
-      });
+  resetSidebarState() {
+    this.getModulesOnTrigger();
+  }
+
+  logOut() {
+
+
+    if (localStorage.getItem('usertype') == 'A') {
+      window.location.href = environment.frontendAdminUrl;
     } else {
-      if (!groupedData[parentName]) {
-        groupedData[parentName] = {
-          parentModuleName: parentName,
-          subchildren: [],
-          isOpen: false
-        };
-      }
 
-      groupedData[parentName].subchildren.push({
-        module_name: item.module_name,
-        module_route: item.module_route,
-        add1: item.add1,
-        delete1: item.delete1,
-        edit1: item.edit1,
-        isActive: item.isActive,
-        view1: item.view1
-      });
+      window.location.href = environment.frontendUserUrl;
     }
+    localStorage.clear();
+    sessionStorage.clear();
   }
-  
 
-);
+  getModulesOnTrigger() {
+    this.globalBlockUiService.startLoading();
+    this.sidebarService.getModules().subscribe((res: any) => {
+      this.userName = localStorage.getItem('username');
+      // const cleaned = this.transformSidebarData(data);  // this will be dense, clean
+      this.sidebarItems = res.data.modules;
+      if (res.data.profile == null || res.data.profile == '') {
+        this.profilePhoto = ''
+      } else {
+        this.profilePhoto = environment.uploadedProfileUrl + res.data.profile;
+      }
+      //console.log("modules api trigger in sidebar ",this.sidebarItems)
+      //  this.sidebarItems=this.transformData(this.sidebarItems)
+      // this.filteredItems=this.transformData(this.sidebarItems);
+      this.sharedService.updateSidebarData(this.sidebarItems)
+      this.transformData(this.sidebarItems)
+      this.globalBlockUiService.stopLoading();
+    }, (error: any) => {
+      this.globalBlockUiService.stopLoading();
+    })
+  }
+  getModules() {
 
-  const combinedResult = [...Object.values(groupedData), ...directParents];
-  this.sidebarItems = combinedResult;
+    this.globalBlockUiService.startLoading();
+    this.sidebarService.getModules().subscribe((res: any) => {
 
-  this.filteredItems = [...this.sidebarItems];
- // console.log("filtered items in sidebar",this.filteredItems)
+      // const cleaned = this.transformSidebarData(data);  // this will be dense, clean
+      //console.log("res .data ",res.data)
+      this.sidebarItems = res.data.modules;
+      //console.log("sidebar items ",this.sidebarItems)
+      if (res.data.profile == null || res.data.profile == '') {
+        this.profilePhoto = ''
+      } else {
+        this.profilePhoto = environment.uploadedProfileUrl + res.data.profile;
+        this.sharedService.setProfilePhoto(this.profilePhoto);
+      }
+      //console.log("profilePhoto ",this.profilePhoto,"envir ",environment.uploadedProfileUrl)
+      this.sharedService.updateSidebarData(this.sidebarItems)
+      //console.log("sidebar items ",this.sidebarItems)
+      this.globalBlockUiService.stopLoading();
+    }, (error: any) => {
+      this.globalBlockUiService.stopLoading();
+    })
+  }
 
- console.log();
- 
-  return combinedResult;
-}
+  transformData(data: any) {
+    const groupedData: { [key: string]: any } = {};
+    const directParents: any[] = [];
+    //console.log("type of sidebar ",typeof data,data)
+    data?.forEach((item: any) => {
+      const parentName = item.parentModuleName;
 
-
-
-sendDataToUser(data:any) {
-    
-  this.sharedService.updateSidebarData(data);
-}
-
-
-toggleSubMenu(item: any) {
-  // Check if the clicked submenu is already open. If so, close it; otherwise, open it.
-  item.isOpen = !item.isOpen;
-
-  // Close other submenus
-  this.sidebarItems.forEach((subItem: any) => {
-    if (subItem !== item) {
-      subItem.isOpen = false;  // Close other submenus
+      // Handle missing, "null", or NULL strings as direct parent
+      if (!parentName || parentName.toLowerCase?.() === 'null') {
+        directParents.push({
+          parentModuleName: item.module_name,
+          module_route: item.module_route,
+          add1: item.add1,
+          delete1: item.delete1,
+          edit1: item.edit1,
+          isActive: item.isActive,
+          view1: item.view1,
+          subchildren: [],     // still keep subchildren key to simplify UI logic
+          isOpen: false
+        });
+      } else {
+        if (!groupedData[parentName]) {
+          groupedData[parentName] = {
+            parentModuleName: parentName,
+            subchildren: [],
+            isOpen: false
+          };
+        }
+        groupedData[parentName].subchildren.push({
+          module_name: item.module_name,
+          module_route: item.module_route,
+          add1: item.add1,
+          delete1: item.delete1,
+          edit1: item.edit1,
+          isActive: item.isActive,
+          view1: item.view1
+        });
+      }
     }
-  });
-}
+
+
+    );
+
+    const combinedResult = [...Object.values(groupedData), ...directParents];
+    this.sidebarItems = combinedResult;
+
+    this.filteredItems = [...this.sidebarItems];
+    // console.log("filtered items in sidebar",this.filteredItems)
+
+    console.log();
+
+    return combinedResult;
+  }
+
+
+
+  sendDataToUser(data: any) {
+
+    this.sharedService.updateSidebarData(data);
+  }
+
+
+  toggleSubMenu(item: any) {
+    // Check if the clicked submenu is already open. If so, close it; otherwise, open it.
+    item.isOpen = !item.isOpen;
+
+    // Close other submenus
+    this.sidebarItems.forEach((subItem: any) => {
+      if (subItem !== item) {
+        subItem.isOpen = false;  // Close other submenus
+      }
+    });
+  }
 }

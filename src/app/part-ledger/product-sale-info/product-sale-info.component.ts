@@ -11,38 +11,40 @@ import { Table } from 'primeng/table';
   styleUrl: './product-sale-info.component.css'
 })
 export class ProductSaleInfoComponent {
-   @ViewChild('dt') dt!: Table;
-   originalData: any[] = [];
-   
+  @ViewChild('dt') dt!: Table;
+  originalData: any[] = [];
+  @Input() isLoading: boolean = false;
+
+
 
   @Input() SalesInfo: any = []
   @Input() DataTypeArray: any = []
-  
+
   loading: boolean = false;
 
   ngOnInit(): void {
     this.originalData = JSON.parse(JSON.stringify(this.SalesInfo));
   }
 
-  startloading(){
+  startloading() {
     this.loading = true;
   }
-  
-  stoploading(){
+
+  stoploading() {
     this.loading = false;
   }
 
 
 
 
- clearFilters() {
+  clearFilters() {
     if (this.dt) {
       this.dt.reset(); // PrimeNG table ka built-in clear
 
-    
+
       this.SalesInfo = JSON.parse(JSON.stringify(this.originalData)); // data reset
-  
-      
+
+
     }
   }
 
