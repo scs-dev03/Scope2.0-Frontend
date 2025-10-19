@@ -48,7 +48,7 @@ export class DealerSalesReportComponent {
       { "id": 18, "name": "Others" }
     ]
     //this.fetchBrandAdminData();
-    this.fetchLocationAdminData(localStorage.getItem('dealerid'))
+    this.fetchLocationAdminData(sessionStorage.getItem('dealerid'))
 
     this.sharedService.updateModuleName('Dealer Parts Ledger')
 
@@ -135,7 +135,7 @@ export class DealerSalesReportComponent {
       }
       else {
         this.fetchPartDescription(
-          localStorage.getItem('brandid')?.toString(),
+          sessionStorage.getItem('brandid')?.toString(),
           this.partNumber,
           this.excel.toString()
         );
@@ -160,8 +160,8 @@ export class DealerSalesReportComponent {
 
     this.fetchSalesInfo(
 
-      localStorage.getItem('brandid')?.toString(),
-      localStorage.getItem('dealerid')?.toString(),
+      sessionStorage.getItem('brandid')?.toString(),
+      sessionStorage.getItem('dealerid')?.toString(),
       this.DealerSalesReportInputData.value.LocationID,
       this.partNumber,
       this.getLastDateOfMonthForFrom(this.DealerSalesReportInputData.value.FormDate).toString(),
@@ -216,7 +216,7 @@ export class DealerSalesReportComponent {
   fetchLocationAdminData(dealerid: any) {
     this.globalBlockUiService.startLoading();
     this.adminSalesReportService
-      .getLocaitonData({ dealerid: localStorage.getItem('dealerid') })
+      .getLocaitonData({ dealerid: sessionStorage.getItem('dealerid') })
       .subscribe({
         next: (res: any) => {
           this.LocationData = res;
@@ -241,7 +241,7 @@ export class DealerSalesReportComponent {
     this.showMessage = false;
     this.globalBlockUiService.startLoading();
     this.adminSalesReportService
-      .getPartDescription({ Brandid: localStorage.getItem('brandid')?.toString(), Partnumber: partnumber, excel: excel })
+      .getPartDescription({ Brandid: sessionStorage.getItem('brandid')?.toString(), Partnumber: partnumber, excel: excel })
       .subscribe({
         next: (res: any) => {
           this.PartDetail = res;
@@ -295,8 +295,8 @@ export class DealerSalesReportComponent {
 
     this.adminSalesReportService
       .getSalesInfo({
-        Brandid: localStorage.getItem('brandid')?.toString(),
-        Dealerid: localStorage.getItem('dealerid')?.toString(),
+        Brandid: sessionStorage.getItem('brandid')?.toString(),
+        Dealerid: sessionStorage.getItem('dealerid')?.toString(),
         Locationid: Locationid,
         PartNumber: partnumber,
         from: from,
@@ -501,8 +501,8 @@ export class DealerSalesReportComponent {
     this.DataTypeArray = this.DealerSalesReportInputData.value.DataType
     const formData = new FormData();
     formData.append("file", this.partsExcel);
-    formData.append('Brandid', localStorage.getItem('brandid') || '');
-    formData.append('Dealerid', localStorage.getItem('dealerid') || '');
+    formData.append('Brandid', sessionStorage.getItem('brandid') || '');
+    formData.append('Dealerid', sessionStorage.getItem('dealerid') || '');
     formData.append('Locationid', this.DealerSalesReportInputData.value.LocationID);
     formData.append('from', this.getLastDateOfMonthForFrom(this.DealerSalesReportInputData.value.FormDate).toString());
     formData.append('to', this.getLastDateOfMonthForTo(this.DealerSalesReportInputData.value.ToDate).toString());

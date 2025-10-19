@@ -117,19 +117,19 @@ blForm:FormGroup
       this.getBrands();
       // this.dealerId=20210;
       
-  //  localStorage.setItem('dealerid',"20141");
-      // localStorage.setItem('brandid',"33")
+  //  sessionStorage.setItem('dealerid',"20141");
+      // sessionStorage.setItem('brandid',"33")
     // this.userId=38
       this.userService.allUserData$.subscribe((users:any)=>{
         this.users=users;
       })
-      // localStorage.setItem('dealerid',"20141");
-      this.dealerId=localStorage.getItem('dealerid');
+      // sessionStorage.setItem('dealerid',"20141");
+      this.dealerId=sessionStorage.getItem('dealerid');
       this.getLocations()
        this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible;
    })
-      this.userId=localStorage.getItem('userid');
+      this.userId=sessionStorage.getItem('userid');
      //  this.userId=38
     }
     get locationControls() {
@@ -428,9 +428,9 @@ let formData1 = new FormData();
       else{
          
        formData1.append('excelFile', this.file, this.fileName);
-       formData1.append('dealer_id', localStorage?.getItem('dealerid')?.toString()??'');
+       formData1.append('dealer_id', sessionStorage?.getItem('dealerid')?.toString()??'');
       
-       formData1.append('brand_id', localStorage?.getItem('brandid')?.toString()??'');
+       formData1.append('brand_id', sessionStorage?.getItem('brandid')?.toString()??'');
        formData1.append('user_id', this.userId.toString());
          this.globalBlockUiService.startLoading();
         this.stockUploadService.uploadBulkStock(formData1).subscribe((res:any)=>{
@@ -562,7 +562,7 @@ let formData1 = new FormData();
     getBulkRecords(){
 
       this.globalBlockUiService.startLoading();
-        this.stockUploadServiceBySCSUser.getAllBulkRecords({dealer_id:localStorage.getItem('dealerid'),added_by:this.userId}).subscribe((res:any)=>{
+        this.stockUploadServiceBySCSUser.getAllBulkRecords({dealer_id:sessionStorage.getItem('dealerid'),added_by:this.userId}).subscribe((res:any)=>{
           this.globalBlockUiService.stopLoading();
           this.records=[];
           this.records=res.data;
@@ -629,7 +629,7 @@ let formData1 = new FormData();
 
     getBulkPartNotInMasterRecords(){
       this.globalBlockUiService.startLoading();
- this.stockUploadService.getPartNotInMasterForBulk({brand_id:localStorage.getItem('brandid')}).subscribe((res:any)=>{
+ this.stockUploadService.getPartNotInMasterForBulk({brand_id:sessionStorage.getItem('brandid')}).subscribe((res:any)=>{
       this.globalBlockUiService.stopLoading();
       this.partNotInMasterData=[];
       this.partNotInMasterData=res.data;
@@ -827,7 +827,7 @@ let formData1 = new FormData();
 
     getBulkUploadedData(){
 
-      this.stockUploadServiceBySCSUser.getUploadedData({dealer_id:localStorage.getItem('dealerid'),user_id:this.userId}).subscribe((blob:any)=>{
+      this.stockUploadServiceBySCSUser.getUploadedData({dealer_id:sessionStorage.getItem('dealerid'),user_id:this.userId}).subscribe((blob:any)=>{
       const link = document.createElement('a');
       const url = window.URL.createObjectURL(blob);
 
@@ -847,7 +847,7 @@ let formData1 = new FormData();
     }
 
     getPartNotInMasterBulk(){
-      this.stockUploadService.getPartNotInMasterForBulk({dealer_id:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
+      this.stockUploadService.getPartNotInMasterForBulk({dealer_id:sessionStorage.getItem('dealerid')}).subscribe((res:any)=>{
          this.partNotInMasterData=res.data;
           if(this.partNotInMasterData.length==0){
             this.isDataPresentPartNotInMaster=false;

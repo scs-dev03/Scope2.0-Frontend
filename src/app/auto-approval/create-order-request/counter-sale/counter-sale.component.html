@@ -1,0 +1,855 @@
+<div class="min-w-full h-full bg-gray-100">
+  <h1 class="text-xl font-serif ml-2">Counter Sale Request</h1>
+
+  <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
+    <div
+      class="min-w-full min-h-[15vh] flex-wrap flex-col p-2 gap-3 shadow-lg border-dashed border-2 bg-white rounded-md border-white"
+    >
+      <p-tabs value="0">
+        <p-tablist>
+          <p-tab class="text-xs" value="0">Single</p-tab>
+          <p-tab class="text-xs" value="1">Bulk</p-tab>
+        </p-tablist>
+        <p-tabpanels>
+          <p-tabpanel value="0">
+            <div
+              class="flex gap-4 mb-2 items-start flex-wrap"
+              [formGroup]="CounterSaleFilterData"
+            >
+              <div class="flex flex-col">
+                <p-floatlabel variant="on">
+                  <p-select
+                    [options]="LocationData"
+                    optionValue="locationid"
+                    optionLabel="location"
+                    formControlName="Location"
+                    class="w-44"
+                    scrollHeight="250px"
+                    (onChange)="OnClickLocation()"
+                    [filter]="true"
+                    filterBy="location"
+                    [ngClass]="{
+                      'border border-red-500':
+                        CounterSaleFilterData.get('Location')?.invalid &&
+                        (CounterSaleFilterData.get('Location')?.touched ||
+                          CounterSaleFilterData.get('Location')?.dirty)
+                    }"
+                  ></p-select>
+                  <label for="location" class="text-xs">Locations</label>
+                </p-floatlabel>
+                <div class="h-4">
+                  <span
+                    *ngIf="
+                      CounterSaleFilterData.get('Location')?.hasError(
+                        'required'
+                      ) &&
+                      (CounterSaleFilterData.get('Location')?.touched ||
+                        CounterSaleFilterData.get('Location')?.dirty)
+                    "
+                    class="text-red-500 text-xs"
+                  >
+                    Location is required
+                  </span>
+                </div>
+              </div>
+
+              <!-- Order Type -->
+              <div class="flex flex-col">
+                <p-floatlabel variant="on">
+                  <p-select
+                    formControlName="OrderType"
+                    [options]="OrderTypeData"
+                    optionLabel="Name"
+                    optionValue="Name"
+                    [checkmark]="true"
+                    size="small"
+                    class="w-44"
+                  />
+                  <label for="OrderType" class="text-xs">Order Type *</label>
+                </p-floatlabel>
+                <small
+                  *ngIf="
+                    CounterSaleFilterData.get('OrderType')?.invalid &&
+                    CounterSaleFilterData.get('OrderType')?.touched
+                  "
+                  class="text-red-500 text-xs"
+                >
+                  Order Type is required
+                </small>
+              </div>
+
+              <!-- Party Name & Code -->
+              <div class="flex flex-col">
+                <p-floatlabel variant="on">
+                  <p-select
+                    formControlName="PartyNameAndCode"
+                    [options]="PartyAndPartyCode"
+                    optionLabel="Name"
+                    optionValue="Id"
+                    [checkmark]="true"
+                    size="small"
+                    class="w-44"
+                  />
+                  <label for="Party" class="text-xs">Party Name & Code *</label>
+                </p-floatlabel>
+                <small
+                  *ngIf="
+                    CounterSaleFilterData.get('PartyNameAndCode')?.invalid &&
+                    CounterSaleFilterData.get('PartyNameAndCode')?.touched
+                  "
+                  class="text-red-500 text-xs"
+                >
+                  Party Name & Code is required
+                </small>
+              </div>
+            </div>
+
+            <!-- Checkbox -->
+            <div class="flex gap-2">
+              <p-checkbox
+                inputId="ingredient1"
+                name="upload"
+                [(ngModel)]="MultiUpload"
+                binary="true"
+              ></p-checkbox>
+              <label for="ingredient1" class="mt-1">
+                Do You Want to Upload
+              </label>
+            </div>
+
+            <br />
+
+            <!-- Div visible only when checked -->
+            <div class="flex gap-3 mb-3" *ngIf="MultiUpload">
+              <p-button
+                size="small"
+                icon="pi pi-download"
+                [style]="{ 'background-color': '#008080', color: '#fff' }"
+                (onClick)="CounterSaleMultiPartSampleExcelDownload()"
+                iconPos="right"
+                class="text-xs"
+              ></p-button>
+
+              <p-fileupload
+                #fum
+                mode="basic"
+                chooseLabel="Choose"
+                [chooseStyleClass]="
+                  'w-[84px] background-color: #008080, color: #fff h-[30px] !text-[12px]'
+                "
+                chooseIcon="pi pi-upload"
+                accept=".xlsx,.xls"
+                (onSelect)="OnSelectFileMulti($event, fum)"
+                maxFileSize="1000000"
+              ></p-fileupload>
+            </div>
+
+            <div class="flex justify-start bg-white mb-3" *ngIf="!MultiUpload">
+              <p class="text-md font-medium">Add Part Wise</p>
+            </div>
+
+            <div
+              class="flex flex-wrap gap-3"
+              *ngIf="!MultiUpload"
+              [formGroup]="AddPartWise"
+            >
+              <div formArrayName="parts">
+                <div
+                  *ngFor="let part of parts.controls; let i = index"
+                  [formGroupName]="i"
+                  class="flex flex-wrap gap-3 mb-3"
+                >
+                  <div class="flex flex-col h-8 mb-1">
+                    <p-floatlabel variant="on">
+                      <label for="partnumber-{{ i }}" class="text-[13px]"
+                        >Part Number</label
+                      >
+                      <input
+                        pInputText
+                        id="partnumber"
+                        formControlName="PartNumber"
+                        [pSize]="'small'"
+                        class="text-xs w-44 h-8"
+                        (keypress)="blockSpecialChar($event)"
+                      />
+                    </p-floatlabel>
+                    <small
+                      *ngIf="
+                        part.get('PartNumber')?.invalid &&
+                        part.get('PartNumber')?.touched
+                      "
+                      class="text-red-500 text-[10px]"
+                    >
+                      Part Number is required
+                    </small>
+                  </div>
+
+                  <div class="flex flex-col h-8 mb-1">
+                    <p-floatlabel variant="on">
+                      <label for="qty-{{ i }}" class="text-[13px]"
+                        >Quantity</label
+                      >
+                      <input
+                        pInputText
+                        id="qty"
+                        type="number"
+                        min="1"
+                        formControlName="Quantity"
+                        [pSize]="'small'"
+                        class="text-xs w-44 h-8"
+                        (input)="blockZero($event)"
+                        (keypress)="preventNegative($event)"
+                        (paste)="blockNegativePaste($event)"
+                      />
+                    </p-floatlabel>
+                    <small
+                      *ngIf="
+                        part.get('Quantity')?.invalid &&
+                        part.get('Quantity')?.touched
+                      "
+                      class="text-red-500 text-[10px]"
+                    >
+                      <ng-container
+                        *ngIf="part.get('Quantity')?.errors?.['required']"
+                      >
+                        Quantity is required
+                      </ng-container>
+                      <ng-container
+                        *ngIf="part.get('Quantity')?.errors?.['pattern']"
+                      >
+                        Quantity must contain only numbers (no special
+                        characters)
+                      </ng-container>
+                      <ng-container
+                        *ngIf="part.get('Quantity')?.errors?.['min']"
+                      >
+                        Quantity cannot be negative
+                      </ng-container>
+                    </small>
+                  </div>
+
+                  <div class="flex flex-col h-8 mb-1">
+                    <p-floatlabel variant="on">
+                      <label for="remark-{{ i }}" class="text-[13px]"
+                        >Remark</label
+                      >
+                      <input
+                        pInputText
+                        id="remark"
+                        formControlName="Remark"
+                        [pSize]="'small'"
+                        class="text-xs w-44 h-8"
+                      />
+                    </p-floatlabel>
+                  </div>
+
+                  <p-button
+                    *ngIf="parts.length > 1"
+                    [style]="{ 'background-color': '#008080', color: '#fff' }"
+                    icon="pi pi-trash"
+                    aria-label="Save"
+                    (onClick)="removePart(i)"
+                  />
+                </div>
+              </div>
+
+              <p-button
+                [style]="{ 'background-color': '#008080', color: '#fff' }"
+                icon="pi pi-plus"
+                aria-label="add"
+                (onClick)="addParts()"
+              />
+            </div>
+            <br />
+
+            <div class="flex gap-2">
+              <p-button
+                label="Reset"
+                size="small"
+                icon="pi pi-undo"
+                [style]="{ 'background-color': '#008080', color: '#fff' }"
+                iconPos="right"
+                (onClick)="ResetSingle()"
+              />
+              <p-button
+                label="Save"
+                size="small"
+                (onClick)="OnClickMultiUploadAndSend()"
+                icon="pi pi-check"
+                [style]="{ 'background-color': '#008080', color: '#fff' }"
+                iconPos="right"
+              />
+            </div>
+          </p-tabpanel>
+          <p-tabpanel value="1">
+            <div
+              class="flex gap-4 mb-2 flex-wrap"
+              [formGroup]="CounterSaleFilterDataBulk"
+            >
+              <div class="flex flex-col">
+                <p-floatlabel variant="on">
+                  <p-select
+                    [options]="LocationData"
+                    optionValue="locationid"
+                    optionLabel="location"
+                    formControlName="Location"
+                    class="w-44"
+                    scrollHeight="250px"
+                    [filter]="true"
+                    filterBy="location"
+                    [ngClass]="{
+                      'border border-red-500':
+                        CounterSaleFilterDataBulk.get('Location')?.invalid &&
+                        (CounterSaleFilterDataBulk.get('Location')?.touched ||
+                          CounterSaleFilterDataBulk.get('Location')?.dirty)
+                    }"
+                  ></p-select>
+                  <label for="location" class="text-xs">Locations</label>
+                </p-floatlabel>
+                <div class="h-4">
+                  <span
+                    *ngIf="
+                      CounterSaleFilterDataBulk.get('Location')?.hasError(
+                        'required'
+                      ) &&
+                      (CounterSaleFilterDataBulk.get('Location')?.touched ||
+                        CounterSaleFilterDataBulk.get('Location')?.dirty)
+                    "
+                    class="text-red-500 text-xs"
+                  >
+                    Location is required
+                  </span>
+                </div>
+              </div>
+
+              <!-- Order Type -->
+              <div class="flex flex-col">
+                <p-floatlabel variant="on">
+                  <p-select
+                    formControlName="OrderType"
+                    [options]="OrderTypeData"
+                    optionLabel="Name"
+                    optionValue="Name"
+                    [checkmark]="true"
+                    size="small"
+                    class="w-44"
+                  />
+                  <label for="OrderType" class="text-xs">Order Type *</label>
+                </p-floatlabel>
+                <small
+                  *ngIf="
+                    CounterSaleFilterDataBulk.get('OrderType')?.invalid &&
+                    CounterSaleFilterDataBulk.get('OrderType')?.touched
+                  "
+                  class="text-red-500 text-xs"
+                >
+                  Order Type is required
+                </small>
+              </div>
+            </div>
+
+            <div
+              class="w-full max-w-full flex gap-5 flex-wrap items-center bg-gray-100 p-3 font-medium"
+            >
+              <p-button
+                size="small"
+                icon="pi pi-download"
+                [style]="{ 'background-color': '#008080', color: '#fff' }"
+                (onClick)="CounterSaleBulkUploadSampleExcelDownload()"
+                iconPos="right"
+                class="text-xs"
+              />
+              <p-fileUpload
+                #fu
+                name="excelFile"
+                [multiple]="true"
+                accept=".xlsx,.xls"
+                class="text-xs"
+                [maxFileSize]="1000000"
+                mode="advanced"
+                chooseLabel="Choose"
+                showCancelButton="false"
+                showUploadButton="false"
+                (onSelect)="OnSelectFileBulk($event, fu)"
+                styleClass="w-auto"
+                [customUpload]="true"
+                [chooseStyleClass]="
+                  'w-[84px] bg-teal-600 text-white h-[30px] !text-[12px]'
+                "
+              >
+              </p-fileUpload>
+            </div>
+            <br />
+
+            <div class="flex gap-2">
+              <p-button
+                label="Reset"
+                size="small"
+                icon="pi pi-undo"
+                [style]="{ 'background-color': '#008080', color: '#fff' }"
+                iconPos="right"
+                (onClick)="ResetBulk()"
+              />
+              <p-button
+                label="Save"
+                size="small"
+                (onClick)="OnClickBulkUploadSend()"
+                icon="pi pi-check"
+                [style]="{ 'background-color': '#008080', color: '#fff' }"
+                iconPos="right"
+              />
+            </div>
+          </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
+
+      <br />
+    </div>
+  </div>
+  <br />
+
+  <!-- Table  -->
+  <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
+    <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+      <p-table
+        #dt1
+        [value]="TableViewData"
+        dataKey="PartNumber"
+        [(selection)]="selectedRows"
+        selectionMode="multiple"
+        [scrollable]="true"
+        scrollHeight="450px"
+        [showGridlines]="true"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 30, 50, this.TableViewData.length]"
+        scrollDirection="both"
+        paginatorDropdownAppendTo="body"
+        class="!w-[90vw]"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [globalFilterFields]="[
+          'PartNumber',
+          'Latest',
+          'isSubstitution',
+          'PartDesc',
+          'MOQ',
+          'Qty',
+          'Price',
+          'Stock',
+          'GroupStock',
+          'NonMoving',
+          'OrderType',
+          'OrderValue',
+          'OrderDate',
+          'Remarks'
+        ]"
+      >
+        <ng-template let-item pTemplate="paginatordropdownitem">
+          {{ item.value === TableViewData?.length ? "All" : item.value }}
+        </ng-template>
+
+        <!-- ✅ Caption -->
+        <ng-template pTemplate="caption">
+          <div class="flex items-center">
+            <p-button
+              label="Clear"
+              size="small"
+              [outlined]="true"
+              icon="pi pi-filter-slash"
+              (click)="clear(dt1)"
+            ></p-button>
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                size="small"
+                (input)="onGlobalFilter($event)"
+                placeholder="Search keyword"
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
+        <!-- ✅ Header -->
+        <ng-template pTemplate="header">
+          <tr>
+            <th
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300"
+              style="width: 3rem"
+            >
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300">
+              S.No
+            </th>
+
+            <!-- All your sortable + filterable columns -->
+            <th
+              pSortableColumn="PartNumber"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Part Number
+              <p-sortIcon field="PartNumber" />
+              <p-columnFilter type="text" field="PartNumber" display="menu" />
+            </th>
+
+            <th
+              pSortableColumn="Latest"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Latest Part Number
+              <p-sortIcon field="Latest" />
+              <p-columnFilter type="text" field="Latest" display="menu" />
+            </th>
+
+            <th
+              pSortableColumn="isSubstitution"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Substitution
+              <p-sortIcon field="isSubstitution" />
+              <p-columnFilter
+                type="text"
+                field="isSubstitution"
+                display="menu"
+              />
+            </th>
+
+            <th
+              pSortableColumn="PartDesc"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Part Description
+              <p-sortIcon field="PartDesc" />
+              <p-columnFilter type="text" field="PartDesc" display="menu" />
+            </th>
+
+            <th
+              pSortableColumn="MOQ"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              MOQ
+              <p-sortIcon field="MOQ" />
+              <p-columnFilter type="text" field="MOQ" display="menu" />
+            </th>
+
+            <th
+              pSortableColumn="Qty"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Quantity
+              <p-sortIcon field="Qty" />
+              <p-columnFilter type="text" field="Qty" display="menu" />
+            </th>
+
+            <th
+              pSortableColumn="Price"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Price
+              <p-sortIcon field="Price" />
+              <p-columnFilter type="text" field="Price" display="menu" />
+            </th>
+
+            <th
+              pSortableColumn="Stock"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Stock as on
+              <p-sortIcon field="Stock" />
+              <p-columnFilter type="text" field="Stock" display="menu" />
+            </th>
+
+            <th
+              pSortableColumn="GroupStock"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Group Stock
+              <p-sortIcon field="GroupStock" />
+              <p-columnFilter type="text" field="GroupStock" display="menu" />
+            </th>
+
+            <th
+              pSortableColumn="PartyName"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Party Name
+              <p-sortIcon field="PartyName" />
+              <p-columnFilter type="text" field="PartyName" display="menu" />
+            </th>
+
+            <th
+              pSortableColumn="NonMoving"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Non Moving Check
+              <p-sortIcon field="NonMoving" />
+              <p-columnFilter type="text" field="NonMoving" display="menu" />
+            </th>
+
+            <th
+              pSortableColumn="Advisor"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              OOQ
+              <p-sortIcon field="Advisor" />
+              <p-columnFilter type="text" field="Advisor" display="menu" />
+            </th>
+
+            <th
+              pSortableColumn="OrderType"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Order Type
+              <p-sortIcon field="OrderType" />
+              <p-columnFilter type="text" field="OrderType" display="menu" />
+            </th>
+
+            <th
+              pSortableColumn="OrderValue"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Order Value
+              <p-sortIcon field="OrderValue" />
+              <p-columnFilter type="text" field="OrderValue" display="menu" />
+            </th>
+
+            <th
+              pSortableColumn="OrderDate"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Order Date
+              <p-sortIcon field="OrderDate" />
+              <p-columnFilter type="text" field="OrderDate" display="menu" />
+            </th>
+
+            <th class="!px-1 !py-1 text-[12px] !bg-gray-300">Action</th>
+
+            <th
+              pSortableColumn="Remarks"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Order Remark
+              <p-sortIcon field="Remarks" />
+              <p-columnFilter type="text" field="Remarks" display="menu" />
+            </th>
+          </tr>
+        </ng-template>
+
+        <!-- ✅ Body -->
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+          <tr [pSelectableRow]="rowData" class="hover:bg-gray-100">
+            <td class="p-1 text-center">
+              <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            </td>
+
+            <td class="p-1 text-[12px] text-center">{{ i + 1 }}</td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.PartNumber }}
+            </td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.Latest }}</td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.isSubstitution }}
+            </td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.PartDesc }}</td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.MOQ }}</td>
+
+            <td class="p-1 text-[13px] text-center">
+              <input
+                type="number"
+                [min]="1"
+                max="1000"
+                [minlength]="1"
+                [(ngModel)]="rowData.Qty"
+                (ngModelChange)="updateOrderValue(rowData)"
+                (input)="blockZero($event)"
+                (keypress)="preventNegative($event)"
+                (paste)="blockNegativePaste($event)"
+                class="p-inputtext p-component text-center !text-[13px] w-20 h-7 border border-gray-300 rounded"
+              />
+            </td>
+
+            <td class="p-1 text-[13px] text-center">{{ rowData.Price }}</td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.Stock }}</td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.GroupStock }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.PartyName + " - " + rowData.PartyCode }}
+            </td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.NonMoving }}</td>
+            <td class="p-1 text-[13px] text-center"></td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.OrderType }}</td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.OrderValue | number:'1.2-2' }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.OrderDate | date : "dd-MM-yyyy HH:mm:ss a" : "UTC" }}
+            </td>
+            <td class="p-1 text-[13px] text-center"></td>
+
+            <td class="p-1 text-[13px] text-center">
+              <input
+                type="text"
+                [(ngModel)]="rowData.Remarks"
+                class="p-inputtext p-component text-center !text-[13px] w-20 h-7 border border-gray-300 rounded"
+              />
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <div class="flex m-4 p-3 justify-center items-center">
+    <p-button
+      size="small"
+      icon="pi pi-send"
+      label="Send Request"
+      [disabled]="selectedRows.length < 0"
+      [raised]="true"
+      severity="info"
+      (onClick)="SendOrderRequestData()"
+      class="ml-2"
+    />
+  </div>
+</div>
+
+<p-dialog
+  header="⚠️ Important Info"
+  [modal]="true"
+  [style]="{ width: '30rem' }"
+  [closable]="false"
+  [visible]="VisibleNotInMaster"
+>
+  <div class="flex justify-between items-center mb-4">
+    <span class="text-gray-500 text-sm">
+      The following parts are
+      <span class="font-semibold text-teal-500">not available in Master</span>:
+    </span>
+    <p-button
+      icon="pi pi-download"
+      [size]="'small'"
+      [rounded]="true"
+      [text]="true"
+      [raised]="true"
+      class="!text-blue-600 hover:!bg-blue-50 transition-colors"
+    />
+  </div>
+
+  <!-- Content Box (scrollable if long list) -->
+  <div
+    class="bg-teal-50 border-l-4 border-teal-400 rounded-md p-4 mb-6 shadow-sm max-h-40 overflow-y-auto"
+  >
+    <h4 class="text-sm font-semibold text-gray-700 mb-2">Part Numbers:</h4>
+    <p class="text-gray-800 text-base leading-relaxed">
+      <ng-container *ngFor="let part of NotInMasterPartNumber; let i = index">
+        {{ part }}<span *ngIf="i < NotInMasterPartNumber.length - 1">, </span>
+      </ng-container>
+    </p>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex justify-end gap-3 mt-6">
+    <p-button
+      label="Fill Details"
+      icon="pi pi-align-left"
+      size="small"
+      class="!bg-blue-600 !border-blue-600 !rounded-lg !shadow-sm hover:!bg-blue-700 hover:!shadow-md transition-all"
+      (click)="VisibleNotInMaster = false"
+    />
+  </div>
+</p-dialog>
+
+<p-dialog
+  header="Message"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="text-lg">
+    {{ Result }}
+  </p>
+  <div
+    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+    *ngIf="showErrorsTable"
+  >
+    <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+      <p-table
+        [scrollable]="true"
+        scrollHeight="600px"
+        [value]="errorViewData"
+        [showGridlines]="true"
+        class="!w-[90vw]"
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th
+              class="!px-1 flex-auto !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px] !min-h-[22px]"
+            >
+              S.No
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Part Number
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Quantity
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Remark
+            </th>
+
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Party Name
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+          <tr
+            class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+          >
+            <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.PartNumber }}
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.Qty }}
+            </td>
+
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.Remarks }}
+            </td>
+
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.PartyName }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</p-dialog>

@@ -25,11 +25,11 @@ export class DealervonserviceService {
 // brandID: any = 9
 // locationid: any = 14
 // usertype: any = "U"
-// setLocalStorage(){
-//   localStorage.setItem('dealerid',this.dealerId);
-//   localStorage.setItem('brandid',this.brandID)
-//   localStorage.setItem('usertype',this.usertype)
-//   localStorage.setItem('locationid',this.locationid)
+// setsessionStorage(){
+//   sessionStorage.setItem('dealerid',this.dealerId);
+//   sessionStorage.setItem('brandid',this.brandID)
+//   sessionStorage.setItem('usertype',this.usertype)
+//   sessionStorage.setItem('locationid',this.locationid)
 // }
 constructor(private http: HttpClient) { }
 

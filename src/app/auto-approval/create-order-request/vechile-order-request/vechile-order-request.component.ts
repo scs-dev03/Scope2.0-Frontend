@@ -7,6 +7,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { PaginatorState } from 'primeng/paginator';
+import { CreateOrderViewServiceService } from '../../../services/Auto-Approvals/create-order-view-service.service';
 
 
 @Component({
@@ -17,17 +18,16 @@ import { PaginatorState } from 'primeng/paginator';
 })
 export class VechileOrderRequestComponent {
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     this.addPart()
   }
+
 
   AddPartWise: FormGroup
   VechileOrderRequestInput: FormGroup
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private createorderviewservice: CreateOrderViewServiceService) {
     this.AddPartWise = this.fb.group({
-      parts: this.fb.array([]) // FormArray to hold each part form group
+      parts: this.fb.array([]) 
     });
 
     this.VechileOrderRequestInput = this.fb.group({
@@ -62,15 +62,17 @@ export class VechileOrderRequestComponent {
 
     const Data = [
       {
-        'Vehicle_Number': '',
-        'Vehicle_Model': '',
-        'Job_Card_Number': '',
-        'Advisor': '',
-        'JOb_Card_Type': '',
-        'Order_Type': '',
-        'Part_Number': '',
-        'Quantity': '',
-        'Remark': ''
+        'VehicleNumber': '',
+        'VehicleModel': '',
+        'JobCardNumber': '',
+        'JobType': '',
+        'OrderType': '',
+        'PartNumber': '',
+        'Qty': '',
+        'Remarks': '',
+        'AdvanceValue': '',
+        'Estimate': '',
+        'Advisor': ''
 
       }
     ];
@@ -180,6 +182,25 @@ tableColumns = [
 // Initially all columns selected
 selectedColumns: string[] = this.tableColumns.map(c => c.field);
 
+
+onUploadExcel(event: any) {
+  const formData = new FormData();
+  formData.append('file', event.files[0]);
+  formData.append('userId', sessionStorage.getItem('userid') || '');
+  formData.append('LocationId', sessionStorage.getItem('headerlocation') || '');
+
+
+
+  // Backend call
+  this.createorderviewservice.BulkUploadVehicle(formData).subscribe({
+    next: (res) => {
+      console.log("Upload Success", res);
+    },
+    error: (err) => {
+      console.error("Upload Failed", err);
+    }
+  });
+}
 
 
 }

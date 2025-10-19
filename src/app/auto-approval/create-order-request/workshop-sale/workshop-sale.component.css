@@ -1,0 +1,31 @@
+::ng-deep .p-paginator {
+  border: 0 none;
+  padding: 1em;
+  .p-dropdown {
+    float: left;
+    .p-dropdown-panel {
+      ul {
+        p-dropdownItem:last-child > li {
+          &:last-child {
+            span::before {
+              content: "All";
+              visibility: visible;
+            }
+
+            span::after {
+              content: "";
+            }
+
+            span {
+              visibility: hidden;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .p-paginator-current {
+    float: right;
+  }
+}

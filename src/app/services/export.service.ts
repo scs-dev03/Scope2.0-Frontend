@@ -11,10 +11,6 @@ export class ExportService {
   private url:any=environment.apiUrl;
   constructor(private http:HttpClient) { }
 
-  // exportExcel(sheet1Data: any[], sheet2Data: any[],sheet3Data:any[]): Observable<Blob> {
-  //   const body = { sheet1Data, sheet2Data,sheet3Data };
-  //   return this.http.post(`${this.url}leadtime/export-multi`, body, { responseType: 'blob' });
-  // }
 
   exportExcel(data:any): Observable<any> {
     return this.http.post(`${this.url}leadtime/export-multi`,data, { responseType: 'blob' });

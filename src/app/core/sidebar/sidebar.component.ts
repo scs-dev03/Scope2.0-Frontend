@@ -159,7 +159,7 @@ filterItems() {
  
    
   ]
-  this.userName=localStorage.getItem('username');
+  this.userName=sessionStorage.getItem('username');
   
   this.sharedService.sidebarData
   .pipe(take(2))// ensure it only runs once
@@ -194,23 +194,23 @@ resetSidebarState(){
 
 logOut(){
  
- // localStorage.setItem('usertype','d')
- //console.log(localStorage.getItem('usertype')=='A')
-  if(localStorage.getItem('usertype')=='A')
+ // sessionStorage.setItem('usertype','d')
+ //console.log(sessionStorage.getItem('usertype')=='A')
+  if(sessionStorage.getItem('usertype')=='A')
   {
 window.location.href = environment.frontendAdminUrl;
   }else{
     
     window.location.href = environment.frontendUserUrl;
   }
-   localStorage.clear();
+   sessionStorage.clear();
    sessionStorage.clear();
 }
 
 getModulesOnTrigger(){
   this.globalBlockUiService.startLoading();
   this.sidebarService.getModules().subscribe((res:any)=>{
-   this.userName=localStorage.getItem('username');
+   this.userName=sessionStorage.getItem('username');
 // const cleaned = this.transformSidebarData(data);  // this will be dense, clean
 this.sidebarItems = res.data.modules;
  if(res.data.profile==null|| res.data.profile==''){

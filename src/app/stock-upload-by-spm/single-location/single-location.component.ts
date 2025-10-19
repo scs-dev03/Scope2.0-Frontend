@@ -70,7 +70,7 @@ export class SingleLocationComponent {
  
   ngOnInit(){
   //  this.getLocations();
-  this.dealerId=localStorage.getItem('dealerid');
+  this.dealerId=sessionStorage.getItem('dealerid');
  // this.dealerId=20210;
   //this.dealerId=20482;
   // this.getBrands();  
@@ -78,7 +78,7 @@ export class SingleLocationComponent {
     this.users=res;
    })
 
-   this.userId=localStorage.getItem('userid');
+   this.userId=sessionStorage.getItem('userid');
     
    this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible

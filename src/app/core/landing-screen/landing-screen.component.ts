@@ -17,7 +17,7 @@ export class LandingScreenComponent {
     private router: Router, private homepageservice: HomePageService, private sidebarService: SidebarService,
     private utilitiesService: UtilitiesService, private sharedService: SharedServiceService) {
 
-    // localStorage.clear();
+    // sessionStorage.clear();
   }
   usertoken: any
   usertype: any
@@ -34,82 +34,65 @@ export class LandingScreenComponent {
     });
 
     if (this.usertype === 'd') {
-      localStorage.setItem('usertype', 'U')
-      // console.log(localStorage.getItem('usertype'));
-    }
-    else if (this.usertype == 'a') {
-      localStorage.setItem('usertype', 'A')
-      // console.log(localStorage.getItem('usertype'));
+      sessionStorage.setItem('usertype', 'U')
+      // console.log(sessionStorage.getItem('usertype'));
     }
 
-    // console.log('User Token in ngoinint :', this.usertoken);
-    // console.log('User Type  in ngoinint :  ',this.usertype);
-
-    localStorage.setItem('usertoken', this.usertoken)
-    localStorage.setItem('userType', this.usertype)
-    //  console.log("token is ",this.usertoken);
+    sessionStorage.setItem('usertoken', this.usertoken)
+    sessionStorage.setItem('userType', this.usertype)
 
     this.fetchUserinfo(this.usertype)
-    // this.getUserId();
+
 
 
   }
 
   getUserId() {
-
     this.utilitiesService.getUserInfo({ token: this.usertoken }).subscribe((res: any) => {
 
-      localStorage.setItem('userid', res?.data[0]?.userId);
-      localStorage.setItem('username', res.data[0]?.username)
+      sessionStorage.setItem('userid', res?.data[0]?.userId);
+      sessionStorage.setItem('username', res.data[0]?.username)
       this.getModules();
     })
   }
 
 
   fetchUserinfo(usertype: any) {
-    // console.log('fetch method',usertoken);
-    // console.log('fetch method',usertype);
-
-    this.isloading = true;
-    //localStorage.setItem('token','0x020000002EB14F6A0A250DB388BEDD446A7DB9BBADD863F6293CC693258A5A69E6D8FBC7')
-    //let usertoken1='0x0200000046E3737AED5FE0B13F2E6D0710BC96ABB705BA29736DDB3ADE3CBC2F7260C908'
-    // let usertype1='U'
     let usertoken1 = this.usertoken
+    this.isloading = true;
 
     this.homepageservice.getuserinfo({ token: usertoken1, usertype: usertype }).subscribe({
       next: (res: any) => {
-        //  console.log(res.Data);
-        //  localStorage.setItem('userId',res.Data[0].userId);
-        if (usertype == 'd') {
-          localStorage.setItem('brandid', res.Data[0].BrandID);
-          localStorage.setItem('userid', res.Data[0].bintid_pk);
-          localStorage.setItem('dealerid', res.Data[0].dealerid);
-          localStorage.setItem('username', res.Data[0].username);
-          localStorage.setItem('def_location', res.Data[0].locationid)
-          localStorage.setItem('userid', res?.Data[0]?.userId);
 
+
+        if (res?.Data?.length > 0) {
+          const user = res.Data[0];
+          console.log(" this is user ", user);
+
+
+          sessionStorage.setItem('brandid', user.BrandID ?? '');
+          sessionStorage.setItem('userid', user.userId );
+          sessionStorage.setItem('dealerid', user.dealerid ?? '');
+          sessionStorage.setItem('username', user.username ?? '');
+          sessionStorage.setItem('def_location', user.locationid ?? '');
+          sessionStorage.setItem('headerlocation', user.locationid ?? '');
+          sessionStorage.setItem('locationData', JSON.stringify(res.Data));
+
+         // this.getUserId();
+          this.getModules();
+          this.goToHomePage();
+        } else {
+          alert('No user data found.');
         }
-
-
-        this.isloading = false;
-
-
-        // this.getUserId();
-        this.getModules();
-        this.goToHomePage();
-
       },
       error: (err) => {
         //  console.error('Error fetching user info:', err);
         this.isloading = false;
-
         // Optional: show user-friendly message
         alert('Something went wrong while fetching user info. Please try again.');
-
         // You could also use a snackbar/toast service instead of alert
       }
     });
-
 
   }
 
@@ -178,6 +161,9 @@ export class LandingScreenComponent {
   }
 
   goToHomePage() {
+
+    console.log("navigating to home page");
+
 
     this.router.navigate(['core/home']
       //   {

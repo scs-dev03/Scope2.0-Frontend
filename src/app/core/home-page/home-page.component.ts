@@ -25,17 +25,17 @@ export class HomePageComponent {
 
   private subscription!: Subscription;
   ngOnInit(): void {
-    //localStorage.setItem('dealerid', '8');
+    //sessionStorage.setItem('dealerid', '8');
     this.globalBlockUiService.startLoading();
 
-    this.fetchUserinfo(localStorage.getItem('usertoken'), localStorage.getItem('usertype'));
+    this.fetchUserinfo(sessionStorage.getItem('usertoken'), sessionStorage.getItem('usertype'));
 
     this.fetchCardsData(
-      localStorage.getItem('def_location'),
-      localStorage.getItem('dealerid')
+      sessionStorage.getItem('def_location'),
+      sessionStorage.getItem('dealerid')
     );
     // this.homeData.patchValue({
-    //   locationId: localStorage.getItem('def_location')
+    //   locationId: sessionStorage.getItem('def_location')
     // });
 
     //console.log("init called ");
@@ -44,10 +44,10 @@ export class HomePageComponent {
       this.locationId = locationId;
       this.fetchCardsData(
         this.locationId,
-        localStorage.getItem('dealerid')
+        sessionStorage.getItem('dealerid')
       );
     })
-    this.locationId = localStorage.getItem('def_location');
+    this.locationId = sessionStorage.getItem('def_location');
     console.log("locationis ", this.locationId)
     this.homeData.patchValue({
       locationId: this.locationId
@@ -80,15 +80,14 @@ export class HomePageComponent {
 
 
   async fetchUserinfo(usertoken: any, usertype: any) {
+   
     this.globalBlockUiService.startLoading();
-    this.globalBlockUiService.startLoading();
-    //   usertoken='0x0200000046E3737AED5FE0B13F2E6D0710BC96ABB705BA29736DDB3ADE3CBC2F7260C908'
     await this.homepageservice
       .getuserinfo({ token: usertoken, usertype: 'U' })
       .subscribe({
         next: (res: any) => {
           this.userInfo = res.Data;
-          localStorage.setItem('def_location', res.Data[0]?.locationid);
+          sessionStorage.setItem('def_location', res.Data[0]?.locationid);
 
           //console.log(this.userInfo);
           this.filteredLocationData = this.userInfo.map((item: any) => ({
@@ -98,10 +97,9 @@ export class HomePageComponent {
 
           this.sharedService.updateModuleName('Home Page')
           this.sharedService.updateHomePageData(this.filteredLocationData)
+          sessionStorage.setItem('locationData', JSON.stringify(this.filteredLocationData));
 
-          this.locationId = localStorage.getItem('def_location')
-          // console.log("location is imn 98 ",this.locationId) 
-          //console.log(this.filteredLocationData);
+          this.locationId = sessionStorage.getItem('def_location')
           this.globalBlockUiService.stopLoading();
         },
         error: (err) => {
@@ -125,11 +123,11 @@ export class HomePageComponent {
 
     // this.fetchCardsData(
     //   this.homeData.value.locationId,
-    //   localStorage.getItem('dealerid')
+    //   sessionStorage.getItem('dealerid')
     // );
     //  this.fetchCardsData(
     //   this.locationId,
-    //   localStorage.getItem('dealerid')
+    //   sessionStorage.getItem('dealerid')
     // );
   }
 
@@ -140,161 +138,172 @@ export class HomePageComponent {
   chart2: any
 
   fetchCardsData(locationId: any, dealerid: any) {
-  this.globalBlockUiService.startLoading();
+    this.globalBlockUiService.startLoading();
 
-  this.homepageservice
-    .getcardsdata({ locationId, dealerid })
-    .subscribe({
-      next: (res: any) => {
-        this.CardsData = res;
-        //console.log('raw API response:', this.CardsData);
+    this.homepageservice
+      .getcardsdata({ locationId, dealerid })
+      .subscribe({
+        next: (res: any) => {
+          this.CardsData = res;
+          //console.log('raw API response:', this.CardsData);
 
-        // stop the loader as soon as possible
-        this.globalBlockUiService.stopLoading();
+          // stop the loader as soon as possible
+          this.globalBlockUiService.stopLoading();
 
-        // 1) Pie chart data
-        this.StockValue    = res.SNStockValue[0]?.StockableValue  || 0;
-        this.NonStockValue = res.SNStockValue[0]?.NonStockableValue || 0;
+          // 1) Pie chart data
+          this.StockValue = res.SNStockValue[0]?.StockableValue || 0;
+          this.NonStockValue = res.SNStockValue[0]?.NonStockableValue || 0;
 
-        this.chart1 = {
-          color: ['#34D399', '#EF4444'],
-          tooltip: {
-            trigger: 'item',
-            backgroundColor: 'rgba(0,0,0,0.75)',
-            padding: 4,
-            textStyle: { fontSize: 12, color: '#e8c200' },
-            formatter: '{b}: {c}\n{d}%'
-          },
-          legend: {
-            bottom: '2%',
-            left: 'center',
-            icon: 'circle',
-            itemWidth: 10,
-            itemHeight: 10,
-            textStyle: { fontSize: 12, color: '#A9A9A9' }
-          },
-          series: [{
-            name: 'Stock Type',
-            type: 'pie',
-            radius: ['40%', '70%'],
-            center: ['50%', '40%'],
-            avoidLabelOverlap: true,
-            label: {
-              show: true,
-              position: 'inside',
-              formatter: '{d}%',
-              fontSize: 14,
-              fontWeight: 'bold',
-              color: '#A9A9A9'
+          const saleValues = res.SixMonthSaleValue[0];
+
+          // Step 2: Sabhi values ko ek array me le lo
+          const values = Object.values(saleValues) as number[];;
+          // console.log("values ", values);
+          
+
+          // Step 3: Min aur Max nikal lo
+          const minValue = Math.min(...values);
+          const maxValue = Math.ceil(Math.max(...values));
+
+          this.chart1 = {
+            color: ['#34D399', '#EF4444'],
+            tooltip: {
+              trigger: 'item',
+              backgroundColor: 'rgba(0,0,0,0.75)',
+              padding: 4,
+              textStyle: { fontSize: 12, color: '#e8c200' },
+              formatter: '{b}: {c}\n{d}%'
             },
-            labelLine: { show: false },
-            emphasis: {
-              scale: true,
-              scaleSize: 8,
-              label: { show: true, fontSize: 16, fontWeight: 'bold', color: '#fff' }
+            legend: {
+              bottom: '2%',
+              left: 'center',
+              icon: 'circle',
+              itemWidth: 10,
+              itemHeight: 10,
+              textStyle: { fontSize: 12, color: '#A9A9A9' }
             },
-            data: [
-              { value: this.StockValue,    name: 'Stockable' },
-              { value: this.NonStockValue, name: 'Non-Stockable' }
+            series: [{
+              name: 'Stock Type',
+              type: 'pie',
+              radius: ['40%', '70%'],
+              center: ['50%', '40%'],
+              avoidLabelOverlap: true,
+              label: {
+                show: true,
+                position: 'inside',
+                formatter: '{d}%',
+                fontSize: 14,
+                fontWeight: 'bold',
+                color: '#A9A9A9'
+              },
+              labelLine: { show: false },
+              emphasis: {
+                scale: true,
+                scaleSize: 8,
+                label: { show: true, fontSize: 16, fontWeight: 'bold', color: '#fff' }
+              },
+              data: [
+                { value: this.StockValue, name: 'Stockable' },
+                { value: this.NonStockValue, name: 'Non-Stockable' }
+              ]
+            }]
+          };
+
+          // 2) reset & transform your 6-month arrays
+          this.month = [];
+          this.ws = [];
+          this.cs = [];
+          this.p = [];
+
+          this.transformSixMonthData(res.SixMonthSaleValue[0]);
+          // at this point:
+          //   this.month = ["Nov '24", ..., "Apr '25"]
+          //   this.ws, this.cs, this.p are all length-matched arrays
+
+          // 3) Bar+line chart configuration
+          this.chart2 = {
+            color: ['#4F46E5', '#10B981', '#F59E0B'],
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            legend: {
+              itemGap: 10,
+              textStyle: { fontSize: 12, color: '#4B5563' },
+              data: ['Workshop Sale', 'Counter Sale', 'Purchase']
+            },
+            grid: {
+              top: '20%', left: '5%', right: '5%', bottom: '0%',
+              containLabel: true
+            },
+            xAxis: {
+              type: 'category',
+              data: this.month,
+              axisLine: { lineStyle: { color: '#E5E7EB' } },
+              axisTick: { show: false },
+              axisLabel: { color: '#6B7280', fontSize: 12, rotate: 30 }
+            },
+            yAxis: [
+              {
+                type: 'value',
+                name: 'Sale',
+                nameLocation: 'middle',
+                nameRotate: 90,
+                nameGap: 25,
+                nameTextStyle: { fontSize: 12, color: '#4B5563' },
+               min: minValue, max: maxValue, interval: Math.ceil((maxValue - minValue) / 5),
+                axisLine: { lineStyle: { color: '#E5E7EB' } },
+                splitLine: { lineStyle: { type: 'dashed', color: '#F3F4F6' } },
+                axisLabel: { color: '#6B7280', fontSize: 12 }
+              },
+              {
+                type: 'value',
+                name: 'Purchase',
+                nameLocation: 'middle',
+                nameRotate: 90,
+                nameGap: 25,
+                nameTextStyle: { fontSize: 12, color: '#4B5563' },
+                position: 'right',
+                min: minValue, max: maxValue, interval: Math.ceil((maxValue - minValue) / 5),
+                axisLine: { lineStyle: { color: '#E5E7EB' } },
+                splitLine: { show: false },
+                axisLabel: { color: '#6B7280', fontSize: 12 }
+              }
+            ],
+            series: [
+              {
+                name: 'Workshop Sale',
+                type: 'bar',
+                barWidth: '28%',
+                itemStyle: { borderRadius: [4, 4, 0, 0] },
+                emphasis: { focus: 'series' },
+                data: this.ws
+              },
+              {
+                name: 'Counter Sale',
+                type: 'bar',
+                barWidth: '28%',
+                itemStyle: { borderRadius: [4, 4, 0, 0] },
+                emphasis: { focus: 'series' },
+                data: this.cs
+              },
+              {
+                name: 'Purchase',
+                type: 'line',
+                yAxisIndex: 1,
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 8,
+                lineStyle: { width: 3 },
+                emphasis: { focus: 'series' },
+                data: this.p
+              }
             ]
-          }]
-        };
-
-        // 2) reset & transform your 6-month arrays
-        this.month = [];
-        this.ws    = [];
-        this.cs    = [];
-        this.p     = [];
-
-        this.transformSixMonthData(res.SixMonthSaleValue[0]);
-        // at this point:
-        //   this.month = ["Nov '24", ..., "Apr '25"]
-        //   this.ws, this.cs, this.p are all length-matched arrays
-
-        // 3) Bar+line chart configuration
-        this.chart2 = {
-          color: ['#4F46E5', '#10B981', '#F59E0B'],
-          tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-          legend: {
-            itemGap: 10,
-            textStyle: { fontSize: 12, color: '#4B5563' },
-            data: ['Workshop Sale', 'Counter Sale', 'Purchase']
-          },
-          grid: {
-            top: '20%', left: '5%', right: '5%', bottom: '0%',
-            containLabel: true
-          },
-          xAxis: {
-            type: 'category',
-            data: this.month,
-            axisLine: { lineStyle: { color: '#E5E7EB' } },
-            axisTick: { show: false },
-            axisLabel: { color: '#6B7280', fontSize: 12, rotate: 30 }
-          },
-          yAxis: [
-            {
-              type: 'value',
-              name: 'Sale',
-              nameLocation: 'middle',
-              nameRotate: 90,
-              nameGap: 35,
-              nameTextStyle: { fontSize: 12, color: '#4B5563' },
-              min: 0, max: 250, interval: 50,
-              axisLine: { lineStyle: { color: '#E5E7EB' } },
-              splitLine: { lineStyle: { type: 'dashed', color: '#F3F4F6' } },
-              axisLabel: { color: '#6B7280', fontSize: 12 }
-            },
-            {
-              type: 'value',
-              name: 'Purchase',
-              nameLocation: 'middle',
-              nameRotate: 90,
-              nameGap: 35,
-              nameTextStyle: { fontSize: 12, color: '#4B5563' },
-              position: 'right',
-              min: 0, max: 250, interval: 50,
-              axisLine: { lineStyle: { color: '#E5E7EB' } },
-              splitLine: { show: false },
-              axisLabel: { color: '#6B7280', fontSize: 12 }
-            }
-          ],
-          series: [
-            {
-              name: 'Workshop Sale',
-              type: 'bar',
-              barWidth: '28%',
-              itemStyle: { borderRadius: [4, 4, 0, 0] },
-              emphasis: { focus: 'series' },
-              data: this.ws
-            },
-            {
-              name: 'Counter Sale',
-              type: 'bar',
-              barWidth: '28%',
-              itemStyle: { borderRadius: [4, 4, 0, 0] },
-              emphasis: { focus: 'series' },
-              data: this.cs
-            },
-            {
-              name: 'Purchase',
-              type: 'line',
-              yAxisIndex: 1,
-              smooth: true,
-              symbol: 'circle',
-              symbolSize: 8,
-              lineStyle: { width: 3 },
-              emphasis: { focus: 'series' },
-              data: this.p
-            }
-          ]
-        };
-      },
-      error: (err: any) => {
-        console.error('Error fetching cards data:', err);
-        this.globalBlockUiService.stopLoading();
-      },
-    });
-}
+          };
+        },
+        error: (err: any) => {
+          console.error('Error fetching cards data:', err);
+          this.globalBlockUiService.stopLoading();
+        },
+      });
+  }
 
   month: string[] = [];
   ws: number[] = [];
@@ -308,20 +317,20 @@ export class HomePageComponent {
       const m = rx.exec(key);
       if (!m) return;
 
-      const monthKey = m[1];   
-      const type = m[2];   
+      const monthKey = m[1];
+      const type = m[2];
       const num = value;
 
-      
+
       const [mon, yr] = monthKey.split('_');
       const label = `${mon} '${yr}`;
 
-      
+
       if (!this.month.includes(label)) {
         this.month.push(label);
       }
 
-     
+
       if (type === 'WS') {
         this.ws.push(num);
       } else if (type === 'CS') {

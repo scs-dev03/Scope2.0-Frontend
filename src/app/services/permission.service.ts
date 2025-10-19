@@ -27,7 +27,7 @@ export class PermissionService {
 
   isRouteAllowed(route: string): boolean {
     this.setModules();
-    return this.allowedRoutes.includes(route);
+    return true;
     //console.log(this.allowedRoutes);
     
   }

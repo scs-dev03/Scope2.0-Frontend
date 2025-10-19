@@ -5,39 +5,88 @@
     <div
       class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-5 shadow-lg border-dashed border-2 bg-white rounded-md border-white"
     >
-      <div class="flex flex-col w-44">
-        <label for="partyname" class="text-sm">Add Party Name :</label>
-        <input
-          pInputText
-          id="partyname"
-          class="text-xs h-8"
-          [placeholder]="'Add Name Here'"
-          aria-describedby="username-help"
-          [(ngModel)]="PartyName"
-        />
-      </div>
-      <div class="flex flex-col w-44">
-        <label for="partycode" class="text-sm">Add Party Code :</label>
-        <input
-          pInputText
-          id="partycode"
-          class="text-xs h-8"
-          [placeholder]="'Add Name Here'"
-          aria-describedby="username-help"
-          [(ngModel)]="PartyCode"
-        />
-      </div>
+      <form #partyForm="ngForm" class="flex flex-wrap items-start gap-6">
+        <!-- Party Name -->
+        <div class="flex flex-col">
+          <p-floatlabel variant="on">
+            <label for="partyname" class="text-[12px]">Add Party Name</label>
+            <input
+              pInputText
+              id="partyname"
+              name="partyname"
+              class="text-xs w-44 h-8"
+              [(ngModel)]="PartyName"
+              #partyname="ngModel"
+              (ngModelChange)="validateFields()"
+            />
+          </p-floatlabel>
+        </div>
+
+        <span class="text-xs mt-2">Or</span>
+
+        <div class="flex flex-col">
+          <p-floatlabel variant="on">
+            <label for="partycode" class="text-[12px]">Add Party Code</label>
+            <input
+              pInputText
+              id="partycode"
+              name="partycode"
+              class="text-xs w-44 h-8"
+              [(ngModel)]="PartyCode"
+              #partycode="ngModel"
+              (ngModelChange)="validateFields()"
+            />
+          </p-floatlabel>
+        </div>
+
+        <!-- Location -->
+        <form #myForm="ngForm" class="flex gap-2">
+          <div class="flex flex-col">
+            <p-floatlabel variant="on">
+              <p-select
+                [(ngModel)]="location"
+                name="location"
+                [options]="LocationData"
+                optionValue="locationid"
+                optionLabel="location"
+                class="w-44 !h-8"
+                scrollHeight="250px"
+                [filter]="true"
+                filterBy="location"
+                #locationCtrl="ngModel"
+                required
+              ></p-select>
+              <label for="location" class="text-[12px]">Locations</label>
+            </p-floatlabel>
+            <div class="h-4">
+              <span
+                *ngIf="
+                  locationCtrl.invalid &&
+                  (locationCtrl.dirty || locationCtrl.touched)
+                "
+                class="text-red-500 text-xs"
+              >
+                This field is required
+              </span>
+            </div>
+          </div>
+          <div>
+            <button
+              pButton
+              type="submit"
+              label="Save"
+              size="small"
+              icon="pi pi-check"
+              class="h-8 w-24"
+              (click)="OnClickSaveParty(myForm)"
+            ></button>
+          </div>
+        </form>
+
+        <!-- Submit Button -->
+      </form>
 
       <div class="flex items-end gap-3 flex-wrap w-auto justify-center">
-        <p-button
-          label="Save"
-          size="small"
-          icon="pi pi-check"
-          [style]="{ 'background-color': '#008080', color: '#fff' }"
-          iconPos="right"
-          class="text-xs"
-          (onClick)="onclickSave()"
-        />
         <p-button
           label="View Table"
           size="small"
@@ -62,15 +111,16 @@
           mode="basic"
           chooseLabel="Choose"
           chooseIcon="pi pi-upload"
-          name="demo[]"
-          accept=".xls,.xlsx" 
+          accept=".xls,.xlsx"
           maxFileSize="1000000"
-          (onSelect)="onFileSelect($event,fu)"
-          
+          (onSelect)="onFileSelect($event, fu)"
         />
-        <p-button label="Upload" size="small"  severity="secondary" />
-
-        
+        <p-button
+          label="Upload"
+          size="small"
+          severity="secondary"
+          (onClick)="UploadExcel()"
+        />
       </div>
     </div>
   </div>
@@ -80,31 +130,77 @@
   >
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
+        #dt1
         [scrollable]="true"
-        scrollHeight="600px"
+        scrollHeight="450px"
+        [value]="PartyViewData"
         [showGridlines]="true"
+        [paginator]="true"
+        [globalFilterFields]="['PartyName', 'PartyCode', 'CreatedAt']"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 30, 50, this.PartyViewData.length]"
         scrollDirection="both"
         paginatorDropdownAppendTo="body"
         class="!w-[90vw]"
         [tableStyle]="{ 'min-width': '50rem' }"
       >
-        <ng-template #header>
-          <tr class="">
+        <ng-template let-item pTemplate="paginatordropdownitem">
+          {{ item.value === PartyViewData?.length ? "All" : item.value }}
+        </ng-template>
+
+        <ng-template #caption>
+          <div class="flex">
+            <p-button
+              label="Clear"
+              size="small"
+              [outlined]="true"
+              icon="pi pi-filter-slash"
+              (click)="clear(dt1)"
+            />
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                size="small"
+                (input)="onGlobalFilter($event)"
+                placeholder="Search keyword"
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
             <th
               class="!px-1 flex-auto !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px] !min-h-[22px]"
             >
               S.No
             </th>
             <th
+              pSortableColumn="PartyName"
               class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
             >
               Party Name
-              <p-columnFilter type="text" field="" display="menu" />
+              <p-columnFilter type="text" field="PartyName" display="menu" />
+              <p-sortIcon field="PartyName" />
             </th>
             <th
+              pSortableColumn="PartyCode"
               class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
             >
               Party Code
+              <p-columnFilter type="text" field="PartyCode" display="menu" />
+              <p-sortIcon field="PartyCode" />
+            </th>
+            <th
+              pSortableColumn="CreatedAt"
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+            >
+              Created On
+              <p-columnFilter type="text" field="CreatedAt" display="menu" />
+              <p-sortIcon field="CreatedAt" />
             </th>
             <th
               class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
@@ -119,7 +215,7 @@
           </tr>
         </ng-template>
 
-        <ng-template #body let-rowData let-i="rowIndex">
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
           <tr
             class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
           >
@@ -127,20 +223,177 @@
             <td
               class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
             >
-              {{ rowData.Dashboard }}
+              {{ rowData.PartyName }}
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.PartyCode }}
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.CreatedAt | date : "dd-MM-yyyy hh:mm:ss a" : "UTC" }}
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              <p-toggleswitch
+                [(ngModel)]="rowData.Status"
+                (onChange)="onStatusChangeOfParty(rowData)"
+              />
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              <p-button
+                icon="pi pi-pencil"
+                size="small"
+                severity="success"
+                (click)="OnClickUpdatePartyInfo(rowData)"
+              ></p-button>
             </td>
           </tr>
         </ng-template>
       </p-table>
-      <p-paginator
-        class="h-6 text-sm"
-        (onPageChange)="onPageChange($event)"
-        [first]="first"
-        [rows]="rows"
-        [appendTo]="body"
-        [totalRecords]="120"
-        [rowsPerPageOptions]="[10, 20, 30]"
-      />
     </div>
   </div>
 </div>
+
+<p-dialog
+  header="Message"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="text-lg">
+    {{ Result }}
+  </p>
+
+  <div
+    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+    *ngIf="showErrorsTable"
+  >
+    <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+      <p-table
+        [scrollable]="true"
+        scrollHeight="600px"
+        [value]="errorViewData"
+        [showGridlines]="true"
+        class="!w-[90vw]"
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th
+              class="!px-1 flex-auto !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px] !min-h-[22px]"
+            >
+              S.No
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Party Name
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Party Code
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Conflict
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+          <tr
+            class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+          >
+            <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.PartyName }}
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.PartyCode }}
+            </td>
+
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.conflictBy }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+  header="Edit Party"
+  [(visible)]="editDialogVisible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '40vw', height: '50vh' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="flex mt-10 gap-3 justify-center items-center">
+    <p-floatlabel variant="on">
+      <label for="partyname" class="text-[13px]">Add Party Name</label>
+      <input
+        pInputText
+        id="partyname"
+        name="partyname"
+        class="text-xs w-44 h-8"
+        [(ngModel)]="editParty.partyName"
+        #partyname="ngModel"
+        (ngModelChange)="validateFields()"
+      />
+    </p-floatlabel>
+
+    <span class="text-xs mt-2">Or</span>
+
+    <p-floatlabel variant="on">
+      <label for="partyname" class="text-[13px]">Add Party Code</label>
+      <input
+        pInputText
+        id="partyname"
+        name="partyname"
+        class="text-xs w-44 h-8"
+        [(ngModel)]="editParty.partyCode"
+        #partyname="ngModel"
+        (ngModelChange)="validateFields()"
+      />
+    </p-floatlabel>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2">
+      <button
+        pButton
+        size="small"
+        label="Cancel"
+        class="p-button-text"
+        (click)="onCancelEdit()"
+      ></button>
+      <button
+        pButton
+        size="small"
+        label="Save"
+        icon="pi pi-check"
+        (click)="updatePartyInfo()"
+      ></button>
+    </div>
+  </ng-template>
+</p-dialog>

@@ -91,28 +91,24 @@
                 iconPos="right"
                 class="text-xs"
               />
-              <p-fileupload
-                name="demo[]"
-                url="https://www.primefaces.org/cdn/api/upload.php"
-                [multiple]="true"
-                accept="xlxs/*"
-                class="text-xs"
-                [maxFileSize]="1000000"
-                mode="advanced"
-                chooseLabel="Choose"
-                [chooseStyleClass]="
-                  'w-[84px] background-color: #008080, color: #fff h-[30px] !text-[12px]'
-                "
-                uploadLabel="Upload"
-                cancelLabel="Cancel"
-                styleClass="w-auto"
-              >
-                <ng-template #empty>
-                  <div class="text-gray-500 text-sm">
-                    Drag and drop files here to upload.
-                  </div>
-                </ng-template>
-              </p-fileupload>
+               <p-fileUpload
+                  name="excelFile"
+                  [multiple]="true"
+                  accept=".xlsx,.xls"
+                  class="text-xs"
+                  [maxFileSize]="1000000"
+                  mode="advanced"
+                  chooseLabel="Choose"
+                  uploadLabel="Upload"
+                  cancelLabel="Cancel"
+                  styleClass="w-auto"
+                  [customUpload]="true"
+                  (uploadHandler)="onUploadExcel($event)"
+                  [chooseStyleClass]="
+                    'w-[84px] bg-teal-600 text-white h-[30px] !text-[12px]'
+                  "
+                >
+                </p-fileUpload>
             </div>
             <br />
 
@@ -262,28 +258,24 @@
                 iconPos="right"
                 class="text-xs"
               />
-              <p-fileupload
-                name="demo[]"
-                url="https://www.primefaces.org/cdn/api/upload.php"
-                [multiple]="true"
-                accept="xlxs/*"
-                class="text-xs"
-                [maxFileSize]="1000000"
-                mode="advanced"
-                chooseLabel="Choose"
-                [chooseStyleClass]="
-                  'w-[84px] background-color: #008080, color: #fff h-[30px] !text-[12px]'
-                "
-                uploadLabel="Upload"
-                cancelLabel="Cancel"
-                styleClass="w-auto"
-              >
-                <ng-template #empty>
-                  <div class="text-gray-500 text-sm">
-                    Drag and drop files here to upload.
-                  </div>
-                </ng-template>
-              </p-fileupload>
+               <p-fileUpload
+                  name="excelFile"
+                  [multiple]="true"
+                  accept=".xlsx,.xls"
+                  class="text-xs"
+                  [maxFileSize]="1000000"
+                  mode="advanced"
+                  chooseLabel="Choose"
+                  uploadLabel="Upload"
+                  cancelLabel="Cancel"
+                  styleClass="w-auto"
+                  [customUpload]="true"
+                  (uploadHandler)="onUploadExcelCounterBulk($event)"
+                  [chooseStyleClass]="
+                    'w-[84px] bg-teal-600 text-white h-[30px] !text-[12px]'
+                  "
+                >
+                </p-fileUpload>
             </div>
             <br>
             

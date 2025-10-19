@@ -1,37 +1,53 @@
-<div class="min-w-full bg-gray-100">
+<div class="min-w-full">
   <!-- <h1 class="text-2xl font-serif ml-2">Dashboard</h1> -->
-  <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
+  <div class="min-w-full !min-h-auto flex items-center justify-start p-2">
     <div
       class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-3 items-center rounded bg-gray-50"
     >
       <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">Part Number</label>
+        <input type="text"  pSize="small" pInputText />
+        <label class="text-xs">Part Number</label>
       </p-floatlabel>
       <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">Description</label>
+        <input type="text"  pSize="small" pInputText />
+        <label class="text-xs">Description</label>
       </p-floatlabel>
       <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">MRP</label>
+        <input type="text"  pSize="small" pInputText />
+        <label class="text-xs">MRP</label>
       </p-floatlabel>
       <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">Latest Part</label>
+        <input type="text"  pSize="small" pInputText />
+        <label class="text-xs">Latest Part</label>
       </p-floatlabel>
       <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">Rate / NDP Price</label>
+        <input type="text"  pSize="small" pInputText />
+        <label class="text-xs">Rate / NDP Price</label>
       </p-floatlabel>
       <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">Model</label>
+        <input type="text"  pSize="small" pInputText />
+        <label class="text-xs">Model</label>
       </p-floatlabel>
       <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">MOQ</label>
+        <input type="text"  pSize="small" pInputText />
+        <label class="text-xs">MOQ</label>
       </p-floatlabel>
+
+      <p-fileupload
+          #fu
+          mode="basic"
+          chooseLabel="Choose"
+          chooseIcon="pi pi-upload"
+          accept=".xls,.xlsx"
+          maxFileSize="1000000"
+          
+        />
+        <p-button
+          label="Upload"
+          size="small"
+          severity="secondary"
+          
+        />
 
       <p-button
         size="small"

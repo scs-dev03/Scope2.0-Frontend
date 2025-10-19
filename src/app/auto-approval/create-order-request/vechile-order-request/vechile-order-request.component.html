@@ -409,28 +409,24 @@
                   iconPos="right"
                   class="text-xs"
                 />
-                <p-fileupload
-                  name="demo[]"
-                  url="https://www.primefaces.org/cdn/api/upload.php"
+                <p-fileUpload
+                  name="excelFile"
                   [multiple]="true"
-                  accept="xlxs/*"
+                  accept=".xlsx,.xls"
                   class="text-xs"
                   [maxFileSize]="1000000"
                   mode="advanced"
                   chooseLabel="Choose"
-                  [chooseStyleClass]="
-                    'w-[84px] background-color: #008080, color: #fff h-[30px] !text-[12px]'
-                  "
                   uploadLabel="Upload"
                   cancelLabel="Cancel"
                   styleClass="w-auto"
+                  [customUpload]="true"
+                  (uploadHandler)="onUploadExcel($event)"
+                  [chooseStyleClass]="
+                    'w-[84px] bg-teal-600 text-white h-[30px] !text-[12px]'
+                  "
                 >
-                  <!-- <ng-template #empty>
-            <div class="text-gray-500 text-sm">
-              Drag and drop files here to upload.
-            </div>
-          </ng-template> -->
-                </p-fileupload>
+                </p-fileUpload>
               </div>
             </p-tabpanel>
           </p-tabpanels>
@@ -439,15 +435,15 @@
     </div>
   </div>
   <br />
-   <p-button
-          size="small"
-          icon="pi pi-sliders-h"
-          label="Configure Table"
-          [raised]="true"
-          (onClick)="showDialogconfig()"
-          severity="secondary"
-          class="ml-2"
-        />
+  <p-button
+    size="small"
+    icon="pi pi-sliders-h"
+    label="Configure Table"
+    [raised]="true"
+    (onClick)="showDialogconfig()"
+    severity="secondary"
+    class="ml-2"
+  />
   <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
@@ -650,7 +646,6 @@
   </div>
 </p-dialog>
 
-
 <p-dialog
   header="⚙️ Configure Table Columns"
   [(visible)]="visibleConfig"
@@ -659,10 +654,7 @@
   [style]="{ width: '80vw' }"
   [contentStyle]="{ 'max-height': '80vh', 'overflow-y': 'auto' }"
   [draggable]="true"
-
   [resizable]="false"
-
-
 >
   <!-- Content -->
   <div class="grid grid-cols-5 gap-3 p-2">
@@ -694,20 +686,15 @@
         label="Save as Default"
         severity="info"
         class="p-button-outlined p-button-sm"
-        (click)="visible=false"
+        (click)="visible = false"
       ></button>
       <button
         pButton
         label="Cancel"
         class="p-button-outlined p-button-sm"
-        (click)="visible=false"
+        (click)="visible = false"
       ></button>
-      <button
-        pButton
-        label="Apply for Now"
-        class="p-button-sm"
-        
-      ></button>
+      <button pButton label="Apply for Now" class="p-button-sm"></button>
     </div>
   </ng-template>
 </p-dialog>

@@ -46,10 +46,10 @@ export class DealerVonComponent {
 
   ngOnInit(): void {
 
-    // localStorage.setItem('brandid','9')
-    // localStorage.setItem('dealerid','8')
-    // localStorage.setItem('usertype','U')
-    //this.dealerVonService.setLocalStorage()
+    // sessionStorage.setItem('brandid','9')
+    // sessionStorage.setItem('dealerid','8')
+    // sessionStorage.setItem('usertype','U')
+    //this.dealerVonService.setsessionStorage()
     this.dealerFilterData.reset();
     this.globalBlockUiService.startLoading();
     this.dealerstatus = [
@@ -62,10 +62,10 @@ export class DealerVonComponent {
       { name: 'Planned', code: '1' },
       { name: 'Unplanned', code: '0' },
     ];
-    //this.dealerVonService.setLocalStorage();
-    this.fetchlocation(localStorage.getItem('dealerid'));
+    //this.dealerVonService.setsessionStorage();
+    this.fetchlocation(sessionStorage.getItem('dealerid'));
     this.fetchNature();
-    this.fetchModel(localStorage.getItem('brandid'));
+    this.fetchModel(sessionStorage.getItem('brandid'));
     this.fetchSeasonaData();
     this.fetchPartType();
     this.globalBlockUiService.stopLoading();
@@ -118,7 +118,7 @@ export class DealerVonComponent {
     this.showSale = false
   }
 
-  userid: any = localStorage.getItem('userid')
+  userid: any = sessionStorage.getItem('userid')
 
   // for sending dealer logs
   sendlog(
@@ -148,8 +148,8 @@ export class DealerVonComponent {
 
   onClickViewLog(rowData: any) {
     this.fetchDelerViewlog(
-      localStorage.getItem('brandid'),
-      localStorage.getItem('dealerid'),
+      sessionStorage.getItem('brandid'),
+      sessionStorage.getItem('dealerid'),
       rowData.locationid,
       rowData.Partid
     );
@@ -177,7 +177,7 @@ export class DealerVonComponent {
       this.fetchDealerTableData(
         this.dealerFilterData.value.fromrate,
         this.dealerFilterData.value.torate,
-        localStorage.getItem('dealerid'),
+        sessionStorage.getItem('dealerid'),
         this.dealerFilterData.value.parttype,
         this.dealerFilterData.value.fromrange,
         this.dealerFilterData.value.torange,
@@ -187,7 +187,7 @@ export class DealerVonComponent {
         this.dealerFilterData.value.seasonal,
         this.dealerFilterData.value.nature,
         this.dealerFilterData.value.model,
-        localStorage.getItem('brandid')
+        sessionStorage.getItem('brandid')
       );
     }
   }
@@ -316,8 +316,8 @@ export class DealerVonComponent {
         }
 
         this.fetchDealerRemark(
-          localStorage.getItem('brandid'),
-          localStorage.getItem('usertype')
+          sessionStorage.getItem('brandid'),
+          sessionStorage.getItem('usertype')
         );
 
         this.showTable = true;
@@ -371,8 +371,8 @@ export class DealerVonComponent {
   onClickShowSales(rowData: any) {
 
     this.fetchPartSale(
-      localStorage.getItem('brandid'),
-      localStorage.getItem('dealerid'),
+      sessionStorage.getItem('brandid'),
+      sessionStorage.getItem('dealerid'),
       rowData.Locationid,
       rowData.partnumber
     )
@@ -429,8 +429,8 @@ export class DealerVonComponent {
     // Proceed with submission
     this.dealerVonService
       .submituserlog({
-        brandid: localStorage.getItem('brandid'),
-        dealerid: localStorage.getItem('dealerid'),
+        brandid: sessionStorage.getItem('brandid'),
+        dealerid: sessionStorage.getItem('dealerid'),
         locationid: rowData.Locationid,
         partid: rowData.Partid,
         max: rowData.Maxvalue,

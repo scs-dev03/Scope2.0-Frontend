@@ -3,60 +3,173 @@
 
   <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
     <div
-      class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-2 shadow-lg border-dashed border-2 bg-white rounded-md border-white"
+      class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-3 shadow-lg border-dashed border-2 bg-white rounded-md border-white"
+      [formGroup]="AdvisorData"
     >
-      <div class="flex flex-col w-[132px]">
-        <label for="partyname" class="text-sm">Add Advisor :</label>
-        <input
-          pInputText
-          id="partyname"
-          class="text-xs h-8"
-          [placeholder]="'Add Name'"
-          aria-describedby="username-help"
-          [(ngModel)]="Advisor"
-        />
-      </div>
-      <div class="flex flex-col w-[132px]">
-        <label for="partyname" class="text-sm">Phone Number</label>
-        <input
-          pInputText
-          id="partyname"
-          class="text-xs h-8"
-          [placeholder]="'Phone Number'"
-          aria-describedby="username-help"
-          [(ngModel)]="Advisor"
-        />
-      </div>
-      <div class="flex flex-col w-[132px]">
-        <label for="partyname" class="text-sm">Email</label>
-        <input
-          pInputText
-          id="partyname"
-          class="text-xs h-8"
-          [placeholder]="'Email Number'"
-          aria-describedby="username-help"
-          [(ngModel)]="Advisor"
-        />
+      <!-- Advisor Name -->
+      <div class="flex flex-col">
+        <p-floatlabel variant="on">
+          <input
+            pInputText
+            id="advisorname"
+            formControlName="AdvisorName"
+            class="text-xs h-8 w-44"
+            [ngClass]="{
+              'border border-red-500':
+                AdvisorData.get('AdvisorName')?.invalid &&
+                (AdvisorData.get('AdvisorName')?.touched ||
+                  AdvisorData.get('AdvisorName')?.dirty)
+            }"
+          />
+          <label for="advisorname" class="text-sm pb-2">Advisor Name</label>
+        </p-floatlabel>
+        <div class="h-4">
+          <span
+            *ngIf="
+              AdvisorData.get('AdvisorName')?.hasError('required') &&
+              (AdvisorData.get('AdvisorName')?.touched ||
+                AdvisorData.get('AdvisorName')?.dirty)
+            "
+            class="text-red-500 text-xs"
+          >
+            Name is required
+          </span>
+        </div>
       </div>
 
-      <div class="flex items-end gap-3 flex-wrap w-auto justify-center">
-        <p-button
-          label="Save"
-          size="small"
-          icon="pi pi-check"
-          [style]="{ 'background-color': '#008080', color: '#fff' }"
-          iconPos="right"
-          class="text-xs"
-          (onClick)="onclickSave()"
-        />
-        <p-button
-          size="small"
-          icon="pi pi-download"
-          [style]="{ 'background-color': '#008080', color: '#fff' }"
-          iconPos="right"
-          class="text-xs"
-          (onClick)="SampleExcelDownload()"
-        />
+      <!-- Phone Number -->
+      <div class="flex flex-col">
+        <p-floatlabel variant="on">
+          <input
+            pInputText
+            id="advisorphone"
+            formControlName="AdvisorPhone"
+            class="text-xs h-8 w-44"
+            maxlength="10"
+            [ngClass]="{
+              'border border-red-500':
+                AdvisorData.get('AdvisorPhone')?.invalid &&
+                (AdvisorData.get('AdvisorPhone')?.touched ||
+                  AdvisorData.get('AdvisorPhone')?.dirty)
+            }"
+          />
+          <label for="advisorphone" class="text-sm pb-2">Phone Number</label>
+        </p-floatlabel>
+        <div class="h-4">
+          <span
+            *ngIf="
+              AdvisorData.get('AdvisorPhone')?.hasError('required') &&
+              (AdvisorData.get('AdvisorPhone')?.touched ||
+                AdvisorData.get('AdvisorPhone')?.dirty)
+            "
+            class="text-red-500 text-xs"
+          >
+            Phone number is required
+          </span>
+
+          <span
+            *ngIf="
+              AdvisorData.get('AdvisorPhone')?.hasError('pattern') &&
+              (AdvisorData.get('AdvisorPhone')?.touched ||
+                AdvisorData.get('AdvisorPhone')?.dirty)
+            "
+            class="text-red-500 text-xs"
+          >
+            Enter a valid 10-digit number
+          </span>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="flex flex-col">
+        <p-floatlabel variant="on">
+          <input
+            pInputText
+            id="advisoremail"
+            formControlName="AdvisorEmail"
+            class="text-xs h-8 w-44"
+            [ngClass]="{
+              'border border-red-500':
+                AdvisorData.get('AdvisorEmail')?.invalid &&
+                (AdvisorData.get('AdvisorEmail')?.touched ||
+                  AdvisorData.get('AdvisorEmail')?.dirty)
+            }"
+          />
+          <label for="advisoremail" class="text-sm pb-2">Email</label>
+        </p-floatlabel>
+        <div class="h-4">
+          <span
+            *ngIf="
+              AdvisorData.get('AdvisorEmail')?.hasError('required') &&
+              (AdvisorData.get('AdvisorEmail')?.touched ||
+                AdvisorData.get('AdvisorEmail')?.dirty)
+            "
+            class="text-red-500 text-xs"
+          >
+            Email is required
+          </span>
+
+          <span
+            *ngIf="
+              AdvisorData.get('AdvisorEmail')?.hasError('email') &&
+              (AdvisorData.get('AdvisorEmail')?.touched ||
+                AdvisorData.get('AdvisorEmail')?.dirty)
+            "
+            class="text-red-500 text-xs"
+          >
+            Enter a valid email address
+          </span>
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div class="flex flex-col">
+        <p-floatlabel variant="on">
+          <p-select
+            [options]="LocationData"
+            optionValue="locationid"
+            optionLabel="location"
+            formControlName="AdvisorLocation"
+            class="w-44 !h-8"
+            scrollHeight="250px"
+            [filter]="true"
+            filterBy="location"
+            [ngClass]="{
+              'border border-red-500':
+                AdvisorData.get('AdvisorLocation')?.invalid &&
+                (AdvisorData.get('AdvisorLocation')?.touched ||
+                  AdvisorData.get('AdvisorLocation')?.dirty)
+            }"
+          ></p-select>
+          <label for="location" class="text-xs">Locations</label>
+        </p-floatlabel>
+        <div class="h-4">
+          <span
+            *ngIf="
+              AdvisorData.get('AdvisorLocation')?.hasError('required') &&
+              (AdvisorData.get('AdvisorLocation')?.touched ||
+                AdvisorData.get('AdvisorLocation')?.dirty)
+            "
+            class="text-red-500 text-xs"
+          >
+            Location is required
+          </span>
+        </div>
+      </div>
+
+      <p-button
+        label="Save"
+        size="small"
+        icon="pi pi-check"
+        [disabled]="AdvisorData.invalid"
+        [style]="{ 'background-color': '#008080', color: '#fff' }"
+        iconPos="right"
+        class="text-xs"
+        (onClick)="OnclickSaveAdvisor()"
+      ></p-button>
+
+      <!-- Action Buttons -->
+      <div class="flex items-end gap-3 flex-wrap justify-center">
         <p-button
           label="View Table"
           size="small"
@@ -65,18 +178,33 @@
           iconPos="right"
           class="text-xs"
           (onClick)="onClickShowTable()"
-        />
+        ></p-button>
+
+        <p-button
+          size="small"
+          icon="pi pi-download"
+          [style]="{ 'background-color': '#008080', color: '#fff' }"
+          iconPos="right"
+          class="text-xs"
+          (onClick)="SampleExcelDownload()"
+        ></p-button>
+
         <p-fileupload
           #fu
           mode="basic"
           chooseLabel="Choose"
           chooseIcon="pi pi-upload"
-          name="demo[]"
-          url="https://www.primefaces.org/cdn/api/upload.php"
-          accept="image/*"
+          accept=".xls,.xlsx"
           maxFileSize="1000000"
-        />
-        <p-button label="Upload" size="small" severity="secondary" />
+          (onSelect)="onFileSelect($event, fu)"
+        ></p-fileupload>
+
+        <p-button
+          label="Upload"
+          size="small"
+          severity="secondary"
+          (onClick)="UploadExcel()"
+        ></p-button>
       </div>
     </div>
   </div>
@@ -86,14 +214,46 @@
   >
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
+        #dt1
         [scrollable]="true"
         scrollHeight="600px"
+        [value]="AdvisorViewData"
         [showGridlines]="true"
+        [paginator]="true"
+        [globalFilterFields]="['Advisor', 'PhoneNo', 'Email', 'CreatedAt']"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 25, 50, this.AdvisorViewData.length]"
         scrollDirection="both"
-        [paginatorDropdownAppendTo]="'body'"
+        paginatorDropdownAppendTo="body"
         class="!w-[90vw]"
         [tableStyle]="{ 'min-width': '50rem' }"
       >
+        <ng-template let-item pTemplate="paginatordropdownitem">
+          {{ item.value === AdvisorViewData?.length ? "All" : item.value }}
+        </ng-template>
+        <ng-template #caption>
+          <div class="flex">
+            <p-button
+              label="Clear"
+              size="small"
+              [outlined]="true"
+              icon="pi pi-filter-slash"
+              (click)="clear(dt1)"
+            />
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                size="small"
+                (input)="onGlobalFilter($event)"
+                placeholder="Search keyword"
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
         <ng-template #header>
           <tr class="">
             <th
@@ -103,9 +263,35 @@
             </th>
             <th
               class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+              pSortableColumn="Advisor"
             >
-              Advisor
-              <p-columnFilter type="text" field="" display="menu" />
+              Advisor Name
+              <p-sortIcon field="Advisor" />
+              <p-columnFilter type="text" field="Advisor" display="menu" />
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+              pSortableColumn="PhoneNo"
+            >
+              Phone Number
+              <p-columnFilter type="text" field="PhoneNo" display="menu" />
+              <p-sortIcon field="PhoneNo" />
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+              pSortableColumn="Email"
+            >
+              Email
+              <p-sortIcon field="Email" />
+              <p-columnFilter type="text" field="Email" display="menu" />
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+              pSortableColumn="CreatedAt"
+            >
+              Created On
+              <p-sortIcon field="CreatedAt" />
+              <p-columnFilter type="text" field="CreatedAt" display="menu" />
             </th>
             <th
               class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
@@ -128,20 +314,222 @@
             <td
               class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
             >
-              {{ rowData.Dashboard }}
+              {{ rowData.Advisor }}
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.PhoneNo }}
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.Email }}
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.CreatedAt | date : "dd-MM-yyyy HH:mm:ss a" : "UTC" }}
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              <p-toggleswitch
+                [(ngModel)]="rowData.Status"
+                (onChange)="OnStatusChangeOfAdvisor(rowData)"
+              />
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              <p-button
+                icon="pi pi-pencil"
+                size="small"
+                severity="success"
+                (click)="OnClickUpdateAdvisorInfo(rowData)"
+              ></p-button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="dropdownitem" let-option>
+          {{ option === AdvisorViewData.length ? "All" : option }}
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+<p-dialog
+  header="Message"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="text-lg">
+    {{ Result }}
+  </p>
+
+  <div
+    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+    *ngIf="showErrorsTable"
+  >
+    <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+      <p-table
+        [scrollable]="true"
+        scrollHeight="600px"
+        [value]="errorViewData"
+        [showGridlines]="true"
+        class="!w-[90vw]"
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th
+              class="!px-1 flex-auto !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px] !min-h-[22px]"
+            >
+              S.No
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Advisor Name
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Phone Number
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Email
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Conflict
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+          <tr
+            class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+          >
+            <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.Advisor }}
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.PhoneNo }}
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.Email }}
+            </td>
+
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.conflictBy }}
             </td>
           </tr>
         </ng-template>
       </p-table>
-      <p-paginator
-        class="h-6 text-sm"
-        (onPageChange)="onPageChange($event)"
-        [first]="first"
-        [rows]="rows"
-        [appendTo]="body"
-        [totalRecords]="120"
-        [rowsPerPageOptions]="[10, 20, 30]"
-      />
     </div>
   </div>
-</div>
+</p-dialog>
+
+<p-dialog
+  header="Update Advisor Info"
+  [(visible)]="editDialogVisible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw', height: '50vh' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="flex mt-10 gap-6 justify-center items-start">
+    <!-- Advisor Name -->
+    <div class="flex flex-col">
+      <p-floatlabel variant="on">
+        <label for="advisorname" class="text-[13px]">Advisor Name</label>
+        <input
+          pInputText
+          id="advisorname"
+          name="advisorname"
+          class="text-xs w-44 h-8"
+          [(ngModel)]="editAdvisor.Advisor"
+          #advisorname="ngModel"
+          required
+        />
+      </p-floatlabel>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="flex flex-col">
+      <p-floatlabel variant="on">
+        <label for="phoneno" class="text-[13px]">Phone Number</label>
+        <input
+          pInputText
+          id="phoneno"
+          name="phoneno"
+          min="10"
+          class="text-xs w-44 h-8"
+          [(ngModel)]="editAdvisor.PhoneNo"
+          #phoneno="ngModel"
+          required
+          pattern="^[0-9]{10}$"
+        />
+      </p-floatlabel>
+      <div *ngIf="phoneno.invalid" class="text-red-500 text-xs mt-1">
+        <span *ngIf="phoneno.errors?.['pattern']"
+          >Enter a valid 10-digit phone number</span
+        >
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="flex flex-col">
+      <p-floatlabel variant="on">
+        <label for="email" class="text-[13px]">Email</label>
+        <input
+          pInputText
+          id="email"
+          name="email"
+          class="text-xs w-44 h-8"
+          [(ngModel)]="editAdvisor.Email"
+          required
+          email
+        />
+      </p-floatlabel>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2">
+      <button
+        pButton
+        size="small"
+        label="Cancel"
+        class="p-button-text"
+        (click)="onCancelEdit()"
+      ></button>
+      <button
+        pButton
+        size="small"
+        label="Save"
+        icon="pi pi-check"
+        (click)="updateAdvisorInfo()"
+      ></button>
+    </div>
+  </ng-template>
+</p-dialog>
