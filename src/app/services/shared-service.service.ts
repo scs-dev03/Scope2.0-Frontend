@@ -9,6 +9,10 @@ export class SharedServiceService {
   private  photoSource  = new BehaviorSubject<any>('');
   profilePhoto$ = this.photoSource.asObservable();
 
+   private UserNameSource = new  BehaviorSubject<any>('');
+  UserName = this.UserNameSource.asObservable();
+
+
 
   private sidebarDataSource = new BehaviorSubject<any>(null); // Holds the data
   sidebarData = this.sidebarDataSource.asObservable(); // Expose observable for components
@@ -53,5 +57,9 @@ export class SharedServiceService {
 
   setProfilePhoto(photo: string){
     this.photoSource.next(photo);
+  }
+
+   getUserName(username:string){
+    this.UserNameSource.next(username)
   }
 }

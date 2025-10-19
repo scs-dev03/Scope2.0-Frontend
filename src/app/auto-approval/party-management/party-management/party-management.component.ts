@@ -6,6 +6,8 @@ import { PrimengModuleModule } from '../../../shared/primeng-module/primeng-modu
 import { PaginatorState } from 'primeng/paginator';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import { GlobalBlockUiService } from '../../../services/global-block-ui.service';
+import { PmServiceService } from '../../../services/Auto-Approvals/pm-service.service';
 
 @Component({
   selector: 'app-party-management',
@@ -14,6 +16,9 @@ import * as FileSaver from 'file-saver';
   styleUrl: './party-management.component.css'
 })
 export class PartyManagementComponent {
+
+
+  constructor( private globalBlockUiService: GlobalBlockUiService,private  pmservice: PmServiceService){}
 
   PartyName:any = ''
   PartyCode:any = ''
@@ -63,9 +68,6 @@ export class PartyManagementComponent {
       FileSaver.saveAs(data, 'Sample_Download.xlsx');
     }
 
-
-
-
   first: number = 0;
   rows: number = 10;
 
@@ -73,5 +75,29 @@ export class PartyManagementComponent {
     this.first = event.first ?? 0;
     this.rows = event.rows ?? 10;
   }
+
+
+  partsExcel: any
+  selectedFileName: any
+
+  onFileSelect(event: any, fu: any) {
+    this.globalBlockUiService.startLoading()
+    if (event.files && event.files.length > 0) {
+      this.partsExcel = event.files[0];
+      this.selectedFileName = event.files[0].name // Pehli file select karna
+      this.globalBlockUiService.stopLoading()
+    }
+  }
+
+  // UploadExcel(){
+  //   const formData = new FormData()
+
+  //   formData.append('LocationId',)
+  //   formData.append('userId')
+  //   this.pmservice.BulkUploadParty()
+  // }
+
+
+
 
 }

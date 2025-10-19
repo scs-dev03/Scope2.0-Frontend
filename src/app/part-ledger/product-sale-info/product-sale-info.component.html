@@ -5,9 +5,10 @@
 >
   <div class="bg-gray-50 w-full rounded-lg shadow-lg overflow-hidden">
     <p-table
+     #dt
       [scrollable]="true"
       scrollHeight="600px"
-      [value]="SalesInfo"
+      [value]="tableData"
       [paginator]="true"
       [showCurrentPageReport]="true"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -37,10 +38,10 @@
             Location<p-sortIcon field="Location" />
           </th>
           <th
-            pSortableColumn="Months"
+           
             class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
           >
-            Month<p-sortIcon field="Months" />
+            Month
           </th>
           <th
             pSortableColumn="ClosingStocks"

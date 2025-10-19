@@ -199,14 +199,20 @@
         [style]="{ 'background-color': '#008080', 'color': '#fff'}"
         [disabled]="exportVisible"
         (onClick)="exportToExcel()"
+      />  <p-button
+        label="Clear"
+        icon="pi pi-filter-slash"
+        size="small"
+        [disabled]="exportVisible"
+        (onClick)="clearTable()"
+        [style]="{ 'background-color': '#008080', color: '#fff' }"
       />
     </div>
   </div>
   <div
-    class="w-full h-auto flex justify-start items-center !p-4"
-    
-  >
+    class="w-full h-auto flex justify-start items-center !p-4">
     <app-product-sale-info
+      #productSaleInfo
       [SalesInfo]="SalesInfo[0]"
       [isLoading]="isLoading"
       class="!w-full"

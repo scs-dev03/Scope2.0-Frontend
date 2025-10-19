@@ -38,9 +38,9 @@ allUserData$=this.allUserDataSubject.asObservable();
     return this.http.post(`${this.url}user/request-new-mail`,data)
   }
 
-  loadDataOnce() {
-    this.http.get(`${this.url}user/get-user`).subscribe((res:any) => {
-      this.allUserDataSubject.next(res.data);
-    });
-  }
+  // loadDataOnce() {
+  //   this.http.get(`${this.url}user/get-user`).subscribe((res:any) => {
+  //     this.allUserDataSubject.next(res.data);
+  //   });
+  // }
 }

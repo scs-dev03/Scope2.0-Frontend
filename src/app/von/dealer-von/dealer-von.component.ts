@@ -324,9 +324,27 @@ export class DealerVonComponent {
         this.globalBlockUiService.stopLoading();  // Ensure `isloading` is reset in success case
       },
       error: (err: any) => {
+        let msg = err.error.message
+        let error = err.error.Error
+        if (msg) {
+          console.log(msg);
+
+          this.Result = msg;
+          this.visible = true
+        }
+        else if (error) {
+          this.Result = error;
+          this.visible = true
+        }
+        else {
+
+          this.visible = true
+          this.Result = 'Failed to load Sales Information'
+
+        }
         console.error("Error fetching dealer table data:", err);
-        this.Result = "Failed to fetch data. Please try again.";
-        this.visible = true;
+        // this.Result = "Failed to fetch data. Please try again.";
+        // this.visible = true;
         this.onClickCloseSales()
         this.globalBlockUiService.stopLoading();  // Ensure `isloading` is reset in failure case
       }
@@ -431,7 +449,7 @@ export class DealerVonComponent {
         (error: any) => {
           this.globalBlockUiService.stopLoading();
           this.visible = true;
-          this.Result = error.error?.Error || 'Something went wrong.';
+          this.Result = error.error?.Error || 'Techincal issue! Try Again After Some Time';
         }
       );
   }

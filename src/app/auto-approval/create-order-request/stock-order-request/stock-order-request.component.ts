@@ -52,7 +52,68 @@ export class StockOrderRequestComponent {
 
   selectedSalesType: any
 
-  SampleExcelDownload() {
+  
+  WorkShopBulkSampleExcelDownload() {
+
+    const Data = [
+      {
+        'PartNumber': '',
+        'Quantity': '',
+        'Remark': '',
+        'Party Name': ''
+      }
+    ];
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(Data)
+
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'SampleData': worksheet },
+      SheetNames: ['SampleData']
+    }
+
+    const ExcelBuffer: any = XLSX.write(workbook, {
+      type: 'array',
+      bookType: 'xlsx'
+    })
+
+    const data: Blob = new Blob([ExcelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+
+    });
+
+    FileSaver.saveAs(data, 'Sample_Download.xlsx');
+  }
+  CounterSaleMultiPartSampleExcelDownload() {
+
+    const Data = [
+      {
+        'PartNumber': '',
+        'Quantity': '',
+        'Remark': '',
+        'Party Name': ''
+      }
+    ];
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(Data)
+
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'SampleData': worksheet },
+      SheetNames: ['SampleData']
+    }
+
+    const ExcelBuffer: any = XLSX.write(workbook, {
+      type: 'array',
+      bookType: 'xlsx'
+    })
+
+    const data: Blob = new Blob([ExcelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+
+    });
+
+    FileSaver.saveAs(data, 'Sample_Download.xlsx');
+  }
+  CounterSaleBulkUploadSampleExcelDownload() {
 
     const Data = [
       {

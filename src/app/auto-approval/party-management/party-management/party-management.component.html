@@ -63,9 +63,9 @@
           chooseLabel="Choose"
           chooseIcon="pi pi-upload"
           name="demo[]"
-          url="https://www.primefaces.org/cdn/api/upload.php"
-          accept="image/*"
+          accept=".xls,.xlsx" 
           maxFileSize="1000000"
+          (onSelect)="onFileSelect($event,fu)"
           
         />
         <p-button label="Upload" size="small"  severity="secondary" />

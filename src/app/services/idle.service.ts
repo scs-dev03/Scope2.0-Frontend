@@ -63,6 +63,6 @@ window.location.href = environment.frontendAdminUrl;
     window.location.href = environment.frontendUserUrl;
   }
    localStorage.clear();
-   sessionStorage.clear();
+   localStorage.clear();
   }
 }

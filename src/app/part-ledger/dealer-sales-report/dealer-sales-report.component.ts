@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { PrimengModuleModule } from '../../shared/primeng-module/primeng-module.module';
 import { SharedModule } from '../../shared/shared.module';
 import * as XLSX from 'xlsx';
@@ -20,6 +20,9 @@ import FileSaver from 'file-saver';
   styleUrl: './dealer-sales-report.component.css'
 })
 export class DealerSalesReportComponent {
+
+
+  @ViewChild('productSaleInfo') productSaleInfo!: ProductSaleInfoComponent;
   minDate: Date | undefined;
   maxDate: Date | undefined;
   ngOnInit() {
@@ -246,11 +249,29 @@ export class DealerSalesReportComponent {
           // console.log(this.PartDetail);
         },
         error: (err: any) => {
+          let msg = err.error.message
+          let error = err.error.Error
+          if (msg) {
+            console.log(msg);
+
+            this.Result = msg;
+            this.visible = true
+          }
+          else if (error) {
+            this.Result = error;
+            this.visible = true
+          }
+          else {
+
+            this.visible = true
+            this.Result = 'Failed to load Sales Information'
+
+          }
           console.error('Error while fetching part description:', err);
           this.globalBlockUiService.stopLoading();
           this.showMessage = true; // if you want to show an error message on UI
-          this.visible = true
-          this.Result = "Faild to Load Part Details"
+          // this.visible = true
+          // this.Result = "Faild to Load Part Details"
           // Optional: Show toast or user-friendly error
           // this.toastr.error('Failed to load part description. Please try again.');
         }
@@ -293,19 +314,34 @@ export class DealerSalesReportComponent {
           console.log(this.SalesInfo);
         },
         error: (err: any) => {
-          let msg = err.error.Error
+          let msg = err.error.message
+          let error = err.error.Error
+          if (msg) {
+            console.log(msg);
 
-          console.log(typeof (msg));
+            this.Result = msg;
+            this.visible = true
+          }
+          else if (error) {
+            this.Result = error;
+            this.visible = true
+          }
+          else {
 
+            this.visible = true
+            this.Result = 'Failed to load Sales Information'
 
+          }
+
+          console.log(msg);
 
           console.error('Error while fetching sales info:', err);
           this.globalBlockUiService.stopLoading();
           this.showMessage = true;
           this.exportVisible = true;
-          this.visible = true
-           this.isLoading = false;
-          this.Result = 'Failed to load Sales Information'
+          // this.visible = true
+          // this.Result = 'Failed to load Sales Information'
+          this.isLoading = false;
           // Optional: Toast or user-friendly alert
           // this.toastr.error('Failed to load sales info. Please try again.');
         }
@@ -446,6 +482,7 @@ export class DealerSalesReportComponent {
     }
   }
 
+
   UploadPartNumber(fu: any) {
 
     const partNumberCtrl = this.DealerSalesReportInputData.get('PartNumber');
@@ -474,12 +511,30 @@ export class DealerSalesReportComponent {
     this.adminSalesReportService.getPartDescription(formData).subscribe((res: any) => {
       this.globalBlockUiService.stopLoading()
       this.PartDetail = res
-      
+
       this.showupload = false
       this.partsExcel = null
       fu.clear();
     },
-      (error: any) => {
+      (err: any) => {
+        let msg = err.error.message
+        let error = err.error.Error
+        if (msg) {
+          console.log(msg);
+
+          this.Result = msg;
+          this.visible = true
+        }
+        else if (error) {
+          this.Result = error;
+          this.visible = true
+        }
+        else {
+
+          this.visible = true
+          this.Result = 'Failed to load Sales Information'
+
+        }
         console.error("File upload failed:", error);
         this.globalBlockUiService.stopLoading()
         this.showupload = false
@@ -552,6 +607,10 @@ export class DealerSalesReportComponent {
     // Step 4: Save to file
     const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
     FileSaver.saveAs(data, 'PartNumberExport.xlsx');
+  }
+
+  clearTable() {
+    this.productSaleInfo.clearFilters()
   }
 
 
