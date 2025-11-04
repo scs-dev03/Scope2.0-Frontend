@@ -16,6 +16,7 @@
               name="partyname"
               class="text-xs w-44 h-8"
               [(ngModel)]="PartyName"
+              (keypress)="allowOnlyLetters($event)"
               #partyname="ngModel"
               (ngModelChange)="validateFields()"
             />
@@ -33,6 +34,7 @@
               name="partycode"
               class="text-xs w-44 h-8"
               [(ngModel)]="PartyCode"
+              (keypress)="allowOnlyLettersAndNumber($event)"
               #partycode="ngModel"
               (ngModelChange)="validateFields()"
             />
@@ -137,6 +139,8 @@
         [showGridlines]="true"
         [paginator]="true"
         [globalFilterFields]="['PartyName', 'PartyCode', 'CreatedAt']"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         [rows]="10"
         [rowsPerPageOptions]="[5, 10, 30, 50, this.PartyViewData.length]"
         scrollDirection="both"

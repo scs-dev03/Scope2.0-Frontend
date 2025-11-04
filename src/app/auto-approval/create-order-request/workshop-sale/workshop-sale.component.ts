@@ -6,7 +6,6 @@ import * as XLSX from 'xlsx';
 import { PrimeNG } from 'primeng/config';
 import { DividerModule } from 'primeng/divider';
 import { PaginatorState } from 'primeng/paginator';
-import { CreateOrderViewServiceService } from '../../../services/Auto-Approvals/create-order-view-service.service';
 import { PrimengModuleModule } from '../../../shared/primeng-module/primeng-module.module';
 import { SHARED_IMPORTS } from '../../../shared/shared-imports/shared-module';
 import { WorkshopSaleService } from '../../../services/Auto-Approvals/workshop-sale.service';
@@ -14,10 +13,11 @@ import { GlobalBlockUiService } from '../../../services/global-block-ui.service'
 import { Table } from 'primeng/table';
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
+import { Popover } from 'primeng/popover';
 
 @Component({
   selector: 'app-workshop-sale',
-  imports: [SHARED_IMPORTS, PrimengModuleModule, SharedModule, DividerModule, IconField, InputIcon],
+  imports: [SHARED_IMPORTS,Popover, PrimengModuleModule, SharedModule, DividerModule, IconField, InputIcon],
   templateUrl: './workshop-sale.component.html',
   styleUrl: './workshop-sale.component.css'
 })
@@ -36,7 +36,7 @@ export class WorkshopSaleComponent {
   visible: boolean = false;
   Result: any
 
-  constructor(private fb: FormBuilder, private config: PrimeNG, private globalBlockUiService: GlobalBlockUiService, private messageService: MessageService, private createorderviewservice: CreateOrderViewServiceService, private workshopeservice: WorkshopSaleService) {
+  constructor(private fb: FormBuilder, private config: PrimeNG, private globalBlockUiService: GlobalBlockUiService, private messageService: MessageService, private workshopeservice: WorkshopSaleService) {
     this.AddPartWise = this.fb.group({
       parts: this.fb.array([])
     });
@@ -105,17 +105,10 @@ export class WorkshopSaleComponent {
 
     const Data = [
       {
-        "VehicleNumber": "",
-        "VehicleModel": "",
-        "JobCardNumber": "",
-        "JobType": "",
-        "OrderType": "",
         "PartNumber": "",
         "Qty": "",
-        "Remarks": "",
-        "AdvanceValue": "",
-        "Estimate": "",
-        "Advisor": ""
+        "Remarks": ""
+        
       }
     ];
 
@@ -217,9 +210,12 @@ export class WorkshopSaleComponent {
 
 
           this.TableViewData = res.data.result;
+          this.visibleTableData = true
+          
 
           if (res.data?.notinMaster.length > 0) {
             this.VisibleNotInMaster = true;
+            this.visible = false;
             this.NotInMasterPartNumber = res.data?.notinMaster.map((part: any) => {
               return part.PartNumber
             })
@@ -266,6 +262,21 @@ export class WorkshopSaleComponent {
   }
 
 
+    canAddMoreParts(): boolean {
+    const partsArray = this.AddPartWise.get('parts') as FormArray;
+    if (!partsArray || partsArray.length === 0) return false;
+
+    const lastPart = partsArray.at(partsArray.length - 1);
+
+    const partNumber = lastPart.get('PartNumber')?.value?.trim();
+    const quantity = lastPart.get('Quantity')?.value;
+
+    return !!partNumber && !!quantity && lastPart.valid;
+  }
+
+  
+
+  visibleTableData:boolean=false;
   OnClickSendWorkshopSaleBulkUpload() {
     if (this.WorkShopInputFieldDataBulkUpload.valid && this.WorkshopSaleBulkExcel) {
       this.globalBlockUiService.startLoading()
@@ -276,6 +287,8 @@ export class WorkshopSaleComponent {
       formData.append('LocationId', this.WorkShopInputFieldDataBulkUpload.value.Location || '');
       formData.append('OrderType', this.WorkShopInputFieldDataBulkUpload.value.OrderType || '');
       formData.append('BrandId', sessionStorage.getItem('brandid') || '');
+      formData.append('DealerId', sessionStorage.getItem('dealerid') || '');
+
 
       this.workshopeservice.BulkUploadWorkShopSale(formData).subscribe({
         next: (res: any) => {
@@ -285,9 +298,11 @@ export class WorkshopSaleComponent {
           this.showErrorsTable = false;
 
           this.TableViewData = res.data.result;
+          this.visibleTableData = true
 
           if (res.data?.notinMaster.length > 0) {
             this.VisibleNotInMaster = true;
+            this.visible = false;
             this.NotInMasterPartNumber = res.data?.notinMaster.map((part: any) => {
               return part.PartNumber
             })
@@ -351,6 +366,7 @@ export class WorkshopSaleComponent {
           this.Result = res.message
           this.visible = true;
           this.TableViewData = []
+          this.visibleTableData = false
           this.selectedRows = []
           this.globalBlockUiService.stopLoading()
 
@@ -417,6 +433,77 @@ export class WorkshopSaleComponent {
       event.preventDefault();
     }
   }
+
+
+
+onShowGroupStock(rowData: any, event: Event, popover: any) {
+    popover.toggle(event);
+
+
+    this.fetchGrpupStockData(
+      sessionStorage.getItem('dealerid'),
+      rowData.PartNumber,
+      sessionStorage.getItem('brandid'),
+      rowData.LocationId
+    );
+  }
+
+  GroupStockData: any
+  fetchGrpupStockData(DealerId: any, PartNumber: any, BrandId: any, LocationId: any) {
+    this.globalBlockUiService.startLoading();
+    this.workshopeservice.getGroupStockData({ DealerId, PartNumber, BrandId, LocationId }).subscribe({
+      next: (res: any) => {
+        this.GroupStockData = res.data;
+        this.globalBlockUiService.stopLoading();
+      },
+      error: (err: any) => {
+        console.error("Error fetching Group Stock data:", err);
+        this.globalBlockUiService.stopLoading();
+      }
+    })
+  }
+
+
+  onShowNonMovingData(rowData: any, event: Event, popover: any) {
+    popover.toggle(event);
+
+
+    this.fetchNonMovingData(
+      sessionStorage.getItem('dealerid'),
+      rowData.PartNumber,
+      sessionStorage.getItem('brandid'),
+      rowData.LocationId
+    );
+  }
+
+
+  NonMovingData: any =  [
+        {
+            "LOCATION": "Kalikapur",
+            "QTY": 6,
+            "DISCOUNT": 25,
+            "Dealer": "Auto Carriage (Royal Mahindra)"
+        }
+    ]
+  fetchNonMovingData(DealerId: any, partnumber: any, BrandId: any, LocationId: any) {
+    this.globalBlockUiService.startLoading();
+
+    this.workshopeservice.getNonMovingData({ DealerId, partnumber, BrandId, LocationId }).subscribe({
+      next: (res: any) => {
+        this.NonMovingData = res.data;
+        this.globalBlockUiService.stopLoading();
+      },
+      error: (err: any) => {
+        console.error("Error fetching Group Stock data:", err);
+        this.globalBlockUiService.stopLoading();
+      }
+    });
+  }
+
+
+
+
+
 
 
 }

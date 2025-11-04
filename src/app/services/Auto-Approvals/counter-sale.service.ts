@@ -43,4 +43,12 @@ private apiurl: any =
     return this.http.post(`${this.apiurl}insert`,data)
   }
 
+  getGroupStockData(data:any):Observable<any>{
+    return this.http.post(`${this.apiurl}group-stock`,data)
+  }
+
+  getNonMovingData(data:any):Observable<any>{
+    return this.http.post(`${this.apiurl}non-moving`,data)
+  }
+
 }

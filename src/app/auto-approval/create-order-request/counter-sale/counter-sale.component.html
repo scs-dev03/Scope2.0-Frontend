@@ -258,6 +258,7 @@
                 icon="pi pi-plus"
                 aria-label="add"
                 (onClick)="addParts()"
+                [disabled]="!canAddMoreParts()"
               />
             </div>
             <br />
@@ -409,16 +410,21 @@
   <br />
 
   <!-- Table  -->
-  <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
+  <div
+    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+    *ngIf="visibleTableData"
+  >
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
         #dt1
         [value]="TableViewData"
-        dataKey="PartNumber"
+        dataKey="Id"
         [(selection)]="selectedRows"
         selectionMode="multiple"
         [scrollable]="true"
         scrollHeight="450px"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         [showGridlines]="true"
         [paginator]="true"
         [rows]="10"
@@ -526,6 +532,14 @@
               <p-sortIcon field="PartDesc" />
               <p-columnFilter type="text" field="PartDesc" display="menu" />
             </th>
+            <th
+              pSortableColumn="PartType"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Category
+              <p-sortIcon field="PartType" />
+              <p-columnFilter type="text" field="PartType" display="menu" />
+            </th>
 
             <th
               pSortableColumn="MOQ"
@@ -558,7 +572,7 @@
               pSortableColumn="Stock"
               class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
-              Stock as on
+              Stock as on ({{ StockAsOnDate | date : "dd-MM-yyyy" }})
               <p-sortIcon field="Stock" />
               <p-columnFilter type="text" field="Stock" display="menu" />
             </th>
@@ -585,7 +599,7 @@
               pSortableColumn="NonMoving"
               class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
-              Non Moving Check
+              Gainer Pool Check
               <p-sortIcon field="NonMoving" />
               <p-columnFilter type="text" field="NonMoving" display="menu" />
             </th>
@@ -616,16 +630,6 @@
               <p-sortIcon field="OrderValue" />
               <p-columnFilter type="text" field="OrderValue" display="menu" />
             </th>
-
-            <th
-              pSortableColumn="OrderDate"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
-            >
-              Order Date
-              <p-sortIcon field="OrderDate" />
-              <p-columnFilter type="text" field="OrderDate" display="menu" />
-            </th>
-
             <th class="!px-1 !py-1 text-[12px] !bg-gray-300">Action</th>
 
             <th
@@ -641,7 +645,7 @@
 
         <!-- ✅ Body -->
         <ng-template pTemplate="body" let-rowData let-i="rowIndex">
-          <tr [pSelectableRow]="rowData" class="hover:bg-gray-100">
+          <tr class="hover:bg-gray-100">
             <td class="p-1 text-center">
               <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
             </td>
@@ -654,8 +658,9 @@
             <td class="p-1 text-[13px] text-center">
               {{ rowData.isSubstitution }}
             </td>
-            <td class="p-1 text-[13px] text-center">{{ rowData.PartDesc }}</td>
             <td class="p-1 text-[13px] text-center">{{ rowData.MOQ }}</td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.PartType }}</td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.PartDesc }}</td>
 
             <td class="p-1 text-[13px] text-center">
               <input
@@ -671,23 +676,26 @@
                 class="p-inputtext p-component text-center !text-[13px] w-20 h-7 border border-gray-300 rounded"
               />
             </td>
-
             <td class="p-1 text-[13px] text-center">{{ rowData.Price }}</td>
             <td class="p-1 text-[13px] text-center">{{ rowData.Stock }}</td>
-            <td class="p-1 text-[13px] text-center">
+            <td
+              class="p-1 text-[13px] text-center"
+              (click)="onShowGroupStock(rowData, $event, op)"
+            >
               {{ rowData.GroupStock }}
             </td>
             <td class="p-1 text-[13px] text-center">
-              {{ rowData.PartyName + " - " + rowData.PartyCode }}
+              {{
+                (rowData.PartyName ? rowData.PartyName : "") +
+                  (rowData.PartyName && rowData.PartyCode ? " - " : "") +
+                  (rowData.PartyCode ? rowData.PartyCode : "")
+              }}
             </td>
-            <td class="p-1 text-[13px] text-center">{{ rowData.NonMoving }}</td>
+            <td class="p-1 text-[13px] text-center"  (click)="onShowNonMovingData(rowData, $event, ap)">{{ rowData.NonMoving }}</td>
             <td class="p-1 text-[13px] text-center"></td>
             <td class="p-1 text-[13px] text-center">{{ rowData.OrderType }}</td>
             <td class="p-1 text-[13px] text-center">
-              {{ rowData.OrderValue | number:'1.2-2' }}
-            </td>
-            <td class="p-1 text-[13px] text-center">
-              {{ rowData.OrderDate | date : "dd-MM-yyyy HH:mm:ss a" : "UTC" }}
+              {{ rowData.OrderValue | number : "1.2-2" }}
             </td>
             <td class="p-1 text-[13px] text-center"></td>
 
@@ -704,7 +712,10 @@
     </div>
   </div>
 
-  <div class="flex m-4 p-3 justify-center items-center">
+  <div
+    class="flex m-4 p-3 justify-center items-center"
+    *ngIf="visibleTableData"
+  >
     <p-button
       size="small"
       icon="pi pi-send"
@@ -726,6 +737,7 @@
   [visible]="VisibleNotInMaster"
 >
   <div class="flex justify-between items-center mb-4">
+    <p class="text-lg">Data Fetch Successful!</p>
     <span class="text-gray-500 text-sm">
       The following parts are
       <span class="font-semibold text-teal-500">not available in Master</span>:
@@ -853,3 +865,56 @@
     </div>
   </div>
 </p-dialog>
+
+<p-popover #op>
+  <ng-template #content>
+    <h4 class="font-semibold mb-2 text-sm">Group Stock</h4>
+
+    <ng-container
+      *ngIf="GroupStockData && GroupStockData.length > 0; else noData"
+    >
+      <table class="w-full text-[12px] border border-gray-200">
+        <tr class="bg-gray-100 text-left">
+          <th class="px-2 py-1 border">Location</th>
+          <th class="px-2 py-1 border">Quantity</th>
+        </tr>
+        <tr *ngFor="let item of GroupStockData">
+          <td class="px-2 py-1 border">{{ item.location }}</td>
+          <td class="px-2 py-1 border text-center">{{ item.GroupStock }}</td>
+        </tr>
+      </table>
+    </ng-container>
+
+    <ng-template #noData>
+      <p class="text-gray-500 text-xs">No group stock data found.</p>
+    </ng-template>
+  </ng-template>
+</p-popover>
+
+
+<p-popover #ap>
+  <ng-template #content>
+    <h4 class="font-semibold mb-2 text-sm">Group Stock</h4>
+
+    <ng-container
+      *ngIf="GroupStockData && GroupStockData.length > 0; else noData"
+    >
+      <table class="w-full text-[12px] border border-gray-200">
+        <tr class="bg-gray-100 text-left">
+          <th class="px-2 py-1 border">Location</th>
+          <th class="px-2 py-1 border">Quantity</th>
+          <th class="px-2 py-1 border">Discount</th>
+        </tr>
+        <tr *ngFor="let item of GroupStockData">
+          <td class="px-2 py-1 border">{{ item.LOCATION }}</td>
+          <td class="px-2 py-1 border text-center">{{ item.QTY }}</td>
+          <td class="px-2 py-1 border text-center">{{ item.DISCOUNT }}</td>
+        </tr>
+      </table>
+    </ng-container>
+
+    <ng-template #noData>
+      <p class="text-gray-500 text-xs">No group stock data found.</p>
+    </ng-template>
+  </ng-template>
+</p-popover>

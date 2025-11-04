@@ -331,6 +331,28 @@ export class AdvisorManagementComponent {
     });
   }
 
+  allowOnlyLetters(event: KeyboardEvent) {
+    const char = event.key;
+    const pattern = /^[a-zA-Z\s]*$/;
+    if (!pattern.test(char)) {
+      event.preventDefault();
+    }
+  }
+  allowOnlyLettersAndNumber(event: KeyboardEvent) {
+    const char = event.key;
+    const pattern = /^[a-zA-Z0-9\s]*$/;
+    if (!pattern.test(char)) {
+      event.preventDefault();
+    }
+  }
+  allowOnlyNumber(event: KeyboardEvent){
+    const char = event.key;
+    const pattern  = /^[0-9]*$/;
+    if(!pattern.test(char)){
+      event.preventDefault();
+    }
+  }
+
 
 
 

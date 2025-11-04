@@ -6,130 +6,192 @@
       class="min-w-full min-h-[15vh] flex-wrap items-center justify-center flex-col p-2 gap-3 shadow-lg bg-white rounded-md"
     >
       <div class="flex flex-wrap gap-4" [formGroup]="OrderStatusInput">
-        <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
-          <p-multiselect
-            [showClear]="true"
-            size="small"
-            class="w-full h-8"
-            optionLabel="name"
-          />
-          <label class="text-xs">Location</label>
-        </p-floatlabel>
-        <!-- From Date -->
-        <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
-          <p-datepicker
-            inputId="fromDate"
-            size="small"
-            dateFormat="mm/dd/yy"
-            formControlName="FromDate"
-            iconDisplay="input"
-            [readonlyInput]="true"
-            [panelStyle]="{
-              position: 'absolute',
-              left: '0px',
-              top: '100%',
-              'z-index': '1000',
-              transform: 'scale(0.7)',
-              'transform-origin': 'top left'
-            }"
-            class="w-full h-8"
-            [styleClass]="'w-full sm:w-44 md:w-52 lg:w-[185px]'"
-          />
-          <label for="fromDate" class="text-xs">From Date</label>
-        </p-floatlabel>
+        <div class="flex flex-col h-11">
+          <p-floatlabel
+            class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+            variant="on"
+          >
+            <p-multiselect
+              [showClear]="true"
+              size="small"
+              class="w-full h-8"
+              formControlName="Location"
+              [options]="LocationData"
+              optionValue="locationid"
+              optionLabel="location"
+            />
+            <label class="text-xs">Location</label>
+          </p-floatlabel>
+          <small
+            *ngIf="
+              OrderStatusInput.get('Location')?.invalid &&
+              OrderStatusInput.get('Location')?.touched
+            "
+            class="text-red-500 text-xs"
+          >
+            Location is required
+          </small>
+        </div>
+        <div class="flex flex-col h-11">
+          <p-floatlabel
+            class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+            variant="on"
+          >
+            <input
+              pInputText
+              formControlName="FromDate"
+              id="fromDate"
+              type="date"
+              [max]="today"
+              pSize="small"
+              [value]="firstDayOfMonth"
+              autocomplete="off"
+              class="w-full h-8"
+            />
+            <label for="fromDate" class="text-xs">From Date</label>
+          </p-floatlabel>
+        </div>
 
-        <!-- To Date -->
-        <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
-          <p-datepicker
-            inputId="toDate"
-            size="small"
-            dateFormat="mm/dd/yy"
-            formControlName="ToDate"
-            iconDisplay="input"
-            [readonlyInput]="true"
-            [panelStyle]="{
-              position: 'absolute',
-              'z-index': '1201',
-              transform: 'scale(0.7)',
-              'transform-origin': 'top left'
-            }"
-            class="w-full h-8"
-            [styleClass]="'w-full sm:w-44 md:w-52 lg:w-[185px]'"
-          />
-          <label for="toDate" class="text-xs">To Date</label>
-        </p-floatlabel>
+        <div class="flex flex-col">
+          <p-floatlabel
+            class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+            variant="on"
+          >
+            <input
+              pInputText
+              formControlName="ToDate"
+              type="date"
+              pSize="small"
+              [max]="today"
+              placeholder="Small"
+              id="ToDate"
+              autocomplete="off"
+              class="w-full h-8"
+            />
+            <label for="ToDate" class="text-xs">To Date</label>
+          </p-floatlabel>
+        </div>
 
-        <!-- Order Type -->
-        <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
-          <p-select
-            [checkmark]="true"
-            [showClear]="true"
-            size="small"
-            class="w-full h-8"
-            optionLabel="name"
-          />
-          <label class="text-xs">Select Order Type</label>
-        </p-floatlabel>
-        <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
-          <p-select
-            [checkmark]="true"
-            [showClear]="true"
-            size="small"
-            class="w-full h-8"
-            optionLabel="name"
-          />
-          <label class="text-xs">Status</label>
-        </p-floatlabel>
+        <div class="flex flex-col h-11">
+          <p-floatlabel
+            class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+            variant="on"
+          >
+            <p-multiselect
+              [showClear]="true"
+              size="small"
+              class="w-full h-8"
+              formControlName="OrderType"
+              [options]="OrderTypeData"
+              optionValue="Name"
+              optionLabel="Name"
+            />
+            <label class="text-xs">Select Order Type</label>
+          </p-floatlabel>
+        </div>
+        <div class="flex flex-col h-11">
+          <p-floatlabel
+            class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+            variant="on"
+          >
+            <p-multiselect
+              [showClear]="true"
+              size="small"
+              class="w-full h-8"
+              formControlName="RequestType"
+              [options]="RequestTypeData"
+              optionValue="id"
+              optionLabel="Name"
+            />
+            <label class="text-xs">Select Request Type</label>
+          </p-floatlabel>
+        </div>
 
-        <!-- Part Number -->
-        <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
-          <input
-            pInputText
-            formControlName="PartNumber"
-            id="partNumber"
-            autocomplete="off"
-            class="w-full h-8"
-          />
-          <label for="partNumber" class="text-xs">Part Number</label>
-        </p-floatlabel>
+        <div class="flex flex-col h-11">
+          <p-floatlabel
+            class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+            variant="on"
+          >
+            <p-multiselect
+              formControlName="Status"
+              size="small"
+              class="w-full h-8"
+              [options]="StatusData"
+              optionLabel="Name"
+              optionValue="Name"
+            />
+            <label class="text-xs">Status</label>
+          </p-floatlabel>
+        </div>
 
-        <!-- Job Card Number -->
-        <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
-          <input
-            pInputText
-            formControlName="JobCardNumber"
-            id="jobCardNumber"
-            autocomplete="off"
-            class="w-full h-8"
-          />
-          <label for="jobCardNumber" class="text-xs">Job Card Number</label>
-        </p-floatlabel>
+        <div class="flex flex-col h-11">
+          <p-floatlabel
+            class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+            variant="on"
+          >
+            <input
+              pInputText
+              formControlName="PartNumber"
+              id="partNumber"
+              autocomplete="off"
+              class="w-full h-8"
+              (keypress)="allowOnlyLettersAndNumber($event)"
+            />
+            <label for="partNumber" class="text-xs">Part Number</label>
+          </p-floatlabel>
+        </div>
 
-        <!-- Vehicle Number -->
-        <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
-          <input
-            pInputText
-            formControlName="VehicleNumber"
-            id="vehicleNumber"
-            autocomplete="off"
-            class="w-full h-8"
-          />
-          <label for="vehicleNumber" class="text-xs">Vehicle Number</label>
-        </p-floatlabel>
+        <div class="flex flex-col h-11">
+          <p-floatlabel
+            class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+            variant="on"
+          >
+            <input
+              pInputText
+              formControlName="JobCardNumber"
+              id="jobCardNumber"
+              autocomplete="off"
+              class="w-full h-8"
+              (keypress)="allowOnlyLettersAndNumber($event)"
+            />
+            <label for="jobCardNumber" class="text-xs">Job Card Number</label>
+          </p-floatlabel>
+        </div>
 
-        <!-- Advisor -->
-        <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
-          <p-select
-            [checkmark]="true"
-            [showClear]="true"
-            size="small"
-            class="w-full h-8"
-            optionLabel="name"
-          />
-          <label class="text-xs">Advisor</label>
-        </p-floatlabel>
+        <div class="flex flex-col h-11">
+          <p-floatlabel
+            class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+            variant="on"
+          >
+            <input
+              pInputText
+              formControlName="VehicleNumber"
+              id="vehicleNumber"
+              autocomplete="off"
+              class="w-full h-8"
+              (keypress)="allowOnlyLettersAndNumber($event)"
+            />
+            <label for="vehicleNumber" class="text-xs">Vehicle Number</label>
+          </p-floatlabel>
+        </div>
 
-        <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
+        <div class="flex flex-col h-11">
+          <p-floatlabel
+            class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+            variant="on"
+          >
+            <p-select
+              [checkmark]="true"
+              [showClear]="true"
+              size="small"
+              class="w-full h-8"
+              optionLabel="name"
+            />
+            <label class="text-xs">Advisor</label>
+          </p-floatlabel>
+        </div>
+
+        <!-- <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
           <p-select
             [checkmark]="true"
             [showClear]="true"
@@ -165,7 +227,7 @@
           </div>
         </div>
 
-        <!-- Custom Filter -->
+       
         <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
           <p-select
             [checkmark]="true"
@@ -175,25 +237,20 @@
             optionLabel="name"
           />
           <label class="text-xs">Custom Filter</label>
-        </p-floatlabel>
+        </p-floatlabel> -->
 
         <!-- Table Column -->
-         
-        <div class="flex h-8 gap-4  justify-center items-center">
-          <p-checkbox inputId="ingredient1" name="pizza" value="Cheese" />
-          <label for="ingredient1" class="mt-2"> View Group Data </label>
-        </div>
       </div>
 
       <div class="flex w-full mt-4 gap-2">
         <p-button
           label="View Order Status"
           size="small"
-          (onClick)="onClickView()"
+          (onClick)="OnClickViewOrderStatus()"
         />
-        
+
         <p-button size="small" icon="pi pi-download" />
-        
+
         <p-button
           size="small"
           icon="pi pi-sliders-h"
@@ -213,283 +270,550 @@
   >
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
+        #dt1
+        [value]="TableViewData"
+        selectionMode="multiple"
         [scrollable]="true"
         scrollHeight="600px"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         [showGridlines]="true"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 30, 50, TableViewData?.length]"
         scrollDirection="both"
+        paginatorDropdownAppendTo="body"
         class="!w-[90vw]"
         [tableStyle]="{ 'min-width': '50rem' }"
+        [globalFilterFields]="[
+          'bigid',
+          'Location',
+          'LocationId',
+          'part_number1',
+          'Latest',
+          'isSubstitution',
+          'vehiclenumber',
+          'vehiclemodel',
+          'Jobcard_number',
+          'jobcart_type',
+          'JobTypeId',
+          'Advisor',
+          'SCS_Status',
+          'RequestType',
+          'Ordertye',
+          'Partdesc',
+          'MOQ',
+          'Qty',
+          'Price',
+          'CurrentStock',
+          'Stock',
+          'Group_stock',
+          'CurrentGroupStock',
+          'Ordervalue',
+          'Dateadded',
+          'jobcardopendate',
+          'Final_Close_Date',
+          'JobLineCloseDate',
+          'Current_status',
+          'SCS_Remarks',
+          'JobCardStatus'
+        ]"
       >
-        <ng-template #header>
-          <tr class="">
-            <th
-              class="!px-1 flex-auto !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px] !min-h-[22px]"
-            >
+        <!-- ✅ Paginator Dropdown -->
+        <ng-template let-item pTemplate="paginatordropdownitem">
+          {{ item.value === TableViewData?.length ? "All" : item.value }}
+        </ng-template>
+
+        <!-- ✅ Caption -->
+        <ng-template pTemplate="caption">
+          <div class="flex items-center">
+            <p-button
+              label="Clear"
+              size="small"
+              [outlined]="true"
+              icon="pi pi-filter-slash"
+              (click)="clear(dt1)"
+            ></p-button>
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                size="small"
+                (input)="onGlobalFilter($event)"
+                placeholder="Search keyword"
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
+        <!-- ✅ Header -->
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300">
               S.No
             </th>
+
+            <!-- 🔹 All new columns below -->
             <th
-              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+              pSortableColumn="bigid"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Approval ID
+              <p-sortIcon field="bigid" />
+              <p-columnFilter type="text" field="bigid" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+              pSortableColumn="Location"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Location
+              <p-sortIcon field="Location" />
+              <p-columnFilter type="text" field="Location" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+              pSortableColumn="part_number1"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Part Number
+              <p-sortIcon field="part_number1" />
+              <p-columnFilter type="text" field="part_number1" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+              pSortableColumn="Latest"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Latest Part Number
+              <p-sortIcon field="Latest" />
+              <p-columnFilter type="text" field="Latest" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="isSubstitution"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Substitution
+              <p-sortIcon field="isSubstitution" />
+              <p-columnFilter
+                type="text"
+                field="isSubstitution"
+                display="menu"
+              />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="vehiclenumber"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Vehicle Number
+              <p-sortIcon field="vehiclenumber" />
+              <p-columnFilter
+                type="text"
+                field="vehiclenumber"
+                display="menu"
+              />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="vehiclemodel"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Vehicle Model
+              <p-sortIcon field="vehiclemodel" />
+              <p-columnFilter type="text" field="vehiclemodel" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Jobcard_number"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Job Card Number
+              <p-sortIcon field="Jobcard_number" />
+              <p-columnFilter
+                type="text"
+                field="Jobcard_number"
+                display="menu"
+              />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="jobcart_type"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Job Card Type
+              <p-sortIcon field="jobcart_type" />
+              <p-columnFilter type="text" field="jobcart_type" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Advisor"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Advisor Name
+              <p-sortIcon field="Advisor" />
+              <p-columnFilter type="text" field="Advisor" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="FloorSupervisor"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Floor Supervisor
+              <p-sortIcon field="FloorSupervisor" />
+              <p-columnFilter
+                type="text"
+                field="FloorSupervisor"
+                display="menu"
+              />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Ordertye"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
-              Job Card Type
+              Order Type
+              <p-sortIcon field="Ordertye" />
+              <p-columnFilter type="text" field="Ordertye" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              Order Type.
-            </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="RequestType"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Request Type
+              <p-sortIcon field="RequestType" />
+              <p-columnFilter type="text" field="RequestType" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Partdesc"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Part Description
+              <p-sortIcon field="Partdesc" />
+              <p-columnFilter type="text" field="Partdesc" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="MOQ"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               MOQ
+              <p-sortIcon field="MOQ" />
+              <p-columnFilter type="text" field="MOQ" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Qty"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Quantity
+              <p-sortIcon field="Qty" />
+              <p-columnFilter type="text" field="Qty" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Price"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Price
+              <p-sortIcon field="Price" />
+              <p-columnFilter type="text" field="Price" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              Orignal Stock.
-            </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Stock"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Stock
+              <p-sortIcon field="Stock" />
+              <p-columnFilter type="text" field="Stock" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="CurrentStock"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Original Stock
+              <p-sortIcon field="CurrentStock" />
+              <p-columnFilter type="text" field="CurrentStock" display="menu" />
+            </th>
+            <th
+              pSortableColumn="Group_stock"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Group Stock
+              <p-sortIcon field="Group_stock" />
+              <p-columnFilter type="text" field="Group_stock" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="CurrentGroupStock"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Latest Group Stock
+              <p-sortIcon field="CurrentGroupStock" />
+              <p-columnFilter
+                type="text"
+                field="CurrentGroupStock"
+                display="menu"
+              />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Ordervalue"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Order Value
+              <p-sortIcon field="Ordervalue" />
+              <p-columnFilter type="text" field="Ordervalue" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Dateadded"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Ordering Date
+              <p-sortIcon field="Dateadded" />
+              <p-columnFilter type="text" field="Dateadded" display="menu" />
             </th>
+            
+
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              Stockable
-            </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              GM Approval
-            </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              GM Remarks
-            </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="GMRemarks"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               PO Number
+              <p-sortIcon field="GMRemarks" />
+              <p-columnFilter type="text" field="GMRemarks" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="jobcardopendate"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               JobCard Open Date
+              <p-sortIcon field="jobcardopendate" />
+              <p-columnFilter
+                type="text"
+                field="jobcardopendate"
+                display="menu"
+              />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Final_Close_Date"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               JobCard Close Date
+              <p-sortIcon field="Final_Close_Date" />
+              <p-columnFilter
+                type="text"
+                field="Final_Close_Date"
+                display="menu"
+              />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="JobLineCloseDate"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               JobLine Close Date
+              <p-sortIcon field="JobLineCloseDate" />
+              <p-columnFilter
+                type="text"
+                field="JobLineCloseDate"
+                display="menu"
+              />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="GMRemarks"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               JobLine Update Date
+              <p-sortIcon field="GMRemarks" />
+              <p-columnFilter type="text" field="GMRemarks" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="GMRemarks"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               OOQ Date
+              <p-sortIcon field="GMRemarks" />
+              <p-columnFilter type="text" field="GMRemarks" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              Advance/Estimate 
-            </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              View Receipt
-            </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="SCS_Status"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               SCS Approval
+              <p-sortIcon field="SCS_Status" />
+              <p-columnFilter type="text" field="SCS_Status" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="SCS_Remarks"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               SCS Remarks
+              <p-sortIcon field="SCS_Remarks" />
+              <p-columnFilter type="text" field="SCS_Remarks" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="GMRemarks"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Open Jobline with Open JC
+              <p-sortIcon field="GMRemarks" />
+              <p-columnFilter type="text" field="GMRemarks" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="GMRemarks"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Jobline Status
+              <p-sortIcon field="GMRemarks" />
+              <p-columnFilter type="text" field="GMRemarks" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="GMRemarks"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Jobcard Status
+              <p-sortIcon field="GMRemarks" />
+              <p-columnFilter type="text" field="GMRemarks" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="GMRemarks"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Order Remarks
+              <p-sortIcon field="GMRemarks" />
+              <p-columnFilter type="text" field="GMRemarks" display="menu" />
             </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              Order Place
-            </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              Re-Order
-            </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              Re-Submit
-            </th>
+            <th class="!px-1 !py-1 text-[12px] !bg-gray-300">Order Place</th>
+            <th class="!px-1 !py-1 text-[12px] !bg-gray-300">Re Order</th>
           </tr>
         </ng-template>
 
-        <ng-template #body let-rowData let-i="rowIndex">
-          <tr
-            class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
-          >
-            <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
-            <td
-              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
-            >
-              {{ rowData.Dashboard }}
+        <!-- ✅ Body -->
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+          <tr [pSelectableRow]="rowData" class="hover:bg-gray-100">
+            <td class="p-1 text-[12px] text-center">{{ i + 1 }}</td>
+
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.bigid }}
+            </td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.Location }}</td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.part_number1 }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.Latest }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.isSubstitution }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.vehiclenumber }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.vehiclemodel }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.Jobcard_number }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.jobcart_type }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.Advisor }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.FloorSupervisor }}
+            </td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.Ordertye }}</td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.RequestType }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.Partdesc }}
+            </td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.MOQ }}</td>
+
+            <td class="p-1 text-[13px] text-center">{{ rowData.Qty }}</td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.Price }}</td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.Stock }}</td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.CurrentStock }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.Group_stock }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.CurrentGroupStock }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.Ordervalue }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.Dateadded | date : "dd-MM-yyyy HH:mm:ss a" : "UTC" }}
+            </td>
+            <td class="p-1 text-[13px] text-center"></td>
+
+            <td class="p-1 text-[13px] text-center">
+              {{
+                rowData.jobcardopendate | date : "dd-MM-yyyy HH:mm:ss a" : "UTC"
+              }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{
+                rowData.Final_Close_Date
+                  | date : "dd-MM-yyyy HH:mm:ss a" : "UTC"
+              }}
+            </td>
+
+            <td class="p-1 text-[13px] text-center">
+              {{
+                rowData.JobLineCloseDate
+                  | date : "dd-MM-yyyy HH:mm:ss a" : "UTC"
+              }}
+            </td>
+            <td class="p-1 text-[13px] text-center"></td>
+            <td class="p-1 text-[13px] text-center"></td>
+            <td class="p-1 text-[13px] text-center">
+              {{rowData.SCS_Status}}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{rowData.SCS_Remarks}}
+            </td>
+            <td class="p-1 text-[13px] text-center"></td>
+            <td class="p-1 text-[13px] text-center"></td>
+            <td class="p-1 text-[13px] text-center">
+                {{rowData.JobCardStatus}}
+            </td>
+            <td class="p-1 text-[13px] text-center"></td>
+            <td class="p-1 text-[13px] text-center">
+              <div class="flex flex-col gap-2">
+                <button
+                  class="bg-gray-400 h-6 w-8 text-white px-2 z-0 py-1 rounded-lg text-[8px] font-medium hover:bg-black transition-transform duration-200 hover:scale-105"
+                  (click)="OnclickYesInputPONumber(rowData)"
+                >
+                  Yes
+                </button>
+
+                <button
+                  class="bg-gray-400 h-6 w-8 text-white px-2 z-0 py-1 rounded-lg text-[8px] font-medium hover:bg-black focus:outline-none focus:ring-2 focus:ring-green-400 transition-transform duration-200 hover:scale-105"
+                   (click)="OnClickNo(rowData)"
+                  >
+                  No
+                </button>
+              </div>
+            </td>
+            <td class="p-1 text-[13px] text-center">
+               <button *ngIf="rowData.SCS_Status == 'Decline'"
+                  class="bg-blue-400 h-6 w-12 text-white px-2 z-0 py-1 rounded-lg text-[8px] font-medium hover:bg-bg-blue-600 transition-transform duration-200 hover:scale-105"
+                  (click)="OnClickReOrder(rowData)"
+                >
+                  Re Order
+                </button>
             </td>
           </tr>
         </ng-template>
       </p-table>
-
-      <p-paginator
-        class="h-6 w-full text-sm"
-        (onPageChange)="onPageChange($event)"
-        [first]="first"
-        [rows]="rows"
-        [appendTo]="body"
-        pagginatordropdownappendto="body"
-        [totalRecords]="120"
-        [rowsPerPageOptions]="[10, 20, 30]"
-      />
     </div>
   </div>
 </div>
 
 <p-dialog
   header="⚙️ Configure Table Columns"
-  [(visible)]="visible"
+  
   [modal]="true"
   [breakpoints]="{ '1199px': '75vw', '575px': '95vw' }"
   [style]="{ width: '40vw' }"
   [contentStyle]="{ 'max-height': '60vh', 'overflow-y': 'auto' }"
   [draggable]="true"
-
   [resizable]="false"
-
-
 >
   <!-- Content -->
   <div class="grid grid-cols-2 gap-3 p-2">
@@ -521,20 +845,32 @@
         label="Save as Default"
         severity="info"
         class="p-button-outlined p-button-sm"
-        (click)="visible=false"
+        (click)="visible = false"
       ></button>
       <button
         pButton
         label="Cancel"
         class="p-button-outlined p-button-sm"
-        (click)="visible=false"
+        (click)="visible = false"
       ></button>
-      <button
-        pButton
-        label="Apply for Now"
-        class="p-button-sm"
-        
-      ></button>
+      <button pButton label="Apply for Now" class="p-button-sm"></button>
     </div>
   </ng-template>
+</p-dialog>
+
+
+<p-dialog
+  header="Message"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="text-lg">
+    {{ Result }}
+  </p>
+
+
 </p-dialog>

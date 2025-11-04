@@ -13,6 +13,7 @@
             pInputText
             id="advisorname"
             formControlName="AdvisorName"
+            (keypress)="allowOnlyLetters($event)"
             class="text-xs h-8 w-44"
             [ngClass]="{
               'border border-red-500':
@@ -45,6 +46,7 @@
             id="advisorphone"
             formControlName="AdvisorPhone"
             class="text-xs h-8 w-44"
+            (keypress)="allowOnlyNumber($event)"
             maxlength="10"
             [ngClass]="{
               'border border-red-500':
@@ -221,6 +223,8 @@
         [showGridlines]="true"
         [paginator]="true"
         [globalFilterFields]="['Advisor', 'PhoneNo', 'Email', 'CreatedAt']"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         [rows]="10"
         [rowsPerPageOptions]="[5, 10, 25, 50, this.AdvisorViewData.length]"
         scrollDirection="both"

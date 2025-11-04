@@ -9,7 +9,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { PrimeNG } from 'primeng/config';
 import { MessageService } from 'primeng/api';
 import { PaginatorState } from 'primeng/paginator';
-import { CreateOrderViewServiceService } from '../../../services/Auto-Approvals/create-order-view-service.service';
 
 @Component({
   selector: 'app-stock-order-request',
@@ -22,7 +21,7 @@ export class StockOrderRequestComponent {
   AddPartWise: FormGroup
   visible: boolean = false;
 
-  constructor(private fb: FormBuilder, private config: PrimeNG, private messageService: MessageService, private createorderviewservice: CreateOrderViewServiceService) {
+  constructor(private fb: FormBuilder, private config: PrimeNG, private messageService: MessageService) {
     this.AddPartWise = this.fb.group({
       PartNumber: (''),
       Quantity: (''),
@@ -249,44 +248,7 @@ export class StockOrderRequestComponent {
   selectedColumns: string[] = this.tableColumns.map(c => c.field);
 
 
-  onUploadExcel(event: any) {
-    const formData = new FormData();
-    formData.append('file', event.files[0]);
-    formData.append('userId', sessionStorage.getItem('userid') || '');
-    formData.append('LocationId', sessionStorage.getItem('headerlocation') || '');
-    formData.append('OrderType', 'WS');
-
-
-
-    // Backend call
-    this.createorderviewservice.BulkUploadWorkShop(formData).subscribe({
-      next: (res) => {
-        console.log("Upload Success", res);
-      },
-      error: (err) => {
-        console.error("Upload Failed", err);
-      }
-    });
-  }
-  onUploadExcelCounterBulk(event: any) {
-    const formData = new FormData();
-    formData.append('file', event.files[0]);
-    formData.append('userId', sessionStorage.getItem('userid') || '');
-    formData.append('LocationId', sessionStorage.getItem('headerlocation') || '');
-    formData.append('OrderType', 'WS');
-
-
-
-    // Backend call
-    this.createorderviewservice.BulkUploadWorkShop(formData).subscribe({
-      next: (res) => {
-        console.log("Upload Success", res);
-      },
-      error: (err) => {
-        console.error("Upload Failed", err);
-      }
-    });
-  }
+ 
 
 
 }

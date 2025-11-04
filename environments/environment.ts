@@ -49,11 +49,11 @@ export const environment = {
   //DiverterUser: 'https://scope.sparecare.in/UAP_SC/home.aspx',
 
 
-  //  mm  mmmmmAyush Module API Url
+  // Ayush Module API Url
   //EnvApiUrlMaster: 'http://web36.185.238.new.ocpwebserver.com/api/v1/',
-  //EnvApiUrlMaster: 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/',
+  EnvApiUrlMaster: 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/',
   //EnvApiUrlMaster: 'https://scopeapi.sparecare.in/api/v1/',
-  EnvApiUrlMaster: 'http://web10.185.238.new.ocpwebserver.com/api/v1/',
+  //EnvApiUrlMaster: 'http://web10.185.238.new.ocpwebserver.com/api/v1/',
 
 
    //apiUrl: 'https://scopeapi.sparecare.in/api/',
@@ -61,3 +61,6 @@ export const environment = {
 };
 
 
+
+
+// http://localhost:4200/core/landing?usertoken=0x0200000046E1779B5C59368B699B4A2CF057F582EC21845DDF7331B204D04AC6BEE30093&usertype=d

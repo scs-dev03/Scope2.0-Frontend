@@ -20,7 +20,7 @@ import { Table } from 'primeng/table';
 })
 export class PartyManagementComponent {
 
-  
+
 
 
   constructor(private globalBlockUiService: GlobalBlockUiService, private pmservice: PmServiceService) { }
@@ -183,7 +183,7 @@ export class PartyManagementComponent {
       next: (res: any) => {
         this.showtable = true;
         this.PartyViewData = res.data;
-        
+
         this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
@@ -213,7 +213,7 @@ export class PartyManagementComponent {
         this.PartyName = null
         this.PartyCode = null
         this.onClickShowTable()
-        
+
         this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
@@ -248,7 +248,7 @@ export class PartyManagementComponent {
       });
       return;
     }
-    else{
+    else {
       this.CreateParty(this.location, sessionStorage.getItem('userid') || '', this.PartyCode, this.PartyName);
     }
   }
@@ -340,6 +340,21 @@ export class PartyManagementComponent {
 
   onCancelEdit() {
     this.editDialogVisible = false;
+  }
+
+  allowOnlyLetters(event: KeyboardEvent) {
+    const char = event.key;
+    const pattern = /^[a-zA-Z\s]*$/;
+    if (!pattern.test(char)) {
+      event.preventDefault();
+    }
+  }
+  allowOnlyLettersAndNumber(event: KeyboardEvent) {
+    const char = event.key;
+    const pattern = /^[a-zA-Z0-9\s]*$/;
+    if (!pattern.test(char)) {
+      event.preventDefault();
+    }
   }
 
 

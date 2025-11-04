@@ -19,13 +19,51 @@
                 class="flex gap-4 flex-wrap"
                 [formGroup]="VechileOrderRequestInput"
               >
-                <div>
+                <div class="flex flex-col">
+                  <p-floatlabel variant="on">
+                    <p-select
+                      [options]="LocationData"
+                      optionValue="locationid"
+                      optionLabel="location"
+                      formControlName="Location"
+                      class="w-40 h-8"
+                      scrollHeight="250px"
+                      (onChange)="OnclickLoation()"
+                      [filter]="true"
+                      filterBy="location"
+                      [ngClass]="{
+                        'border border-red-500':
+                          VechileOrderRequestInput.get('Location')?.invalid &&
+                          (VechileOrderRequestInput.get('Location')?.touched ||
+                            VechileOrderRequestInput.get('Location')?.dirty)
+                      }"
+                    ></p-select>
+                    <label for="location" class="text-xs">Locations</label>
+                  </p-floatlabel>
+                  <div class="h-4">
+                    <span
+                      *ngIf="
+                        VechileOrderRequestInput.get('Location')?.hasError(
+                          'required'
+                        ) &&
+                        (VechileOrderRequestInput.get('Location')?.touched ||
+                          VechileOrderRequestInput.get('Location')?.dirty)
+                      "
+                      class="text-red-500 text-[10px]"
+                    >
+                      Location is required
+                    </span>
+                  </div>
+                </div>
+
+                <div class="h-10">
                   <p-floatlabel variant="on">
                     <input
                       pInputText
                       id="on_label"
                       formControlName="VechileNumber"
                       autocomplete="off"
+                      (keypress)="allowOnlyLettersAndNumber($event)"
                       class="w-40 h-8"
                     />
                     <label class="text-xs" for="on_label">Vehicle Number</label>
@@ -47,23 +85,39 @@
                     </span>
                   </div>
                 </div>
-                <p-floatlabel variant="on">
-                  <input
-                    pInputText
-                    id="on_label"
-                    formControlName="VechileModel"
-                    autocomplete="off"
-                    class="w-40 h-8"
-                  />
-                  <label class="text-xs" for="on_label">Vehicle Model</label>
-                </p-floatlabel>
+                <div class="h-10">
+                  <p-floatlabel variant="on">
+                    <input
+                      pInputText
+                      id="on_label"
+                      formControlName="VechileModel"
+                      (keypress)="allowOnlyLettersAndNumber($event)"
+                      autocomplete="off"
+                      class="w-40 h-8"
+                    />
+                    <label class="text-xs" for="on_label">Vehicle Model</label>
+                  </p-floatlabel>
+                  <div
+                    class="text-red-500 text-[10px]"
+                    *ngIf="
+                      VechileOrderRequestInput.get('VechileModel')?.touched &&
+                      VechileOrderRequestInput.get('VechileModel')?.invalid
+                    "
+                  >
+                    <span
+                      *ngIf="VechileOrderRequestInput.get('VechileModel')?.errors?.['required']"
+                      >Vehicle Model is required.</span
+                    >
+                  </div>
+                </div>
 
-                <div>
+                <div class="h-10">
                   <p-floatlabel variant="on">
                     <input
                       pInputText
                       id="on_label"
                       formControlName="JobCardNumber"
+                      (keypress)="allowOnlyLettersAndNumber($event)"
                       autocomplete="off"
                       class="w-40 h-8"
                     />
@@ -71,86 +125,15 @@
                       >Job Card Number</label
                     >
                   </p-floatlabel>
-                  <div
-                    class="text-red-500 text-[10px]"
-                    *ngIf="
-                      VechileOrderRequestInput.get('JobCardNumber')?.touched &&
-                      VechileOrderRequestInput.get('JobCardNumber')?.invalid
-                    "
-                  >
-                    <span
-                      *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['required']"
-                      >Vehicle Number is required.</span
-                    >
-                    <span
-                      *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['pattern']"
-                      >Must be 15 letters/numbers
-                    </span>
-                  </div>
                 </div>
-                <div>
-                  <p-floatlabel variant="on">
-                    <input
-                      pInputText
-                      id="on_label"
-                      formControlName="JobCardNumber"
-                      autocomplete="off"
-                      class="w-40 h-8"
-                    />
-                    <label class="text-xs" for="on_label">Advance</label>
-                  </p-floatlabel>
-                  <div
-                    class="text-red-500 text-[10px]"
-                    *ngIf="
-                      VechileOrderRequestInput.get('JobCardNumber')?.touched &&
-                      VechileOrderRequestInput.get('JobCardNumber')?.invalid
-                    "
-                  >
-                    <span
-                      *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['required']"
-                      >Vehicle Number is required.</span
-                    >
-                    <span
-                      *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['pattern']"
-                      >Must be 15 letters/numbers
-                    </span>
-                  </div>
-                </div>
-                <span class="mt-1">or</span>
-                <div>
-                  <p-floatlabel variant="on">
-                    <input
-                      pInputText
-                      id="on_label"
-                      formControlName="JobCardNumber"
-                      autocomplete="off"
-                      class="w-40 h-8"
-                    />
-                    <label class="text-xs" for="on_label">Estimate</label>
-                  </p-floatlabel>
-                  <div
-                    class="text-red-500 text-[10px]"
-                    *ngIf="
-                      VechileOrderRequestInput.get('JobCardNumber')?.touched &&
-                      VechileOrderRequestInput.get('JobCardNumber')?.invalid
-                    "
-                  >
-                    <span
-                      *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['required']"
-                      >Vehicle Number is required.</span
-                    >
-                    <span
-                      *ngIf="VechileOrderRequestInput.get('JobCardNumber')?.errors?.['pattern']"
-                      >Must be 15 letters/numbers
-                    </span>
-                  </div>
-                </div>
-                <div>
+                <div class="h-10">
                   <p-floatlabel class="w-40" variant="on">
                     <p-select
                       inputId="on_label"
-                      optionLabel="name"
+                      optionLabel="Jobtype"
+                      optionValue="Jobtype"
                       class="w-40 h-8"
+                      [options]="JobCardData"
                       formControlName="JobCardType"
                     />
                     <label for="on_label" class="text-xs">Job Card Type</label>
@@ -165,12 +148,13 @@
                     >
                   </div>
                 </div>
-
-                <div>
+                <div class="h-10">
                   <p-floatlabel class="w-40" variant="on">
                     <p-select
                       inputId="on_label"
-                      optionLabel="name"
+                      [options]="AdvisorData"
+                      optionValue="Advisor"
+                      optionLabel="Advisor"
                       class="w-40 h-8"
                       formControlName="Advisor"
                     />
@@ -186,11 +170,13 @@
                     >
                   </div>
                 </div>
-                <div>
+                <div class="h-10">
                   <p-floatlabel class="w-40" variant="on">
                     <p-select
                       inputId="on_label"
-                      optionLabel="name"
+                      optionLabel="Name"
+                      optionValue="Name"
+                      [options]="OrderTypeData"
                       class="w-40 h-8"
                       formControlName="OrderType"
                     />
@@ -206,7 +192,72 @@
                     >
                   </div>
                 </div>
+                <div class="flex gap-2">
+                  <p-checkbox
+                    inputId="ingredient1"
+                    name="upload"
+                    formControlName="AdvaceReceiptUpload"
+                    binary="true"
+                    class="on hover: cursor-pointer"
+                  ></p-checkbox>
+                  <label
+                    for="ingredient1"
+                    class="mt-1 on hover: cursor-pointer"
+                  >
+                    Do You Want to Upload Advance/Estimate Recipt
+                  </label>
+                </div>
+                <div
+                  class="h-10"
+                  *ngIf="
+                    this.VechileOrderRequestInput.get('AdvaceReceiptUpload')
+                      ?.value
+                  "
+                >
+                  <p-floatlabel variant="on">
+                    <input
+                      pInputText
+                      id="on_label"
+                      formControlName="Advance"
+                      autocomplete="off"
+                      (keypress)="allowNumberOnly($event)"
+                      class="w-40 h-8"
+                    />
+                    <label class="text-xs" for="on_label">Advance</label>
+                  </p-floatlabel>
+                </div>
+                <span
+                  class="mt-1"
+                  *ngIf="
+                    this.VechileOrderRequestInput.get('AdvaceReceiptUpload')
+                      ?.value
+                  "
+                  >or</span
+                >
+                <div
+                  *ngIf="
+                    this.VechileOrderRequestInput.get('AdvaceReceiptUpload')
+                      ?.value
+                  "
+                >
+                  <p-floatlabel variant="on">
+                    <input
+                      pInputText
+                      id="on_label"
+                      formControlName="Estimate"
+                      autocomplete="off"
+                      (keypress)="allowNumberOnly($event)"
+                      class="w-40 h-8"
+                    />
+                    <label class="text-xs" for="on_label">Estimate</label>
+                  </p-floatlabel>
+                </div>
+
                 <p-fileupload
+                  *ngIf="
+                    this.VechileOrderRequestInput.get('AdvaceReceiptUpload')
+                      ?.value
+                  "
                   #fu
                   mode="basic"
                   chooseLabel="Advance/Estimate Recipt upload"
@@ -216,111 +267,126 @@
                   chooseIcon="pi pi-upload"
                   accept="image/*"
                   maxFileSize="1000000"
-                />
-                <p-button
-                  label="Upload"
-                  size="small"
-                  (onClick)="fu.upload()"
-                  severity="secondary"
+                   (onSelect)="OnSelectAdvanceReceiptImage($event, fu)"
                 />
               </div>
               <br />
 
-              <div class="flex justify-start bg-white">
+              <!-- Checkbox -->
+              <div class="flex gap-2">
+                <p-checkbox
+                  inputId="ingredient1"
+                  name="upload"
+                  [(ngModel)]="MultiUpload"
+                  binary="true"
+                ></p-checkbox>
+                <label for="ingredient1" class="mt-1">
+                  Do You Want to Upload
+                </label>
+              </div>
+
+              <div
+                class="flex justify-start bg-white mb-3"
+                *ngIf="!MultiUpload"
+              >
                 <p class="text-md font-medium">Add Part Wise</p>
               </div>
-              <br />
-              <div [formGroup]="AddPartWise">
+
+              <div
+                class="flex flex-wrap gap-3"
+                [formGroup]="AddPartWise"
+                *ngIf="!MultiUpload"
+              >
                 <div formArrayName="parts">
-                  <!-- Loop through each part -->
                   <div
                     *ngFor="let part of parts.controls; let i = index"
                     [formGroupName]="i"
                     class="flex flex-wrap gap-3 mb-3"
                   >
-                    <!-- Part Number Field -->
-                    <div class="flex flex-col items-start gap-2">
-                      <div>
-                        <label
-                          for="partnumber-{{ i }}"
-                          class="text-sm mt-1 font-medium"
-                          >Part Number :</label
+                    <div class="flex flex-col h-8 mb-1">
+                      <p-floatlabel variant="on">
+                        <label for="partnumber-{{ i }}" class="text-[13px]"
+                          >Part Number</label
                         >
                         <input
-                          type="text"
-                          id="partnumber-{{ i }}"
+                          pInputText
+                          id="partnumber"
                           formControlName="PartNumber"
-                          placeholder="Enter Part Number"
-                          pInputText
-                          class="w-44 h-8 ml-2 !text-xs"
+                          [pSize]="'small'"
+                          class="text-xs w-44 h-8"
+                          (keypress)="blockSpecialChar($event)"
                         />
-                      </div>
-                      <div
-                        *ngIf="part.get('PartNumber')?.touched"
+                      </p-floatlabel>
+                      <small
+                        *ngIf="
+                          part.get('PartNumber')?.invalid &&
+                          part.get('PartNumber')?.touched
+                        "
                         class="text-red-500 text-[10px]"
                       >
-                        <span
-                          *ngIf="part.get('PartNumber')?.errors?.['required']"
-                          >Part Number is required.</span
-                        >
-                      </div>
+                        Part Number is required
+                      </small>
                     </div>
 
-                    <!-- Quantity Field -->
-                    <div class="flex flex-col items-start gap-2">
-                      <div>
-                        <label
-                          for="qty-{{ i }}"
-                          class="text-sm mt-1 font-medium"
-                          >Quantity :</label
+                    <div class="flex flex-col h-8 mb-1">
+                      <p-floatlabel variant="on">
+                        <label for="qty-{{ i }}" class="text-[13px]"
+                          >Quantity</label
                         >
                         <input
-                          type="text"
-                          id="qty-{{ i }}"
+                          pInputText
+                          id="qty"
+                          type="number"
+                          min="1"
                           formControlName="Quantity"
-                          placeholder="Enter Quantity"
-                          class="w-44 h-8 ml-2 !text-xs"
-                          pInputText
+                          [pSize]="'small'"
+                          class="text-xs w-44 h-8"
+                          (input)="blockZero($event)"
+                          (keypress)="preventNegative($event)"
+                          (paste)="blockNegativePaste($event)"
                         />
-                      </div>
-                      <div
-                        *ngIf="part.get('Quantity')?.touched"
+                      </p-floatlabel>
+                      <small
+                        *ngIf="
+                          part.get('Quantity')?.invalid &&
+                          part.get('Quantity')?.touched
+                        "
                         class="text-red-500 text-[10px]"
                       >
-                        <span *ngIf="part.get('Quantity')?.errors?.['required']"
-                          >Quantity is required.</span
+                        <ng-container
+                          *ngIf="part.get('Quantity')?.errors?.['required']"
                         >
-                      </div>
+                          Quantity is required
+                        </ng-container>
+                        <ng-container
+                          *ngIf="part.get('Quantity')?.errors?.['pattern']"
+                        >
+                          Quantity must contain only numbers (no special
+                          characters)
+                        </ng-container>
+                        <ng-container
+                          *ngIf="part.get('Quantity')?.errors?.['min']"
+                        >
+                          Quantity cannot be negative
+                        </ng-container>
+                      </small>
                     </div>
 
-                    <!-- Remark Field -->
-                    <div class="flex flex-col items-start gap-2">
-                      <div>
-                        <label
-                          for="remark-{{ i }}"
-                          class="text-sm mt-1 font-medium"
-                          >Remark :</label
+                    <div class="flex flex-col h-8 mb-1">
+                      <p-floatlabel variant="on">
+                        <label for="remark-{{ i }}" class="text-[13px]"
+                          >Remark</label
                         >
                         <input
-                          type="text"
-                          id="remark-{{ i }}"
-                          formControlName="Remark"
-                          placeholder="Enter Remark"
-                          class="w-44 h-8 ml-2 !text-xs"
                           pInputText
+                          id="remark"
+                          formControlName="Remark"
+                          [pSize]="'small'"
+                          class="text-xs w-44 h-8"
                         />
-                      </div>
-                      <div
-                        *ngIf="part.get('Remark')?.touched"
-                        class="text-red-500 text-[10px]"
-                      >
-                        <span *ngIf="part.get('Remark')?.errors?.['required']"
-                          >Remark is required.</span
-                        >
-                      </div>
+                      </p-floatlabel>
                     </div>
 
-                    <!-- Remove Button -->
                     <p-button
                       *ngIf="parts.length > 1"
                       [style]="{ 'background-color': '#008080', color: '#fff' }"
@@ -328,22 +394,23 @@
                       aria-label="Save"
                       (onClick)="removePart(i)"
                     />
-
-                    <p-button
-                      [style]="{ 'background-color': '#008080', color: '#fff' }"
-                      icon="pi pi-plus"
-                      aria-label="Save"
-                      (onClick)="addPart()"
-                    />
                   </div>
                 </div>
+
+                <p-button
+                  [style]="{ 'background-color': '#008080', color: '#fff' }"
+                  icon="pi pi-plus"
+                  aria-label="add"
+                  (onClick)="addParts()"
+                />
               </div>
 
-              <p-divider />
-
-              <p class="text-md font-medium">Order Upload</p>
+              <p class="text-md font-medium" *ngIf="MultiUpload">
+                Order Upload
+              </p>
               <div
                 class="w-full max-w-full flex gap-5 flex-wrap items-center bg-gray-100 p-3 font-medium"
+                *ngIf="MultiUpload"
               >
                 <p-button
                   size="small"
@@ -354,10 +421,9 @@
                   class="text-xs"
                 />
                 <p-fileupload
+                  #fum
                   name="demo[]"
-                  url="https://www.primefaces.org/cdn/api/upload.php"
-                  [multiple]="true"
-                  accept="xlxs/*"
+                  accept=".xlsx,.xls"
                   class="text-xs"
                   [maxFileSize]="1000000"
                   mode="advanced"
@@ -365,15 +431,11 @@
                   [chooseStyleClass]="
                     'w-[84px] background-color: #008080, color: #fff h-[30px] !text-[12px]'
                   "
-                  uploadLabel="Upload"
-                  cancelLabel="Cancel"
                   styleClass="w-auto"
+                  (onSelect)="OnSelectFileMulti($event, fum)"
+                  showUploadButton="false"
+                  showCancelButton="false"
                 >
-                  <!-- <ng-template #empty>
-            <div class="text-gray-500 text-sm">
-              Drag and drop files here to upload.
-            </div>
-          </ng-template> -->
                 </p-fileupload>
               </div>
               <br />
@@ -389,7 +451,7 @@
                 <p-button
                   label="Save"
                   size="small"
-                  (onClick)="OnClickAdd()"
+                  (onClick)="OnClickSaveSingleAndMulti()"
                   icon="pi pi-check"
                   [style]="{ 'background-color': '#008080', color: '#fff' }"
                   iconPos="right"
@@ -397,7 +459,49 @@
               </div>
             </p-tabpanel>
             <p-tabpanel value="1">
-              <p class="text-md font-medium">Bulk Order Upload</p>
+              <div
+                class="flex gap-4 mb-2 flex-wrap"
+                [formGroup]="VechileOrderFilterDataBulk"
+              >
+                <div class="flex flex-col">
+                  <p-floatlabel variant="on">
+                    <p-select
+                      [options]="LocationData"
+                      optionValue="locationid"
+                      optionLabel="location"
+                      formControlName="Location"
+                      class="w-44"
+                      scrollHeight="250px"
+                      [filter]="true"
+                      filterBy="location"
+                      [ngClass]="{
+                        'border border-red-500':
+                          VechileOrderFilterDataBulk.get('Location')?.invalid &&
+                          (VechileOrderFilterDataBulk.get('Location')
+                            ?.touched ||
+                            VechileOrderFilterDataBulk.get('Location')?.dirty)
+                      }"
+                    ></p-select>
+                    <label for="location" class="text-xs">Locations</label>
+                  </p-floatlabel>
+                  <div class="h-4">
+                    <span
+                      *ngIf="
+                        VechileOrderFilterDataBulk.get('Location')?.hasError(
+                          'required'
+                        ) &&
+                        (VechileOrderFilterDataBulk.get('Location')?.touched ||
+                          VechileOrderFilterDataBulk.get('Location')?.dirty)
+                      "
+                      class="text-red-500 text-xs"
+                    >
+                      Location is required
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+
               <div
                 class="w-full max-w-full flex gap-5 flex-wrap items-center bg-gray-100 p-3 font-medium"
               >
@@ -405,11 +509,11 @@
                   size="small"
                   icon="pi pi-download"
                   [style]="{ 'background-color': '#008080', color: '#fff' }"
-                  (onClick)="SampleExcelDownload()"
                   iconPos="right"
                   class="text-xs"
                 />
                 <p-fileUpload
+                  #fu
                   name="excelFile"
                   [multiple]="true"
                   accept=".xlsx,.xls"
@@ -417,16 +521,35 @@
                   [maxFileSize]="1000000"
                   mode="advanced"
                   chooseLabel="Choose"
-                  uploadLabel="Upload"
-                  cancelLabel="Cancel"
+                  showCancelButton="false"
+                  showUploadButton="false"
+                  (onSelect)="OnSelectFileBulk($event, fu)"
                   styleClass="w-auto"
                   [customUpload]="true"
-                  (uploadHandler)="onUploadExcel($event)"
                   [chooseStyleClass]="
                     'w-[84px] bg-teal-600 text-white h-[30px] !text-[12px]'
                   "
                 >
                 </p-fileUpload>
+              </div>
+              <br />
+
+              <div class="flex gap-2">
+                <p-button
+                  label="Reset"
+                  size="small"
+                  icon="pi pi-undo"
+                  [style]="{ 'background-color': '#008080', color: '#fff' }"
+                  iconPos="right"
+                />
+                <p-button
+                  label="Save"
+                  size="small"
+                  (onClick)="OnClickBulkUploadSend()"
+                  icon="pi pi-check"
+                  [style]="{ 'background-color': '#008080', color: '#fff' }"
+                  iconPos="right"
+                />
               </div>
             </p-tabpanel>
           </p-tabpanels>
@@ -435,171 +558,384 @@
     </div>
   </div>
   <br />
-  <p-button
-    size="small"
-    icon="pi pi-sliders-h"
-    label="Configure Table"
-    [raised]="true"
-    (onClick)="showDialogconfig()"
-    severity="secondary"
-    class="ml-2"
-  />
   <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
+        #dt1
+        [value]="TableViewData"
+        dataKey="Id"
+        [(selection)]="selectedRows"
+        selectionMode="multiple"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         [scrollable]="true"
-        scrollHeight="600px"
+        scrollHeight="450px"
         [showGridlines]="true"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 30, 50, this.TableViewData.length]"
         scrollDirection="both"
+        paginatorDropdownAppendTo="body"
         class="!w-[90vw]"
         [tableStyle]="{ 'min-width': '50rem' }"
+        [globalFilterFields]="[
+          'VehicleNumber',
+          'VehicleModel',
+          'JobCardNumber',
+          'JobType',
+          'Advisor',
+          'PartNumber',
+          'Latest',
+          'isSubstitution',
+          'PartDesc',
+          'MOQ',
+          'Qty',
+          'Price',
+          'Stock',
+          'GroupStock',
+          'NonMoving',
+          'OrderType',
+          'OrderValue',
+          'OrderDate',
+          'Remarks'
+        ]"
       >
-        <ng-template #header>
-          <tr class="">
+        <ng-template let-item pTemplate="paginatordropdownitem">
+          {{ item.value === TableViewData?.length ? "All" : item.value }}
+        </ng-template>
+
+        <!-- ✅ Caption -->
+        <ng-template pTemplate="caption">
+          <div class="flex items-center">
+            <p-button
+              label="Clear"
+              size="small"
+              [outlined]="true"
+              icon="pi pi-filter-slash"
+              (click)="clear(dt1)"
+            ></p-button>
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                size="small"
+                (input)="onGlobalFilter($event)"
+                placeholder="Search..."
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
+        <!-- ✅ Header -->
+        <ng-template pTemplate="header">
+          <tr>
             <th
-              class="!px-1 flex-auto !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px] !min-h-[22px]"
+              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300"
+              style="width: 3rem"
             >
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300">
               S.No
             </th>
+
+            <!-- All your sortable + filterable columns -->
             <th
-              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+              pSortableColumn="VehicleNumber"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
-              Vehivle Number
+              Vehicle Number
+              <p-sortIcon field="VehicleNumber" />
+              <p-columnFilter
+                type="text"
+                field="VehicleNumber"
+                display="menu"
+              />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+              pSortableColumn="VehicleModel"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Vehicle Model
+              <p-sortIcon field="VehicleModel" />
+              <p-columnFilter type="text" field="VehicleModel" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+              pSortableColumn="JobCardNumber"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
-              Advisor Name
+              Job Card Number
+              <p-sortIcon field="JobCardNumber" />
+              <p-columnFilter
+                type="text"
+                field="JobCardNumber"
+                display="menu"
+              />
+            </th>
+            <th
+              pSortableColumn="JobType"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Job Type
+              <p-sortIcon field="JobType" />
+              <p-columnFilter type="text" field="JobType" display="menu" />
+            </th>
+            <th
+              pSortableColumn="Advisor"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Advisor
+              <p-sortIcon field="Advisor" />
+              <p-columnFilter type="text" field="Advisor" display="menu" />
+            </th>
+            
+            <th
+              pSortableColumn="PartNumber"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+            >
+              Part Number
+              <p-sortIcon field="PartNumber" />
+              <p-columnFilter type="text" field="PartNumber" display="menu" />
             </th>
 
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              Part Number
-            </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Latest"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Latest Part Number
+              <p-sortIcon field="Latest" />
+              <p-columnFilter type="text" field="Latest" display="menu" />
             </th>
+
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="isSubstitution"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Substitution
+              <p-sortIcon field="isSubstitution" />
+              <p-columnFilter
+                type="text"
+                field="isSubstitution"
+                display="menu"
+              />
             </th>
+
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="PartDesc"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Part Description
+              <p-sortIcon field="PartDesc" />
+              <p-columnFilter type="text" field="PartDesc" display="menu" />
             </th>
+
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="MOQ"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               MOQ
+              <p-sortIcon field="MOQ" />
+              <p-columnFilter type="text" field="MOQ" display="menu" />
             </th>
+
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Qty"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Quantity
+              <p-sortIcon field="Qty" />
+              <p-columnFilter type="text" field="Qty" display="menu" />
             </th>
+
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Price"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Price
+              <p-sortIcon field="Price" />
+              <p-columnFilter type="text" field="Price" display="menu" />
             </th>
+
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Stock"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Stock as on
+              <p-sortIcon field="Stock" />
+              <p-columnFilter type="text" field="Stock" display="menu" />
             </th>
+
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="GroupStock"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Group Stock
+              <p-sortIcon field="GroupStock" />
+              <p-columnFilter type="text" field="GroupStock" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="NonMoving"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
-              Non Moving Check
+              Gainer Pool Check
+              <p-sortIcon field="NonMoving" />
+              <p-columnFilter type="text" field="NonMoving" display="menu" />
             </th>
+
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Advisor"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               OOQ
+              <p-sortIcon field="Advisor" />
+              <p-columnFilter type="text" field="Advisor" display="menu" />
             </th>
+
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="OrderType"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Order Type
+              <p-sortIcon field="OrderType" />
+              <p-columnFilter type="text" field="OrderType" display="menu" />
             </th>
+
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="OrderValue"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Order Value
+              <p-sortIcon field="OrderValue" />
+              <p-columnFilter type="text" field="OrderValue" display="menu" />
             </th>
+
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              Open Jobline with Open JC
-            </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="OrderDate"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Order Date
+              <p-sortIcon field="OrderDate" />
+              <p-columnFilter type="text" field="OrderDate" display="menu" />
             </th>
+
+            <th class="!px-1 !py-1 text-[12px] !bg-gray-300">Action</th>
+
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              Action
-            </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Remarks"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Order Remark
+              <p-sortIcon field="Remarks" />
+              <p-columnFilter type="text" field="Remarks" display="menu" />
             </th>
           </tr>
         </ng-template>
 
-        <ng-template #body let-rowData let-i="rowIndex">
-          <tr
-            class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
-          >
-            <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
-            <td
-              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
-            >
-              {{ rowData.Dashboard }}
+        <!-- ✅ Body -->
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+          <tr [pSelectableRow]="rowData" class="hover:bg-gray-100">
+            <td class="p-1 text-center">
+              <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            </td>
+
+            <td class="p-1 text-[12px] text-center">{{ i + 1 }}</td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.VehicleNumber }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.VehicleModel }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.JobCardNumber }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.JobType }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.Advisor }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.PartNumber }}
+            </td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.Latest }}</td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.isSubstitution }}
+            </td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.PartDesc }}</td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.MOQ }}</td>
+
+            <td class="p-1 text-[13px] text-center">
+              <input
+                type="number"
+                [min]="1"
+                max="1000"
+                [minlength]="1"
+                [(ngModel)]="rowData.Qty"
+                (ngModelChange)="updateOrderValue(rowData)"
+                (input)="blockZero($event)"
+                (keypress)="preventNegative($event)"
+                (paste)="blockNegativePaste($event)"
+                class="p-inputtext p-component text-center !text-[13px] w-20 h-7 border border-gray-300 rounded"
+              />
+            </td>
+
+            <td class="p-1 text-[13px] text-center">{{ rowData.Price }}</td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.Stock }}</td>
+            <td class="p-1 text-[13px] text-center"(click)="onShowGroupStock(rowData, $event, op)">
+              {{ rowData.GroupStock }}
+            </td>
+            <td class="p-1 text-[13px] text-center"(click)="onShowNonMovingData(rowData, $event, ap)">{{ rowData.NonMoving }}</td>
+            <td class="p-1 text-[13px] text-center"></td>
+            <td class="p-1 text-[13px] text-center">{{ rowData.OrderType }}</td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.OrderValue | number : "1.2-2" }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.OrderDate | date : "dd-MM-yyyy HH:mm:ss a" : "UTC" }}
+            </td>
+            <td class="p-1 text-[13px] text-center"></td>
+
+            <td class="p-1 text-[13px] text-center">
+              <input
+                type="text"
+                [(ngModel)]="rowData.Remarks"
+                (keypress)="blockSpecialChar($event)"
+                class="p-inputtext p-component text-center !text-[13px] w-20 h-7 border border-gray-300 rounded"
+              />
             </td>
           </tr>
         </ng-template>
       </p-table>
-
-      <p-paginator
-        class="h-6 w-full text-sm"
-        (onPageChange)="onPageChange($event)"
-        [first]="first"
-        [rows]="rows"
-        [appendTo]="body"
-        pagginatordropdownappendto="body"
-        [totalRecords]="120"
-        [rowsPerPageOptions]="[10, 20, 30]"
-      />
     </div>
   </div>
+  <div class="flex m-4 p-3 justify-center items-center">
+    <p-button
+      size="small"
+      icon="pi pi-send"
+      label="Send Request"
+      [disabled]="selectedRows.length < 0"
+      [raised]="true"
+      severity="info"
+      (onClick)="SendOrderRequestData()"
+      class="ml-2"
+    />
+  </div>
+
 </div>
+
+
 
 <p-dialog
   header="⚠️ Important Info"
   [modal]="true"
-  [(visible)]="visible"
   [style]="{ width: '30rem' }"
   [closable]="false"
+  [visible]="VisibleNotInMaster"
 >
+  <p class="text-lg">Data Fetch Successful!</p>
   <div class="flex justify-between items-center mb-4">
     <span class="text-gray-500 text-sm">
       The following parts are
@@ -621,80 +957,165 @@
   >
     <h4 class="text-sm font-semibold text-gray-700 mb-2">Part Numbers:</h4>
     <p class="text-gray-800 text-base leading-relaxed">
-      9782228, 3434432, 44G4533, 9782228, 3434432, 44G4533, 9782228, 3434432,
-      44G4533, 9782228, 3434432, 44G4533, 9782228, 3434432, 44G4533
+      <ng-container *ngFor="let part of NotInMasterPartNumber; let i = index">
+        {{ part }}<span *ngIf="i < NotInMasterPartNumber.length - 1">, </span>
+      </ng-container>
     </p>
   </div>
 
   <!-- Action Buttons -->
   <div class="flex justify-end gap-3 mt-6">
     <p-button
-      label="Skip For Now"
-      severity="secondary"
-      size="small"
-      icon="pi pi-arrow-right"
-      class="!rounded-lg !shadow-sm hover:!shadow-md transition-all"
-      (click)="visible = false"
-    />
-    <p-button
       label="Fill Details"
       icon="pi pi-align-left"
       size="small"
       class="!bg-blue-600 !border-blue-600 !rounded-lg !shadow-sm hover:!bg-blue-700 hover:!shadow-md transition-all"
-      (click)="visible = false"
+      (click)="VisibleNotInMaster = false"
     />
   </div>
 </p-dialog>
 
 <p-dialog
-  header="⚙️ Configure Table Columns"
-  [(visible)]="visibleConfig"
+  header="Message"
+  [(visible)]="visible"
   [modal]="true"
-  [breakpoints]="{ '1199px': '75vw', '575px': '95vw' }"
-  [style]="{ width: '80vw' }"
-  [contentStyle]="{ 'max-height': '80vh', 'overflow-y': 'auto' }"
-  [draggable]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
   [resizable]="false"
 >
-  <!-- Content -->
-  <div class="grid grid-cols-5 gap-3 p-2">
-    <div
-      class="flex items-center bg-gray-50 hover:bg-gray-100 rounded-lg px-3 py-2 transition"
-      *ngFor="let col of tableColumns"
-    >
-      <p-checkbox
-        [inputId]="col.field"
-        name="columns"
-        [value]="col.field"
-        [(ngModel)]="selectedColumns"
-        binary="true"
-      />
-      <label
-        [for]="col.field"
-        class="ml-2 mt-2 text-sm text-gray-700 cursor-pointer select-none"
+  <p class="text-lg">
+    {{ Result }}
+  </p>
+  <div
+    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+    *ngIf="showErrorsTable"
+  >
+    <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+      <p-table
+        [scrollable]="true"
+        scrollHeight="600px"
+        [value]="errorViewData"
+        [showGridlines]="true"
+        class="!w-[90vw]"
+        [tableStyle]="{ 'min-width': '50rem' }"
       >
-        {{ col.header }}
-      </label>
+        <ng-template pTemplate="header">
+          <tr>
+            <th
+              class="!px-1 flex-auto !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px] !min-h-[22px]"
+            >
+              S.No
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Part Number
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Quantity
+            </th>
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Remark
+            </th>
+
+            <th
+              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+            >
+              Party Name
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+          <tr
+            class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+          >
+            <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.PartNumber }}
+            </td>
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.Qty }}
+            </td>
+
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.Remarks }}
+            </td>
+
+            <td
+              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+            >
+              {{ rowData.PartyName }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
   </div>
-
-  <!-- Footer -->
-  <ng-template pTemplate="footer">
-    <div class="flex justify-end gap-3 mt-3">
-      <button
-        pButton
-        label="Save as Default"
-        severity="info"
-        class="p-button-outlined p-button-sm"
-        (click)="visible = false"
-      ></button>
-      <button
-        pButton
-        label="Cancel"
-        class="p-button-outlined p-button-sm"
-        (click)="visible = false"
-      ></button>
-      <button pButton label="Apply for Now" class="p-button-sm"></button>
-    </div>
-  </ng-template>
 </p-dialog>
+
+
+
+<p-popover #op>
+  <ng-template #content>
+    <h4 class="font-semibold mb-2 text-sm">Group Stock</h4>
+
+    <ng-container
+      *ngIf="GroupStockData && GroupStockData.length > 0; else noData"
+    >
+      <table class="w-full text-[12px] border border-gray-200">
+        <tr class="bg-gray-100 text-left">
+          <th class="px-2 py-1 border">Location</th>
+          <th class="px-2 py-1 border">Quantity</th>
+        </tr>
+        <tr *ngFor="let item of GroupStockData">
+          <td class="px-2 py-1 border">{{ item.location }}</td>
+          <td class="px-2 py-1 border text-center">{{ item.GroupStock }}</td>
+        </tr>
+      </table>
+    </ng-container>
+
+    <ng-template #noData>
+      <p class="text-gray-500 text-xs">No group stock data found.</p>
+    </ng-template>
+  </ng-template>
+</p-popover>
+
+
+<p-popover #ap>
+  <ng-template #content>
+    <h4 class="font-semibold mb-2 text-sm">Group Stock</h4>
+
+    <ng-container
+      *ngIf="GroupStockData && GroupStockData.length > 0; else noData"
+    >
+      <table class="w-full text-[12px] border border-gray-200">
+        <tr class="bg-gray-100 text-left">
+          <th class="px-2 py-1 border">Location</th>
+          <th class="px-2 py-1 border">Quantity</th>
+          <th class="px-2 py-1 border">Discount</th>
+        </tr>
+        <tr *ngFor="let item of GroupStockData">
+          <td class="px-2 py-1 border">{{ item.LOCATION }}</td>
+          <td class="px-2 py-1 border text-center">{{ item.QTY }}</td>
+          <td class="px-2 py-1 border text-center">{{ item.DISCOUNT }}</td>
+        </tr>
+      </table>
+    </ng-container>
+
+    <ng-template #noData>
+      <p class="text-gray-500 text-xs">No group stock data found.</p>
+    </ng-template>
+  </ng-template>
+</p-popover>

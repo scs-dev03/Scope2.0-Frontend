@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class WorkshopSaleService {
+export class OrderStatusService {
 
   private apiurl: any =
     `${environment.EnvApiUrlMaster}aa/`;
@@ -16,39 +16,31 @@ export class WorkshopSaleService {
 
   constructor(private http: HttpClient) { }
 
+
   getlocationMaster(data: any) {
     return this.http.post(`${this.apiurlmaster}locations`, data)
   }
-
 
   getOrderType() {
     return this.http.get(`${this.apiurlmaster}ordertype`)
   }
 
-  SingleAddWorkShopSale(data: any): Observable<any> {
-    return this.http.post(`${this.apiurl}addstk-ws`, data)
+  getAdvisor(data: any) {
+    return this.http.post(`${this.apiurl}viewadvisor`, data)
   }
 
-  BulkUploadWorkShopSale(data: any): Observable<any> {
-    return this.http.post(`${this.apiurl}stkupload-ws`, data)
+  fetchViewOrderStatusData(data:any):Observable<any>{
+    return this.http.post(`${this.apiurl}view-os`,data)
   }
 
-  sendOrderRequest(data: any) {
-    return this.http.post(`${this.apiurl}insert`, data)
-  }
-
-  getGroupStockData(data: any): Observable<any> {
-    return this.http.post(`${this.apiurl}group-stock`, data)
-  }
-
-  getNonMovingData(data: any): Observable<any> {
-    return this.http.post(`${this.apiurl}non-moving`, data)
+  SendYesOrNo(data:any):Observable<any>{
+    return this.http.patch(`${this.apiurl}os/order`,data)
   }
 
 
-
-
-
+  SendOrderRemark(data:any):Observable<any>{
+    return this.http.post(`${this.apiurl}os/re-order`,data)
+  }
 
 
 

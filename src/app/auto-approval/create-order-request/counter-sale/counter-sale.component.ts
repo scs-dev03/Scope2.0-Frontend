@@ -7,7 +7,6 @@ import * as FileSaver from 'file-saver';
 import { PrimeNG } from 'primeng/config';
 import { DividerModule } from 'primeng/divider';
 import { PaginatorState } from 'primeng/paginator';
-import { CreateOrderViewServiceService } from '../../../services/Auto-Approvals/create-order-view-service.service';
 import { PrimengModuleModule } from '../../../shared/primeng-module/primeng-module.module';
 import { SHARED_IMPORTS } from '../../../shared/shared-imports/shared-module';
 import { CounterSaleService } from '../../../services/Auto-Approvals/counter-sale.service';
@@ -16,14 +15,17 @@ import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
 import { Table } from 'primeng/table';
 
+import { Popover } from 'primeng/popover';
+
 @Component({
   selector: 'app-counter-sale',
-  imports: [SHARED_IMPORTS, PrimengModuleModule, SharedModule, DividerModule, FormsModule, IconField, InputIcon],
+  imports: [SHARED_IMPORTS, Popover, PrimengModuleModule, SharedModule, DividerModule, FormsModule, IconField, InputIcon],
   templateUrl: './counter-sale.component.html',
   styleUrl: './counter-sale.component.css'
 })
 export class CounterSaleComponent {
   TableViewData: any = [];
+  visibleTableData: boolean = false;
 
   ngOnInit(): void {
     this.addParts()
@@ -110,8 +112,8 @@ export class CounterSaleComponent {
     const Data = [
       {
         'PartNumber': '',
-        'Quantity': '',
-        'Remark': '',
+        'Qty': '',
+        'Remarks': '',
 
       }
     ];
@@ -140,9 +142,10 @@ export class CounterSaleComponent {
     const Data = [
       {
         'PartNumber': '',
-        'Quantity': '',
-        'Remark': '',
-        'Party Name': ''
+        'Qty': '',
+        'Remarks': '',
+        'PartyName': '',
+        'PartyCode': ''
       }
     ];
 
@@ -286,7 +289,6 @@ export class CounterSaleComponent {
     console.log('Selected Rows:', this.selectedRows);
   }
 
-  
 
   OnClickBulkUploadSend() {
     if (this.CounterSaleFilterDataBulk.valid && this.CounterSaleBulkExcel) {
@@ -298,6 +300,7 @@ export class CounterSaleComponent {
       formData.append('OrderType', this.CounterSaleFilterDataBulk.value.OrderType || '');
       formData.append('Bulk', '1');
       formData.append('BrandId', sessionStorage.getItem('brandid') || '');
+      formData.append('DealerId', sessionStorage.getItem('dealerid') || '');
 
       this.countersaleservice.BulkUploadCounterSale(formData).subscribe({
         next: (res: any) => {
@@ -305,9 +308,12 @@ export class CounterSaleComponent {
           this.visible = true;
 
           this.TableViewData = res.data.result;
+          this.StockAsOnDate = res.data.result[0].StockDate;
+          this.visibleTableData = true;
 
           if (res.data?.notinMaster.length > 0) {
             this.VisibleNotInMaster = true;
+            this.visible = false;
             this.NotInMasterPartNumber = res.data?.notinMaster.map((part: any) => {
               return part.PartNumber
             })
@@ -369,6 +375,7 @@ export class CounterSaleComponent {
   MultiUpload: boolean = false;
   VisibleNotInMaster: boolean = false
   NotInMasterPartNumber: any = ""
+  StockAsOnDate: any;
 
 
   OnClickMultiUploadAndSend() {
@@ -378,7 +385,6 @@ export class CounterSaleComponent {
 
     }
     if (this.MultiUpload) {
-      //console.log(this.CounterSaleMultiExcel);
 
       if (this.CounterSaleFilterData.valid && this.CounterSaleMultiExcel) {
         this.globalBlockUiService.startLoading();
@@ -389,6 +395,7 @@ export class CounterSaleComponent {
         formData.append('OrderType', this.CounterSaleFilterData.value.OrderType || '');
         formData.append('Bulk', '0');
         formData.append('PartyId', this.CounterSaleFilterData.value.PartyNameAndCode || '');
+        formData.append('DealerId', sessionStorage.getItem('dealerid') || '');
         formData.append('BrandId', sessionStorage.getItem('brandid') || '');
 
         this.countersaleservice.BulkUploadCounterSale(formData).subscribe({
@@ -399,8 +406,12 @@ export class CounterSaleComponent {
 
 
             this.TableViewData = res.data.result;
+            this.StockAsOnDate = res.data.result[0].StockDate;
+            console.log("Stock Date ", this.StockAsOnDate);
+            this.visibleTableData = true;
             if (res.data?.notinMaster.length > 0) {
               this.VisibleNotInMaster = true;
+              this.visible = false;
               this.NotInMasterPartNumber = res.data?.notinMaster.map((part: any) => {
                 return part.PartNumber
               })
@@ -474,6 +485,8 @@ export class CounterSaleComponent {
             this.Result = res.message
             this.visible = true;
             this.TableViewData = res.data.result;
+            this.StockAsOnDate = res.data.result[0].StockDate;
+            this.visibleTableData = true;
 
             if (res.data?.notinMaster.length > 0) {
               this.VisibleNotInMaster = true;
@@ -509,7 +522,17 @@ export class CounterSaleComponent {
     }
   }
 
+  canAddMoreParts(): boolean {
+    const partsArray = this.AddPartWise.get('parts') as FormArray;
+    if (!partsArray || partsArray.length === 0) return false;
 
+    const lastPart = partsArray.at(partsArray.length - 1);
+
+    const partNumber = lastPart.get('PartNumber')?.value?.trim();
+    const quantity = lastPart.get('Quantity')?.value;
+
+    return !!partNumber && !!quantity && lastPart.valid;
+  }
 
   SendOrderRequestData() {
 
@@ -521,6 +544,7 @@ export class CounterSaleComponent {
           this.Result = res.message
           this.visible = true;
           this.TableViewData = []
+          this.visibleTableData = false;
           this.selectedRows = []
 
           this.globalBlockUiService.stopLoading()
@@ -559,7 +583,7 @@ export class CounterSaleComponent {
 
   preventNegative(event: KeyboardEvent) {
 
-     const input = event.target as HTMLInputElement;
+    const input = event.target as HTMLInputElement;
 
     if (event.key === '-' || event.key === '+' || event.key === 'e') {
       event.preventDefault();
@@ -590,6 +614,69 @@ export class CounterSaleComponent {
     }
   }
 
+  onShowGroupStock(rowData: any, event: Event, popover: any) {
+    popover.toggle(event);
+
+
+    this.fetchGrpupStockData(
+      sessionStorage.getItem('dealerid'),
+      rowData.PartNumber,
+      sessionStorage.getItem('brandid'),
+      rowData.LocationId
+    );
+  }
+
+  GroupStockData: any
+  fetchGrpupStockData(DealerId: any, PartNumber: any, BrandId: any, LocationId: any) {
+    this.globalBlockUiService.startLoading();
+    this.countersaleservice.getGroupStockData({ DealerId, PartNumber, BrandId, LocationId }).subscribe({
+      next: (res: any) => {
+        this.GroupStockData = res.data;
+        this.globalBlockUiService.stopLoading();
+      },
+      error: (err: any) => {
+        console.error("Error fetching Group Stock data:", err);
+        this.globalBlockUiService.stopLoading();
+      }
+    })
+  }
+
+
+  onShowNonMovingData(rowData: any, event: Event, popover: any) {
+    popover.toggle(event);
+
+
+    this.fetchNonMovingData(
+      sessionStorage.getItem('dealerid'),
+      rowData.PartNumber,
+      sessionStorage.getItem('brandid'),
+      rowData.LocationId
+    );
+  }
+
+
+  NonMovingData: any =  [
+        {
+            "LOCATION": "Kalikapur",
+            "QTY": 6,
+            "DISCOUNT": 25,
+            "Dealer": "Auto Carriage (Royal Mahindra)"
+        }
+    ]
+  fetchNonMovingData(DealerId: any, partnumber: any, BrandId: any, LocationId: any) {
+    this.globalBlockUiService.startLoading();
+
+    this.countersaleservice.getNonMovingData({ DealerId, partnumber, BrandId, LocationId }).subscribe({
+      next: (res: any) => {
+        this.NonMovingData = res.data;
+        this.globalBlockUiService.stopLoading();
+      },
+      error: (err: any) => {
+        console.error("Error fetching Group Stock data:", err);
+        this.globalBlockUiService.stopLoading();
+      }
+    });
+  }
 
 
 
