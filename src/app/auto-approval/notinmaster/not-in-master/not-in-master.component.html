@@ -1,60 +1,463 @@
-<div class="min-w-full">
-  <!-- <h1 class="text-2xl font-serif ml-2">Dashboard</h1> -->
-  <div class="min-w-full !min-h-auto flex items-center justify-start p-2">
-    <div
-      class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-3 items-center rounded bg-gray-50"
-    >
-      <p-floatlabel variant="on">
-        <input type="text"  pSize="small" pInputText />
-        <label class="text-xs">Part Number</label>
-      </p-floatlabel>
-      <p-floatlabel variant="on">
-        <input type="text"  pSize="small" pInputText />
-        <label class="text-xs">Description</label>
-      </p-floatlabel>
-      <p-floatlabel variant="on">
-        <input type="text"  pSize="small" pInputText />
-        <label class="text-xs">MRP</label>
-      </p-floatlabel>
-      <p-floatlabel variant="on">
-        <input type="text"  pSize="small" pInputText />
-        <label class="text-xs">Latest Part</label>
-      </p-floatlabel>
-      <p-floatlabel variant="on">
-        <input type="text"  pSize="small" pInputText />
-        <label class="text-xs">Rate / NDP Price</label>
-      </p-floatlabel>
-      <p-floatlabel variant="on">
-        <input type="text"  pSize="small" pInputText />
-        <label class="text-xs">Model</label>
-      </p-floatlabel>
-      <p-floatlabel variant="on">
-        <input type="text"  pSize="small" pInputText />
-        <label class="text-xs">MOQ</label>
-      </p-floatlabel>
-
-      <p-fileupload
-          #fu
-          mode="basic"
-          chooseLabel="Choose"
-          chooseIcon="pi pi-upload"
-          accept=".xls,.xlsx"
-          maxFileSize="1000000"
-          
-        />
-        <p-button
-          label="Upload"
-          size="small"
-          severity="secondary"
-          
-        />
-
-      <p-button
+<div class="w-full">
+  <div
+    class="flex flex-wrap items-center justify-start mt-2 gap-3 bg-gray-50 p-3 rounded-md"
+    [formGroup]="NotInMasterInputData"
+  >
+    <!-- Location -->
+    <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
+      <p-select
+        [showClear]="true"
         size="small"
-        [style]="{ 'background-color': '#008080', color: '#fff' }"
-        icon="pi pi-check"
-        iconPos="right"
+        formControlName="Location"
+        [options]="LocationData"
+        class="w-full h-8"
+        optionValue="locationid"
+        optionLabel="location"
+      ></p-select>
+      <label class="text-xs">Location</label>
+    </p-floatlabel>
+
+    <!-- From Date -->
+    <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
+      <input
+        pInputText
+        class="text-xs h-8 w-44"
+        id="fromDate"
+        formControlName="FromDate"
+        type="date"
+        pSize="small"
+        autocomplete="off"
+        class="w-full h-8"
       />
+      <label for="fromDate" class="text-xs">From Date</label>
+    </p-floatlabel>
+
+    <!-- To Date -->
+    <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
+      <input
+        pInputText
+        class="text-xs h-8 w-44"
+        id="toDate"
+        formControlName="ToDate"
+        type="date"
+        pSize="small"
+        autocomplete="off"
+        class="w-full h-8"
+      />
+      <label for="toDate" class="text-xs">To Date</label>
+    </p-floatlabel>
+
+    <p-button
+      [style]="{ 'background-color': '#008080', color: '#fff' }"
+      icon="pi pi-check"
+      label="Submit"
+      size="small"
+      aria-label="submit"
+    />
+    <p-button
+      [style]="{ 'background-color': '#008080', color: '#fff' }"
+      icon="pi pi-arrow-up-right"
+      label="View Status"
+      size="small"
+      aria-label="Viewstatus"
+      (onClick)="RedirectToNotInMaster()"
+    />
+    <p-button
+      size="small"
+      icon="pi pi-download"
+      *ngIf="PartNumberData"
+      (onClick)="ExportTableData()"
+    />
+
+    <p-fileupload
+      #fu
+      mode="basic"
+      chooseLabel="Upload Not In Master Info"
+      [chooseStyleClass]="
+        'w-[150px] background-color: #008080, color: #fff h-[40px] !text-[12px]'
+      "
+      chooseIcon="pi pi-upload"
+      accept=".xlsx,.xls"
+      showCancelButton="true"
+      maxFileSize="1000000"
+      (onSelect)="OnSelectNotInMasterExcel($event, fu)"
+    />
+    <p-button
+      label="Upload"
+      size="small"
+      (onClick)="OnUploadNotInMasterExcel()"
+    />
+  </div>
+
+  <!-- Table  -->
+  <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
+    <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+      <p-table
+        #dt1
+        [scrollable]="true"
+        scrollHeight="400px"
+        [value]="PartNumberData"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 30, 50, this.PartNumberData.length]"
+        [showGridlines]="true"
+        paginatorDropdownAppendTo="body"
+        class="!w-[90vw]"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [globalFilterFields]="['PartNumber']"
+      >
+        <ng-template let-item pTemplate="paginatordropdownitem">
+          {{ item.value === PartNumberData.length ? "All" : item.value }}
+        </ng-template>
+        <ng-template pTemplate="caption">
+          <div class="flex items-center">
+            <p-button
+              label="Clear"
+              size="small"
+              [outlined]="true"
+              icon="pi pi-filter-slash"
+              (click)="clear(dt1)"
+            ></p-button>
+
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                size="small"
+                (input)="onGlobalFilter($event)"
+                placeholder="Search keyword"
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              S.No
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Part Number
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Latest Part Number
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Part Description*
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              MOQ*
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              MRP*
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Landed Cost*
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              HSNID*
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Part Type ID*
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              GST %*
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Qty / Vehicle*
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Model*
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Add Attachment
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Remark
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Submit
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+          <tr
+            class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+          >
+            <!-- S.No -->
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ i + 1 }}
+            </td>
+
+            <!-- Part Number (read-only from API) -->
+            <td
+              class="!px-1 !py-1 text-center text-[13px] text-gray-700 font-medium"
+            >
+              {{ rowData.PartNumber }}
+            </td>
+
+            <!-- Latest Part Number (input) -->
+            <td class="!px-1 !py-1">
+              <input
+                pInputText
+                class="text-xs h-8 w-44"
+                [(ngModel)]="rowData.LatestPartNumber"
+                (keypress)="allowOnlyLettersAndNumber($event)"
+                placeholder="Latest Part No."
+              />
+            </td>
+
+            
+            <!-- Part Description* -->
+            <td class="!px-1 !py-1">
+              <input
+                pInputText
+                class="text-xs h-8 w-44"
+                [(ngModel)]="rowData.PartDesc"
+                [ngModelOptions]="{ standalone: true }"
+                (blur)="rowData.PartDesc = rowData.PartDesc?.trim()"
+                (keypress)="allowOnlyLettersAndNumber($event)"
+                placeholder="Description"
+              />
+              <div
+                *ngIf="rowData._submitTry && isEmpty(rowData.PartDesc)"
+                class="text-xs text-red-600 mt-1"
+              >
+                This field is mandatory
+              </div>
+            </td>
+
+            <!-- MOQ* -->
+            <td class="!px-1 !py-1">
+              <input
+                type="number"
+                min="1"
+                step="1"
+                pInputText
+                placeholder="MOQ"
+                class="text-xs h-8 w-44"
+                [(ngModel)]="rowData.MOQ"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <div
+                *ngIf="rowData._submitTry && isEmpty(rowData.MOQ)"
+                class="text-xs text-red-600 mt-1"
+              >
+                This field is mandatory
+              </div>
+            </td>
+            <td class="!px-1 !py-1">
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                pInputText
+                placeholder="MRP"
+                class="text-xs h-8 w-44"
+                [(ngModel)]="rowData.MRP"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <div
+                *ngIf="rowData._submitTry && isEmpty(rowData.MRP)"
+                class="text-xs text-red-600 mt-1"
+              >
+                This field is mandatory
+              </div>
+            </td>
+            <td class="!px-1 !py-1">
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                pInputText
+                placeholder="Landed Cost"
+                class="text-xs h-8 w-44"
+                [(ngModel)]="rowData.LandedCost"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <div
+                *ngIf="rowData._submitTry && isEmpty(rowData.LandedCost)"
+                class="text-xs text-red-600 mt-1"
+              >
+                This field is mandatory
+              </div>
+            </td>
+
+            <!-- HSNID* (p-select) -->
+            <td class="!px-1 !py-1">
+              <p-select
+                optionLabel="description"
+                optionValue="tcode"
+                [virtualScroll]="true"
+                [virtualScrollItemSize]="38"
+                [options]="HSNCodeData"
+                [(ngModel)]="rowData.HSNID"
+                [ngModelOptions]="{ standalone: true }"
+                placeholder="Select type"
+                class="w-full text-sm"
+                appendTo="body"
+              ></p-select>
+              <div
+                *ngIf="rowData._submitTry && isEmpty(rowData.HSNID)"
+                class="text-xs text-red-600 mt-1"
+              >
+                This field is mandatory
+              </div>
+            </td>
+
+            <!-- Part Type ID (dropdown or number) -->
+             <td class="!px-1 !py-1">
+              <p-select
+                optionLabel="Description"
+                optionValue="parttypeid"
+                [options]="PartyTypeData"
+                [(ngModel)]="rowData.PartTypeId"
+                [ngModelOptions]="{ standalone: true }"
+                placeholder="Select type"
+                class="w-full text-sm"
+                appendTo="body"
+              ></p-select>
+              <div
+                *ngIf="rowData._submitTry && isEmpty(rowData.PartTypeId)"
+                class="text-xs text-red-600 mt-1"
+              >
+                This field is mandatory
+              </div>
+            </td>
+
+             <!-- GST %* -->
+            <td class="!px-1 !py-1">
+              <input
+                type="number"
+                min="1"
+                max="100"
+                pInputText
+                placeholder="GST %"
+                class="text-xs h-8 w-44"
+                [(ngModel)]="rowData.GSTPer"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <div
+                *ngIf="rowData._submitTry && isEmpty(rowData.GSTPer)"
+                class="text-xs text-red-600 mt-1"
+              >
+                This field is mandatory
+              </div>
+            </td>
+
+           
+
+          
+            
+
+            
+           
+            <!-- Qty Per Vehicle -->
+            <td class="!px-1 !py-1">
+              <input
+                type="number"
+                min="1"
+                step="1"
+                pInputText
+                placeholder="Qty Per Vehicle"
+                class="text-xs h-8 w-44"
+                [(ngModel)]="rowData.QtyPerVehicle"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <div
+                *ngIf="rowData._submitTry && isEmpty(rowData.QtyPerVehicle)"
+                class="text-xs text-red-600 mt-1"
+              >
+                This field is mandatory
+              </div>
+            </td>
+
+            <!-- Model -->
+            <td class="!px-1 !py-1">
+              <input
+                type="text"
+                placeholder="Model"
+                pInputText
+                class="text-xs h-8 w-44"
+                [(ngModel)]="rowData.Model"
+                (keypress)="allowOnlyLettersAndNumber($event)"
+              />
+            </td>
+
+            <!-- Attachment -->
+            <td class="!px-1 !py-1 text-center">
+              <div class="flex flex-col">
+                <div class="flex items-center justify-center gap-2">
+                  <p-fileUpload
+                    mode="basic"
+                    name="file"
+                    chooseLabel="Attach"
+                    customUpload="true"
+                    [chooseStyleClass]="
+                      'w-[80px] background-color: #008080, color: #fff h-[35px] !text-[12px]'
+                    "
+                    accept="image/*"
+                    (uploadHandler)="onAttach($event, rowData)"
+                    [auto]="true"
+                    [maxFileSize]="5_000_000"
+                  ></p-fileUpload>
+                  <p-button
+                    icon="pi pi-times"
+                    severity="danger"
+                    size="small"
+                    (onClick)="RemoveFile(rowData)"
+                  />
+                </div>
+                <div *ngIf="rowData.Image" class="text-xs text-green-700 mt-1">
+                  Attached
+                </div>
+              </div>
+            </td>
+
+            <!-- Remark -->
+            <td class="!px-1 !py-1">
+              <input
+                type="text"
+                placeholder="Remarks"
+                pInputText
+                class="text-xs h-8 w-44"
+                [(ngModel)]="rowData.Remarks"
+                (keypress)="allowOnlyLettersAndNumber($event)"
+              />
+            </td>
+
+            <!-- Submit (per row) -->
+            <td class="!px-1 !py-1 text-center">
+              <button
+                pButton
+                type="button"
+                label="Submit"
+                class="p-button-sm"
+                (click)="SendNotInMaster(rowData)"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
   </div>
 </div>
+
+<p-dialog
+  header="Message"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="text-lg">
+    {{ Result }}
+  </p>
+</p-dialog>

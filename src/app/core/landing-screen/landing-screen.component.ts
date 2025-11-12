@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HomePageService } from '../../services/home-page/home-page.service';
 import { LoaderComponent } from "../../shared/components/loader/loader.component";
@@ -14,7 +14,7 @@ import { SidebarService } from '../../services/sidebar.service';
 })
 export class LandingScreenComponent {
   constructor(private route: ActivatedRoute,
-    private router: Router, private homepageservice: HomePageService, private sidebarService: SidebarService,
+    private router: Router, private homepageservice: HomePageService, private sidebarservice: SidebarService,
     private utilitiesService: UtilitiesService, private sharedService: SharedServiceService) {
 
     // sessionStorage.clear();
@@ -27,6 +27,9 @@ export class LandingScreenComponent {
 
 
   ngOnInit() {
+
+    console.log("hellow from landing page ");
+    
 
     this.route.queryParams.subscribe(params => {
       this.usertoken = params['usertoken'];
@@ -52,7 +55,7 @@ export class LandingScreenComponent {
 
       sessionStorage.setItem('userid', res?.data[0]?.userId);
       sessionStorage.setItem('username', res.data[0]?.username)
-      this.getModules();
+      //this.getModules();
     })
   }
 
@@ -78,8 +81,8 @@ export class LandingScreenComponent {
           sessionStorage.setItem('headerlocation', user.locationid ?? '');
           sessionStorage.setItem('locationData', JSON.stringify(res.Data));
 
-         // this.getUserId();
-          this.getModules();
+          this.isloading = false;
+          this.getSidebarModuleData();
           this.goToHomePage();
         } else {
           alert('No user data found.');
@@ -96,69 +99,25 @@ export class LandingScreenComponent {
 
   }
 
-  getModules() {
+  permission: any;
 
-    this.sidebarService.getModules().subscribe((res: any) => {
-      const data = res.data.modules;
-      const cleaned = this.transformSidebarData(data);  // this will be dense, clean
-      // console.log("cleaned ",cleaned)
-      this.sidebarItems = cleaned;
-      //console.log("landing screen ",res.data);
-      this.sharedService.updateSidebarData(this.sidebarItems);
+  getSidebarModuleData() {
 
-      //  this.sharedService.hasSidebarDataLoaded=true;
+    console.log("hello from landing sidebar api ");
+    
+    this.sidebarservice.getModules().subscribe((res: any) => {
+      this.menu = res.tree;
+      this.sharedService.updateSidebarData(this.menu);
+      this.permission = res.accessibleRoutes;
+      sessionStorage.setItem('sidebarMenu', JSON.stringify(this.menu));
+      sessionStorage.setItem('Permission', JSON.stringify(this.permission));
 
       this.goToHomePage();
-    }, (error: any) => {
-      // this.globalBlockUiService.stopLoading();
     })
   }
 
-  transformSidebarData(data: any[]): any[] {
-    const groupedData: { [key: string]: any } = {};
-    const directParents: any[] = [];
 
-    data.forEach((item) => {
-      const parent = item.parentModuleName;
-
-      if (!parent || parent.toLowerCase() === 'null') {
-        // Direct parent (no group)
-        directParents.push({
-          parentModuleName: item.module_name,
-          isOpen: false,
-          subchildren: [], // treat like no children
-          module_route: item.module_route,
-          add1: item.add1,
-          delete1: item.delete1,
-          edit1: item.edit1,
-          view1: item.view1,
-          isActive: item.isActive
-        });
-      } else {
-        // Grouped under a parent
-        if (!groupedData[parent]) {
-          groupedData[parent] = {
-            parentModuleName: parent,
-            isOpen: false,
-            subchildren: []
-          };
-        }
-
-        groupedData[parent].subchildren.push({
-          module_name: item.module_name,
-          module_route: item.module_route,
-          add1: item.add1,
-          delete1: item.delete1,
-          edit1: item.edit1,
-          view1: item.view1,
-          isActive: item.isActive
-        });
-      }
-    });
-
-    const finalResult = [...Object.values(groupedData), ...directParents];
-    return finalResult;
-  }
+  @Input() menu: any[] = []
 
   goToHomePage() {
 

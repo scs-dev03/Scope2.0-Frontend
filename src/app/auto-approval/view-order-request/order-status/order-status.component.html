@@ -83,7 +83,7 @@
               class="w-full h-8"
               formControlName="OrderType"
               [options]="OrderTypeData"
-              optionValue="Name"
+              optionValue="Id"
               optionLabel="Name"
             />
             <label class="text-xs">Select Order Type</label>
@@ -249,16 +249,16 @@
           (onClick)="OnClickViewOrderStatus()"
         />
 
-        <p-button size="small" icon="pi pi-download" />
+        <p-button size="small" icon="pi pi-download" *ngIf="TableViewData" (onClick)="ExportTableData()" />
 
-        <p-button
+        <!-- <p-button
           size="small"
           icon="pi pi-sliders-h"
           label="Configure Table"
           [raised]="true"
           (onClick)="showDialog()"
           severity="secondary"
-        />
+        /> -->
       </div>
     </div>
   </div>
@@ -334,6 +334,27 @@
               icon="pi pi-filter-slash"
               (click)="clear(dt1)"
             ></p-button>
+
+            <div class="flex items-center gap-4 text-sm font-medium ml-2">
+              <div class="flex items-center gap-1">
+                <span
+                  class="inline-block w-3 h-3 rounded-full bg-red-100"
+                ></span>
+                <span>Non-Moving</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span
+                  class="inline-block w-3 h-3 rounded-full bg-orange-100"
+                ></span>
+                <span>Non-Stockable</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span
+                  class="inline-block w-3 h-3 rounded-full bg-green-100"
+                ></span>
+                <span>Stockable</span>
+              </div>
+            </div>
             <p-iconfield iconPosition="left" class="ml-auto">
               <p-inputicon>
                 <i class="pi pi-search"></i>
@@ -401,7 +422,7 @@
                 display="menu"
               />
             </th>
-            <th
+            <th *ngIf="shouldShowVehicleColumn()"
               pSortableColumn="vehiclenumber"
               class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
@@ -413,7 +434,7 @@
                 display="menu"
               />
             </th>
-            <th
+            <th *ngIf="shouldShowVehicleColumn()"
               pSortableColumn="vehiclemodel"
               class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
@@ -421,7 +442,7 @@
               <p-sortIcon field="vehiclemodel" />
               <p-columnFilter type="text" field="vehiclemodel" display="menu" />
             </th>
-            <th
+            <th *ngIf="shouldShowVehicleColumn()"
               pSortableColumn="Jobcard_number"
               class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
@@ -433,7 +454,7 @@
                 display="menu"
               />
             </th>
-            <th
+            <th *ngIf="shouldShowVehicleColumn()"
               pSortableColumn="jobcart_type"
               class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
@@ -441,25 +462,13 @@
               <p-sortIcon field="jobcart_type" />
               <p-columnFilter type="text" field="jobcart_type" display="menu" />
             </th>
-            <th
+            <th *ngIf="shouldShowVehicleColumn()"
               pSortableColumn="Advisor"
               class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
               Advisor Name
               <p-sortIcon field="Advisor" />
               <p-columnFilter type="text" field="Advisor" display="menu" />
-            </th>
-            <th
-              pSortableColumn="FloorSupervisor"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
-            >
-              Floor Supervisor
-              <p-sortIcon field="FloorSupervisor" />
-              <p-columnFilter
-                type="text"
-                field="FloorSupervisor"
-                display="menu"
-              />
             </th>
             <th
               pSortableColumn="Ordertye"
@@ -561,16 +570,7 @@
               <p-sortIcon field="Dateadded" />
               <p-columnFilter type="text" field="Dateadded" display="menu" />
             </th>
-            
 
-            <th
-              pSortableColumn="GMRemarks"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
-            >
-              PO Number
-              <p-sortIcon field="GMRemarks" />
-              <p-columnFilter type="text" field="GMRemarks" display="menu" />
-            </th>
             <th
               pSortableColumn="jobcardopendate"
               class="!px-1 !py-1 text-[12px] !bg-gray-300"
@@ -607,14 +607,7 @@
                 display="menu"
               />
             </th>
-            <th
-              pSortableColumn="GMRemarks"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
-            >
-              JobLine Update Date
-              <p-sortIcon field="GMRemarks" />
-              <p-columnFilter type="text" field="GMRemarks" display="menu" />
-            </th>
+
             <th
               pSortableColumn="GMRemarks"
               class="!px-1 !py-1 text-[12px] !bg-gray-300"
@@ -643,22 +636,6 @@
               pSortableColumn="GMRemarks"
               class="!px-1 !py-1 text-[12px] !bg-gray-300"
             >
-              Open Jobline with Open JC
-              <p-sortIcon field="GMRemarks" />
-              <p-columnFilter type="text" field="GMRemarks" display="menu" />
-            </th>
-            <th
-              pSortableColumn="GMRemarks"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
-            >
-              Jobline Status
-              <p-sortIcon field="GMRemarks" />
-              <p-columnFilter type="text" field="GMRemarks" display="menu" />
-            </th>
-            <th
-              pSortableColumn="GMRemarks"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
-            >
               Jobcard Status
               <p-sortIcon field="GMRemarks" />
               <p-columnFilter type="text" field="GMRemarks" display="menu" />
@@ -678,7 +655,15 @@
 
         <!-- ✅ Body -->
         <ng-template pTemplate="body" let-rowData let-i="rowIndex">
-          <tr [pSelectableRow]="rowData" class="hover:bg-gray-100">
+          <tr
+            [pSelectableRow]="rowData"
+            class="hover:bg-gray-100"
+            [ngClass]="{
+              '!bg-orange-100': rowData.PartQuality === 'Non-Stockable',
+              '!bg-red-100': rowData.PartQuality === 'Non-Moving',
+              '!bg-green-100': rowData.PartQuality === 'Stockable'
+            }"
+          >
             <td class="p-1 text-[12px] text-center">{{ i + 1 }}</td>
 
             <td class="p-1 text-[13px] text-center">
@@ -686,7 +671,7 @@
             </td>
             <td class="p-1 text-[13px] text-center">{{ rowData.Location }}</td>
             <td class="p-1 text-[13px] text-center">
-              {{ rowData.part_number1 }}
+              {{ rowData.PartNumber }}
             </td>
             <td class="p-1 text-[13px] text-center">
               {{ rowData.Latest }}
@@ -694,25 +679,23 @@
             <td class="p-1 text-[13px] text-center">
               {{ rowData.isSubstitution }}
             </td>
-            <td class="p-1 text-[13px] text-center">
-              {{ rowData.vehiclenumber }}
+            <td *ngIf="shouldShowVehicleColumn()" class="p-1 text-[13px] text-center">
+              {{ rowData.VehicleNumber }}
             </td>
-            <td class="p-1 text-[13px] text-center">
-              {{ rowData.vehiclemodel }}
+            <td *ngIf="shouldShowVehicleColumn()" class="p-1 text-[13px] text-center">
+              {{ rowData.VehicleModel }}
             </td>
-            <td class="p-1 text-[13px] text-center">
-              {{ rowData.Jobcard_number }}
+            <td *ngIf="shouldShowVehicleColumn()" class="p-1 text-[13px] text-center">
+              {{ rowData.JobcardNumber }}
             </td>
-            <td class="p-1 text-[13px] text-center">
+            <td *ngIf="shouldShowVehicleColumn()" class="p-1 text-[13px] text-center">
               {{ rowData.jobcart_type }}
             </td>
-            <td class="p-1 text-[13px] text-center">
+            <td *ngIf="shouldShowVehicleColumn()" class="p-1 text-[13px] text-center">
               {{ rowData.Advisor }}
             </td>
-            <td class="p-1 text-[13px] text-center">
-              {{ rowData.FloorSupervisor }}
-            </td>
-            <td class="p-1 text-[13px] text-center">{{ rowData.Ordertye }}</td>
+
+            <td class="p-1 text-[13px] text-center">{{ rowData.OrderType }}</td>
             <td class="p-1 text-[13px] text-center">
               {{ rowData.RequestType }}
             </td>
@@ -739,7 +722,6 @@
             <td class="p-1 text-[13px] text-center">
               {{ rowData.Dateadded | date : "dd-MM-yyyy HH:mm:ss a" : "UTC" }}
             </td>
-            <td class="p-1 text-[13px] text-center"></td>
 
             <td class="p-1 text-[13px] text-center">
               {{
@@ -760,21 +742,18 @@
               }}
             </td>
             <td class="p-1 text-[13px] text-center"></td>
-            <td class="p-1 text-[13px] text-center"></td>
             <td class="p-1 text-[13px] text-center">
-              {{rowData.SCS_Status}}
+              {{ rowData.SCS_Status }}
             </td>
             <td class="p-1 text-[13px] text-center">
-              {{rowData.SCS_Remarks}}
+              {{ rowData.SCS_Remarks }}
+            </td>
+            <td class="p-1 text-[13px] text-center">
+              {{ rowData.JobCardStatus }}
             </td>
             <td class="p-1 text-[13px] text-center"></td>
-            <td class="p-1 text-[13px] text-center"></td>
-            <td class="p-1 text-[13px] text-center">
-                {{rowData.JobCardStatus}}
-            </td>
-            <td class="p-1 text-[13px] text-center"></td>
-            <td class="p-1 text-[13px] text-center">
-              <div class="flex flex-col gap-2">
+            <td class="p-1 text-[13px] text-center" >
+              <div class="flex flex-col gap-2" *ngIf="rowData.bigid">
                 <button
                   class="bg-gray-400 h-6 w-8 text-white px-2 z-0 py-1 rounded-lg text-[8px] font-medium hover:bg-black transition-transform duration-200 hover:scale-105"
                   (click)="OnclickYesInputPONumber(rowData)"
@@ -784,19 +763,20 @@
 
                 <button
                   class="bg-gray-400 h-6 w-8 text-white px-2 z-0 py-1 rounded-lg text-[8px] font-medium hover:bg-black focus:outline-none focus:ring-2 focus:ring-green-400 transition-transform duration-200 hover:scale-105"
-                   (click)="OnClickNo(rowData)"
-                  >
+                  (click)="OnClickNo(rowData)"
+                >
                   No
                 </button>
               </div>
             </td>
             <td class="p-1 text-[13px] text-center">
-               <button *ngIf="rowData.SCS_Status == 'Decline'"
-                  class="bg-blue-400 h-6 w-12 text-white px-2 z-0 py-1 rounded-lg text-[8px] font-medium hover:bg-bg-blue-600 transition-transform duration-200 hover:scale-105"
-                  (click)="OnClickReOrder(rowData)"
-                >
-                  Re Order
-                </button>
+              <button
+                *ngIf="rowData.SCS_Status == 'Decline'"
+                class="bg-blue-400 h-6 w-12 text-white px-2 z-0 py-1 rounded-lg text-[8px] font-medium hover:bg-bg-blue-600 transition-transform duration-200 hover:scale-105"
+                (click)="OnClickReOrder(rowData)"
+              >
+                Re Order
+              </button>
             </td>
           </tr>
         </ng-template>
@@ -807,7 +787,6 @@
 
 <p-dialog
   header="⚙️ Configure Table Columns"
-  
   [modal]="true"
   [breakpoints]="{ '1199px': '75vw', '575px': '95vw' }"
   [style]="{ width: '40vw' }"
@@ -858,7 +837,6 @@
   </ng-template>
 </p-dialog>
 
-
 <p-dialog
   header="Message"
   [(visible)]="visible"
@@ -871,6 +849,4 @@
   <p class="text-lg">
     {{ Result }}
   </p>
-
-
 </p-dialog>

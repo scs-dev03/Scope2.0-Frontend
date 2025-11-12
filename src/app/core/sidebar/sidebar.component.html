@@ -1,138 +1,195 @@
-<!-- <div class="h-full"> -->
-
-<!-- <p-sidebar [(visible)]="isVisible" *ngIf="isVisible"  position="left" [baseZIndex]="10000" [dismissible]="false" [showCloseIcon]="false"  mode="overlay"  > -->
-<!-- Logo Section -->
-<!-- <button (click)="closeSidebar()">Close</button> -->
-<div class="sidebar ">
-  <div class="logo-section ms-4">
-    <img src="Scs-logo.png" alt="Logo" class="sidebar-logo cursor-pointer" [routerLink]="['/core/home']" />
-  </div>
-
-  <!-- Search Section -->
-  <div class="search-section">
-    <input
-      type="text"
-      pInputText
-      placeholder="Search..."
-      [(ngModel)]="searchQuery"
-      (input)="filterItems()"
-      class="sidebar-search"
-    />
-    <!-- <ng-template pTemplate="append"> -->
-    <i class="pi pi-search"></i>
-    <!-- Search icon on the right -->
-    <!-- </ng-template> -->
-  </div>
-
-  <!-- Menu Items Section -->
-  <ul class="menu-items">
-    <!-- <li
-      *ngFor="let item of filteredItems"
-      class="menu-item"
-      routerLinkActive="active"
-    >
-      <a [routerLink]="item.route" *ngIf="!item.children">{{ item.value }}</a>
-
-       Parent item with toggle for children -->
-      <!-- <div
-        *ngIf="item.children"
-        (click)="toggleChildren(item)"
-        class="parent-item"
+<!-- sidebar.component.html -->
+<nav
+  class="h-full bg-white border-r border-gray-400 shadow-sm flex flex-col transition-all duration-300 ease-in-out text-[80%]"
+  [ngClass]="collapsed ? 'w-14' : 'w-[250px]'"
+  aria-label="Main sidebar"
+>
+  <!-- Menu -->
+  <div class="flex-1 overflow-y-auto nice-scroll py-1.5 bg-gray-50/30">
+    <ng-container *ngFor="let item of menu; trackBy: trackById">
+      <!-- Header -->
+      <div
+        *ngIf="item.type === 'header'"
+        class="px-3 py-0.5 text-[1px] font-semibold uppercase tracking-wide text-gray-500"
+        [ngClass]="collapsed ? 'opacity-0 h-0 overflow-hidden' : 'mt-2.5'"
       >
-        <i
-          [class]="
-            item.isExpanded ? 'pi pi-chevron-down f-12' : 'pi pi-chevron-right f-12'
-          "
-        ></i>
-        {{ item.value }}
+        {{ item.label }}
       </div>
 
-     
-      <ul *ngIf="item.isExpanded">
-        <li *ngFor="let child of item?.children" class="menu-item child ms-3">
-          <a
-            [routerLink]="child.route"
-            (click)="setActive(child, item)"
-            routerLinkActive="active"
-            [ngClass]="child.isActive ? 'active-item' : ''"
-            [ngClass]="child.isActive ? 'active-item' : ''"
-            >{{ child.value }}</a
+      <!-- Divider -->
+      <div
+        *ngIf="item.type === 'divider'"
+        class="my-1.5 mx-2 border-t border-gray-200"
+        [ngClass]="collapsed ? 'mx-1.5' : 'mx-2'"
+      ></div>
+
+      <!-- Single Link -->
+      <a
+        *ngIf="item.type?.toLowerCase() === 'link'"
+        [routerLink]="!item.external ? item.route : null"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [href]="item.external ? item.route : null"
+        [attr.target]="item.external ? '_blank' : null"
+        [attr.rel]="item.external ? 'noopener noreferrer' : null"
+        class="group mx-1.5 my-0.5 flex items-center gap-2 rounded-md transition-all duration-200 text-gray-700 hover:bg-teal-100 hover:text-[#129990]"
+        [ngClass]="collapsed ? 'px-1.5 py-1.5 justify-center' : 'px-2.5 py-1.5'"
+        [attr.title]="collapsed ? item.label : null"
+      >
+        <!-- Icon -->
+        <span
+          class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-teal-500 text-white group-hover:text-[#129990]"
+        >
+          <i class="text-[13px]" [ngClass]="item.icon"></i>
+        </span>
+
+        <!-- Label -->
+        <span
+          class="truncate text-sm font-medium"
+          [ngClass]="collapsed ? 'hidden' : ''"
+        >
+          {{ item.label }}
+        </span>
+
+        <!-- Badge -->
+        <span
+          *ngIf="item.badge && !collapsed"
+          class="ml-auto text-[11px] px-1.5 py-0.5 rounded-full font-semibold"
+          [ngClass]="{
+            'bg-green-100 text-green-700': item.badge.variant === 'success',
+            'bg-yellow-100 text-yellow-700': item.badge.variant === 'warning',
+            'bg-blue-100 text-blue-700': item.badge.variant === 'info'
+          }"
+        >
+          {{ item.badge.text }}
+        </span>
+      </a>
+
+      <!-- Group -->
+      <div *ngIf="item.type.toLowerCase() === 'group'" class="mx-1.5 my-0.5">
+        <button
+          type="button"
+          (click)="toggleGroup(item)"
+          role="button"
+          class="flex items-center w-full rounded-md transition-all duration-200 hover:bg-teal-100 hover:text-[#129990]"
+          [ngClass]="
+            collapsed ? 'px-1.5 py-1.5 justify-center' : 'px-2.5 py-1.5'
+          "
+          [attr.aria-expanded]="item.expanded"
+          [attr.aria-controls]="'group-' + item.id"
+          [attr.title]="collapsed ? item.label : null"
+        >
+          <!-- Icon -->
+          <span
+            class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-teal-500 text-white"
           >
-        </li>
-      </ul>
-    </li>  -->
+            <i class="text-[13px]" [ngClass]="item.icon"></i>
+          </span>
 
+          <!-- Label -->
+          <span class="ml-2 text-sm" [ngClass]="collapsed ? 'hidden' : ''">
+            {{ item.label }}
+          </span>
 
-    <li *ngFor="let item of filteredItems" [class.active]="item.isActive" class="f-13">
-        
-      <!-- Main Menu Item -->
-      <a 
-        class="menu-item submenu-title cursor-pointer text-balance line-clamp-1 full-name" 
-        [routerLink]="item.module_route"  *ngIf="item.subchildren.length>=1"
-        routerLinkActive="active" 
-        (click)="toggleSubMenu(item)" 
-        [ngClass]="item.isActive ? 'active-item' : ''">
-        
-        <!-- Chevron Icon -->
-        <i class="icon" [ngClass]="item.isOpen ? 'bx bx-chevron-up f-12' : 'bx bx-chevron-down f-12'"></i>
-        {{ item.parentModuleName }}
-       
-      </a>
-      
-      <a 
-        class="ml-3  submenu-title cursor-pointer text-balance line-clamp-1 full-name menu-item" 
-        [routerLink]="item.module_route"  *ngIf="item.subchildren.length==0"
-        routerLinkActive="active" 
-        (click)="toggleSubMenu(item)" 
-        [ngClass]="item.isActive ? 'active-item' : ''">
-        
-        <!-- Chevron Icon -->
-        {{ item.parentModuleName }}
-       
-      </a>
-      <!-- Submenu -->
-      <ul *ngIf="item.isOpen" class="submenu">
-       
-        <li *ngFor="let subItem of item.subchildren" class="subsidebar  child  f-12 ms-7 menu-item">
-          <!-- <i class='bx bx-circle f-8'></i> -->
-          <a 
-            [routerLink]="subItem.module_route" 
-            routerLinkActive="active" 
-            (click)="setActive(subItem, item)" 
-            [ngClass]="subItem.isActive ? 'active-item' : ''">
-            {{ subItem?.module_name}}
-          </a>
-        </li>
-      </ul>
-    </li>
-  </ul>
+          <!-- Chevron -->
+          <i
+            class="pi ml-auto transition-transform duration-200 text-teal-400"
+            [ngClass]="{
+              'pi-chevron-down rotate-0': item.expanded,
+              'pi-chevron-right': !item.expanded,
+              hidden: collapsed
+            }"
+            *ngIf="!collapsed"
+          ></i>
+        </button>
 
-  <!-- User Profile Section -->
-  <div class="user-profile d-flex flex-row justify-between me-5 pe-3">
-    <div class="flex flex-row mt-2 align-center" >
-      <!-- <img src="man_4140048.png" height="40px" width="40px" class="me-3" /> -->
-      <img [src]="profilePhoto!='' && profilePhoto?profilePhoto: '/man_4140048.png'"  class="profile-image me-3 h-[40px] w-[40px] rounded-full" />
-      <p class="user-name f-12 d-flex align-items-center">{{userName}}</p>
-    </div>
-    
-    <div
-   
-    class="cursor-pointer pi pi-ellipsis-v mt-2"
-    (click)="onButtonClick($event)"
-  ></div>
+        <!-- Children -->
+        <div
+          *ngIf="item.expanded && !collapsed"
+          [id]="'group-' + item.id"
+          class="ml-2.5"
+        >
+          <ng-container *ngFor="let child of item.children; trackBy: trackById">
+            <!-- Level 2 -->
+            <a
+              *ngIf="child.type?.toLowerCase() === 'link'"
+              [routerLink]="child.route"
+              class="group flex items-center gap-1.5 px-2 py-1.5 rounded hover:bg-gray-100 hover:text-[#129990] transition text-xs"
+            >
+              <i class="text-teal-400 text-[12px]" [ngClass]="child.icon"></i>
+              <span class="truncate">{{ child.label }}</span>
+            </a>
 
-<div class="flex h-full p-1  align-items-center me-4  ">
-  <!-- <button
-    icon="pi pi-ellipsis-v"
-    class="cursor-pointer pi pi-ellipsis-v"
-    (onClick)="onButtonClick($event)"
-  ></button> -->
-  <p-tieredmenu #menu [model]="items" [appendTo]="'body'" [popup]="true" />
-</div>
-</div>
-</div>
-<!-- </p-sidebar> -->
-<!-- </div> -->
-<!-- Button to toggle the sidebar -->
-<!-- <button pButton icon="pi pi-bars" icon="bx bx-upload" (click)="visibleSidebar = true"></button> 
-   -->
+            <div *ngIf="child.children?.length > 0" class="ml-4">
+              <ng-container
+                *ngFor="let subchild of child.children; trackBy: trackById"
+              >
+                <!-- Level 3 -->
+                <a
+                  *ngIf="subchild.type?.toLowerCase() === 'link'"
+                  [routerLink]="subchild.route"
+                  class="group flex items-center gap-1.5 px-2 py-1.5 rounded hover:bg-gray-50 hover:text-[#129990] transition text-xs"
+                >
+                  <i
+                    class="text-gray-400 text-[12px]"
+                    [ngClass]="subchild.icon"
+                  ></i>
+                  <span class="truncate">{{ subchild.label }}</span>
+                </a>
+
+                <div *ngIf="subchild.children?.length > 0" class="ml-4">
+                  <ng-container
+                    *ngFor="let subsub of subchild.children; trackBy: trackById"
+                  >
+                    <!-- Level 4 -->
+                    <a
+                      *ngIf="subsub.type?.toLowerCase() === 'link'"
+                      [routerLink]="subsub.route"
+                      class="group flex items-center gap-1.5 px-2 py-1.5 rounded hover:bg-gray-50 hover:text-[#129990] transition text-xs"
+                    >
+                      <i
+                        class="text-gray-400 text-[12px]"
+                        [ngClass]="subsub.icon"
+                      ></i>
+                      <span class="truncate">{{ subsub.label }}</span>
+                    </a>
+
+                    <div *ngIf="subsub.children?.length > 0" class="ml-4">
+                      <ng-container
+                        *ngFor="
+                          let subsubsub of subsub.children;
+                          trackBy: trackById
+                        "
+                      >
+                        <!-- Level 5 -->
+                        <a
+                          *ngIf="subsubsub.type?.toLowerCase() === 'link'"
+                          [routerLink]="subsubsub.route"
+                          class="group flex items-center gap-1.5 px-2 py-1.5 rounded hover:bg-gray-50 hover:text-[#129990] transition text-xs"
+                        >
+                          <i
+                            class="text-gray-400 text-[12px]"
+                            [ngClass]="subsubsub.icon"
+                          ></i>
+                          <span class="truncate">{{ subsubsub.label }}</span>
+                        </a>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Footer -->
+  <div
+    class="p-2 border-t border-gray-200 text-[10px] text-gray-400 text-center bg-gray-50"
+    [ngClass]="collapsed ? 'hidden' : ''"
+  >
+    © 2025 Scope 2.0
+  </div>
+</nav>

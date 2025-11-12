@@ -29,3 +29,29 @@
     float: right;
   }
 }
+
+
+
+:host ::ng-deep .p-dialog-mask,
+.p-sidebar-mask,
+.p-overlay-mask {
+  z-index: 10000 !important;
+}
+:host ::ng-deep.p-dialog,
+.p-sidebar {
+  z-index: 10001 !important;
+}
+
+/* Push paginator controls behind overlays */
+:host ::ng-deep.p-paginator,
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-last,
+.p-paginator .p-paginator-pages .p-paginator-page,
+.p-paginator .p-inputtext,
+.p-paginator .p-dropdown,
+.p-paginator .p-ripple-element {
+  position: relative;
+  z-index: 0 !important;
+}

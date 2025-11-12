@@ -3,8 +3,6 @@ export const environment = {
 
   //scope 2.0 live server backend
  
-
-
   // apiUrl: 'http://localhost:3000/api/',
 
   // apiUrl: 'https://8bbmhgb4-3000.inc1.devtunnels.ms/api/'
@@ -51,9 +49,9 @@ export const environment = {
 
   // Ayush Module API Url
   //EnvApiUrlMaster: 'http://web36.185.238.new.ocpwebserver.com/api/v1/',
-  EnvApiUrlMaster: 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/',
+  //EnvApiUrlMaster: 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/',
   //EnvApiUrlMaster: 'https://scopeapi.sparecare.in/api/v1/',
-  //EnvApiUrlMaster: 'http://web10.185.238.new.ocpwebserver.com/api/v1/',
+  EnvApiUrlMaster: 'http://web10.185.238.new.ocpwebserver.com/api/v1/',
 
 
    //apiUrl: 'https://scopeapi.sparecare.in/api/',

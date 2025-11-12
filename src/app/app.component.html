@@ -1,127 +1,146 @@
 <div class="max-w-full h-full bg-white flex flex-col overflow-auto">
   <header
-    class="sticky top-0 z-50 bg-white shadow-md backdrop-blur-sm border-b border-slate-200"
-  >
-    <div class="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
-      <div class="h-12 flex items-center justify-between gap-3">
-        <!-- Left: menu + module name -->
-        <div class="flex items-center gap-2">
-          <!-- LOGO SLOT (animates away) -->
-          <div
-            class="overflow-hidden flex-shrink-0 transition-all duration-300 ease-in-out hover:cursor-pointer"
-            [style.maxWidth.px]="visibleSidebar ? 180 : 0"
-            [style.opacity]="visibleSidebar ? 1 : 0"
-            [style.marginRight]="visibleSidebar ? '0.75rem' : '0'"
-            [style.transform]="
-              visibleSidebar ? 'translateX(-8px) scale(0.98)' : 'none'
-            "
-          >
-            <img
-              src="Scs-logo.png"
-              alt="Logo"
-              [routerLink]="['/core/home']"
-              class="h-16 w-auto block"
-            />
-          </div>
-
-          <!-- Sidebar toggle -->
-          <button
-            *ngIf="!isLoginPage"
-            type="button"
-            pButton
-            (click)="toggleSidebar()"
-            [icon]="visibleSidebar ? 'pi pi-arrow-left' : 'pi pi-bars'"
-            class="-ml-4 h-10 w-10 !rounded-xl !bg-teal-600 !border-0 text-white shadow hover:!bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
-            aria-label="Toggle sidebar"
-          ></button>
-
-          <!-- Module name -->
-          <span
-            *ngIf="!isLoginPage"
-            class="text-xl sm:text-xl font-semibold tracking-tight text-slate-800 transition-all duration-300"
-          >
-            {{ moduleName }}
-          </span>
+  class="sticky top-0 z-50 bg-white shadow-md backdrop-blur-sm border-b border-slate-200"
+>
+  <div class="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+    <div
+      class="h-12 sm:h-14 flex items-center justify-between gap-2 sm:gap-3"
+    >
+      <!-- Left: menu + module name -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- LOGO (hide on mobile when sidebar open) -->
+        <div
+          class="overflow-hidden flex-shrink-0 transition-all duration-300 ease-in-out hidden sm:block"
+          [style.maxWidth.px]="!isMobile && visibleSidebar ? 180 : 0"
+          [style.opacity]="!isMobile && visibleSidebar ? 1 : 0"
+          [style.marginRight]="!isMobile && visibleSidebar ? '0.75rem' : '0' "
+          [style.transform]="!isMobile && visibleSidebar ? 'translateX(-8px) scale(0.98)' : 'none'"
+        >
+          <img
+            src="Scs-logo.png"
+            alt="Logo"
+            [routerLink]="['/core/home']"
+            class="h-10 sm:h-12 md:h-14 w-auto block"
+          />
         </div>
 
-        <!-- Right: home page actions -->
-        <div class="flex items-center gap-3">
-          <button
-            type="button"
-            (click)="redirectToLegacyScope()"
-            class="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-3.5 py-2 text-sm font-medium text-white shadow hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+        <!-- Sidebar toggle -->
+        <button
+          *ngIf="!isLoginPage"
+          type="button"
+          pButton
+          (click)="toggleSidebar()"
+          [icon]="visibleSidebar ? 'pi pi-arrow-left' : 'pi pi-bars'"
+          class="h-9 w-9 sm:h-10 sm:w-10 !rounded-xl !bg-teal-600 !border-0 text-white shadow hover:!bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+          aria-label="Toggle sidebar"
+        ></button>
+
+        <!-- Module name -->
+        <span
+          *ngIf="!isLoginPage"
+          class="hidden sm:inline-block text-base sm:text-xl font-semibold tracking-tight text-slate-800 transition-all duration-300 truncate max-w-[120px] sm:max-w-none"
+        >
+          {{ moduleName }}
+        </span>
+      </div>
+
+      <!-- Right: home page actions -->
+      <div class="flex items-center gap-1 sm:gap-3">
+        <!-- Legacy redirect button -->
+        <button
+          type="button"
+          (click)="redirectToLegacyScope()"
+          class="inline-flex items-center gap-1 sm:gap-2 rounded-lg sm:rounded-xl bg-teal-600 px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white shadow hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-3.5 w-3.5 sm:h-4 sm:w-4"
+            viewBox="0 0 24 24"
+            fill="currentColor"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path
-                d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3ZM19 19H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7Z"
-              />
-            </svg>
-          </button>
-
-          <form [formGroup]="homeData" class="card flex justify-center">
-            <p-select
-              formControlName="locationId"
-              [options]="filteredLocationData"
-              optionLabel="location"
-              optionValue="locationid"
-              placeholder="Select Location"
-              (onChange)="onClickLocation()"
-              class="w-44 h-9"
+            <path
+              d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3ZM19 19H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7Z"
             />
-          </form>
+          </svg>
+        </button>
 
-          <div class="h-12 w-auto flex items-center">
-            <p-button icon="pi pi-bell" [rounded]="true" [text]="true" />
-            <p-avatar
-              
-               [image]="profilePhoto!='' && profilePhoto?profilePhoto: '/man_4140048.png'"
-              class="mr-2"
-              shape="circle"
-            />
-            <div class="h-12 w-auto flex justify-center items-center gap-3">
-              <p class="text-sm font-semibold text-slate-800">
-                {{ UserName }}
-              </p>
+        <!-- Notification + Profile -->
+        <div class="flex items-center gap-1 sm:gap-2">
+          <p-button
+            icon="pi pi-bell"
+            [rounded]="true"
+            [text]="true"
+            class="!text-slate-600"
+          ></p-button>
 
-              <p-button
-                icon="pi pi-ellipsis-v"
-                [rounded]="true"
-                [text]="true"
-                (click)="onButtonClick($event)"
-              />
+          <p-avatar
+            [image]="profilePhoto!='' && profilePhoto ? profilePhoto : '/man_4140048.png'"
+            class="mr-1 sm:mr-2"
+            shape="circle"
+          ></p-avatar>
 
-              <p-tieredMenu #menu [model]="items || []" [popup]="true"></p-tieredMenu>
-            </div>
+          <!-- User info (hide name on mobile) -->
+          <div class="hidden sm:flex items-center gap-2">
+            <p class="text-sm font-semibold text-slate-800 truncate max-w-[100px]">
+              {{ UserName }}
+            </p>
+
+            <p-button
+              icon="pi pi-ellipsis-v"
+              [rounded]="true"
+              [text]="true"
+              (click)="onButtonClick($event)"
+            ></p-button>
           </div>
+
+          <!-- Menu popup -->
+          <p-tieredMenu
+            #menu
+            [model]="items || []"
+            [popup]="true"
+          ></p-tieredMenu>
         </div>
       </div>
     </div>
-  </header>
+  </div>
+</header>
 
-  <div class="flex h-full overflow-hidden bg-">
+
+  <div class="flex h-full overflow-hidden">
     <!-- Sidebar -->
     <div
       *ngIf="!isLoginPage"
-      [ngClass]="{
-        'w-[20%]': visibleSidebar,
-        'w-0 overflow-hidden': !visibleSidebar
-      }"
-      class="transition-all duration-300 h-full bg-white shadow-md flex-shrink-0"
+      class="fixed top-12 left-0 bottom-0 z-40 bg-white border-r shadow-md transition-all duration-300"
+      [class.w-14]=" isMobile ? !mobileDrawerOpen : !visibleSidebar"
+      [class.w-[250px]]=" isMobile ?  mobileDrawerOpen :  visibleSidebar"
+      [class.overflow-hidden]="isMobile ? !mobileDrawerOpen : !visibleSidebar"
     >
-      <app-sidebar></app-sidebar>
+      <!-- Pass collapsed based on device + drawer state -->
+      <app-sidebar
+        class="h-full w-full overflow-y-auto"
+        [collapsed]="isMobile ? !mobileDrawerOpen : !visibleSidebar"
+      ></app-sidebar>
     </div>
+
+    <!-- Backdrop for mobile drawer -->
+    <div
+      *ngIf="isMobile && mobileDrawerOpen"
+      class="fixed inset-0 z-30 bg-black/40 backdrop-blur-[1px]"
+      (click)="closeMobileDrawer()"
+    ></div>
 
     <!-- Main Content -->
     <div
       class="flex-1 bg-white transition-all duration-300 overflow-y-auto overflow-x-hidden relative"
-      [ngClass]="{ 'bg-white': is404Page, }"
+      [ngClass]="
+        isLoginPage
+          ? 'ml-0'
+          : (isMobile
+              ? (mobileDrawerOpen ? 'ml-0' : 'ml-16')
+              : (visibleSidebar ? 'ml-[255px]' : 'ml-16'))
+      "
+      [class.bg-white]="is404Page"
     >
-      <!-- Main Content -->
       <router-outlet></router-outlet>
     </div>
   </div>

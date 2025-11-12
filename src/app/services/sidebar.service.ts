@@ -3,21 +3,21 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 interface SidebarItem {
-  id:Number;
+  id: Number;
   label: string;
   route: string;
   roles: string[];  // Specify roles that can see this menu item
-submenu?: SidebarItem[];
+  submenu?: SidebarItem[];
 }
 @Injectable({
   providedIn: 'root'
 })
 export class SidebarService {
 
- private url:any=environment.apiUrl;
- private sidebarVisible = new BehaviorSubject<boolean>(true);
- visibleSidebar$ = this.sidebarVisible.asObservable();
-  private sidebarItems: any 
+  private url: any = environment.EnvApiUrlMaster;
+  private sidebarVisible = new BehaviorSubject<boolean>(true);
+  visibleSidebar$ = this.sidebarVisible.asObservable();
+  private sidebarItems: any
   // = [
   //   {
   //     label: 'Lead Time Calculator',
@@ -55,23 +55,23 @@ export class SidebarService {
   // Simulate getting current user roles (could be fetched from a backend service)
   private currentUserRoles = ['user']; // This would be dynamic in a real app
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   // Return sidebar items based on current user roles
   getSidebarItems() {
-    return this.sidebarItems.filter((item:any) =>
-      item.roles.some((role:any) => this.currentUserRoles.includes(role))
+    return this.sidebarItems.filter((item: any) =>
+      item.roles.some((role: any) => this.currentUserRoles.includes(role))
     );
   }
 
-  getModules():Observable<any>{
-    // sessionStorage.setItem('userid',"18")
-     let userId=sessionStorage.getItem('userid');
-      //  console.log("user id in sidebar ",userId)
-    // let userId='293';
-      // sessionStorage.setItem('userId',userId)
-      return this.http.post(`${this.url}sidebar/modules-based-on-roles`,{userId:userId})
-    }
+  // getModules(): Observable<any> {
+  //   // sessionStorage.setItem('userid',"18")
+  //   let userId = sessionStorage.getItem('userid');
+  //   //  console.log("user id in sidebar ",userId)
+  //   // let userId='293';
+  //   // sessionStorage.setItem('userId',userId)
+  //   return this.http.post(`${this.url}sidebar/modules-based-on-roles`, { userId: userId })
+  // }
 
   setVisible(value: boolean) {
     this.sidebarVisible.next(value);
@@ -79,5 +79,10 @@ export class SidebarService {
 
   toggle() {
     this.sidebarVisible.next(!this.sidebarVisible.value);
+  }
+
+  getModules(): Observable<any> {
+    let userId = sessionStorage.getItem('userid');
+    return this.http.post(`${this.url}master/user-modules`, { userId: userId })
   }
 }

@@ -1,0 +1,190 @@
+<div class="w-full">
+  <div
+    class="flex flex-wrap items-center justify-start mt-2 gap-3 bg-gray-50 p-3 rounded-md" [formGroup]="ViewNotInMaster"
+  >
+    <!-- Location -->
+    <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
+      <p-select
+        [showClear]="true"
+        size="small"
+        formControlName="Location"
+        [options]="LocationData"
+        class="w-full h-8"
+        optionValue="locationid"
+        optionLabel="location"
+      ></p-select>
+      <label class="text-xs">Location</label>
+    </p-floatlabel>
+
+    <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
+      <p-select
+        size="small"
+        class="w-full h-8"
+        [options]="Status"
+        formControlName="Status"
+        optionValue="Id"
+        optionLabel="Name"
+      />
+      <label class="text-xs">Status</label>
+    </p-floatlabel>
+
+    <!-- From Date -->
+    <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
+      <input
+        pInputText
+        id="fromDate"
+        type="date"
+        [max]="today"
+        formControlName="FromDate"
+        pSize="small"
+        [value]="firstDayOfMonth"
+        autocomplete="off"
+        class="w-full h-8"
+      />
+      <label for="fromDate" class="text-xs">From Date</label>
+    </p-floatlabel>
+    <!-- To Date -->
+    <p-floatlabel class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on">
+      <input
+        pInputText
+        type="text"
+        pSize="small"
+        [max]="today"
+         formControlName="ToDate"
+        [value]="today"
+        onfocus="(this.type='date')"
+        id="ToDate"
+        class="w-full custom-date h-8"
+      />
+      <label for="ToDate" class="text-xs">To Date</label>
+    </p-floatlabel>
+
+    <p-button
+      [style]="{ 'background-color': '#008080', color: '#fff' }"
+      icon="pi pi-check"
+      label="Submit"
+      size="small"
+      aria-label="submit"
+      (onClick)="OnClickView()"
+    />
+   
+  </div>
+
+  <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
+    <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+      <p-table
+        [scrollable]="true"
+        scrollHeight="400px"
+        [value]="PartNumberData"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 30, 40, 50, 100]"
+        [showGridlines]="true"
+        paginatorDropdownAppendTo="body"
+        class="!w-[90vw]"
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template pTemplate="header">
+          <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              S.No
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Part Number
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Latest Part Number
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Part Description
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              MOQ
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              MRP
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              HSNID
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Part Type ID
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              GST Percentage
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Qty Per Vechile
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Model
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Add Attachment
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Remark
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              SCS Remark
+            </th>
+            
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+          <tr
+            class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+          >
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ i + 1 }}
+            </td>
+
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.PartNumber }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.LatestPartNumber }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.PartDesc }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.MOQ }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.MRP }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.HSNCode }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.PartNumber }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.GSTPer }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.QtyPerVehicle }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Model }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.PartNumber }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Remarks }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.SCSRemarks }}
+            </td>
+            
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>

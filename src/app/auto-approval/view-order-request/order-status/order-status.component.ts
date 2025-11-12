@@ -11,6 +11,8 @@ import { OrderStatusService } from '../../../services/Auto-Approvals/order-statu
 import { GlobalBlockUiService } from '../../../services/global-block-ui.service';
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-order-status',
@@ -43,7 +45,7 @@ export class OrderStatusComponent {
 
   constructor(private sharedService: SharedServiceService, private fb: FormBuilder, private orderstatusservice: OrderStatusService, private globalBlockUiService: GlobalBlockUiService) {
     this.OrderStatusInput = this.fb.group({
-      Location: [null, Validators.required],
+      Location: [null],
       FromDate: [null],
       ToDate: new Date().toISOString().split('T')[0],
       OrderType: [null],
@@ -74,6 +76,9 @@ export class OrderStatusComponent {
   }, {
     Name: 'Pending',
     id: 'P'
+  }, {
+    Name: 'Internal Approval',
+    id: 'I'
   }]
 
 
@@ -153,7 +158,7 @@ export class OrderStatusComponent {
 
   OnclickYesInputPONumber(rowData: any) {
     console.log("Row data:", rowData);
-    this.globalBlockUiService.startLoading();
+   
 
     const ponumber = prompt("Enter PO Number:");
     if (ponumber !== null && ponumber.trim() !== "") {
@@ -164,13 +169,13 @@ export class OrderStatusComponent {
           console.log("PO Number sent successfully:", res);
           this.Result = 'PO Number submitted successfully.';
           this.visible = true;
-          this.globalBlockUiService.stopLoading();
+          
         },
         error: (err) => {
           console.error("Error sending PO Number:", err);
           this.Result = 'Error submitting PO Number. Please try again.';
           this.visible = true;
-          this.globalBlockUiService.stopLoading();
+         
         }
       });
     } else {
@@ -214,7 +219,7 @@ export class OrderStatusComponent {
           this.Result = 'Success';
           this.visible = true;
         }
-        else{
+        else {
           this.Result = "No Data Available";
           this.visible = true;
         }
@@ -242,8 +247,17 @@ export class OrderStatusComponent {
         console.log(res);
         this.visibleTable = true;
         this.Result = 'Data Fetched successfully.';
+        this.visible = true;
         this.globalBlockUiService.stopLoading();
         this.TableViewData = res.data;
+        if (this.TableViewData.length > 0) {
+          this.visibleTable = true;
+        }
+        else {
+          this.Result = 'No Data Avaiable'
+          this.visible = true;
+          this.visibleTable = false;
+        }
       },
       error: (err: any) => {
         console.error("Error fetching View Order Status data:", err);
@@ -255,7 +269,24 @@ export class OrderStatusComponent {
   }
 
   OnClickViewOrderStatus() {
-    console.log("orderstatus" + this.OrderStatusInput.value);
+    //console.log("orderstatus" + this.OrderStatusInput.value);
+    const partnumber = this.OrderStatusInput.value.PartNumber
+    const vehiclenumber = this.OrderStatusInput.value.VehicleNumber
+    const jobcardno = this.OrderStatusInput.value.JobCardNumber
+
+    if(this.OrderStatusInput.value.PartNumber != null){
+      partnumber.split(',')
+      this.OrderStatusInput.get('PartNumber')?.patchValue(partnumber.split(','))      
+    }
+    if(this.OrderStatusInput.value.JobCardNumber != null){
+      jobcardno.split(',')
+      this.OrderStatusInput.get('JobCardNumber')?.patchValue(jobcardno.split(','))      
+    }
+    if(this.OrderStatusInput.value.VehicleNumber != null){
+      vehiclenumber.split(',')
+      this.OrderStatusInput.get('VehicleNumber')?.patchValue(vehiclenumber.split(','))      
+    }
+
     this.fetchViewOrderStatusData(
       sessionStorage.getItem('dealerid') || '',
       this.OrderStatusInput.value.Location,
@@ -275,58 +306,11 @@ export class OrderStatusComponent {
 
   allowOnlyLettersAndNumber(event: KeyboardEvent) {
     const char = event.key;
-    const pattern = /^[a-zA-Z0-9\s]*$/;
+    const pattern = /^[a-zA-Z0-9\s,]*$/;
     if (!pattern.test(char)) {
       event.preventDefault();
     }
   }
-
-  ColummnData = [
-    { "field": "sNo", "header": "S.No" },
-    { "field": "approvalId", "header": "Approval ID" },
-    { "field": "location", "header": "Location" },
-    { "field": "partNumber", "header": "Part Number" },
-    { "field": "latestPartNumber", "header": "Latest Part Number" },
-    { "field": "substitution", "header": "Substitution" },
-    { "field": "vehicleNumber", "header": "Vehicle Number" },
-    { "field": "vehicleModel", "header": "Vehicle Model" },
-    { "field": "jobCardNumber", "header": "Job Card Number" },
-    { "field": "jobCardType", "header": "Job Card Type" },
-    { "field": "advisorName", "header": "Advisor Name" },
-    { "field": "floorSupervisor", "header": "Floor Supervisor" },
-    { "field": "jobCardType2", "header": "Job Card Type" },
-    { "field": "orderType", "header": "Order Type." },
-    { "field": "requestType", "header": "Request Type" },
-    { "field": "partDescription", "header": "Part Description" },
-    { "field": "moq", "header": "MOQ" },
-    { "field": "quantity", "header": "Quantity" },
-    { "field": "price", "header": "Price" },
-    { "field": "originalStock", "header": "Orignal Stock." },
-    { "field": "stock", "header": "Stock" },
-    { "field": "groupStock", "header": "Group Stock" },
-    { "field": "latestGroupStock", "header": "Latest Group Stock" },
-    { "field": "orderValue", "header": "Order Value" },
-    { "field": "orderingDate", "header": "Ordering Date" },
-    { "field": "stockable", "header": "Stockable" },
-    { "field": "gmApproval", "header": "GM Approval" },
-    { "field": "gmRemarks", "header": "GM Remarks" },
-    { "field": "poNumber", "header": "PO Number" },
-    { "field": "jobCardOpenDate", "header": "JobCard Open Date" },
-    { "field": "jobCardCloseDate", "header": "JobCard Close Date" },
-    { "field": "jobLineCloseDate", "header": "JobLine Close Date" },
-    { "field": "jobLineUpdateDate", "header": "JobLine Update Date" },
-    { "field": "ooqDate", "header": "OOQ Date" },
-    { "field": "scsApproval", "header": "SCS Approval" },
-    { "field": "scsRemarks", "header": "SCS Remarks" },
-    { "field": "openJoblineWithOpenJC", "header": "Open Jobline with Open JC" },
-    { "field": "joblineStatus", "header": "Jobline Status" },
-    { "field": "jobcardStatus", "header": "Jobcard Status" },
-    { "field": "orderRemarks", "header": "Order Remarks" },
-    { "field": "orderPlace", "header": "Order Place" },
-    { "field": "reOrder", "header": "Re-Order" }
-  ]
-
-
 
   visibleTable: boolean = false;
   MaxOrPending: boolean = true;
@@ -377,5 +361,78 @@ export class OrderStatusComponent {
   }
 
 
+  private readonly EXCEL_TYPE =
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+
+  ExportTableData() {
+    if (this.TableViewData) {
+
+      const exportData = this.TableViewData.map((item: any) => ({
+
+        'Location': item.Location,
+        'Part Number': item.PartNumber,
+        'Latest Part Number': item.Latest,
+        'Vehicle Number': item.VehicleNumber,
+        'Vehicle Model': item.VehicleModel,
+        'JobCard Number': item.JobcardNumber,
+        'SCS_Status': item.SCS_Status,
+        'Request Type': item.RequestType,
+        'Part Description': item.Partdesc,
+        'MOQ': item.MOQ,
+        'Quantity': item.Qty,
+        'Price': item.Price,
+        'Stock': item.Stock,
+        'Current Stock': item.CurrentStock,
+        'Group Stock': item.Group_stock,
+        'Current Group Stock': item.CurrentGroupStock,
+        'Order Value': item.Ordervalue,
+        'Job Card Open Date': item.jobcardopendate,
+        'Job Card Close Date': item.Final_Close_Date,
+        'Job Line Close Date': item.JobLineCloseDate,
+        'Date Added': item.Dateadded,
+        'SCS Remark': item.SCS_Remarks,
+        'JobCard Type': item.jobcart_type,
+        'Order Type': item.OrderType,
+        'Is Substitution': item.isSubstitution
+      }));
+
+      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+      const workbook: XLSX.WorkBook = {
+        Sheets: { 'Orders': worksheet },
+        SheetNames: ['Orders']
+      };
+
+
+      const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+      const data: Blob = new Blob([excelBuffer], { type: this.EXCEL_TYPE });
+      saveAs(data, 'VehicleOrders_' + new Date().getTime() + '.xlsx');
+
+    }
+
+
+  }
+
+
+  shouldShowVehicleColumn(): boolean {
+    const requestType = this.OrderStatusInput.get('RequestType')?.value;
+
+    // Agar value null hai to false
+    if (!requestType) return false;
+
+    // Case 1: RequestType ek single string ho sakti hai ("S" ya "V")
+    // Case 2: RequestType ek array ho sakti hai (["S", "V"])
+    if (Array.isArray(requestType)) {
+      return requestType.includes('V'); // agar array me "V" hai to dikhao
+    } else {
+      return requestType === 'V'; // agar sirf "V" hai to dikhao
+    }
+  }
+
+
+
+
 
 }
+
+

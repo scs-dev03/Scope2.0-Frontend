@@ -3,7 +3,7 @@ import { SHARED_IMPORTS } from '../../../shared/shared-imports/shared-module';
 import { PrimengModuleModule } from '../../../shared/primeng-module/primeng-module.module';
 import { SharedModule } from 'primeng/api';
 import { DividerModule } from 'primeng/divider';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { PaginatorState } from 'primeng/paginator';
@@ -14,10 +14,11 @@ import { InputIcon } from "primeng/inputicon";
 import { Table } from 'primeng/table';
 import { format } from 'echarts';
 import { Popover } from 'primeng/popover';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vechile-order-request',
-  imports: [SHARED_IMPORTS,Popover, PrimengModuleModule, SharedModule, DividerModule, IconField, InputIcon],
+  imports: [SHARED_IMPORTS, Popover, PrimengModuleModule, SharedModule, DividerModule, IconField, InputIcon],
   templateUrl: './vechile-order-request.component.html',
   styleUrl: './vechile-order-request.component.css'
 })
@@ -29,6 +30,7 @@ export class VechileOrderRequestComponent {
     this.fetchJobCardType()
   }
 
+
   MultiUpload: boolean = false;
   AddPartWise: FormGroup
   VechileOrderRequestInput: FormGroup
@@ -37,22 +39,21 @@ export class VechileOrderRequestComponent {
     Location: new FormControl(null, [Validators.required]),
   })
 
-  constructor(private fb: FormBuilder, private globalBlockUiService: GlobalBlockUiService, private vechileorderservice: VehicleOrderService) {
+  constructor(private router: Router, private fb: FormBuilder, private globalBlockUiService: GlobalBlockUiService, private vechileorderservice: VehicleOrderService) {
     this.AddPartWise = this.fb.group({
       parts: this.fb.array([])
     });
 
     this.VechileOrderRequestInput = this.fb.group({
       Location: [null, Validators.required],
-      VechileNumber: [null, [Validators.required, Validators.pattern(/^[A-Za-z0-9]{10}$/)]],
+      VechileNumber: [null, [Validators.required]],
       VechileModel: [null, Validators.required],
-      JobCardNumber: [null, [Validators.pattern(/^[A-Za-z0-9]{15}$/)]],
+      JobCardNumber: [null],
       JobCardType: [null, Validators.required],
       AdvaceReceiptUpload: [false],
       Advisor: [null, Validators.required],
       OrderType: [null, Validators.required],
-      Advance: [null],
-      Estimate: [null],
+
     })
   }
 
@@ -64,8 +65,18 @@ export class VechileOrderRequestComponent {
     const part = this.fb.group({
       PartNumber: [null, [Validators.required, Validators.pattern(/^[A-Za-z0-9]+$/)]],
       Quantity: [null, [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.min(1)]],
-      Remark: [null,]
+      Remark: [null],
+      Advance: [null],
+      Estimate: [null]
     })
+
+    console.log("advance image" + this.AdvanceReceiptImage);
+
+    if (this.AdvanceReceiptImage) {
+      part.get('Advance')?.addValidators(Validators.required);
+    }
+
+    part.get('Advance')?.updateValueAndValidity();
     this.parts.push(part);
   }
 
@@ -93,6 +104,8 @@ export class VechileOrderRequestComponent {
   NotInMasterPartNumber: any = [];
   showErrorsTable: boolean = false;
   errorViewData: any = [];
+  visibleTableData: boolean = false;
+  StockAsOnDate: any;
 
 
 
@@ -110,8 +123,15 @@ export class VechileOrderRequestComponent {
         next: (res: any) => {
           this.Result = res.message
           this.visible = true;
-
+          this.visibleTableData = true;
           this.TableViewData = res.data.result;
+          if (this.TableViewData.length > 0) {
+            this.visibleTableData = true;
+          }
+          else {
+            this.visibleTableData = false;
+          }
+
 
           if (res.data?.notinMaster.length > 0) {
             this.VisibleNotInMaster = true;
@@ -121,6 +141,7 @@ export class VechileOrderRequestComponent {
             })
           }
           this.VehicleSaleBulkExcel = null;
+          this.StockAsOnDate = res.data.result[0].StockDate;
           this.fu.clear();
           this.VechileOrderFilterDataBulk.reset();
           this.globalBlockUiService.stopLoading();
@@ -152,9 +173,6 @@ export class VechileOrderRequestComponent {
               this.visible = true;
               this.showErrorsTable = true
               this.errorViewData = ErrorMessage.data
-
-
-
             }
             else {
               this.Result = err.error.message;
@@ -212,6 +230,22 @@ export class VechileOrderRequestComponent {
     this.globalBlockUiService.startLoading()
     if (event.files && event.files.length > 0) {
       this.AdvanceReceiptImage = event.files[0];
+      this.parts.controls.forEach((group: AbstractControl) => {
+        const ctrl = (group as FormGroup).get('Advance');
+        ctrl?.addValidators(Validators.required);
+        ctrl?.updateValueAndValidity();
+      })
+
+      this.globalBlockUiService.stopLoading()
+    }
+    else {
+      this.AdvanceReceiptImage = null;
+      this.parts.controls.forEach((group: AbstractControl) => {
+        const ctrl = (group as FormGroup).get('Advance');
+        ctrl?.removeValidators(Validators.required);
+        ctrl?.updateValueAndValidity();
+      });
+
       this.globalBlockUiService.stopLoading()
     }
   }
@@ -227,16 +261,31 @@ export class VechileOrderRequestComponent {
   }
 
 
+  canAddMoreParts(): boolean {
+    const partsArray = this.AddPartWise.get('parts') as FormArray;
+    if (!partsArray || partsArray.length === 0) return false;
+
+    const lastPart = partsArray.at(partsArray.length - 1);
+
+    const partNumber = lastPart.get('PartNumber')?.value?.trim();
+    const quantity = lastPart.get('Quantity')?.value;
+
+    return !!partNumber && !!quantity && lastPart.valid;
+  }
+
+
   @ViewChild('fum') fum: any;
 
   OnClickSaveSingleAndMulti() {
-    this.globalBlockUiService.startLoading();
 
-    if (this.AddPartWise.invalid && this.VechileOrderRequestInput.invalid) {
+
+    if (this.AddPartWise.invalid || this.VechileOrderRequestInput.invalid) {
       this.AddPartWise.markAllAsTouched();
       this.VechileOrderRequestInput.markAllAsTouched();
+      return;
     }
     if (this.MultiUpload && this.VechileOrderRequestInput.valid) {
+      this.globalBlockUiService.startLoading();
 
       const formdata = new FormData();
 
@@ -259,8 +308,15 @@ export class VechileOrderRequestComponent {
         next: (res: any) => {
           this.Result = res.message
           this.visible = true;
+          this.visibleTableData = true;
 
           this.TableViewData = res.data.result;
+          if (this.TableViewData.length > 0) {
+            this.visibleTableData = true;
+          }
+          else {
+            this.visibleTableData = false;
+          }
 
           if (res.data?.notinMaster.length > 0) {
             this.VisibleNotInMaster = true;
@@ -312,13 +368,10 @@ export class VechileOrderRequestComponent {
           }
         }
       })
-
-
-
-
     }
 
     if (this.VechileOrderRequestInput.valid && this.AddPartWise.valid) {
+      this.globalBlockUiService.startLoading();
 
       const data = this.AddPartWise.value.parts
 
@@ -334,8 +387,8 @@ export class VechileOrderRequestComponent {
           PartNumber: part.PartNumber,
           Qty: part.Quantity,
           Remarks: part.Remark,
-          Estimate: this.VechileOrderRequestInput.value.Estimate,
-          AdvanceValue: this.VechileOrderRequestInput.value.Advance,
+          Estimate: part.Estimate,
+          AdvanceValue: part.Advance,
           UserId: sessionStorage.getItem('userid') || '',
         }
       })
@@ -344,6 +397,7 @@ export class VechileOrderRequestComponent {
       formdata.append('LocationId', this.VechileOrderRequestInput.value.Location || '');
       formdata.append('userId', sessionStorage.getItem('userid') || '');
       formdata.append('BrandId', sessionStorage.getItem('brandid') || '');
+      formdata.append('DealerId', sessionStorage.getItem('dealerid') || '');
       formdata.append('image', this.AdvanceReceiptImage || '');
       formdata.append('payload', JSON.stringify(payload));
 
@@ -352,8 +406,16 @@ export class VechileOrderRequestComponent {
         next: (res: any) => {
           this.Result = res.message
           this.visible = true;
+          this.visibleTableData = true;
 
           this.TableViewData = res.data.result;
+          if (this.TableViewData.length > 0) {
+            this.visibleTableData = true;
+          }
+          else {
+            this.visibleTableData = false;
+          }
+
 
           if (res.data?.notinMaster.length > 0) {
             this.VisibleNotInMaster = true;
@@ -365,8 +427,10 @@ export class VechileOrderRequestComponent {
           this.VehicleSaleBulkExcel = null;
           this.fu.clear();
           this.VechileOrderRequestInput.reset();
+          this.resetAdvanceValidators()
           this.AddPartWise.reset()
           this.globalBlockUiService.stopLoading();
+          this.StockAsOnDate = res.data.result[0].StockDate;
 
         },
         error: (err: any) => {
@@ -410,10 +474,21 @@ export class VechileOrderRequestComponent {
 
   }
 
+  resetAdvanceValidators() {
+  const partsArray = this.AddPartWise.get('parts') as FormArray;
+
+  partsArray.controls.forEach((group: AbstractControl) => {
+    const formGroup = group as FormGroup;
+    const advanceCtrl = formGroup.get('Advance');
+
+    advanceCtrl?.clearValidators();
+    advanceCtrl?.updateValueAndValidity();
+  });
+}
 
 
   SendOrderRequestData() {
-     this.showErrorsTable = false;
+    this.showErrorsTable = false;
 
     if (this.selectedRows.length > 0) {
 
@@ -448,9 +523,6 @@ export class VechileOrderRequestComponent {
 
   }
 
-
-
-
   blockSpecialChar(event: KeyboardEvent) {
     const allowedPattern = /^[A-Za-z0-9]$/;
     const input = event.key
@@ -459,7 +531,6 @@ export class VechileOrderRequestComponent {
     }
 
   }
-
 
   SampleExcelDownload() {
 
@@ -528,11 +599,6 @@ export class VechileOrderRequestComponent {
 
     FileSaver.saveAs(data, 'Sample_Download.xlsx');
   }
-
-
-
-
-
   LocationData: any
   fetchlocation() {
     this.globalBlockUiService.startLoading();
@@ -549,15 +615,15 @@ export class VechileOrderRequestComponent {
   }
 
   OnclickLoation() {
-    this.fetchAdvisorData(this.VechileOrderRequestInput.value.Location);
+    this.fetchAdvisorData(this.VechileOrderRequestInput.value.Location,1);
   }
 
 
   AdvisorData: any
-  fetchAdvisorData(LocationId: any) {
+  fetchAdvisorData(LocationId: any,Status:any) {
     this.globalBlockUiService.startLoading();
 
-    this.vechileorderservice.getAdvisor({ LocationId }).subscribe({
+    this.vechileorderservice.getAdvisor({ LocationId,Status }).subscribe({
       next: (res: any) => {
 
         this.AdvisorData = res.data;
@@ -601,9 +667,41 @@ export class VechileOrderRequestComponent {
       }
     })
   }
+  SendOrderRequestSingle(rowData: any) {
+    console.log(rowData.value);
+
+    this.globalBlockUiService.startLoading();
+    this.vechileorderservice.sendOrderRequest({ userId: sessionStorage.getItem('userid'), type: 'S', payload: [rowData] }).subscribe({
+      next: (res: any) => {
+        this.Result = res.message
+        this.visible = true;
+        this.selectedRows = []
+        this.globalBlockUiService.stopLoading()
+        this.TableViewData = this.TableViewData.filter((item: any) => item.Id != rowData.Id)
+      },
+      error: (err: any) => {
+        this.globalBlockUiService.stopLoading()
+
+        if (err?.error?.message) {
+          this.Result = err.error.message;
+          this.visible = true;
+
+        } else {
+          this.Result = "Something went wrong while sending data.";
+          this.visible = true;
+        }
+      }
+    })
+
+  }
 
 
-  
+  RemoveSingleRow(rowData: any) {
+    this.TableViewData = this.TableViewData.filter((item: any) => item.Id != rowData.Id)
+  }
+
+
+
 
   preventNegative(event: KeyboardEvent) {
 
@@ -696,14 +794,14 @@ export class VechileOrderRequestComponent {
   }
 
 
-  NonMovingData: any =  [
-        {
-            "LOCATION": "Kalikapur",
-            "QTY": 6,
-            "DISCOUNT": 25,
-            "Dealer": "Auto Carriage (Royal Mahindra)"
-        }
-    ]
+  NonMovingData: any = [
+    {
+      "LOCATION": "Kalikapur",
+      "QTY": 6,
+      "DISCOUNT": 25,
+      "Dealer": "Auto Carriage (Royal Mahindra)"
+    }
+  ]
   fetchNonMovingData(DealerId: any, partnumber: any, BrandId: any, LocationId: any) {
     this.globalBlockUiService.startLoading();
 
@@ -720,6 +818,17 @@ export class VechileOrderRequestComponent {
   }
 
 
+
+  RedirectToNotInMaster() {
+    this.router.navigate(['/auto/master/nim']);
+  }
+
+
+  CancleAllRequest() {
+    this.TableViewData = []
+    this.visibleTableData = false;
+
+  }
 
 
 

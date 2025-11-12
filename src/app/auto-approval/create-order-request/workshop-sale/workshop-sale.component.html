@@ -344,7 +344,10 @@
   <br />
 
   <!-- Table  -->
-  <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"*ngIf="visibleTableData">
+  <div
+    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+    *ngIf="visibleTableData"
+  >
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
         #dt1
@@ -387,14 +390,35 @@
         </ng-template>
 
         <ng-template pTemplate="caption">
-          <div class="flex">
+          <div class="flex items-center">
             <p-button
               label="Clear"
               size="small"
               [outlined]="true"
               icon="pi pi-filter-slash"
               (click)="clear(dt1)"
-            />
+            ></p-button>
+            <div class="flex items-center gap-4 text-sm font-medium ml-2">
+              <div class="flex items-center gap-1">
+                <span
+                  class="inline-block w-3 h-3 rounded-full bg-red-100"
+                ></span>
+                <span>Non-Moving</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span
+                  class="inline-block w-3 h-3 rounded-full bg-orange-100"
+                ></span>
+                <span>Non-Stockable</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span
+                  class="inline-block w-3 h-3 rounded-full bg-green-100"
+                ></span>
+                <span>Stockable</span>
+              </div>
+            </div>
+
             <p-iconfield iconPosition="left" class="ml-auto">
               <p-inputicon>
                 <i class="pi pi-search"></i>
@@ -421,82 +445,219 @@
               S.No
             </th>
 
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              Part Number
-              <p-sortIcon field="PartNumber" />
-              <p-columnFilter type="text" field="PartNumber" display="menu" />
+            <th
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span>Part Number</span>
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <p-sortIcon field="PartNumber"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="PartNumber"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              Latest Part Number
-              <p-sortIcon field="Latest" />
-              <p-columnFilter type="text" field="Latest" display="menu" />
+            <th
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span>Latest Part Number</span>
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <p-sortIcon field="Latest"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Latest"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              Substitution
-              <p-sortIcon field="isSubstitution" />
-              <p-columnFilter
-                type="text"
-                field="isSubstitution"
-                display="menu"
-              />
+            <th
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span>Substitution</span>
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <p-sortIcon field="isSubstitution"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="isSubstitution"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              Part Description
-              <p-sortIcon field="PartDesc" />
-              <p-columnFilter type="text" field="PartDesc" display="menu" />
+            <th
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span>Part Description</span>
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <p-sortIcon field="PartDesc"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="PartDesc"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              MOQ
-              <p-sortIcon field="MOQ" />
-              <p-columnFilter type="text" field="MOQ" display="menu" />
+            <th
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span>MOQ</span>
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <p-sortIcon field="MOQ"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="MOQ"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              Quantity
-              <p-sortIcon field="Qty" />
-              <p-columnFilter type="text" field="Qty" display="menu" />
+            <th
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span>Quantity</span>
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <p-sortIcon field="Qty"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Qty"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              Price
-              <p-sortIcon field="Price" />
-              <p-columnFilter type="text" field="Price" display="menu" />
+            <th
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span>Price</span>
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <p-sortIcon field="Price"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Price"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              Stock as on
-              <p-sortIcon field="Stock" />
-              <p-columnFilter type="text" field="Stock" display="menu" />
+            <th
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span
+                  >Stock as on({{ StockAsOnDate | date : "dd-MM-yyyy" }})</span
+                >
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <p-sortIcon field="Stock"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Stock"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              Group Stock
-              <p-sortIcon field="GroupStock" />
-              <p-columnFilter type="text" field="GroupStock" display="menu" />
+            <th
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-500 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span>Group Stock</span>
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <p-sortIcon field="GroupStock"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="GroupStock"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              Gainer Pool Check
-              <p-sortIcon field="NonMoving" />
-              <p-columnFilter type="text" field="NonMoving" display="menu" />
+            <th
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-500 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span>Gainer Pool Check</span>
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <p-sortIcon field="NonMoving"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="NonMoving"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              OOQ
+            <th
+              pSortableColumn="OOQ"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span>OOQ</span>
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <p-sortIcon field="OOQ"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="OOQ"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              Order Type
+
+            <th
+              pSortableColumn="OrderType"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span>Order Type</span>
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <p-sortIcon field="OrderType"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="OrderType"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              Order Value
+
+            <th
+              pSortableColumn="OrderValue"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span>Order Value</span>
+                <div class="flex items-center justify-center gap-1 mt-0.5">
+                  <p-sortIcon field="OrderValue"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="OrderValue"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
-              Order Date
-            </th>
+
             <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               Action
             </th>
@@ -509,7 +670,11 @@
         <!-- 🔹 Body -->
         <ng-template pTemplate="body" let-rowData let-i="rowIndex">
           <tr
-            [pSelectableRow]="rowData"
+            [ngClass]="{
+              '!bg-orange-100': rowData.PartQuality === 'Non-Stockable',
+              '!bg-red-100': rowData.PartQuality === 'Non-Moving',
+              '!bg-green-100': rowData.PartQuality === 'Stockable'
+            }"
             class="!border-b hover:!shadow-xl transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
           >
             <td class="p-1 text-center">
@@ -543,19 +708,41 @@
 
             <td class="p-1 text-[13px] text-center">{{ rowData.Price }}</td>
             <td class="p-1 text-[13px] text-center">{{ rowData.Stock }}</td>
-            <td class="p-1 text-[13px] text-center" (click)="onShowGroupStock(rowData, $event, op)">
+            <td
+              class="p-1 text-[13px] text-center"
+              (click)="onShowGroupStock(rowData, $event, op)"
+            >
               {{ rowData.GroupStock }}
             </td>
-            <td class="p-1 text-[13px] text-center" (click)="onShowNonMovingData(rowData, $event, ap)" >{{ rowData.NonMoving }}</td>
+            <td
+              class="p-1 text-[13px] text-center"
+              (click)="onShowNonMovingData(rowData, $event, ap)"
+            >
+              {{ rowData.NonMoving }}
+            </td>
             <td class="p-1 text-[13px] text-center"></td>
             <td class="p-1 text-[13px] text-center">{{ rowData.OrderType }}</td>
             <td class="p-1 text-[13px] text-center">
-              {{ rowData.OrderValue | number:'1.2-2' }}
+              {{ rowData.OrderValue | number : "1.2-2" }}
             </td>
+
             <td class="p-1 text-[13px] text-center">
-              {{ rowData.OrderDate | date : "dd-MM-yyyy HH:mm:ss a" : "UTC" }}
+              <p-button
+                icon="pi pi-check"
+                [rounded]="true"
+                [text]="true"
+                severity="info"
+                (onClick)="SendOrderRequestSingle(rowData)"
+              />
+              <p-button
+                icon="pi pi-times"
+                [rounded]="true"
+                [text]="true"
+                severity="danger"
+                (onClick)="RemoveSingleRow(rowData)"
+              />
             </td>
-            <td class="p-1 text-[13px] text-center"></td>
+
             <td class="p-1 text-[13px] text-center">
               <input
                 type="text"
@@ -569,7 +756,10 @@
     </div>
   </div>
 
-  <div class="flex m-4 p-3 justify-center items-center"*ngIf="visibleTableData">
+  <div
+    class="flex m-4 p-3 justify-center items-center"
+    *ngIf="visibleTableData"
+  >
     <p-button
       size="small"
       icon="pi pi-send"
@@ -578,6 +768,16 @@
       [raised]="true"
       severity="info"
       (onClick)="SendOrderRequestData()"
+      class="ml-2"
+    />
+    <p-button
+      size="small"
+      icon="pi pi-times"
+      label="Cancle Request"
+      [disabled]="selectedRows.length < 0"
+      [raised]="true"
+      severity="danger"
+      (onClick)="CancleAllRequest()"
       class="ml-2"
     />
   </div>
@@ -591,11 +791,14 @@
   [visible]="VisibleNotInMaster"
 >
   <div class="flex justify-between items-center mb-4">
-     <p class="text-lg">Data Fetch Successful!</p>
-    <span class="text-gray-500 text-sm">
-      The following parts are
-      <span class="font-semibold text-teal-500">not available in Master</span>:
-    </span>
+    <div class="flex flex-col items-start gap-2">
+      <p class="text-lg">Data Fetch Successful!</p>
+      <span class="text-gray-500 text-sm">
+        The following parts are
+        <span class="font-semibold text-teal-500">not available in Master</span
+        >:
+      </span>
+    </div>
     <p-button
       icon="pi pi-download"
       [size]="'small'"
@@ -623,6 +826,14 @@
     <p-button
       label="Fill Details"
       icon="pi pi-align-left"
+      size="small"
+      class="!bg-blue-600 !border-blue-600 !rounded-lg !shadow-sm hover:!bg-blue-700 hover:!shadow-md transition-all"
+      (click)="RedirectToNotInMaster()"
+    />
+
+    <p-button
+      label="Skip for Now"
+      icon="pi pi-times"
       size="small"
       class="!bg-blue-600 !border-blue-600 !rounded-lg !shadow-sm hover:!bg-blue-700 hover:!shadow-md transition-all"
       (click)="VisibleNotInMaster = false"
@@ -671,7 +882,7 @@
             <th
               class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
             >
-             Qty
+              Qty
             </th>
             <th
               class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
@@ -719,7 +930,6 @@
   </div>
 </p-dialog>
 
-
 <p-popover #op>
   <ng-template #content>
     <h4 class="font-semibold mb-2 text-sm">Group Stock</h4>
@@ -745,13 +955,12 @@
   </ng-template>
 </p-popover>
 
-
 <p-popover #ap>
   <ng-template #content>
-    <h4 class="font-semibold mb-2 text-sm">Group Stock</h4>
+    <h4 class="font-semibold mb-2 text-sm">Gainer Pool Check</h4>
 
     <ng-container
-      *ngIf="GroupStockData && GroupStockData.length > 0; else noData"
+      *ngIf="NonMovingData && NonMovingData.length > 0; else noData"
     >
       <table class="w-full text-[12px] border border-gray-200">
         <tr class="bg-gray-100 text-left">
@@ -768,7 +977,7 @@
     </ng-container>
 
     <ng-template #noData>
-      <p class="text-gray-500 text-xs">No group stock data found.</p>
+      <p class="text-gray-500 text-xs">No data found.</p>
     </ng-template>
   </ng-template>
 </p-popover>

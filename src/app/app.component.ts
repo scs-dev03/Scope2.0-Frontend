@@ -1,4 +1,4 @@
-import { Component, Renderer2, ViewChild } from '@angular/core';
+import { Component, HostListener, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { CoreModule } from './core/core.module';
 import { SidebarComponent } from "./core/sidebar/sidebar.component";
@@ -65,6 +65,33 @@ export class AppComponent {
 
     this.UserName = sessionStorage.getItem('username') ?? ''
 
+  }
+
+  isMobile = window.innerWidth < 640; // Tailwind 'sm'
+  mobileDrawerOpen = false;
+
+
+
+  @HostListener('window:resize')
+  onResize() {
+    this.isMobile = window.innerWidth < 640;
+
+    // Auto-close the mobile drawer when switching to desktop
+    if (!this.isMobile) {
+      this.mobileDrawerOpen = false;
+    }
+  }
+
+  toggleSidebar() {
+    if (this.isMobile) {
+      this.mobileDrawerOpen = !this.mobileDrawerOpen;
+    } else {
+      this.visibleSidebar = !this.visibleSidebar;
+    }
+  }
+
+  closeMobileDrawer() {
+    this.mobileDrawerOpen = false;
   }
 
   items: MenuItem[] = [
@@ -143,7 +170,7 @@ export class AppComponent {
       // console.log('Received token:', token);
     });
 
-   let userToken = sessionStorage.getItem('usertoken');
+    let userToken = sessionStorage.getItem('usertoken');
 
 
 
@@ -183,10 +210,10 @@ export class AppComponent {
     this.updateLoaderHeight(); // Adjust height when content updates
   }
 
-  toggleSidebar() {
-    this.visibleSidebar = !this.visibleSidebar;
-    this.sidebarService.toggle();
-  }
+  // toggleSidebar() {
+  //   this.visibleSidebar = !this.visibleSidebar;
+  //   this.sidebarService.toggle();
+  // }
 
   // getModules() {
   //   this.isLoading = true;

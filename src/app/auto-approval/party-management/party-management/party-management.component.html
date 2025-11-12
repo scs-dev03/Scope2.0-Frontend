@@ -362,6 +362,7 @@
         class="text-xs w-44 h-8"
         [(ngModel)]="editParty.partyName"
         #partyname="ngModel"
+        (keypress)="allowOnlyLetters($event)"
         (ngModelChange)="validateFields()"
       />
     </p-floatlabel>
@@ -377,6 +378,7 @@
         class="text-xs w-44 h-8"
         [(ngModel)]="editParty.partyCode"
         #partyname="ngModel"
+        (keypress)="allowOnlyLettersAndNumber($event)"
         (ngModelChange)="validateFields()"
       />
     </p-floatlabel>

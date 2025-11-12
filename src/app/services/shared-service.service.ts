@@ -37,9 +37,9 @@ export class SharedServiceService {
   // Method to update the data
   updateSidebarData(data: any) {
     // this.sidebarDataSource.next(data);
-    const payload = { items: data, loaded: true };
+     
    // console.log('Updating sidebar data with:', payload);
-    this.sidebarDataSource.next(payload);
+    this.sidebarDataSource.next(data);
   }
 
   updateModuleName(data:any){

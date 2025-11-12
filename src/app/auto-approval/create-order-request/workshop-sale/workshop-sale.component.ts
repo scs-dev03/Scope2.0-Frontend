@@ -14,6 +14,7 @@ import { Table } from 'primeng/table';
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
 import { Popover } from 'primeng/popover';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-workshop-sale',
@@ -29,6 +30,7 @@ export class WorkshopSaleComponent {
     this.addParts()
     this.fetchOrderType()
     this.fetchlocation()
+    //this.visibleTableData = true;
   }
 
 
@@ -36,7 +38,7 @@ export class WorkshopSaleComponent {
   visible: boolean = false;
   Result: any
 
-  constructor(private fb: FormBuilder, private config: PrimeNG, private globalBlockUiService: GlobalBlockUiService, private messageService: MessageService, private workshopeservice: WorkshopSaleService) {
+  constructor(private router: Router,private fb: FormBuilder, private config: PrimeNG, private globalBlockUiService: GlobalBlockUiService, private messageService: MessageService, private workshopeservice: WorkshopSaleService) {
     this.AddPartWise = this.fb.group({
       parts: this.fb.array([])
     });
@@ -170,6 +172,7 @@ export class WorkshopSaleComponent {
   errorViewData: any
   NotInMasterPartNumber: any
   VisibleNotInMaster: boolean = false
+  StockAsOnDate: any
 
   updateOrderValue(row: any) {
     if (row.Qty < 1 || !row.Qty) {
@@ -202,27 +205,33 @@ export class WorkshopSaleComponent {
         }
       })
 
-      this.workshopeservice.SingleAddWorkShopSale({ BrandId: sessionStorage.getItem('brandid') || '', payload }).subscribe({
+      this.workshopeservice.SingleAddWorkShopSale({DealerId : sessionStorage.getItem('dealerid'), BrandId: sessionStorage.getItem('brandid') || '', payload }).subscribe({
         next: (res: any) => {
 
+          this.globalBlockUiService.stopLoading();
+           console.log("true form nim");
           this.Result = res.message
           this.visible = true;
-
-
-          this.TableViewData = res.data.result;
-          this.visibleTableData = true
-          
-
           if (res.data?.notinMaster.length > 0) {
+            
             this.VisibleNotInMaster = true;
             this.visible = false;
             this.NotInMasterPartNumber = res.data?.notinMaster.map((part: any) => {
               return part.PartNumber
             })
+            this.visibleTableData = false
           }
+          this.TableViewData = res.data.result;
+          this.visibleTableData = true
+           if (this.TableViewData.length > 0) {
+              this.visibleTableData = true;
+            }
+            else{
+              this.visibleTableData = false;
+            }
           this.WorkShopInputFieldData.reset();
-          this.globalBlockUiService.stopLoading();
           this.AddPartWise.reset();
+          this.StockAsOnDate = res.data.result[0].StockDate;
 
         },
         error: (err: any) => {
@@ -246,6 +255,7 @@ export class WorkshopSaleComponent {
     else {
       this.WorkShopInputFieldData.markAllAsTouched()
       this.AddPartWise.markAllAsTouched()
+      this.globalBlockUiService.stopLoading();
     }
 
 
@@ -299,6 +309,13 @@ export class WorkshopSaleComponent {
 
           this.TableViewData = res.data.result;
           this.visibleTableData = true
+           if (this.TableViewData.length > 0) {
+              this.visibleTableData = true;
+            }
+            else{
+              this.visibleTableData = false;
+            }
+           this.StockAsOnDate = res.data.result[0].StockDate;
 
           if (res.data?.notinMaster.length > 0) {
             this.VisibleNotInMaster = true;
@@ -391,6 +408,42 @@ export class WorkshopSaleComponent {
     }
 
   }
+
+
+  SendOrderRequestSingle(rowData:any){
+    console.log(rowData.value);
+    
+    this.globalBlockUiService.startLoading();
+    this.workshopeservice.sendOrderRequest({ userId: sessionStorage.getItem('userid'), type: 'S', payload: [rowData] }).subscribe({
+      next: (res:any)=>{
+        this.Result = res.message
+        this.visible = true;
+        this.selectedRows = []
+        this.globalBlockUiService.stopLoading()
+        this.TableViewData = this.TableViewData.filter((item:any)=> item.Id != rowData.Id)
+      },
+      error: (err: any) => {
+          this.globalBlockUiService.stopLoading()
+
+          if (err?.error?.message) {
+            this.Result = err.error.message;
+            this.visible = true;
+
+          } else {
+            this.Result = "Something went wrong while sending data.";
+            this.visible = true;
+          }
+        }
+    })
+
+  }
+
+
+  RemoveSingleRow(rowData:any){
+    this.TableViewData = this.TableViewData.filter((item:any)=> item.Id != rowData.Id)
+  }
+
+
 
 
   ResetSingle() {
@@ -501,7 +554,19 @@ onShowGroupStock(rowData: any, event: Event, popover: any) {
   }
 
 
+   RedirectToNotInMaster() {
+    this.router.navigate(['/auto/master/nim']);
+  }
 
+
+  CancleAllRequest(){
+    this.TableViewData = []
+    this.visibleTableData = false;
+    
+  }
+
+
+  
 
 
 

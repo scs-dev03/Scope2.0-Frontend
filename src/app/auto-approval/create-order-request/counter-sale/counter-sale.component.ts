@@ -14,7 +14,7 @@ import { GlobalBlockUiService } from '../../../services/global-block-ui.service'
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
 import { Table } from 'primeng/table';
-
+import { Router } from '@angular/router';
 import { Popover } from 'primeng/popover';
 
 @Component({
@@ -31,6 +31,428 @@ export class CounterSaleComponent {
     this.addParts()
     this.fetchlocation()
     this.fetchOrderType()
+    // this.TableViewData = [
+    //   {
+    //     "Id": "1",
+    //     "LocationId": "14",
+    //     "PartNumber": "0107FR0020N",
+    //     "Latest": "0107FR0020N",
+    //     "isSubstitution": "N",
+    //     "PartType": "Spare Part",
+    //     "PartDesc": "GROMMET BRAKE TUBE",
+    //     "MOQ": "5",
+    //     "Qty": 2,
+    //     "Price": 2.35,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 4.7,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "2",
+    //     "LocationId": "14",
+    //     "PartNumber": "0107FR0030N",
+    //     "Latest": "0107FR0030N",
+    //     "isSubstitution": "N",
+    //     "PartType": "Spare Part",
+    //     "PartDesc": "GROMMET WIPER KIT RH",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 21.04,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 42.08,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "3",
+    //     "LocationId": "14",
+    //     "PartNumber": "0107FS200020N",
+    //     "Latest": "0107FS200020N",
+    //     "isSubstitution": "N",
+    //     "PartType": "Spare Part",
+    //     "PartDesc": "SEAL FENDER LH",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 122.1,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 244.2,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "4",
+    //     "LocationId": "14",
+    //     "PartNumber": "0107FS200040N",
+    //     "Latest": "0107FS200040N",
+    //     "isSubstitution": "N",
+    //     "PartType": "Spare Part",
+    //     "PartDesc": "SEAL FENDER RH",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 122.1,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 244.2,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "5",
+    //     "LocationId": "14",
+    //     "PartNumber": "0304DG0480N",
+    //     "Latest": "0304DG0480N",
+    //     "isSubstitution": "N",
+    //     "PartType": "Spare Part",
+    //     "PartDesc": "HOSE RADIATOR OUTLET(IFS)",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 432.86,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 865.72,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "6",
+    //     "LocationId": "14",
+    //     "PartNumber": "0304DG0490N",
+    //     "Latest": "0304DG0490N",
+    //     "isSubstitution": "Y",
+    //     "PartType": "Spare Part",
+    //     "PartDesc": "HOSE VENT DEGASSING TANK TO RADIATOR",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 56.94,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 113.88,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "7",
+    //     "LocationId": "14",
+    //     "PartNumber": "0304DG0510N",
+    //     "Latest": "0304DG0510N",
+    //     "isSubstitution": "N",
+    //     "PartType": "Spare Part",
+    //     "PartDesc": "HOSE ASSY DEGASSING TANK",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 177.86,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 355.72,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "8",
+    //     "LocationId": "14",
+    //     "PartNumber": "0304DG0580N",
+    //     "Latest": "0304DG0580N",
+    //     "isSubstitution": "Y",
+    //     "PartType": "Spare Part",
+    //     "PartDesc": "HOSE RADIATOR INLET",
+    //     "MOQ": "1",
+    //     "Qty": 4,
+    //     "Price": 140.89,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 563.56,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "9",
+    //     "LocationId": "14",
+    //     "PartNumber": "0304DG0580N",
+    //     "Latest": "0304DG0580N",
+    //     "isSubstitution": "Y",
+    //     "PartType": "Spare Part",
+    //     "PartDesc": "HOSE RADIATOR INLET",
+    //     "MOQ": "1",
+    //     "Qty": 4,
+    //     "Price": 140.89,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 563.56,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "10",
+    //     "LocationId": "14",
+    //     "PartNumber": "0304DG0580N",
+    //     "Latest": "0304DG0580N",
+    //     "isSubstitution": "Y",
+    //     "PartType": "Spare Part",
+    //     "PartDesc": "HOSE RADIATOR INLET",
+    //     "MOQ": "1",
+    //     "Qty": 4,
+    //     "Price": 140.89,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 563.56,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "11",
+    //     "LocationId": "14",
+    //     "PartNumber": "0703DBA0002ST",
+    //     "Latest": "0703DBA0002ST",
+    //     "isSubstitution": "N",
+    //     "PartType": "Tool",
+    //     "PartDesc": "COUNTER SHAFT DGBB PRESSING TOOL",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 627.75,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 1255.5,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "12",
+    //     "LocationId": "14",
+    //     "PartNumber": "0703DBA0003ST",
+    //     "Latest": "0703DBA0003ST",
+    //     "isSubstitution": "N",
+    //     "PartType": "Tool",
+    //     "PartDesc": "COUNTER SHAFT DGBB PRESSING DOLLY",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 1668.14,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 3336.28,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "13",
+    //     "LocationId": "14",
+    //     "PartNumber": "100001",
+    //     "Latest": "100001",
+    //     "isSubstitution": "Y",
+    //     "PartType": "Tool",
+    //     "PartDesc": "TOOL EXTRACTOR FOR 5TH GEAR PINION ON SE",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 10261.11,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 20522.22,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "14",
+    //     "LocationId": "14",
+    //     "PartNumber": "101",
+    //     "Latest": "101",
+    //     "isSubstitution": "N",
+    //     "PartType": "Consumable",
+    //     "PartDesc": "TUBE TYPE BULB",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 8,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 16,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "15",
+    //     "LocationId": "14",
+    //     "PartNumber": "101800",
+    //     "Latest": "101800",
+    //     "isSubstitution": "Y",
+    //     "PartType": "Tool",
+    //     "PartDesc": "TOOL 8MM SQUARE SUMP DRAIN SPANNER",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 3504.52,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 7009.04,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "16",
+    //     "LocationId": "14",
+    //     "PartNumber": "A93500029",
+    //     "Latest": "A93500029",
+    //     "isSubstitution": "N",
+    //     "PartType": "Genuine Accessory",
+    //     "PartDesc": "BRACKET ASSEMBLY HELPER SPRING",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 0,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 0,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "17",
+    //     "LocationId": "14",
+    //     "PartNumber": "A93500032P1",
+    //     "Latest": "A93500032P1",
+    //     "isSubstitution": "Y",
+    //     "PartType": "Genuine Accessory",
+    //     "PartDesc": "BRKT ASSY SHOCK ABS FR LH",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 234.65,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 469.3,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "18",
+    //     "LocationId": "14",
+    //     "PartNumber": "A93500033",
+    //     "Latest": "A93500033P1",
+    //     "isSubstitution": "Y",
+    //     "PartType": "Genuine Accessory",
+    //     "PartDesc": "BRKT ASSY SHOCK ABS FR RH",
+    //     "MOQ": "1",
+    //     "Qty": 2,
+    //     "Price": 211.91,
+    //     "Stock": 0,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 0,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 423.82,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 0,
+    //     "Remarks": "okay2"
+    //   },
+    //   {
+    //     "Id": "19",
+    //     "LocationId": "14",
+    //     "PartNumber": "EOVULTRA210",
+    //     "Latest": "EOVULTRA210",
+    //     "isSubstitution": "N",
+    //     "PartType": "Lubricant",
+    //     "PartDesc": "MAXIMILE ULTRA V4 BARREL",
+    //     "MOQ": "1",
+    //     "Qty": 12,
+    //     "Price": 313.39,
+    //     "Stock": 100,
+    //     "StockDate": "2025-08-08T00:00:00.000Z",
+    //     "GroupStock": 3667.65,
+    //     "PartyCode": "5444new",
+    //     "PartyName": "Test1",
+    //     "OrderType": "Normal",
+    //     "OrderValue": 3760.68,
+    //     "OrderDate": "2025-11-05T15:22:03.260Z",
+    //     "NonMoving": 100,
+    //     "Remarks": "okay1, okay2"
+    //   }
+    // ]
+
+    // this.visibleTableData = true;
 
   }
 
@@ -40,7 +462,7 @@ export class CounterSaleComponent {
   visible: boolean = false;
   Result: any
 
-  constructor(private fb: FormBuilder, private config: PrimeNG, private globalBlockUiService: GlobalBlockUiService, private messageService: MessageService, private countersaleservice: CounterSaleService) {
+  constructor(private router: Router, private fb: FormBuilder, private config: PrimeNG, private globalBlockUiService: GlobalBlockUiService, private messageService: MessageService, private countersaleservice: CounterSaleService) {
     this.AddPartWise = this.fb.group({
       parts: this.fb.array([])
     });
@@ -311,6 +733,13 @@ export class CounterSaleComponent {
           this.StockAsOnDate = res.data.result[0].StockDate;
           this.visibleTableData = true;
 
+           if (this.TableViewData.length > 0) {
+              this.visibleTableData = true;
+            }
+            else{
+              this.visibleTableData = false;
+            }
+
           if (res.data?.notinMaster.length > 0) {
             this.VisibleNotInMaster = true;
             this.visible = false;
@@ -409,9 +838,16 @@ export class CounterSaleComponent {
             this.StockAsOnDate = res.data.result[0].StockDate;
             console.log("Stock Date ", this.StockAsOnDate);
             this.visibleTableData = true;
+            if (this.TableViewData.length > 0) {
+              this.visibleTableData = true;
+            }
+            else{
+              this.visibleTableData = false;
+            }
             if (res.data?.notinMaster.length > 0) {
               this.VisibleNotInMaster = true;
               this.visible = false;
+
               this.NotInMasterPartNumber = res.data?.notinMaster.map((part: any) => {
                 return part.PartNumber
               })
@@ -461,8 +897,8 @@ export class CounterSaleComponent {
       }
     }
     else {
-
-      if (this.CounterSaleFilterData.valid) {
+      // single Add in counter sale
+      if (this.CounterSaleFilterData.valid && this.AddPartWise.valid) {
         this.globalBlockUiService.startLoading();
         const partsArray = this.AddPartWise.get('parts') as FormArray;
         console.log("single Add ", partsArray.value);
@@ -479,17 +915,24 @@ export class CounterSaleComponent {
             userId: sessionStorage.getItem('userid') || ''
           }
         })
-        this.countersaleservice.SingleAddCounterSale({ BrandId: sessionStorage.getItem('brandid') || '', payload }).subscribe({
+        this.countersaleservice.SingleAddCounterSale({ DealerId: sessionStorage.getItem('dealerid'), BrandId: sessionStorage.getItem('brandid') || '', payload }).subscribe({
           next: (res: any) => {
 
             this.Result = res.message
             this.visible = true;
             this.TableViewData = res.data.result;
-            this.StockAsOnDate = res.data.result[0].StockDate;
-            this.visibleTableData = true;
+            if (this.TableViewData.length > 0) {
+              this.visibleTableData = true;
+            }
+            else{
+              this.visibleTableData = false;
+            }
 
             if (res.data?.notinMaster.length > 0) {
+
               this.VisibleNotInMaster = true;
+              this.visible = false;
+
               this.NotInMasterPartNumber = res.data?.notinMaster.map((part: any) => {
                 return part.PartNumber
               })
@@ -497,6 +940,7 @@ export class CounterSaleComponent {
             this.CounterSaleFilterData.reset();
             this.globalBlockUiService.stopLoading();
             this.AddPartWise.reset();
+            this.StockAsOnDate = res.data.result[0].StockDate;
 
           },
           error: (err: any) => {
@@ -568,6 +1012,43 @@ export class CounterSaleComponent {
       this.visible = true;
     }
 
+  }
+
+  SendOrderRequestSingle(rowData: any) {
+    console.log(rowData.value);
+
+    this.globalBlockUiService.startLoading();
+    this.countersaleservice.sendOrderRequest({ userId: sessionStorage.getItem('userid'), type: 'S', payload: [rowData] }).subscribe({
+      next: (res: any) => {
+        this.Result = res.message
+        this.visible = true;
+        this.selectedRows = []
+        this.globalBlockUiService.stopLoading()
+        this.TableViewData = this.TableViewData.filter((item: any) => item.Id != rowData.Id)
+        if(this.TableViewData.length == 0)
+        {
+          this.visibleTableData = false;
+        }
+      },
+      error: (err: any) => {
+        this.globalBlockUiService.stopLoading()
+
+        if (err?.error?.message) {
+          this.Result = err.error.message;
+          this.visible = true;
+
+        } else {
+          this.Result = "Something went wrong while sending data.";
+          this.visible = true;
+        }
+      }
+    })
+
+  }
+
+
+  RemoveSingleRow(rowData: any) {
+    this.TableViewData = this.TableViewData.filter((item: any) => item.Id != rowData.Id)
   }
 
 
@@ -655,20 +1136,20 @@ export class CounterSaleComponent {
   }
 
 
-  NonMovingData: any =  [
-        {
-            "LOCATION": "Kalikapur",
-            "QTY": 6,
-            "DISCOUNT": 25,
-            "Dealer": "Auto Carriage (Royal Mahindra)"
-        }
-    ]
+  NonMovingData: any = [
+    {
+      "LOCATION": "Kalikapur",
+      "QTY": 6,
+      "DISCOUNT": 25,
+      "Dealer": "Auto Carriage (Royal Mahindra)"
+    }
+  ]
   fetchNonMovingData(DealerId: any, partnumber: any, BrandId: any, LocationId: any) {
     this.globalBlockUiService.startLoading();
 
     this.countersaleservice.getNonMovingData({ DealerId, partnumber, BrandId, LocationId }).subscribe({
       next: (res: any) => {
-        this.NonMovingData = res.data;
+        this.NonMovingData
         this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
@@ -676,6 +1157,17 @@ export class CounterSaleComponent {
         this.globalBlockUiService.stopLoading();
       }
     });
+  }
+
+  RedirectToNotInMaster() {
+    this.router.navigate(['/auto/master/nim']);
+  }
+
+
+  CancleAllRequest(){
+    this.TableViewData = []
+    this.visibleTableData = false;
+    
   }
 
 

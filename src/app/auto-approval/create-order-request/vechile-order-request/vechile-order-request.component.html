@@ -79,10 +79,6 @@
                       *ngIf="VechileOrderRequestInput.get('VechileNumber')?.errors?.['required']"
                       >Vehicle Number is required.</span
                     >
-                    <span
-                      *ngIf="VechileOrderRequestInput.get('VechileNumber')?.errors?.['pattern']"
-                      >Must be 10 letters/numbers
-                    </span>
                   </div>
                 </div>
                 <div class="h-10">
@@ -204,53 +200,8 @@
                     for="ingredient1"
                     class="mt-1 on hover: cursor-pointer"
                   >
-                    Do You Want to Upload Advance/Estimate Recipt
+                    Do You Want to Upload Advance/Estimate Receipt
                   </label>
-                </div>
-                <div
-                  class="h-10"
-                  *ngIf="
-                    this.VechileOrderRequestInput.get('AdvaceReceiptUpload')
-                      ?.value
-                  "
-                >
-                  <p-floatlabel variant="on">
-                    <input
-                      pInputText
-                      id="on_label"
-                      formControlName="Advance"
-                      autocomplete="off"
-                      (keypress)="allowNumberOnly($event)"
-                      class="w-40 h-8"
-                    />
-                    <label class="text-xs" for="on_label">Advance</label>
-                  </p-floatlabel>
-                </div>
-                <span
-                  class="mt-1"
-                  *ngIf="
-                    this.VechileOrderRequestInput.get('AdvaceReceiptUpload')
-                      ?.value
-                  "
-                  >or</span
-                >
-                <div
-                  *ngIf="
-                    this.VechileOrderRequestInput.get('AdvaceReceiptUpload')
-                      ?.value
-                  "
-                >
-                  <p-floatlabel variant="on">
-                    <input
-                      pInputText
-                      id="on_label"
-                      formControlName="Estimate"
-                      autocomplete="off"
-                      (keypress)="allowNumberOnly($event)"
-                      class="w-40 h-8"
-                    />
-                    <label class="text-xs" for="on_label">Estimate</label>
-                  </p-floatlabel>
                 </div>
 
                 <p-fileupload
@@ -266,8 +217,9 @@
                   "
                   chooseIcon="pi pi-upload"
                   accept="image/*"
+                  showCancelButton="true"
                   maxFileSize="1000000"
-                   (onSelect)="OnSelectAdvanceReceiptImage($event, fu)"
+                  (onSelect)="OnSelectAdvanceReceiptImage($event, fu)"
                 />
               </div>
               <br />
@@ -280,7 +232,7 @@
                   [(ngModel)]="MultiUpload"
                   binary="true"
                 ></p-checkbox>
-                <label for="ingredient1" class="mt-1">
+                <label for="ingredient2" class="mt-1">
                   Do You Want to Upload
                 </label>
               </div>
@@ -387,6 +339,49 @@
                       </p-floatlabel>
                     </div>
 
+                    <div class="flex flex-col h-8 mb-1">
+                      <p-floatlabel variant="on">
+                        <input
+                          pInputText
+                          id="on_label"
+                          formControlName="Advance"
+                          autocomplete="off"
+                          (keypress)="allowNumberOnly($event)"
+                          class="w-40 h-8"
+                        />
+                        <label class="text-xs" for="Advance-{{ i }}"
+                          >Advance</label
+                        >
+                      </p-floatlabel>
+                      <small
+                        *ngIf="
+                          part.get('Advance')?.invalid &&
+                          part.get('Advance')?.touched
+                        "
+                        class="text-red-500 text-[10px]"
+                      >
+                        Advance is required
+                      </small>
+                    </div>
+
+                    <span class="mt-1">or</span>
+
+                    <div class="flex flex-col h-8 mb-1">
+                      <p-floatlabel variant="on">
+                        <input
+                          pInputText
+                          id="on_label"
+                          formControlName="Estimate"
+                          autocomplete="off"
+                          (keypress)="allowNumberOnly($event)"
+                          class="w-40 h-8"
+                        />
+                        <label class="text-xs" for="Estimate-{{ i }}"
+                          >Estimate</label
+                        >
+                      </p-floatlabel>
+                    </div>
+
                     <p-button
                       *ngIf="parts.length > 1"
                       [style]="{ 'background-color': '#008080', color: '#fff' }"
@@ -402,6 +397,7 @@
                   icon="pi pi-plus"
                   aria-label="add"
                   (onClick)="addParts()"
+                  [disabled]="!canAddMoreParts()"
                 />
               </div>
 
@@ -499,7 +495,6 @@
                     </span>
                   </div>
                 </div>
-
               </div>
 
               <div
@@ -558,7 +553,10 @@
     </div>
   </div>
   <br />
-  <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
+  <div
+    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+    *ngIf="visibleTableData"
+  >
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
         #dt1
@@ -614,6 +612,27 @@
               icon="pi pi-filter-slash"
               (click)="clear(dt1)"
             ></p-button>
+            <div class="flex items-center gap-4 text-sm font-medium ml-2">
+              <div class="flex items-center gap-1">
+                <span
+                  class="inline-block w-3 h-3 rounded-full bg-red-100"
+                ></span>
+                <span>Non-Moving</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span
+                  class="inline-block w-3 h-3 rounded-full bg-orange-100"
+                ></span>
+                <span>Non-Stockable</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span
+                  class="inline-block w-3 h-3 rounded-full bg-green-100"
+                ></span>
+                <span>Stockable</span>
+              </div>
+            </div>
+
             <p-iconfield iconPosition="left" class="ml-auto">
               <p-inputicon>
                 <i class="pi pi-search"></i>
@@ -623,7 +642,7 @@
                 type="text"
                 size="small"
                 (input)="onGlobalFilter($event)"
-                placeholder="Search..."
+                placeholder="Search keyword"
               />
             </p-iconfield>
           </div>
@@ -643,182 +662,349 @@
             </th>
 
             <!-- All your sortable + filterable columns -->
+            <!-- =================== TABLE HEADER =================== -->
             <th
               pSortableColumn="VehicleNumber"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Vehicle Number
-              <p-sortIcon field="VehicleNumber" />
-              <p-columnFilter
-                type="text"
-                field="VehicleNumber"
-                display="menu"
-              />
+              <div class="flex flex-col items-center">
+                <span>Vehicle Number</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="VehicleNumber"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="VehicleNumber"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
+
             <th
               pSortableColumn="VehicleModel"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Vehicle Model
-              <p-sortIcon field="VehicleModel" />
-              <p-columnFilter type="text" field="VehicleModel" display="menu" />
+              <div class="flex flex-col items-center">
+                <span>Vehicle Model</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="VehicleModel"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="VehicleModel"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
+
             <th
               pSortableColumn="JobCardNumber"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Job Card Number
-              <p-sortIcon field="JobCardNumber" />
-              <p-columnFilter
-                type="text"
-                field="JobCardNumber"
-                display="menu"
-              />
+              <div class="flex flex-col items-center">
+                <span>Job Card Number</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="JobCardNumber"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="JobCardNumber"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
+
             <th
               pSortableColumn="JobType"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Job Type
-              <p-sortIcon field="JobType" />
-              <p-columnFilter type="text" field="JobType" display="menu" />
+              <div class="flex flex-col items-center">
+                <span>Job Type</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="JobType"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="JobType"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
+
             <th
               pSortableColumn="Advisor"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Advisor
-              <p-sortIcon field="Advisor" />
-              <p-columnFilter type="text" field="Advisor" display="menu" />
+              <div class="flex flex-col items-center">
+                <span>Advisor</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="Advisor"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Advisor"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            
+
             <th
               pSortableColumn="PartNumber"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Part Number
-              <p-sortIcon field="PartNumber" />
-              <p-columnFilter type="text" field="PartNumber" display="menu" />
+              <div class="flex flex-col items-center">
+                <span>Part Number</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="PartNumber"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="PartNumber"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
             <th
               pSortableColumn="Latest"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Latest Part Number
-              <p-sortIcon field="Latest" />
-              <p-columnFilter type="text" field="Latest" display="menu" />
+              <div class="flex flex-col items-center">
+                <span>Latest Part Number</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="Latest"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Latest"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
             <th
               pSortableColumn="isSubstitution"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Substitution
-              <p-sortIcon field="isSubstitution" />
-              <p-columnFilter
-                type="text"
-                field="isSubstitution"
-                display="menu"
-              />
+              <div class="flex flex-col items-center">
+                <span>Substitution</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="isSubstitution"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="isSubstitution"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
             <th
               pSortableColumn="PartDesc"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Part Description
-              <p-sortIcon field="PartDesc" />
-              <p-columnFilter type="text" field="PartDesc" display="menu" />
+              <div class="flex flex-col items-center">
+                <span>Part Description</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="PartDesc"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="PartDesc"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
             <th
               pSortableColumn="MOQ"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              MOQ
-              <p-sortIcon field="MOQ" />
-              <p-columnFilter type="text" field="MOQ" display="menu" />
+              <div class="flex flex-col items-center">
+                <span>MOQ</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="MOQ"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="MOQ"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
             <th
               pSortableColumn="Qty"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Quantity
-              <p-sortIcon field="Qty" />
-              <p-columnFilter type="text" field="Qty" display="menu" />
+              <div class="flex flex-col items-center">
+                <span>Quantity</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="Qty"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Qty"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
             <th
               pSortableColumn="Price"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Price
-              <p-sortIcon field="Price" />
-              <p-columnFilter type="text" field="Price" display="menu" />
+              <div class="flex flex-col items-center">
+                <span>Price</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="Price"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Price"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
             <th
               pSortableColumn="Stock"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Stock as on
-              <p-sortIcon field="Stock" />
-              <p-columnFilter type="text" field="Stock" display="menu" />
+              <div class="flex flex-col items-center">
+                <span
+                  >Stock as on({{ StockAsOnDate | date : "dd-MM-yyyy" }})</span
+                >
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="Stock"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Stock"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
             <th
               pSortableColumn="GroupStock"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Group Stock
-              <p-sortIcon field="GroupStock" />
-              <p-columnFilter type="text" field="GroupStock" display="menu" />
-            </th>
-            <th
-              pSortableColumn="NonMoving"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
-            >
-              Gainer Pool Check
-              <p-sortIcon field="NonMoving" />
-              <p-columnFilter type="text" field="NonMoving" display="menu" />
+              <div class="flex flex-col items-center">
+                <span>Group Stock</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="GroupStock"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="GroupStock"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
             <th
-              pSortableColumn="Advisor"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              pSortableColumn="NonMoving"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              OOQ
-              <p-sortIcon field="Advisor" />
-              <p-columnFilter type="text" field="Advisor" display="menu" />
+              <div class="flex flex-col items-center">
+                <span>Gainer Pool Check</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="NonMoving"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="NonMoving"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
+            </th>
+
+            <th
+              pSortableColumn="OOQ"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
+            >
+              <div class="flex flex-col items-center">
+                <span>OOQ</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="OOQ"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="OOQ"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
             <th
               pSortableColumn="OrderType"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Order Type
-              <p-sortIcon field="OrderType" />
-              <p-columnFilter type="text" field="OrderType" display="menu" />
+              <div class="flex flex-col items-center">
+                <span>Order Type</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="OrderType"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="OrderType"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
             <th
               pSortableColumn="OrderValue"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 text-[12px] !bg-gray-300 align-top"
             >
-              Order Value
-              <p-sortIcon field="OrderValue" />
-              <p-columnFilter type="text" field="OrderValue" display="menu" />
-            </th>
-
-            <th
-              pSortableColumn="OrderDate"
-              class="!px-1 !py-1 text-[12px] !bg-gray-300"
-            >
-              Order Date
-              <p-sortIcon field="OrderDate" />
-              <p-columnFilter type="text" field="OrderDate" display="menu" />
+              <div class="flex flex-col items-center">
+                <span>Order Value</span>
+                <div
+                  class="flex items-center justify-between w-full px-1 mt-0.5"
+                >
+                  <p-sortIcon field="OrderValue"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="OrderValue"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
 
             <th class="!px-1 !py-1 text-[12px] !bg-gray-300">Action</th>
@@ -836,7 +1022,14 @@
 
         <!-- ✅ Body -->
         <ng-template pTemplate="body" let-rowData let-i="rowIndex">
-          <tr [pSelectableRow]="rowData" class="hover:bg-gray-100">
+          <tr
+            class="hover:bg-gray-100"
+            [ngClass]="{
+              '!bg-orange-100': rowData.PartQuality === 'Non-Stockable',
+              '!bg-red-100': rowData.PartQuality === 'Non-Moving',
+              '!bg-green-100': rowData.PartQuality === 'Stockable'
+            }"
+          >
             <td class="p-1 text-center">
               <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
             </td>
@@ -884,19 +1077,39 @@
 
             <td class="p-1 text-[13px] text-center">{{ rowData.Price }}</td>
             <td class="p-1 text-[13px] text-center">{{ rowData.Stock }}</td>
-            <td class="p-1 text-[13px] text-center"(click)="onShowGroupStock(rowData, $event, op)">
+            <td
+              class="p-1 text-[13px] text-center"
+              (click)="onShowGroupStock(rowData, $event, op)"
+            >
               {{ rowData.GroupStock }}
             </td>
-            <td class="p-1 text-[13px] text-center"(click)="onShowNonMovingData(rowData, $event, ap)">{{ rowData.NonMoving }}</td>
+            <td
+              class="p-1 text-[13px] text-center"
+              (click)="onShowNonMovingData(rowData, $event, ap)"
+            >
+              {{ rowData.NonMoving }}
+            </td>
             <td class="p-1 text-[13px] text-center"></td>
             <td class="p-1 text-[13px] text-center">{{ rowData.OrderType }}</td>
             <td class="p-1 text-[13px] text-center">
               {{ rowData.OrderValue | number : "1.2-2" }}
             </td>
             <td class="p-1 text-[13px] text-center">
-              {{ rowData.OrderDate | date : "dd-MM-yyyy HH:mm:ss a" : "UTC" }}
+              <p-button
+                icon="pi pi-check"
+                [rounded]="true"
+                [text]="true"
+                severity="info"
+                (onClick)="SendOrderRequestSingle(rowData)"
+              />
+              <p-button
+                icon="pi pi-times"
+                [rounded]="true"
+                [text]="true"
+                severity="danger"
+                (onClick)="RemoveSingleRow(rowData)"
+              />
             </td>
-            <td class="p-1 text-[13px] text-center"></td>
 
             <td class="p-1 text-[13px] text-center">
               <input
@@ -911,7 +1124,10 @@
       </p-table>
     </div>
   </div>
-  <div class="flex m-4 p-3 justify-center items-center">
+  <div
+    class="flex m-4 p-3 justify-center items-center"
+    *ngIf="visibleTableData"
+  >
     <p-button
       size="small"
       icon="pi pi-send"
@@ -922,11 +1138,18 @@
       (onClick)="SendOrderRequestData()"
       class="ml-2"
     />
+    <p-button
+      size="small"
+      icon="pi pi-times"
+      label="Cancle Request"
+      [disabled]="selectedRows.length < 0"
+      [raised]="true"
+      severity="danger"
+      (onClick)="CancleAllRequest()"
+      class="ml-2"
+    />
   </div>
-
 </div>
-
-
 
 <p-dialog
   header="⚠️ Important Info"
@@ -941,14 +1164,7 @@
       The following parts are
       <span class="font-semibold text-teal-500">not available in Master</span>:
     </span>
-    <p-button
-      icon="pi pi-download"
-      [size]="'small'"
-      [rounded]="true"
-      [text]="true"
-      [raised]="true"
-      class="!text-blue-600 hover:!bg-blue-50 transition-colors"
-    />
+    
   </div>
 
   <!-- Content Box (scrollable if long list) -->
@@ -965,13 +1181,22 @@
 
   <!-- Action Buttons -->
   <div class="flex justify-end gap-3 mt-6">
+     <div class="flex justify-end gap-3 mt-6">
     <p-button
       label="Fill Details"
       icon="pi pi-align-left"
       size="small"
       class="!bg-blue-600 !border-blue-600 !rounded-lg !shadow-sm hover:!bg-blue-700 hover:!shadow-md transition-all"
+      (click)="RedirectToNotInMaster()"
+    />
+     <p-button
+      label="Skip for Now"
+      icon="pi pi-times"
+      size="small"
+      class="!bg-blue-600 !border-blue-600 !rounded-lg !shadow-sm hover:!bg-blue-700 hover:!shadow-md transition-all"
       (click)="VisibleNotInMaster = false"
     />
+  </div>
   </div>
 </p-dialog>
 
@@ -1065,8 +1290,6 @@
   </div>
 </p-dialog>
 
-
-
 <p-popover #op>
   <ng-template #content>
     <h4 class="font-semibold mb-2 text-sm">Group Stock</h4>
@@ -1092,13 +1315,12 @@
   </ng-template>
 </p-popover>
 
-
 <p-popover #ap>
   <ng-template #content>
-    <h4 class="font-semibold mb-2 text-sm">Group Stock</h4>
+    <h4 class="font-semibold mb-2 text-sm">Gainer Pool Check</h4>
 
     <ng-container
-      *ngIf="GroupStockData && GroupStockData.length > 0; else noData"
+      *ngIf="NonMovingData && NonMovingData.length > 0; else noData"
     >
       <table class="w-full text-[12px] border border-gray-200">
         <tr class="bg-gray-100 text-left">
@@ -1115,7 +1337,7 @@
     </ng-container>
 
     <ng-template #noData>
-      <p class="text-gray-500 text-xs">No group stock data found.</p>
+      <p class="text-gray-500 text-xs">No data found.</p>
     </ng-template>
   </ng-template>
 </p-popover>

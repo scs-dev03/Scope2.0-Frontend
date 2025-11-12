@@ -427,7 +427,7 @@
             <td
               class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
             >
-              {{ rowData.Advisor }}
+              {{ rowData.AdvisorRaw }}
             </td>
             <td
               class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
@@ -473,6 +473,7 @@
           class="text-xs w-44 h-8"
           [(ngModel)]="editAdvisor.Advisor"
           #advisorname="ngModel"
+          (keypress)="allowOnlyLetters($event)"
           required
         />
       </p-floatlabel>
@@ -490,6 +491,7 @@
           class="text-xs w-44 h-8"
           [(ngModel)]="editAdvisor.PhoneNo"
           #phoneno="ngModel"
+          (keypress)="allowOnlyNumber($event)"
           required
           pattern="^[0-9]{10}$"
         />
