@@ -30,7 +30,7 @@ constructor(private http: HttpClient) {}
 // userId: any = 143565;
 // bintid_pk: any = this.userId;
 
-// setLocalStorage() {
+// setlocalStorage() {
 //   localStorage.setItem('userid', this.userId);
 // }
 getDashboard(data: any): Observable<any> {

@@ -53,7 +53,7 @@ export class AdminVonComponent {
     this.fetchNature();
     this.fetchPartType();
     this.fetchSeasonaData();
-    //this.adminvonservice.setLocalStorage();
+    //this.adminvonservice.setlocalStorage();
 
     this.maxData = [
       { name: 'Planned', code: '1' },
@@ -873,7 +873,7 @@ export class AdminVonComponent {
       .subscribe({
         next: (res: any) => {
           if (!res.Data || res.Data.length === 0) {
-            this.Result = "Max Not Uploaded for this Part"
+            this.Result = "Max Not Uploaded"
             this.visible = true;
             this.globalBlockUiService.stopLoading();
             this.onClickCloseSales();
@@ -889,8 +889,28 @@ export class AdminVonComponent {
           }
         },
         error: (err: any) => {
-          this.Result = 'Something is not well Please Contact IT Admin';
-          this.visible = true;
+          let msg = err.error.message
+          let error = err.error.Error
+          if (msg) {
+            console.log(msg);
+
+            this.Result = msg;
+            this.visible = true
+          }
+          else if (error) {
+            this.Result = error;
+            this.visible = true
+          }
+          else {
+
+            this.visible = true
+            this.Result = 'Failed to load Sales Information'
+
+          }
+
+
+          // this.Result = 'Something is not well Please Contact IT Admin';
+          // this.visible = true;
           this.globalBlockUiService.stopLoading();
           this.onClickCloseSales();
         },
@@ -908,11 +928,6 @@ export class AdminVonComponent {
 
   UploadExcelDealer(fu: any) {
     this.globalBlockUiService.startLoading();
-
-    if (!this.DealerExcel) {
-      console.error('Please select a file first!');
-      return;
-    }
     const formData = new FormData();
     formData.append('file', this.DealerExcel);
     formData.append('addedby', this.userid);
@@ -926,6 +941,7 @@ export class AdminVonComponent {
         this.selectedFileName = '';
       },
       (error) => {
+        this.showupload = false;
         if (error.error.Error) {
           this.visible = true;
           this.Result = 'File Upload Failed';
@@ -985,6 +1001,10 @@ export class AdminVonComponent {
       }
     );
   }
+  RemoveDealerExcel() {
+    this.DealerExcel = null;
+    this.selectedFileName = null;
+  }
   showupload: boolean = false;
   onClickShowUpload() {
     this.showupload = true;
@@ -1000,17 +1020,13 @@ export class AdminVonComponent {
   UploadExcelAdmin(fu: any) {
     this.globalBlockUiService.startLoading();
 
-
-    if (!this.AdminExcel) {
-      console.error('Please select a file first!');
-      return;
-    }
     const formData = new FormData();
     formData.append('file2', this.AdminExcel);
     formData.append('addedby', this.userid);
 
     this.adminvonservice.AdminuploadExcel(formData).subscribe(
       (res: any) => {
+
         this.Result = res.message;
         this.showupload = false;
         this.globalBlockUiService.stopLoading();
@@ -1019,23 +1035,41 @@ export class AdminVonComponent {
         fu.clear();
       },
       (error) => {
-        if (error.error.message) {
+        //this.showupload = false;
+       
+        if (error.error.message && error.error.missingHeaders) {
+          const missingHeadersMessage = error.error.missingHeaders.join(', ');
+          console.log(missingHeadersMessage);
+          
+          this.Result = `${error.error.message}: ${missingHeadersMessage}`;
+          this.visible = true;
+          this.selectedFileName = '';
+          this.globalBlockUiService.stopLoading();
+          fu.clear();
+        }
+        else if (error.error.message) {
           this.Result = error.error.message;
           this.visible = true;
           this.adminFileName = '';
           this.globalBlockUiService.stopLoading();
           fu.clear();
-        } else {
+        }
+        else {
           console.error('File upload failed:', error);
           this.visible = true;
           this.Result = 'File upload failed';
           this.globalBlockUiService.stopLoading();
-          this.showupload = false;
+
           fu.clear();
           this.adminFileName = '';
         }
       }
     );
+  }
+
+  RemoveAdminExcel() {
+    this.AdminExcel = null;
+    this.adminFileName = null;
   }
 
   OnclickPendinCount() {
@@ -1091,7 +1125,7 @@ export class AdminVonComponent {
     }).subscribe({
       next: (res: any) => {
         if (!res.Data || res.Data.length === 0) {
-          this.Result = "Max Not Uploaded for this Part"
+          this.Result = "Max Not Uploaded"
           this.visible = true;
           this.globalBlockUiService.stopLoading();
           this.onClickCloseSales();
@@ -1105,8 +1139,27 @@ export class AdminVonComponent {
         }
       },
       error: (err: any) => {
-        this.Result = 'Something is not well Please Contact IT Admin';
-        this.visible = true;
+
+        let msg = err.error.message
+        let error = err.error.Error
+        if (msg) {
+          console.log(msg);
+
+          this.Result = msg;
+          this.visible = true
+        }
+        else if (error) {
+          this.Result = error;
+          this.visible = true
+        }
+        else {
+
+          this.visible = true
+          this.Result = 'Failed to load Sales Information'
+
+        }
+        // this.Result = 'Something is not well Please Contact IT Admin';
+        // this.visible = true;
         this.globalBlockUiService.stopLoading();
         this.onClickCloseSales();
 

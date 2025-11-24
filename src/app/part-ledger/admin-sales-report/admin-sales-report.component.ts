@@ -255,6 +255,25 @@ export class AdminSalesReportComponent {
           // console.log(this.PartDetail);
         },
         error: (err: any) => {
+          let msg = err.error.message
+          let error = err.error.Error
+          if (msg) {
+            console.log(msg);
+
+            this.Result = msg;
+            this.visible = true
+          }
+          else if (error) {
+            this.Result = error;
+            this.visible = true
+          }
+          else {
+
+            this.visible = true
+            this.Result = 'Failed to load Sales Information'
+
+          }
+
           console.error('Error while fetching part description:', err);
           this.globalBlockUiService.stopLoading();
           this.showMessage = true; // if you want to show an error message on UI
@@ -303,13 +322,35 @@ export class AdminSalesReportComponent {
           console.log(this.SalesInfo);
         },
         error: (err: any) => {
+          let msg = err.error.message
+          let error = err.error.Error
+          if (msg) {
+            console.log(msg);
+
+            this.Result = msg;
+            this.visible = true
+          }
+          else if (error) {
+            this.Result = error;
+            this.visible = true
+          }
+          else {
+
+            this.visible = true
+            this.Result = 'Failed to load Sales Information'
+
+          }
+
+
+
+
           console.error('Error while fetching sales info:', err);
           this.globalBlockUiService.stopLoading();
           this.showMessage = true;
           this.exportVisible = true;
           this.isLoading = false;
-          this.visible = true
-          this.Result = 'No Data Available for this Location'
+          // this.visible = true
+          // this.Result = 'No Data Available for this Location'
           // Optional: Toast or user-friendly alert
           // this.toastr.error('Failed to load sales info. Please try again.');
         }
@@ -486,80 +527,98 @@ export class AdminSalesReportComponent {
     }
   }
 
-UploadPartNumber(fu: any) {
-  // PartNumber ka validation hamesha hata do
-   this.isLoading  = true;
-  const partNumberCtrl = this.AdminSalesReportInputData.get('PartNumber');
-  if (partNumberCtrl) {
-    partNumberCtrl.clearValidators();
-    partNumberCtrl.updateValueAndValidity({ emitEvent: false });
-  }
-
-  if (this.AdminSalesReportInputData.invalid) {
-    this.AdminSalesReportInputData.markAllAsTouched();
-    return; // yahan return kar do taki neeche ka code invalid form pe na chale
-  }
-
-  this.globalBlockUiService.startLoading();
-  this.DataTypeArray = this.AdminSalesReportInputData.value.DataType;
-
-  const formData = new FormData();
-  formData.append("file", this.partsExcel);
-  formData.append('Brandid', this.AdminSalesReportInputData.value.BrandID);
-  formData.append('Dealerid', this.AdminSalesReportInputData.value.DealerID);
-  formData.append('Locationid', this.AdminSalesReportInputData.value.LocationID);
-  formData.append('from', this.getLastDateOfMonthForFrom(this.AdminSalesReportInputData.value.FormDate).toString());
-  formData.append('to', this.getLastDateOfMonthForTo(this.AdminSalesReportInputData.value.ToDate).toString());
-  formData.append('excel', '1');
-
-  this.adminSalesReportService.getPartDescription(formData).subscribe(
-    (res: any) => {
-      this.PartDetail = res;
-      this.showupload = false;
-      this.partsExcel = null;
-       this.globalBlockUiService.stopLoading();
-    
-    },
-    (error: any) => {
-      console.error("File upload failed:", error);
-      this.globalBlockUiService.stopLoading();
-      this.showupload = false;
-      fu.clear();
+  UploadPartNumber(fu: any) {
+    // PartNumber ka validation hamesha hata do
+    this.isLoading = true;
+    const partNumberCtrl = this.AdminSalesReportInputData.get('PartNumber');
+    if (partNumberCtrl) {
+      partNumberCtrl.clearValidators();
+      partNumberCtrl.updateValueAndValidity({ emitEvent: false });
     }
-  );
 
-  setTimeout(() => {
-    this.adminSalesReportService.getSalesInfo(formData).subscribe(
+    if (this.AdminSalesReportInputData.invalid) {
+      this.AdminSalesReportInputData.markAllAsTouched();
+      return; // yahan return kar do taki neeche ka code invalid form pe na chale
+    }
+
+    this.globalBlockUiService.startLoading();
+    this.DataTypeArray = this.AdminSalesReportInputData.value.DataType;
+
+    const formData = new FormData();
+    formData.append("file", this.partsExcel);
+    formData.append('Brandid', this.AdminSalesReportInputData.value.BrandID);
+    formData.append('Dealerid', this.AdminSalesReportInputData.value.DealerID);
+    formData.append('Locationid', this.AdminSalesReportInputData.value.LocationID);
+    formData.append('from', this.getLastDateOfMonthForFrom(this.AdminSalesReportInputData.value.FormDate).toString());
+    formData.append('to', this.getLastDateOfMonthForTo(this.AdminSalesReportInputData.value.ToDate).toString());
+    formData.append('excel', '1');
+
+    this.adminSalesReportService.getPartDescription(formData).subscribe(
       (res: any) => {
-        this.exportVisible = true;
-        this.SalesInfo = res.Data;
+        this.PartDetail = res;
         this.showupload = false;
-        this.exportVisible = false;
-        fu.clear();
-        this.partsExcel = undefined;
-        this.SalesInfoVisible = true;
-        this.onclicktotal();
-        
-        this.isLoading = false;
+        this.partsExcel = null;
+        this.globalBlockUiService.stopLoading();
+
       },
-      (error: any) => {
-        if (error.error.Error) {
-          this.Result = "Data for these Month Range is Not Available";
-          this.visible = true;
-          this.isLoading = false;
-        } else {
-          this.visible = true;
-          this.Result = `${error.error.message + ' Part Number: ' + error.error.unmatchedParts}`;
-          
-          this.showupload = false;
-          fu.clear();
-          this.isLoading = false;
+      (err: any) => {
+        let msg = err.error.message
+        let error = err.error.Error
+        if (msg) {
+          console.log(msg);
+
+          this.Result = msg;
+          this.visible = true
         }
+        else if (error) {
+          this.Result = error;
+          this.visible = true
+        }
+        else {
+
+          this.visible = true
+          this.Result = 'Failed to load Sales Information'
+
+        }
+        console.error("File upload failed:", err);
+        this.globalBlockUiService.stopLoading();
+        this.showupload = false;
+        fu.clear();
       }
     );
-  }, 1500);
-  this.isLoading = false;
-}
+
+    setTimeout(() => {
+      this.adminSalesReportService.getSalesInfo(formData).subscribe(
+        (res: any) => {
+          this.exportVisible = true;
+          this.SalesInfo = res.Data;
+          this.showupload = false;
+          this.exportVisible = false;
+          fu.clear();
+          this.partsExcel = undefined;
+          this.SalesInfoVisible = true;
+          this.onclicktotal();
+
+          this.isLoading = false;
+        },
+        (error: any) => {
+          if (error.error.Error) {
+            this.Result = "Data for these Month Range is Not Available";
+            this.visible = true;
+            this.isLoading = false;
+          } else {
+            this.visible = true;
+            this.Result = `${error.error.message + ' Part Number: ' + error.error.unmatchedParts}`;
+
+            this.showupload = false;
+            fu.clear();
+            this.isLoading = false;
+          }
+        }
+      );
+    }, 1500);
+    this.isLoading = false;
+  }
 
 
 

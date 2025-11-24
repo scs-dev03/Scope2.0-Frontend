@@ -20,7 +20,7 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 export class AdminRemarkComponent {
 
   ngOnInit(): void {
-    //this.adminvonservice.setLocalStorage()
+    //this.adminvonservice.setlocalStorage()
     this.typeData = [
       { name: 'Admin', code: 'A' },
       { name: 'User', code: 'U' },

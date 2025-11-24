@@ -62,7 +62,7 @@ export class AdminDashboardSchedulerComponent {
     
     this.onClickBDM()
 
-    //this.getDashboardService.setLocalStorage();
+    //this.getDashboardService.setlocalStorage();
     this.fetchDashboardSchedule(this.dashboardInputData.value.bdmID);
   }
 

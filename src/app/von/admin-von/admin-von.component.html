@@ -1,257 +1,276 @@
 <div class="relative w-auto mt-2 bg-[#ffffff] overflow-y-auto">
   <div class="flex flex-col gap-1">
     <!-- Filter form  -->
-   
+
     <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
-    <div
-      class="min-w-full min-h-[15vh] flex-wrap items-center justify-center flex-col p-2 gap-3 shadow mb-2 bg-white rounded-md"
-    >
-      <div class="flex flex-wrap gap-4" >
-        <form
-        action=""
-        [formGroup]="adminFilterData"
-        class="flex flex-wrap p-2 justify-start items-center gap-3 w-auto"
+      <div
+        class="min-w-full min-h-[15vh] flex-wrap items-center justify-center flex-col p-2 gap-3 shadow mb-2 bg-white rounded-md"
       >
-        <!-- brand -->
-        <p-floatlabel variant="on">
-          <p-select
-            formControlName="brand"
-            [options]="brandData"
-            optionValue="bigid"
-            optionLabel="vcbrand"
-            showClear="true"
-            appendTo="body"
-            class="!w-36 !text-[10px] custom-clear-style"
-            scrollHeight="150px"
-            (onChange)="onClickBrand()"
-            [filter]="true"
-            filterBy="vcbrand"
-            [ngClass]="{
-              'ng-invalid ng-dirty':
-                adminFilterData.get('brand')?.touched &&
-                adminFilterData.get('brand')?.invalid
-            }"
-          />
-          <label for="brand" class="text-[10px]">Brand</label>
-        </p-floatlabel>
+        <div class="flex flex-wrap gap-4">
+          <form
+            action=""
+            [formGroup]="adminFilterData"
+            class="flex flex-wrap p-2 justify-start items-center gap-3 w-auto"
+          >
+            <!-- brand -->
+            <p-floatlabel variant="on">
+              <p-select
+                formControlName="brand"
+                [options]="brandData"
+                optionValue="bigid"
+                optionLabel="vcbrand"
+                showClear="true"
+                appendTo="body"
+                class="!w-36 !text-[10px] custom-clear-style"
+                scrollHeight="150px"
+                (onChange)="onClickBrand()"
+                [filter]="true"
+                filterBy="vcbrand"
+                [ngClass]="{
+                  'ng-invalid ng-dirty':
+                    adminFilterData.get('brand')?.touched &&
+                    adminFilterData.get('brand')?.invalid
+                }"
+              />
+              <label for="brand" class="text-[10px]">Brand</label>
+            </p-floatlabel>
 
-        <p-floatlabel variant="on">
-          <p-select
-            formControlName="dealer"
-            [options]="dealerData"
-            [showClear]="true"
-            optionValue="dealerid"
-            optionLabel="dealer"
-            scrollHeight="150px"
-            class="!w-36 !text-[10px] custom-clear-style"
-            (onChange)="onclickDealer()"
-            [filter]="true"
-            filterBy="dealer"
-            [ngClass]="{
-              'ng-invalid ng-dirty':
-                adminFilterData.get('dealer')?.touched &&
-                adminFilterData.get('dealer')?.invalid
-            }"
-          />
-          <label for="dealer" class="text-[10px]">Dealer</label>
-        </p-floatlabel>
+            <p-floatlabel variant="on">
+              <p-select
+                formControlName="dealer"
+                [options]="dealerData"
+                [showClear]="true"
+                optionValue="dealerid"
+                optionLabel="dealer"
+                scrollHeight="150px"
+                class="!w-36 !text-[10px] custom-clear-style"
+                (onChange)="onclickDealer()"
+                [filter]="true"
+                filterBy="dealer"
+                [ngClass]="{
+                  'ng-invalid ng-dirty':
+                    adminFilterData.get('dealer')?.touched &&
+                    adminFilterData.get('dealer')?.invalid
+                }"
+              />
+              <label for="dealer" class="text-[10px]">Dealer</label>
+            </p-floatlabel>
 
-        <p-floatlabel variant="on">
-          <p-select
-            formControlName="location"
-            [options]="locaitonData"
-            [showClear]="true"
-            optionValue="locationid"
-            appendTo="body"
-            optionLabel="location"
-            scrollHeight="150px"
-            class="!w-36 !text-[10px] custom-clear-style"
-            (onChange)="onClickLocation()"
-            [filter]="true"
-            filterBy="location"
-            [ngClass]="{
-              'ng-invalid ng-dirty':
-                adminFilterData.get('location')?.touched &&
-                adminFilterData.get('location')?.invalid
-            }"
-          />
-          <label for="Locaiton" class="text-[10px]">Locations</label>
-        </p-floatlabel>
+            <p-floatlabel variant="on">
+              <p-select
+                formControlName="location"
+                [options]="locaitonData"
+                [showClear]="true"
+                optionValue="locationid"
+                appendTo="body"
+                optionLabel="location"
+                scrollHeight="150px"
+                class="!w-36 !text-[10px] custom-clear-style"
+                (onChange)="onClickLocation()"
+                [filter]="true"
+                filterBy="location"
+                [ngClass]="{
+                  'ng-invalid ng-dirty':
+                    adminFilterData.get('location')?.touched &&
+                    adminFilterData.get('location')?.invalid
+                }"
+              />
+              <label for="Locaiton" class="text-[10px]">Locations</label>
+            </p-floatlabel>
 
-        <p-floatlabel variant="on">
-          <p-select
-            [options]="maxData"
-            formControlName="max"
-            optionLabel="name"
-            [showClear]="true"
-            optionValue="code"
-            class="!w-36 !text-[10px]"
-            [filter]="true"
-            filterBy="name"
-          />
-          <label for="max" class="text-[10px]">MAX</label>
-        </p-floatlabel>
-        <p-floatlabel variant="on">
-          <p-select
-            [options]="partType"
-            [showClear]="true"
-            scrollHeight="150px"
-            formControlName="parttype"
-            optionLabel="Description"
-            optionValue="parttypeid"
-            class="!w-36 !text-[10px]"
-          />
-          <label for="parttype" class="text-[10px]">Part Type</label>
-        </p-floatlabel>
+            <p-floatlabel variant="on">
+              <p-select
+                [options]="maxData"
+                formControlName="max"
+                optionLabel="name"
+                [showClear]="true"
+                optionValue="code"
+                class="!w-36 !text-[10px]"
+                [filter]="true"
+                filterBy="name"
+              />
+              <label for="max" class="text-[10px]">MAX</label>
+            </p-floatlabel>
+            <p-floatlabel variant="on">
+              <p-select
+                [options]="partType"
+                [showClear]="true"
+                scrollHeight="150px"
+                formControlName="parttype"
+                optionLabel="Description"
+                optionValue="parttypeid"
+                class="!w-36 !text-[10px]"
+              />
+              <label for="parttype" class="text-[10px]">Part Type</label>
+            </p-floatlabel>
 
-        <p-floatlabel variant="on">
-          <p-select
-            [options]="natureData"
-            formControlName="nature"
-            optionLabel="Description"
-            optionValue="tCode"
-            [showClear]="true"
-            class="!w-36 !text-[10px]"
-            [filter]="true"
-            scrollHeight="150px"
-            filterBy=" Description"
-          />
-          <label for="nature" class="text-[10px]">Part Nature</label>
-        </p-floatlabel>
-        <p-floatlabel variant="on">
-          <p-select
-            [options]="modelData"
-            formControlName="model"
-            optionValue="ModelID"
-            [showClear]="true"
-            optionLabel="Model"
-            scrollHeight="150px"
-            class="!w-36 !text-[10px]"
-            [filter]="true"
-            filterBy=" Model"
-          />
+            <p-floatlabel variant="on">
+              <p-select
+                [options]="natureData"
+                formControlName="nature"
+                optionLabel="Description"
+                optionValue="tCode"
+                [showClear]="true"
+                class="!w-36 !text-[10px]"
+                [filter]="true"
+                scrollHeight="150px"
+                filterBy=" Description"
+              />
+              <label for="nature" class="text-[10px]">Part Nature</label>
+            </p-floatlabel>
+            <p-floatlabel variant="on">
+              <p-select
+                [options]="modelData"
+                formControlName="model"
+                optionValue="ModelID"
+                [showClear]="true"
+                optionLabel="Model"
+                scrollHeight="150px"
+                class="!w-36 !text-[10px]"
+                [filter]="true"
+                filterBy=" Model"
+              />
 
-          <label for="model" class="text-[10px]">Model</label>
-        </p-floatlabel>
+              <label for="model" class="text-[10px]">Model</label>
+            </p-floatlabel>
 
-        <p-floatlabel variant="on">
-          <p-select
-            [options]="seasondata"
-            formControlName="seasonal"
-            optionLabel="Description"
-            [showClear]="true"
-            optionValue="tCode"
-            class="!w-36 !text-[10px]"
-          />
-          <label for="seasonal" class="text-[10px]">Seasonal </label>
-        </p-floatlabel>
+            <p-floatlabel variant="on">
+              <p-select
+                [options]="seasondata"
+                formControlName="seasonal"
+                optionLabel="Description"
+                [showClear]="true"
+                optionValue="tCode"
+                class="!w-36 !text-[10px]"
+              />
+              <label for="seasonal" class="text-[10px]">Seasonal </label>
+            </p-floatlabel>
 
-        <p-floatlabel variant="on">
-          <p-select
-            formControlName="status"
-            [options]="adminstatus"
-            showClear="true"
-            optionValue="code"
-            optionLabel="name"
-            class="!w-36 !text-pretty !text-[10px]"
-            (onChange)="onClickBrand()"
-          />
-          <label for="status" class="text-[10px]">Status </label>
-        </p-floatlabel>
+            <p-floatlabel variant="on">
+              <p-select
+                formControlName="status"
+                [options]="adminstatus"
+                showClear="true"
+                optionValue="code"
+                optionLabel="name"
+                class="!w-36 !text-pretty !text-[10px]"
+                (onChange)="onClickBrand()"
+              />
+              <label for="status" class="text-[10px]">Status </label>
+            </p-floatlabel>
 
-        <div class="flex flex-col">
-          <span class="text-xs -mb-2 ml-3">Price Range</span>
-          <div class="flex flex-row">
-            <input
-              type="text"
-              pInputText
-              formControlName="fromrate"
-              class="w-24 !text-xs mb-4 h-[32px] mt-3"
-              placeholder="From"
+            <div class="flex flex-col">
+              <span class="text-xs -mb-2 ml-3">Price Range</span>
+              <div class="flex flex-row">
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="fromrate"
+                  class="w-24 !text-xs mb-4 h-[32px] mt-3"
+                  placeholder="From"
+                />
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="torate"
+                  class="w-24 !text-xs mb-4 h-[32px] -ml-3 !rounded-l-none !shodow-none mt-3 !"
+                  placeholder="To"
+                />
+              </div>
+            </div>
+
+            <div
+              class="w-auto h-8 bg-white px-2 rounded-lg border hover:border-gray-500"
+            >
+              <div class="flex gap-2 items-center">
+                <span
+                  class="text-xs text-gray-400"
+                  [ngClass]="
+                    !MaxOrPending ? 'text-black font-semibold' : 'text-gray-400'
+                  "
+                  >View Max</span
+                >
+                <p-toggleswitch
+                  [ngModelOptions]="{ standalone: true }"
+                  class="mt-1"
+                  [(ngModel)]="MaxOrPending"
+                  (onChange)="onClickToggle($event)"
+                />
+                <span
+                  class="text-xs text-gray-400"
+                  [ngClass]="
+                    MaxOrPending ? 'text-black font-semibold' : 'text-gray-400'
+                  "
+                  >View Pending</span
+                >
+              </div>
+            </div>
+
+            <div class="flex flex-col">
+              <span class="text-xs -mb-2 ml-3">Average 3Mth Sale</span>
+              <div class="flex flex-row">
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="fromrange"
+                  class="w-24 !text-xs mb-4 h-[32px] mt-3"
+                  placeholder="From"
+                />
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="torange"
+                  class="w-24 !text-xs mb-4 h-[32px] -ml-3 !rounded-l-none !shodow-none mt-3 !"
+                  placeholder="To"
+                />
+              </div>
+            </div>
+            <div *ngFor="let category of categories" class="flex flex-col">
+              <label [for]="category.key" class="text-[12px] -mt-2">{{
+                category.name
+              }}</label>
+              <p-radiobutton
+                [inputId]="category.key"
+                name="selectedCategory"
+                [value]="category"
+                formControlName="selectedCategory"
+                class="-mt-2"
+              />
+            </div>
+
+            <p-floatlabel variant="on">
+              <input
+                formControlName="partnumber"
+                pInputText
+                id="parSearch"
+                autocomplete="off"
+                class="min-w-44 !w-[18vw] !text-[10px]"
+              />
+              <label for="Part Search" class="text-[10px]">Part Search</label>
+            </p-floatlabel>
+            <p-button
+              class="text-[10px]"
+              id="submit"
+              label="Submit"
+              [style]="{ 'background-color': '#008080', color: '#fff' }"
+              size="small"
+              severity="success"
+              (onClick)="onClickSubmitfilterData()"
             />
-            <input
-              type="text"
-              pInputText
-              formControlName="torate"
-              class="w-24 !text-xs mb-4 h-[32px] -ml-3 !rounded-l-none !shodow-none mt-3 !"
-              placeholder="To"
+            <p-button
+              id="submit"
+              size="small"
+              icon="pi pi-download"
+              class="text-[10px]"
+              pTooltip="Norms Export"
+              tooltipPosition="top"
+              [style]="{ 'background-color': '#008080', color: '#fff' }"
+              label="Norms"
+              severity="info"
+              (onClick)="exportToExcelOldSP()"
             />
-          </div>
-        </div>
 
-        <div class="w-auto h-8 bg-white px-2 rounded-lg border hover:border-gray-500">
-          <div class="flex gap-2 items-center ">
-          <span class="text-xs text-gray-400" [ngClass]="!MaxOrPending ? 'text-black font-semibold' : 'text-gray-400'">View Max</span>
-          <p-toggleswitch  [ngModelOptions]="{ standalone: true }" class="mt-1" [(ngModel)]="MaxOrPending" (onChange)="onClickToggle($event)" />
-          <span class="text-xs  text-gray-400" [ngClass]="MaxOrPending ? 'text-black font-semibold' : 'text-gray-400'">View Pending</span>
-          </div>
-       </div>
-       
-        <div class="flex flex-col">
-          <span class="text-xs -mb-2 ml-3">Average 3Mth Sale</span>
-          <div class="flex flex-row">
-            <input
-              type="text"
-              pInputText
-              formControlName="fromrange"
-              class="w-24 !text-xs mb-4 h-[32px] mt-3"
-              placeholder="From"
-            />
-            <input
-              type="text"
-              pInputText
-              formControlName="torange"
-              class="w-24 !text-xs mb-4 h-[32px] -ml-3 !rounded-l-none !shodow-none mt-3 !"
-              placeholder="To"
-            />
-          </div>
-        </div>
-        <div *ngFor="let category of categories" class="flex flex-col">
-          <label [for]="category.key" class="text-[12px] -mt-2">{{
-            category.name
-          }}</label>
-          <p-radiobutton
-            [inputId]="category.key"
-            name="selectedCategory"
-            [value]="category"
-            formControlName="selectedCategory"
-            class="-mt-2"
-          />
-        </div>
-
-        <p-floatlabel variant="on">
-          <input
-            formControlName="partnumber"
-            pInputText
-            id="parSearch"
-            autocomplete="off"
-            class="min-w-44 !w-[18vw] !text-[10px]"
-          />
-          <label for="Part Search" class="text-[10px]">Part Search</label>
-        </p-floatlabel>
-        <p-button
-          class="text-[10px]"
-          id="submit"
-          label="Submit"
-          [style]="{ 'background-color': '#008080', color: '#fff' }"
-          size="small"
-          severity="success"
-          (onClick)="onClickSubmitfilterData()"
-        />
-        <p-button
-          id="submit"
-          size="small"
-          icon="pi pi-download"
-          class="text-[10px]"
-          pTooltip="Norms Export"
-          tooltipPosition="top"
-          [style]="{ 'background-color': '#008080', color: '#fff' }"
-          label="Norms"
-          severity="info"
-          (onClick)="exportToExcelOldSP()"
-        />
-
-        <!-- <p-button
+            <!-- <p-button
           id="submit"
           class="text-[10px]"
           (onClick)="onClickResetField()"
@@ -260,27 +279,24 @@
           severity="info"
         /> -->
 
-        <p-button
-          size="small"
-          icon="pi pi-upload"
-          pTooltip="Upload Review or Feedback"
-          tooltipPosition="top"
-          (onClick)="onClickShowUpload()"
-          [style]="{ 'background-color': '#008080', color: '#fff' }"
-          label="Upload "
-        />
-        <!-- <p-button
+            <p-button
+              size="small"
+              icon="pi pi-upload"
+              pTooltip="Upload Review or Feedback"
+              tooltipPosition="top"
+              (onClick)="onClickShowUpload()"
+              [style]="{ 'background-color': '#008080', color: '#fff' }"
+              label="Upload "
+            />
+            <!-- <p-button
           size="small"
           (onClick)="OnclickPendinCount()"
           label="Pending Count"
         /> -->
-      </form>
+          </form>
+        </div>
       </div>
-      </div>
-      </div>
-
-
-   
+    </div>
 
     <!-- part family sales Table -->
 
@@ -351,7 +367,7 @@
       </div>
 
       <p-button
-      *ngIf="MaxOrPending"
+        *ngIf="MaxOrPending"
         id="submit"
         size="small"
         [style]="{ 'background-color': '#008080', color: '#fff' }"
@@ -491,34 +507,40 @@
                 View Sale
               </th>
               <th
-                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"*ngIf="MaxOrPending"
+                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+                *ngIf="MaxOrPending"
               >
                 Latest Feedback
                 <p-columnFilter type="text" field="SPMRemark" display="menu" />
               </th>
               <th
                 pSortableColumn="ProposedQty"
-                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"*ngIf="MaxOrPending"
+                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+                *ngIf="MaxOrPending"
               >
                 Proposed Qty <p-sortIcon field="ProposedQty" />
               </th>
               <th
-                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"*ngIf="MaxOrPending"
+                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+                *ngIf="MaxOrPending"
               >
                 Review
               </th>
               <th
-                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"*ngIf="MaxOrPending"
+                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+                *ngIf="MaxOrPending"
               >
                 Review Qty
               </th>
               <th
-                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"*ngIf="MaxOrPending"
+                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+                *ngIf="MaxOrPending"
               >
                 Action
               </th>
               <th
-                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"*ngIf="MaxOrPending"
+                class="!px-1 !py-1 !text-center !min-w-[60px] !min-h-auto !bg-gray-300 text-[13px]"
+                *ngIf="MaxOrPending"
               >
                 View Logs
               </th>
@@ -551,7 +573,7 @@
               <td
                 class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
               >
-                {{ rowData.location}}
+                {{ rowData.location }}
               </td>
               <td
                 class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-blue-500 uppercase underline cursor-pointer"
@@ -638,16 +660,21 @@
                 />
               </td>
               <td
-                class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700" *ngIf="MaxOrPending"
+                class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+                *ngIf="MaxOrPending"
               >
                 {{ rowData.SPMRemark }}
               </td>
               <td
-                class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700" *ngIf="MaxOrPending"
+                class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
+                *ngIf="MaxOrPending"
               >
                 {{ rowData.ProposedQty }}
               </td>
-              <td class="!px-1 !py-1 !text-center !h-[20px] text-[13px]" *ngIf="MaxOrPending">
+              <td
+                class="!px-1 !py-1 !text-center !h-[20px] text-[13px]"
+                *ngIf="MaxOrPending"
+              >
                 <div class="flex flex-col gap-y-2">
                   <p-select
                     [options]="adminRemark"
@@ -799,7 +826,7 @@
 <p-dialog
   header="Upload"
   [(visible)]="showupload"
-  class="!w-auto !h-auto bg-slate-500 gap-16"
+  class="!min-w-[300px] !h-auto bg-slate-500 gap-16"
 >
   <div class="flex gap-5">
     <div class="flex flex-col">
@@ -809,18 +836,30 @@
         chooseLabel="Dealer Feedback"
         chooseIcon="pi pi-upload"
         name="excelFile"
+        [chooseStyleClass]="
+          'w-[180px] background-color: #008080, color: #fff h-[30px] !text-[12px]'
+        "
         accept=".xls,.xlsx"
         maxFileSize="5000000"
-        [auto]="false"
         (onSelect)="onFileSelectDealer($event)"
       />
-      <span class="text-sm">{{ selectedFileName }}</span>
+      <span class="flex items-center justify-center mt-2 text-xs">{{ selectedFileName }}</span>
     </div>
     <p-button
       #fu
+      *ngIf="DealerExcel"
       label="Upload"
       (onClick)="UploadExcelDealer(fu)"
       severity="secondary"
+      size="small"
+    />
+    <p-button
+      #fu
+      *ngIf="DealerExcel"
+      
+      label="Remove"
+      (onClick)="RemoveDealerExcel()"
+      severity="danger"
       size="small"
     />
   </div>
@@ -835,16 +874,27 @@
         name="excelFile"
         accept=".xls,.xlsx"
         maxFileSize="5000000"
-        [auto]="false"
+        [chooseStyleClass]="
+          'w-[180px] background-color: #008080, color: #fff h-[30px] !text-[12px]'
+        "
         (onSelect)="onFileSelectAdmin($event)"
       />
-      <span class="text-sm">{{ adminFileName }}</span>
+      <span class="flex items-center justify-center mt-2 text-xs">{{ adminFileName }}</span>
     </div>
     <p-button
       #fu
       label="Upload"
+      *ngIf="AdminExcel"
       (onClick)="UploadExcelAdmin(fu)"
       severity="secondary"
+      size="small"
+    />
+    <p-button
+      #fu
+      label="Remove"
+      *ngIf="AdminExcel"
+      (onClick)="RemoveAdminExcel()"
+      severity="danger"
       size="small"
     />
   </div>

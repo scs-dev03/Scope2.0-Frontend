@@ -27,7 +27,7 @@ export class AdminvonserviceService {
 
     // usertype: any = "A"
     // userid: any = '146297'
-  // setLocalStorage(){
+  // setlocalStorage(){
   //   localStorage.setItem('usertype',this.usertype)
   //   localStorage.setItem('userid',this.userid)
 
