@@ -21,7 +21,6 @@ export class RuleCreationComponent {
     this.FetchBrand()
     this.GetOperator()
     this.FetchAction()
-    this.LocationSpecificName.disable()
     this.sharedService.updateModuleName('Rule Creation');
   }
 
@@ -29,7 +28,6 @@ export class RuleCreationComponent {
 
 
   LocationSpecificName: FormGroup;
-
   visibleTrueFalse: boolean = false
   visible: boolean = false
   Result: any
@@ -46,6 +44,8 @@ export class RuleCreationComponent {
     Description: new FormControl('', [Validators.required]),
     RuleType: new FormControl(null)
   })
+
+
   trueFalseInput = new FormGroup({
 
     trueAction: new FormControl(null),
@@ -72,20 +72,36 @@ export class RuleCreationComponent {
     })
   }
 
-  onlocationSpecificEnable(checked: boolean) {
-    if (checked === true) {
-      this.LocationSpecificName.enable();
-    } else {
-      this.LocationSpecificName.disable();
-    }
-
-  }
+  
 
 
   selectedRuleType: string = 'numeric';
   locationSpecific: boolean = false
-  SaveAsTemplate: boolean = false
-  ActionList: any
+  GeneralRule: boolean = false
+  ActionList : any  = [
+    {
+      Name: "Internal Approver",
+      Id: "IA"
+    },
+    {
+      Name: "Manual Approval",
+      Id: "MA"
+    },
+
+    {
+      Name: "Move To Next Rule",
+      Id: "MNR"
+    },
+
+    {
+      Name: "Approve",
+      Id: "AP"
+    },
+    {
+      Name: "Reject",
+      Id: "RJ"
+    }
+  ]
   enteredValue: string = '';
   expression = '';
   ruleChunks: string[] = []; // this will store each small expression added
@@ -354,7 +370,7 @@ export class RuleCreationComponent {
   }
 
   OnClickSaveRule() {
-    if (this.SaveAsTemplate) {
+    if (this.GeneralRule) {
       this.CreateTemplateRule(this.RuleName.value.NameofRule, this.RuleName.value.Description, this.sendExpression, this.trueFalseInput.value.trueAction, this.trueFalseInput.value.falseAction, sessionStorage.getItem('userid'), this.trueFalseInput.value.trueRemark, this.trueFalseInput.value.falseRemark)
     }
     else {

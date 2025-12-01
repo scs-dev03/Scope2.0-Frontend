@@ -25,7 +25,6 @@ export class RemarkMasterComponent {
   ngOnInit(): void {
     this.FetchUsersData()
     this.FetchBrandData()
-    this.FetchRemarkData()
     this.userid = sessionStorage.getItem('userid')
 
   }
@@ -33,18 +32,17 @@ export class RemarkMasterComponent {
   userid: any
 
   remarkForm!: FormGroup;
-  Result:any
-  visible:boolean = false;
-
+  Result: any
+  visible: boolean = false
+  visibleTableData:boolean = false
 
   constructor(private remarkservice: RemarkServiceService, private fb: FormBuilder, private globalBlockUiService: GlobalBlockUiService, private sharedService: SharedServiceService, private MasterService: MasterServiceService, private remarkFormService: BrandWiseUserMappingServiceService) {
     this.remarkForm = this.fb.group({
-      userType: [null],
-      user: [null, Validators.required],
-      remarkType: [null, Validators.required],
-      brand: [null, Validators.required],
-      dealer: [null, Validators.required],
-      location: [null, Validators.required],
+      userType: [null, Validators.required],
+      remarkType: [null],
+      brand: [null],
+      dealer: [null],
+      location: [null],
       remark: ['', Validators.required]
     });
   }
@@ -61,17 +59,17 @@ export class RemarkMasterComponent {
   UserTypeData: any = [
     {
       "Name": "User",
-      "Id": "1"
+      "Id": "D"
     },
     {
       "Name": "Admin",
-      "Id": "2"
+      "Id": "A"
     }
   ]
 
-  editDialogVisible:boolean = false
-  rowId:any
-  OnClickUpdateRemark(rowData:any){
+  editDialogVisible: boolean = false
+  rowId: any
+  OnClickUpdateRemark(rowData: any) {
     this.editDialogVisible = true
     this.rowId = rowData.Id;
 
@@ -97,6 +95,14 @@ export class RemarkMasterComponent {
   OnclickBrands() {
     this.FetchDealerData(this.remarkForm.value.brand)
   }
+  OnclickEditBrands() {
+    if(this.EditRemarkForm.valid){
+      this.FetchDealerData(this.EditRemarkForm.value.brand)
+    }
+    else{
+      this.EditRemarkForm.markAllAsTouched()
+    }
+  }
 
 
   DealerData: any
@@ -116,6 +122,9 @@ export class RemarkMasterComponent {
 
   OnclickDealer() {
     this.FetchLocationData(this.remarkForm.value.dealer)
+  }
+  OnclickEditDealer() {
+    this.FetchLocationData(this.EditRemarkForm.value.dealer)
   }
 
   LocationData: any
@@ -153,10 +162,14 @@ export class RemarkMasterComponent {
     })
   }
 
+  OnclickUser() {
+    this.FetchRemarkData(this.remarkForm.value.userType)
+  }
+
   RemarkData: any
-  FetchRemarkData() {
+  FetchRemarkData(Type: any) {
     this.globalBlockUiService.startLoading();
-    this.remarkservice.fetchRemarkMaster({ Type: "A" }).subscribe({
+    this.remarkservice.fetchRemarkMaster({ Type: Type }).subscribe({
       next: (res: any) => {
         this.RemarkData = res.data
         this.globalBlockUiService.stopLoading()
@@ -175,12 +188,21 @@ export class RemarkMasterComponent {
       this.remarkForm.markAllAsTouched()
     }
   }
-  SendRemarkData(BrandId: any, DelaerId: any, LocationId: any, Remark: any, RemarkFor: any, userid: any) {
+  SendRemarkData(BrandId: any, DelaerId: any, LocationId: any, Remark: any, Remarktype: any, userid: any) {
     this.globalBlockUiService.startLoading();
-    this.remarkservice.SendRemarkData({ BrandId, DelaerId, LocationId, Remark, RemarkFor, userid }).subscribe({
+    this.remarkservice.SendRemarkData({ BrandId, DelaerId, LocationId, Remark, Remarktype, userid }).subscribe({
       next: (res: any) => {
         this.globalBlockUiService.stopLoading()
-
+        this.Result = res.message
+        this.visible = true;
+        this.remarkForm.reset()
+        this.OnClickViewData()
+      },
+      error: (err: any) => {
+        this.globalBlockUiService.stopLoading()
+        this.Result = err.error.message
+        this.visible = true;
+        this.remarkForm.reset()
       }
     })
   }
@@ -202,8 +224,10 @@ export class RemarkMasterComponent {
   }
 
   OnClickViewData() {
-    this.FetchRemarkDataTable(this.remarkForm.value.brand, this.remarkForm.value.dealer, this.remarkForm.value.location, this.remarkForm.value.remarkType, null)
+    
+    this.FetchRemarkDataTable(this.remarkForm.value.brand, this.remarkForm.value.dealer, this.remarkForm.value.location, this.remarkForm.value.userType, this.remarkForm.value.remarkType)
   }
+
 
   RemarksDataTable: any
   FetchRemarkDataTable(BrandId: any, DealerId: any, LocationId: any, RemarkFor: any, RemarkTypeId: any) {
@@ -211,25 +235,43 @@ export class RemarkMasterComponent {
     this.remarkservice.FetchRemarkData({ BrandId, DealerId, LocationId, RemarkFor, RemarkTypeId }).subscribe({
       next: (res: any) => {
         this.RemarksDataTable = res.data
+        this.visibleTableData = true
+        this.globalBlockUiService.stopLoading()
+      },
+       error: (err: any) => {
+        this.Result = err.error.message;
+        this.visible = true;
         this.globalBlockUiService.stopLoading()
       }
+      
     })
   }
 
-  OnClickSaveEdit(){
-    if(this.EditRemarkForm.valid){
-      this.EditRemarkData(this.rowId,this.EditRemarkForm.value.brand,this.EditRemarkForm.value.dealer,this.EditRemarkForm.value.location,this.EditRemarkForm.value.remark,this.EditRemarkForm.value.remarkTypeId)
+  OnClickSaveEdit() {
+    if (this.EditRemarkForm.valid) {
+      this.EditRemarkData(this.rowId, this.EditRemarkForm.value.brand, this.EditRemarkForm.value.dealer, this.EditRemarkForm.value.location, this.EditRemarkForm.value.remark, this.EditRemarkForm.value.remarkTypeId)
+    }
+    else {
+      this.EditRemarkForm.markAllAsTouched()
     }
   }
 
 
-  EditRemarkData(Id:any,BrandId:any,DealerId:any,LocationId:any,Remark:any,RemarkTypeId:any){
+  EditRemarkData(Id: any, BrandId: any, DealerId: any, LocationId: any, Remark: any, RemarkTypeId: any) {
     this.globalBlockUiService.startLoading()
-    this.remarkservice.EditRemarkData({Id,BrandId,DealerId,LocationId,Remark,RemarkTypeId}).subscribe({
-      next: (res:any)=>{
+    this.remarkservice.EditRemarkData({ Id, BrandId, DealerId, LocationId, Remark, RemarkTypeId }).subscribe({
+      next: (res: any) => {
         this.Result = res.message;
         this.visible = true;
+        this.globalBlockUiService.stopLoading()
+        this.EditRemarkForm.reset()
 
+      },
+      error: (err: any) => {
+        this.Result = err.error.message;
+        this.visible = true;
+        this.EditRemarkForm.reset()
+        this.globalBlockUiService.stopLoading()
       }
     })
   }

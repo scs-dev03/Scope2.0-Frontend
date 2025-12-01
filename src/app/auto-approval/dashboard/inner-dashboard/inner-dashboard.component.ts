@@ -7,6 +7,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalBlockUiService } from '../../../services/global-block-ui.service';
 import { InnerdashboardserviceService } from '../../../services/Auto-Approvals/innerdashboardservice.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { throwIfEmpty } from 'rxjs';
 
 @Component({
   selector: 'app-inner-dashboard',
@@ -17,30 +18,32 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class InnerDashboardComponent {
 
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
-    this.fetchBrandData()
+    //this.globalBlockUiService.startLoading()
+    await this.fetchBrandData()
+    this.fetchOrderType()
 
     this.sharedService.updateModuleName('Approval Summary')
 
     this.route.queryParams.subscribe((params: any) => {
-      this.brandid = params['brandid'];
+      this.brandid = parseInt(params['brandid']);
       this.dealerid = params['dealerid'];
-
-
 
       if (this.brandid && this.dealerid) {
 
         //this.fetchDealerData(this.InnerDashboardInputData.value.Brand)
-        this.InnerDashboardInputData.get("Brand")?.patchValue(params['brandid'])
+        this.InnerDashboardInputData.get("Brand")?.patchValue(this.brandid)
         this.InnerDashboardInputData.get("Dealer")?.patchValue(params['dealerid'])
 
+        this.fetchDealerData(this.brandid);
+        this.fetchlocation(this.dealerid)
         this.OnClickViewData()
 
       }
     })
 
-
+    //console.log(typeof(this.brandid));
 
   }
 
@@ -74,7 +77,7 @@ export class InnerDashboardComponent {
   BrandData: any
 
   fetchBrandData() {
-    this.globalBlockUiService.startLoading();
+    // this.globalBlockUiService.startLoading();
     this.innerdashboardservice.getBrandMaster().subscribe((res: any) => {
       if (this.brandid) {
         this.InnerDashboardInputData.get("Brand")?.patchValue(this.brandid);
@@ -83,7 +86,7 @@ export class InnerDashboardComponent {
       }
       this.BrandData = res;
 
-      this.globalBlockUiService.stopLoading();
+      //this.globalBlockUiService.stopLoading();
       console.log(this.BrandData);
     });
   }
@@ -94,7 +97,7 @@ export class InnerDashboardComponent {
   DealerData: any
   // Fetch Dealer Data
   fetchDealerData(brandid: any) {
-    this.globalBlockUiService.startLoading();
+    //this.globalBlockUiService.startLoading();
     this.innerdashboardservice.getDealersMaster({ brandid }).subscribe({
       next: (res: any) => {
         if (this.dealerid) {
@@ -105,11 +108,11 @@ export class InnerDashboardComponent {
         this.DealerData.sort((a: any, b: any) =>
           a.dealer.localeCompare(b.dealer)
         );
-        this.globalBlockUiService.stopLoading();
+        //this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
         console.error('Error fetching dealer data:', err);
-        this.globalBlockUiService.stopLoading();
+        //this.globalBlockUiService.stopLoading();
       },
     });
   }
@@ -121,15 +124,15 @@ export class InnerDashboardComponent {
 
   LocationData: any
   fetchlocation(dealerid: any) {
-    this.globalBlockUiService.startLoading();
+    //this.globalBlockUiService.startLoading();
     this.innerdashboardservice.getlocationMaster({ dealerid: dealerid }).subscribe({
       next: (res: any) => {
         this.LocationData = res;
-        this.globalBlockUiService.stopLoading();
+        //this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
         console.error("Error fetching location data:", err);
-        this.globalBlockUiService.stopLoading();
+        //this.globalBlockUiService.stopLoading();
       }
     });
   }
@@ -137,28 +140,28 @@ export class InnerDashboardComponent {
   OrderTypeData: any
 
   fetchOrderType() {
-    this.globalBlockUiService.startLoading();
+    
     this.innerdashboardservice.getOrderType().subscribe({
       next: (res: any) => {
         this.OrderTypeData = res.data;
-        this.globalBlockUiService.stopLoading();
       },
       error: (err: any) => {
         console.error("Error fetching Order Type data:", err);
-        this.globalBlockUiService.stopLoading();
       }
     })
   }
 
   periodOptions = [
-    { name: 'Yesterday', value: 'yesterday' },
-    { name: 'Last Week', value: 'lastWeek' },
-    { name: 'Last Month', value: 'lastMonth' },
+    { name: 'Last 30 Min', value: '30min' },
+    { name: 'Last 1 hr', value: '1hr' },
+    { name: 'Last 2 hr', value: '2hr' },
+    { name: 'Yesterday', value: 'lastWeek' },
   ];
 
   selectedPeriod: string | null = null;
 
   OnClickViewData() {
+
     if (this.InnerDashboardInputData.valid) {
 
       this.FetchDashboarData(
@@ -212,35 +215,62 @@ export class InnerDashboardComponent {
       });
   }
 
+  toIST(date: Date, onlyDate: boolean = false) {
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST = UTC + 5:30
+    const ist = new Date(date.getTime() + istOffset);
+
+    if (onlyDate) {
+      return ist.toISOString().split('T')[0]; // YYYY-MM-DD
+    }
+
+    return ist.toISOString();  // Full ISO with IST applied
+  }
+
+
   OnChangeDate() {
-    console.log(this.InnerDashboardInputData.value);
-
     const selected = this.InnerDashboardInputData.value.selectedPeriod as string;
-    const today = new Date();
-    let fromDate: string;
-    let toDate: string;
+    const now = new Date();
+    let fromDate: string = '';
+    let toDate: string = '';
 
-    if (selected === 'yesterday') {
-      const yesterday = new Date();
-      yesterday.setDate(today.getDate() - 1);
-      fromDate = yesterday.toISOString().split('T')[0];
-      toDate = yesterday.toISOString().split('T')[0];
-      console.log(fromDate, "fromdata");
+    if (selected === '30min') {
+      const from = new Date(now);
+      from.setMinutes(now.getMinutes() - 30);
 
-    } else if (selected === 'lastWeek') {
-      const lastWeekStart = new Date();
-      lastWeekStart.setDate(today.getDate() - 7);
-      fromDate = lastWeekStart.toISOString().split('T')[0];
-      toDate = today.toISOString().split('T')[0];
-    } else if (selected === 'lastMonth') {
-      const lastMonthStart = new Date();
-      lastMonthStart.setMonth(today.getMonth() - 1);
-      fromDate = lastMonthStart.toISOString().split('T')[0];
-      toDate = today.toISOString().split('T')[0];
-    } else {
-      // If nothing selected, reset
-      fromDate = '';
-      toDate = '';
+      fromDate = this.toIST(from);
+      toDate = this.toIST(now);
+    }
+
+    else if (selected === '1hr') {
+      const from = new Date(now);
+      from.setHours(now.getHours() - 1);
+
+      fromDate = this.toIST(from);
+      toDate = this.toIST(now);
+    }
+
+    else if (selected === '2hr') {
+      const from = new Date(now);
+      from.setHours(now.getHours() - 2);
+
+      fromDate = this.toIST(from);
+      toDate = this.toIST(now);
+    }
+
+    else if (selected === 'yesterday') {
+      const y = new Date();
+      y.setDate(now.getDate() - 1);
+
+      fromDate = this.toIST(y, true);
+      toDate = this.toIST(y, true);
+    }
+
+    else if (selected === 'lastWeek') {
+      const from = new Date();
+      from.setDate(now.getDate() - 7);
+
+      fromDate = this.toIST(from, true);
+      toDate = this.toIST(now, true);
     }
 
     this.InnerDashboardInputData.patchValue({
@@ -248,8 +278,10 @@ export class InnerDashboardComponent {
       ToDate: toDate
     });
 
-    console.log('Updated Dates:', { fromDate, toDate });
+    console.log("Updated IST Dates:", fromDate, toDate);
   }
+
+
 
   RedirectToNotInMaster() {
     this.router.navigate(['/auto/master/nim']);

@@ -5,81 +5,128 @@
       class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-3 items-center border-dashed border-2 bg-gray-50 border-gray-200"
       [formGroup]="BrandUserMapping"
     >
-      <!-- Brand MultiSelect -->
-      <p-floatlabel variant="on">
-        <p-multiselect
-          [options]="BrandData"
-          optionLabel="vcbrand"
-          optionValue="bigid"
-          [showClear]="true"
-          size="small"
-          class="w-44"
-          formControlName="Brand"
-          (onChange)="OnclickBrands()"
+      <!-- Brand -->
+      <div>
+        <p-floatlabel variant="on">
+          <p-multiselect
+            [options]="BrandData"
+            optionLabel="vcbrand"
+            optionValue="bigid"
+            [showClear]="true"
+            size="small"
+            class="w-44"
+            formControlName="Brand"
+            (onChange)="OnclickBrands()"
+          ></p-multiselect>
+          <label class="text-xs">Select Brand</label>
+        </p-floatlabel>
 
-        />
-        <label for="parameters" class="text-xs">Select Brand</label>
-      </p-floatlabel>
+        <small
+          class="text-red-500 text-xs"
+          *ngIf="
+            BrandUserMapping.get('Brand')?.invalid &&
+            BrandUserMapping.get('Brand')?.touched
+          "
+        >
+          This field is required
+        </small>
+      </div>
 
-      <!-- Dealer MultiSelect -->
-      <p-floatlabel variant="on">
-        <p-multiselect
-          [options]="DealerData"
-          optionLabel="Dealer"
-          optionValue="DealerID"
-          [showClear]="true"
-          size="small"
-          appendTo="body"
-          class="w-44"
-          formControlName="Dealer"
-          (onChange)="OnclickDealer()"
-        />
-        <label for="parameters" class="text-xs">Select Dealer</label>
-      </p-floatlabel>
+      <!-- Dealer -->
+      <div>
+        <p-floatlabel variant="on">
+          <p-multiselect
+            [options]="DealerData"
+            optionLabel="Dealer"
+            optionValue="DealerID"
+            [showClear]="true"
+            size="small"
+            appendTo="body"
+            class="w-44"
+            formControlName="Dealer"
+            (onChange)="OnclickDealer()"
+          ></p-multiselect>
+          <label class="text-xs">Select Dealer</label>
+        </p-floatlabel>
 
-      <!-- Location MultiSelect -->
-      <p-floatlabel variant="on">
-        <p-multiselect
-          [options]="LocationData"
-          optionLabel="Location"
-          optionValue="LocationID"
-          size="small"
-          class="w-44"
-           appendTo="body"
-          formControlName="Location"
-        />
-        <label for="parameters" class="text-xs">Select Location</label>
-      </p-floatlabel>
+        <small
+          class="text-red-500 text-xs"
+          *ngIf="
+            BrandUserMapping.get('Dealer')?.invalid &&
+            BrandUserMapping.get('Dealer')?.touched
+          "
+        >
+          This field is required
+        </small>
+      </div>
 
-      <p-floatlabel variant="on">
-        <p-multiselect
-          [size]="'small'"
-          optionLabel="Name"
-          optionValue="bintId_Pk"
-          [options]="UserData"
-          class="!w-44 !h-8"
-          id="parameters"
-          size="small"
-          formControlName="AssignedUser"
-        />
-        <label for="parameters" class="text-xs"> Assign User</label>
-      </p-floatlabel>
+      <!-- Location -->
+      <div>
+        <p-floatlabel variant="on">
+          <p-multiselect
+            [options]="LocationData"
+            optionLabel="Location"
+            optionValue="LocationID"
+            size="small"
+            class="w-44"
+            appendTo="body"
+            formControlName="Location"
+          ></p-multiselect>
+          <label class="text-xs">Select Location</label>
+        </p-floatlabel>
+
+        <small
+          class="text-red-500 text-xs"
+          *ngIf="
+            BrandUserMapping.get('Location')?.invalid &&
+            BrandUserMapping.get('Location')?.touched
+          "
+        >
+          This field is required
+        </small>
+      </div>
+
+      <!-- Assigned User -->
+      <div>
+        <p-floatlabel variant="on">
+          <p-multiselect
+            optionLabel="Name"
+            optionValue="bintId_Pk"
+            [options]="UserData"
+            class="!w-44 !h-8"
+            size="small"
+            formControlName="AssignedUser"
+          ></p-multiselect>
+          <label class="text-xs">Assign User</label>
+        </p-floatlabel>
+
+        <small
+          class="text-red-500 text-xs"
+          *ngIf="
+            BrandUserMapping.get('AssignedUser')?.invalid &&
+            BrandUserMapping.get('AssignedUser')?.touched
+          "
+        >
+          This field is required
+        </small>
+      </div>
 
       <p-button
         size="small"
         [style]="{ 'background-color': '#008080', color: '#fff' }"
         icon="pi pi-check"
         iconPos="right"
-        (onClick)="onClickSave()"
-      />
+        (onClick)="CreatePayload()"
+      ></p-button>
+
       <p-button
         size="small"
         label="View User Mapping"
         [style]="{ 'background-color': '#008080', color: '#fff' }"
         icon="pi pi-table"
         iconPos="right"
-        
-      />
+        (onClick)="onclickViewUsermapping()"
+      ></p-button>
     </div>
   </div>
 
@@ -87,67 +134,175 @@
 
   <div
     class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
-    
+    *ngIf="visibleTableData"
   >
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
+        #dt1
         [scrollable]="true"
-        scrollHeight="600px"
+        scrollHeight="400px"
+        [value]="ViewMappingData"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 30, 40, 50, 100]"
         [showGridlines]="true"
-        scrollDirection="both"
+        paginatorDropdownAppendTo="body"
         class="!w-[90vw]"
         [tableStyle]="{ 'min-width': '50rem' }"
+        [globalFilterFields]="[
+          'id',
+          'Brand',
+          'BrandId',
+          'Dealer',
+          'DealerId',
+          'Location',
+          'LocationId',
+          'PartNumber',
+          'LatestPartNumber',
+          'PartDesc',
+          'MRP',
+          'LandedCost',
+          'MOQ',
+          'PartType',
+          'PartTypeId',
+          'Model',
+          'GSTPer',
+          'QtyPerVehicle',
+          'HSNCode',
+          'HSNID',
+          'Name',
+          'Addedby',
+          'Remarks',
+          'Addedon',
+          'Remark',
+          'Type',
+          'Addedby',
+          'RemarkFor'
+        ]"
       >
-        <ng-template #header>
-          <tr class="">
-            <th
-              class="!px-1 flex-auto !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px] !min-h-[22px]"
-            >
+        <ng-template let-item pTemplate="paginatordropdownitem">
+          {{ item.value === ViewMappingData?.length ? "All" : item.value }}
+        </ng-template>
+
+        <ng-template pTemplate="caption">
+          <div class="flex items-center">
+            <p-button
+              label="Clear"
+              size="small"
+              [outlined]="true"
+              icon="pi pi-filter-slash"
+              (click)="clear(dt1)"
+            ></p-button>
+
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                size="small"
+                (input)="onGlobalFilter($event)"
+                placeholder="Search keyword"
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               S.No
             </th>
             <th
-              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+              pSortableColumn="Brand"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
               Brand
-              <p-columnFilter type="text" field="" display="menu" />
+              <p-sortIcon field="Brand" />
+              <p-columnFilter type="text" field="Brand" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+              pSortableColumn="Dealer"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
               Dealer
+              <p-sortIcon field="Dealer" />
+              <p-columnFilter type="text" field="Dealer" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+              pSortableColumn="Location"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
               Location
+              <p-sortIcon field="Location" />
+              <p-columnFilter type="text" field="Location" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+              pSortableColumn="Name"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
-              Assigned User
+              Asssigned User
+              <p-sortIcon field="Name" />
+              <p-columnFilter type="text" field="Name" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Addedon"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
-              Status
+              Added On
+              <p-sortIcon field="Addedon" />
+              <p-columnFilter type="text" field="Addedon" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="AddedBy"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
+              Added By
+              <p-sortIcon field="AddedBy" />
+              <p-columnFilter type="text" field="AddedBy" display="menu" />
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               Action
             </th>
           </tr>
         </ng-template>
 
-        <ng-template #body let-rowData let-i="rowIndex">
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
           <tr
             class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
           >
-            <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
-            <td
-              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
-            >
-              {{ rowData.Dashboard }}
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ i + 1 }}
+            </td>
+
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Brand }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Dealer }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Location }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Name }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Addedon | date : "dd-MM-yyyy HH:mm:ss a" : "UTC" }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.AddedBy }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              <p-button
+                icon="pi pi-pencil"
+                size="small"
+                severity="success"
+                (onClick)="OnclickEdit()"
+              ></p-button>
             </td>
           </tr>
         </ng-template>
@@ -155,3 +310,152 @@
     </div>
   </div>
 </div>
+
+<p-dialog
+  header="Update Advisor Info"
+  [(visible)]="editDialogVisible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '70vw', '575px': '90vw' }"
+  [style]="{ width: '45vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  [contentStyle]="{ padding: '0' }"
+>
+  <form [formGroup]="EditBrandUserMapping" class="flex flex-col h-full">
+    <div class="grid grid-cols-2 gap-5 p-5">
+      <!-- Brand -->
+      <div class="flex flex-col">
+        <p-floatlabel variant="on">
+          <p-select
+            optionLabel="vcbrand"
+            optionValue="bigid"
+            [options]="BrandData"
+            formControlName="Brand"
+            appendTo="body"
+            class="w-full"
+            inputClass="h-9"
+            (onChange)="OnclickEditBrand()"
+          />
+          <label class="text-xs">Select Brand</label>
+        </p-floatlabel>
+
+        <small
+          class="text-red-500 text-[11px] mt-1"
+          *ngIf="
+            EditBrandUserMapping.get('Brand')?.touched &&
+            EditBrandUserMapping.get('Brand')?.hasError('required')
+          "
+        >
+          Brand is required
+        </small>
+      </div>
+
+      <!-- Dealer -->
+      <div class="flex flex-col">
+        <p-floatlabel variant="on">
+          <p-select
+            optionLabel="dealer"
+            optionValue="dealerid"
+            [options]="DealerEditData"
+            formControlName="Dealer"
+            appendTo="body"
+            class="w-full"
+            inputClass="h-9"
+            (onChange)="OnClickEditDealer()"
+          />
+          <label class="text-xs">Select Dealer</label>
+        </p-floatlabel>
+
+        <small
+          class="text-red-500 text-[11px] mt-1"
+          *ngIf="
+            EditBrandUserMapping.get('Dealer')?.touched &&
+            EditBrandUserMapping.get('Dealer')?.hasError('required')
+          "
+        >
+          Dealer is required
+        </small>
+      </div>
+
+      <!-- Location -->
+      <div class="flex flex-col">
+        <p-floatlabel variant="on">
+          <p-select
+            optionLabel="location"
+            optionValue="locationid"
+            [options]="LocationEditData"
+            formControlName="Location"
+            appendTo="body"
+            class="w-full"
+            inputClass="h-9"
+          />
+          <label class="text-xs">Select Location</label>
+        </p-floatlabel>
+
+        <small
+          class="text-red-500 text-[11px] mt-1"
+          *ngIf="
+            EditBrandUserMapping.get('Location')?.touched &&
+            EditBrandUserMapping.get('Location')?.hasError('required')
+          "
+        >
+          Location is required
+        </small>
+      </div>
+
+      <!-- Assigned User -->
+      <div class="flex flex-col">
+        <p-floatlabel variant="on">
+          <p-select
+            optionLabel="Name"
+            optionValue="bintId_Pk"
+            [options]="UserData"
+            formControlName="AssignedUser"
+            appendTo="body"
+            class="w-full"
+            inputClass="h-9"
+          />
+          <label class="text-xs">Assign User</label>
+        </p-floatlabel>
+
+        <small
+          class="text-red-500 text-[11px] mt-1"
+          *ngIf="
+            EditBrandUserMapping.get('AssignedUser')?.touched &&
+            EditBrandUserMapping.get('AssignedUser')?.hasError('required')
+          "
+        >
+          User is required
+        </small>
+      </div>
+    </div>
+  </form>
+
+  <!-- Footer -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2 p-3">
+      <button
+        pButton
+        size="small"
+        label="Save"
+        icon="pi pi-check"
+        class="!h-9 !px-5"
+        (click)="EditBrandWiseUserMapping()"
+      ></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  header="Message"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="text-lg">
+    {{ Result }}
+  </p>
+</p-dialog>

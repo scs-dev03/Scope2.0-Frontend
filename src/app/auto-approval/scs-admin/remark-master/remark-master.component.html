@@ -17,6 +17,7 @@
                   formControlName="userType"
                   size="small"
                   class="w-44 h-8"
+                  (onChange)="OnclickUser()"
                 />
                 <label for="userType" class="text-xs">User Type</label>
               </p-floatlabel>
@@ -32,35 +33,10 @@
               </div>
             </div>
 
-            <!-- User -->
-            <div class="flex flex-col">
-              <p-floatlabel variant="on">
-                <p-select
-                  optionLabel="Name"
-                  optionValue="bintId_Pk"
-                  [options]="UserData"
-                  formControlName="user"
-                  size="small"
-                  class="w-44 h-8"
-                />
-                <label class="text-xs">User</label>
-              </p-floatlabel>
-
-              <div
-                class="text-red-500 text-[11px] mt-1"
-                *ngIf="
-                  remarkForm.get('user')?.touched &&
-                  remarkForm.get('user')?.hasError('required')
-                "
-              >
-                User is required
-              </div>
-            </div>
-
             <!-- Remark Type -->
             <div class="flex flex-col">
               <p-floatlabel variant="on">
-                <p-multiselect
+                <p-select
                   optionLabel="Remark"
                   optionValue="Id"
                   [options]="RemarkData"
@@ -206,7 +182,10 @@
       </div>
     </div>
   </div>
-  <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
+  <div
+    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+    *ngIf="visibleTableData"
+  >
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
         #dt1
@@ -245,9 +224,12 @@
           'HSNID',
           'Name',
           'Addedby',
-
           'Remarks',
-          'SCSRemarks'
+          'AddedOn',
+          'Remark',
+          'Type',
+          'Addedby',
+          'RemarkFor'
         ]"
       >
         <ng-template let-item pTemplate="paginatordropdownitem">
@@ -284,29 +266,69 @@
             <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               S.No
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="Brand"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Brand
+              <p-sortIcon field="Brand" />
+              <p-columnFilter type="text" field="Brand" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="Dealer"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Dealer
+              <p-sortIcon field="Dealer" />
+              <p-columnFilter type="text" field="Dealer" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="Location"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Location
+              <p-sortIcon field="Location" />
+              <p-columnFilter type="text" field="Location" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="Remark"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Remark
+              <p-sortIcon field="Remark" />
+              <p-columnFilter type="text" field="Remark" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="RemarkFor"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Remark For
+              <p-sortIcon field="RemarkFor" />
+              <p-columnFilter type="text" field="RemarkFor" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="Type"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Remark Type
+              <p-sortIcon field="Type" />
+              <p-columnFilter type="text" field="Type" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="Addedby"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Added By
+              <p-sortIcon field="Addedby" />
+              <p-columnFilter type="text" field="Addedby" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="AddedOn"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Added On
+              <p-sortIcon field="AddedOn" />
+              <p-columnFilter type="text" field="AddedOn" display="menu" />
             </th>
             <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               Action
@@ -370,23 +392,22 @@
   [draggable]="false"
   [resizable]="false"
 >
-  <form [formGroup]="EditRemarkForm">
-    <div class="flex flex-wrap gap-4">
-      
+  <form [formGroup]="EditRemarkForm" class="h-full flex flex-col">
+    <div class="grid grid-cols-2 gap-4 p-3">
       <!-- Remark Type -->
       <div class="flex flex-col">
         <p-floatlabel variant="on">
-          <p-multiselect
+          <p-select
             optionLabel="Remark"
             optionValue="Id"
             [options]="RemarkData"
-            formControlName="remarkType"
+            formControlName="remarkTypeId"
+            appendTo="body"
             size="small"
-            class="w-44 h-8"
+            class="w-full h-8"
           />
           <label class="text-xs">Remark Type</label>
         </p-floatlabel>
-
         <div
           class="text-red-500 text-[11px] mt-1"
           *ngIf="
@@ -407,12 +428,12 @@
             optionValue="bigid"
             formControlName="brand"
             size="small"
-            class="w-44 h-8"
-            (onChange)="OnclickBrands()"
+            appendTo="body"
+            class="w-full h-8"
+            (onChange)="OnclickEditBrands()"
           />
           <label class="text-xs">Select Brand</label>
         </p-floatlabel>
-
         <div
           class="text-red-500 text-[11px] mt-1"
           *ngIf="
@@ -433,12 +454,12 @@
             optionValue="dealerid"
             formControlName="dealer"
             size="small"
-            class="w-44 h-8"
-            (onChange)="OnclickDealer()"
+            appendTo="body"
+            class="w-full h-8"
+            (onChange)="OnclickEditDealer()"
           />
           <label class="text-xs">Select Dealer</label>
         </p-floatlabel>
-
         <div
           class="text-red-500 text-[11px] mt-1"
           *ngIf="
@@ -458,12 +479,12 @@
             optionValue="locationid"
             formControlName="location"
             [options]="LocationData"
+            appendTo="body"
             size="small"
-            class="w-44 h-8"
+            class="w-full h-8"
           />
           <label class="text-xs">Select Location</label>
         </p-floatlabel>
-
         <div
           class="text-red-500 text-[11px] mt-1"
           *ngIf="
@@ -476,19 +497,19 @@
       </div>
 
       <!-- Remark Input -->
-      <div class="flex flex-col">
+      <div class="col-span-2 flex flex-col">
         <p-floatlabel variant="on">
           <input
             type="text"
-            class="h-8 w-52"
+            class="h-8 w-full"
             id="keyworinput"
             pSize="small"
+            appendTo="body"
             pInputText
             formControlName="remark"
           />
           <label for="keyworinput" class="text-xs">Enter Remark</label>
         </p-floatlabel>
-
         <div
           class="text-red-500 text-[11px] mt-1"
           *ngIf="
@@ -507,17 +528,24 @@
       <button
         pButton
         size="small"
-        label="Cancel"
-        class="p-button-text"
-        
-      ></button>
-      <button
-        pButton
-        size="small"
         label="Save"
         icon="pi pi-check"
-       
+        (click)="OnClickSaveEdit()"
       ></button>
     </div>
   </ng-template>
+</p-dialog>
+
+<p-dialog
+  header="Message"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="text-lg">
+    {{ Result }}
+  </p>
 </p-dialog>

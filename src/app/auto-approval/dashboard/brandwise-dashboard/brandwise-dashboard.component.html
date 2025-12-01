@@ -17,13 +17,7 @@
       paginatorDropdownAppendTo="body"
       class="!w-[90vw]"
       [tableStyle]="{ 'min-width': '50rem' }"
-      [globalFilterFields]="[
-        
-        'Brand',
-        'Dealer',
-        'Pending',
-        'NotinMaster'
-      ]"
+      [globalFilterFields]="['Brand', 'Dealer', 'Pending', 'NotinMaster']"
     >
       <ng-template let-item pTemplate="paginatordropdownitem">
         {{ item.value === DashboardBrandWise?.length ? "All" : item.value }}
@@ -55,26 +49,47 @@
       </ng-template>
 
       <ng-template pTemplate="header">
-        <tr class="bg-gray-200 text-gray-800 text-sm font-semibold" >
+        <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
           <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">S.No</th>
-          <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+          <th
+            pSortableColumn="Brand"
+            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+          >
             Brand
+            <p-sortIcon field="Brand" />
+            <p-columnFilter type="text" field="Brand" display="menu" />
           </th>
-          <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+          <th
+            pSortableColumn="Dealer"
+            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+          >
             Dealer
+            <p-sortIcon field="Dealer" />
+            <p-columnFilter type="text" field="Dealer" display="menu" />
           </th>
 
-          <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+          <th
+            pSortableColumn="Pending"
+            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+          >
             Pending Approvals
+            <p-sortIcon field="Pending" />
+            <p-columnFilter type="text" field="Pending" display="menu" />
           </th>
-          <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+          <th
+            pSortableColumn="NotinMaster"
+            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+          >
             Not In Master
+            <p-sortIcon field="NotinMaster" />
+            <p-columnFilter type="text" field="NotinMaster" display="menu" />
           </th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-rowData let-i="rowIndex">
-        <tr (click)="navigateToApprovalSummary(rowData)"
+        <tr
+          (click)="navigateToApprovalSummary(rowData)"
           class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
         >
           <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
@@ -87,14 +102,13 @@
           <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
             {{ rowData.Dealer }}
           </td>
-          
+
           <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
             {{ rowData.Pending }}
           </td>
           <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
             {{ rowData.NotinMaster }}
           </td>
-          
         </tr>
       </ng-template>
     </p-table>

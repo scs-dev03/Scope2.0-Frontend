@@ -23,27 +23,28 @@ export class BrandwiseDashboardComponent {
 
   ngOnInit(): void {
     this.fetchBrandData()
+    this.sharedService.updateModuleName('Brandwise Dashboard');
   }
   VisiTableData: boolean = false;
 
 
 
   searchValue: string | undefined;
-    @ViewChild('dt1') dt1: any;
-    clear(table: Table) {
-      table.clear();
-      this.searchValue = ''
-    }
-  
-    onGlobalFilter(event: Event) {
-  
-  
-      const value = (event.target as HTMLInputElement)?.value || '';
-      console.log(value);
-  
-      this.dt1.filterGlobal(value, 'contains');
-    }
-  
+  @ViewChild('dt1') dt1: any;
+  clear(table: Table) {
+    table.clear();
+    this.searchValue = ''
+  }
+
+  onGlobalFilter(event: Event) {
+
+
+    const value = (event.target as HTMLInputElement)?.value || '';
+    console.log(value);
+
+    this.dt1.filterGlobal(value, 'contains');
+  }
+
 
   BrandData: any
 
@@ -52,19 +53,19 @@ export class BrandwiseDashboardComponent {
     this.innerdashboardservice.getBrandMaster().subscribe((res: any) => {
       this.BrandData = res;
       this.FetchBrandWiseDashboardData()
-     
+
       console.log(this.BrandData);
     });
   }
 
-  DashboardBrandWise:any
+  DashboardBrandWise: any
 
-  FetchBrandWiseDashboardData(){
+  FetchBrandWiseDashboardData() {
     this.globalBlockUiService.startLoading()
-    this.innerdashboardservice.getBrandWiseDashboardData().subscribe((res:any)=>{
+    this.innerdashboardservice.getBrandWiseDashboardData().subscribe((res: any) => {
       this.DashboardBrandWise = res.data
       this.VisiTableData = true;
-       this.globalBlockUiService.stopLoading();
+      this.globalBlockUiService.stopLoading();
     })
   }
 
@@ -74,7 +75,7 @@ export class BrandwiseDashboardComponent {
       queryParams: {
         brandid: rowData.BrandId,
         dealerid: rowData.DealerId,
-               
+
       }
     });
   }

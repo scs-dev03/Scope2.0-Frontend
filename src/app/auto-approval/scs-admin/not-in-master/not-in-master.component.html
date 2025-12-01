@@ -146,10 +146,8 @@
           'HSNID',
           'Name',
           'Addedby',
-          
           'Remarks',
-          'SCSRemarks',
-          
+          'SCSRemarks'
         ]"
       >
         <ng-template let-item pTemplate="paginatordropdownitem">
@@ -186,56 +184,148 @@
             <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               S.No
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="Brand"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Brand
+              <p-sortIcon field="Brand" />
+              <p-columnFilter type="text" field="Brand" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="Dealer"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Dealer
+              <p-sortIcon field="Dealer" />
+              <p-columnFilter type="text" field="Dealer" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="Location"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Location
+              <p-sortIcon field="Location" />
+              <p-columnFilter type="text" field="Location" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="PartNumber"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Part Number
+              <p-sortIcon field="PartNumber" />
+              <p-columnFilter type="text" field="PartNumber" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="LatestPartNumber"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Latest Part Number
+              <p-sortIcon field="LatestPartNumber" />
+              <p-columnFilter
+                type="text"
+                field="LatestPartNumber"
+                display="menu"
+              />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="PartDesc"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Part Description
+              <p-sortIcon field="PartDesc" />
+              <p-columnFilter type="text" field="PartDesc" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="MOQ"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               MOQ
+              <p-sortIcon field="MOQ" />
+              <p-columnFilter type="text" field="MOQ" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="MRP"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               MRP
+              <p-sortIcon field="MRP" />
+              <p-columnFilter type="text" field="MRP" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="HSNCode"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               HSNID
+              <p-sortIcon field="HSNCode" />
+              <p-columnFilter type="text" field="HSNCode" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="PartType"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Part Type ID
+              <p-sortIcon field="PartType" />
+              <p-columnFilter type="text" field="PartType" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="GSTPer"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               GST Percentage
+              <p-sortIcon field="GSTPer" />
+              <p-columnFilter type="text" field="GSTPer" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="QtyPerVehicle"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Qty Per Vechile
+              <p-sortIcon field="QtyPerVehicle" />
+              <p-columnFilter
+                type="text"
+                field="QtyPerVehicle"
+                display="menu"
+              />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="Model"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Model
+              <p-sortIcon field="Model" />
+              <p-columnFilter type="text" field="Model" display="menu" />
             </th>
             <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               View Attachment
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="Remarks"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               User Remark
+              <p-sortIcon field="Remarks" />
+              <p-columnFilter type="text" field="Remarks" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="Name"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Submitted By
+              <p-sortIcon field="Name" />
+              <p-columnFilter type="text" field="Name" display="menu" />
             </th>
-            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            <th
+              pSortableColumn="DaetailsAddedon"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
               Submitted On
+              <p-sortIcon field="DaetailsAddedon" />
+              <p-columnFilter
+                type="text"
+                field="DaetailsAddedon"
+                display="menu"
+              />
             </th>
             <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               SCS Remark
@@ -298,7 +388,7 @@
                 *ngIf="rowData.Image"
                 pButton
                 type="button"
-                icon="pi pi-download"
+                icon="pi pi-eye"
                 class="p-button-text p-button-sm"
                 (click)="downloadImage(rowData)"
               ></button>
@@ -311,13 +401,16 @@
               {{ rowData.Name }}
             </td>
             <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
-              {{ rowData.DaetailsAddedon | date : "dd-MM-yyyy HH:mm:ss a" : "UTC"  }}
+              {{
+                rowData.DaetailsAddedon | date : "dd-MM-yyyy HH:mm:ss a" : "UTC"
+              }}
             </td>
             <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
               <input
                 type="text"
                 placeholder="Remarks"
                 pInputText
+                (keypress)="allowOnlyLettersAndNumber($event)"
                 class="text-xs h-8 w-44"
                 [(ngModel)]="rowData.SCSRemarks"
               />

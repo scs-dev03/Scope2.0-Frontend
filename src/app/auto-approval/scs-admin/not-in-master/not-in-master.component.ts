@@ -157,48 +157,48 @@ export class NotInMasterComponent {
 
   OnClickViewData() {
 
-  let fromDate: string | null = null;
-  let toDate: string | null = null;
+    let fromDate: string | null = null;
+    let toDate: string | null = null;
 
-  const period = this.NotinMasterInputData.value.from; // selected period
+    const period = this.NotinMasterInputData.value.from; // selected period
 
-  const today = new Date();
+    const today = new Date();
 
-  if (period === 'yesterday') {
-    const y = new Date(today);
-    y.setDate(today.getDate() - 1);
+    if (period === 'yesterday') {
+      const y = new Date(today);
+      y.setDate(today.getDate() - 1);
 
-    fromDate = y.toISOString().split('T')[0];
-    toDate = y.toISOString().split('T')[0];
+      fromDate = y.toISOString().split('T')[0];
+      toDate = y.toISOString().split('T')[0];
 
-  } else if (period === 'lastWeek') {
-    const lastWeekStart = new Date(today);
-    lastWeekStart.setDate(today.getDate() - 7);
+    } else if (period === 'lastWeek') {
+      const lastWeekStart = new Date(today);
+      lastWeekStart.setDate(today.getDate() - 7);
 
-    fromDate = lastWeekStart.toISOString().split('T')[0];
-    toDate = today.toISOString().split('T')[0];
+      fromDate = lastWeekStart.toISOString().split('T')[0];
+      toDate = today.toISOString().split('T')[0];
 
-  } else if (period === 'lastMonth') {
-    const lastMonthStart = new Date(today);
-    lastMonthStart.setMonth(today.getMonth() - 1);
+    } else if (period === 'lastMonth') {
+      const lastMonthStart = new Date(today);
+      lastMonthStart.setMonth(today.getMonth() - 1);
 
-    fromDate = lastMonthStart.toISOString().split('T')[0];
-    toDate = today.toISOString().split('T')[0];
+      fromDate = lastMonthStart.toISOString().split('T')[0];
+      toDate = today.toISOString().split('T')[0];
+    }
+
+    // Call API
+    this.FetchNotInMasterData(
+      this.NotinMasterInputData.value.brand,
+      this.NotinMasterInputData.value.dealer,
+      this.NotinMasterInputData.value.location,
+      null,
+      null,
+      null,
+      fromDate,
+      toDate,
+      1
+    );
   }
-
-  // Call API
-  this.FetchNotInMasterData(
-    this.NotinMasterInputData.value.brand,
-    this.NotinMasterInputData.value.dealer,
-    this.NotinMasterInputData.value.location,
-    null,
-    null,
-    null,
-    fromDate,
-    toDate,
-    1
-  );
-}
 
 
   NotInMasterData: any
@@ -241,10 +241,23 @@ export class NotInMasterComponent {
   }
 
   downloadImage(rowData: any) {
-  const url = rowData.Image;
+    const url = rowData.Image;
 
-  if (url) {
-    window.open(url, '_blank');
+    if (url) {
+      window.open(url, '_blank');
+    }
   }
-}
+
+
+   allowOnlyLettersAndNumber(event: KeyboardEvent) {
+    const char = event.key;
+    const pattern = /^[a-zA-Z0-9\s]*$/;
+    if (!pattern.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+
+
+
 }

@@ -2,23 +2,18 @@
   <!-- <h1 class="text-2xl font-serif ml-2">Rule Creation</h1> -->
   <div class="flex flex-wrap gap-4 p-2">
     <div class="flex items-center">
-      <p-checkbox
-        [(ngModel)]="locationSpecific"
-        [binary]="true"
-        (ngModelChange)="onlocationSpecificEnable($event)"
-      ></p-checkbox>
+      <p-checkbox [(ngModel)]="locationSpecific" [binary]="true"></p-checkbox>
       <label class="ml-2 mt-[10px] text-sm">Location Specific</label>
     </div>
     <div class="flex items-center">
-      <p-checkbox [(ngModel)]="SaveAsTemplate" [binary]="true"></p-checkbox>
-      <label class="ml-2 mt-[10px] text-sm">Save As Template</label>
+      <p-checkbox [(ngModel)]="GeneralRule" [binary]="true"></p-checkbox>
+      <label class="ml-2 mt-[10px] text-sm">General Rule</label>
     </div>
     <br />
   </div>
 
   <div class="p-2 gap-3 flex" [formGroup]="LocationSpecificName">
     <p-select
-      [filter]="true"
       [filter]="true"
       formControlName="brand"
       [options]="Brand"
@@ -31,7 +26,6 @@
     />
     <p-select
       [filter]="true"
-      [filter]="true"
       formControlName="dealer"
       [options]="Dealer"
       optionLabel="dealer"
@@ -43,7 +37,6 @@
     />
     <p-select
       [filter]="true"
-      [filter]="true"
       formControlName="location"
       optionLabel="location"
       optionValue="locationid"
@@ -53,6 +46,7 @@
       class="w-44"
     />
   </div>
+
   <br />
 
   <div class="flex flex-wrap w-full p-2 gap-5" [formGroup]="RuleName">
@@ -135,8 +129,7 @@
       <div
         class="text-red-500 text-xs mt-1"
         *ngIf="
-          RuleName.get('RuleType')?.touched &&
-          RuleName.get('RuleType')?.invalid
+          RuleName.get('RuleType')?.touched && RuleName.get('RuleType')?.invalid
         "
       >
         <span *ngIf="RuleName.get('RuleType')?.errors?.['required']"
@@ -213,7 +206,6 @@
           </p-floatlabel>
 
           <input
-            
             formControlName="enteredValue"
             placeholder="Enter Value (Optional)"
             class="p-inputtext !text-sm h-8 w-44"
@@ -248,6 +240,9 @@
   </div>
   <br />
 </div>
+
+
+
 <p-dialog
   header="Rule Output Condition"
   [modal]="true"
@@ -258,90 +253,86 @@
     >If Success</span
   >
   <div [formGroup]="trueFalseInput">
-
     <div class="flex items-center gap-4 mb-4">
-    <label for="success" class="text-sm w-24">Remark for Success</label>
-    <p-select
-      [filter]="true"
-      [filter]="true"
-      [options]="ActionList"
-      optionLabel="Condition"
-      optionValue="Id"
-      formControlName="trueAction"
-      placeholder="Select a Action "
-      class="w-full h-8 md:w-48"
-    />
+      <label for="success" class="text-sm w-24">Remark for Success</label>
+      <p-select
+        [filter]="true"
+        [filter]="true"
+        [options]="ActionList"
+        optionLabel="Condition"
+        optionValue="Id"
+        formControlName="trueAction"
+        placeholder="Select a Action "
+        class="w-full h-8 md:w-48"
+      />
 
-    <input
-      pInputText
-      id="success"
-      formControlName="trueRemark"
-      pSize="small"
-      [(ngModel)]="trueRemarktext"
-      class="flex-auto"
-      autocomplete="off"
-    />
+      <input
+        pInputText
+        id="success"
+        formControlName="trueRemark"
+        pSize="small"
+        [(ngModel)]="trueRemarktext"
+        class="flex-auto"
+        autocomplete="off"
+      />
 
-    <p-select
-      [filter]="true"
-      [filter]="true"
-      optionLabel="label"
-      formControlName="trueParameter"
-      optionValue="value"
-      placeholder="Parameters"
-      class="w-full h-8 md:w-48"
-    />
+      <p-select
+        [filter]="true"
+        [filter]="true"
+        optionLabel="label"
+        formControlName="trueParameter"
+        optionValue="value"
+        placeholder="Parameters"
+        class="w-full h-8 md:w-48"
+      />
+    </div>
+    <span class="p-text-secondary block mb-8 text-lg font-semibold"
+      >If Failure</span
+    >
+
+    <div class="flex items-center gap-4 mb-8">
+      <label for="faileur" class="text-sm w-24">Remark for Failure</label>
+      <p-select
+        [filter]="true"
+        [filter]="true"
+        [options]="ActionList"
+        optionLabel="Condition"
+        optionValue="Id"
+        appendTo="body"
+        formControlName="falseAction"
+        placeholder="Select a Action "
+        class="w-full h-8 md:w-48"
+      />
+      <input
+        pInputText
+        pSize="small"
+        id="faileur"
+        formControlName="falseRemark"
+        class="flex-auto"
+        autocomplete="off"
+      />
+
+      <p-select
+        [filter]="true"
+        [filter]="true"
+        optionLabel="label"
+        formControlName="falseParameter"
+        optionValue="value"
+        placeholder="Parameters"
+        class="w-full h-8 md:w-48"
+      />
+    </div>
+    <div class="flex justify-end gap-2">
+      <p-button
+        label="Cancel"
+        class="!h-8"
+        size="small"
+        severity="secondary"
+        (click)="visibleTrueFalse = false"
+      />
+      <p-button label="Save" size="small" (click)="OnClickSaveRule()" />
+    </div>
   </div>
-  <span class="p-text-secondary block mb-8 text-lg font-semibold"
-    >If Failure</span
-  >
-
-  <div class="flex items-center gap-4 mb-8">
-    <label for="faileur" class="text-sm w-24">Remark for Failure</label>
-    <p-select
-      [filter]="true"
-      [filter]="true"
-      [options]="ActionList"
-      optionLabel="Condition"
-      optionValue="Id"
-      appendTo="body"
-      formControlName="falseAction"
-      placeholder="Select a Action "
-      class="w-full h-8 md:w-48"
-    />
-    <input
-      pInputText
-      pSize="small"
-      id="faileur"
-      formControlName="falseRemark"
-      class="flex-auto"
-      autocomplete="off"
-    />
-
-    <p-select
-      [filter]="true"
-      [filter]="true"
-      optionLabel="label"
-      formControlName="falseParameter"
-      optionValue="value"
-      placeholder="Parameters"
-      class="w-full h-8 md:w-48"
-    />
-  </div>
-  <div class="flex justify-end gap-2">
-    <p-button
-      label="Cancel"
-      class="!h-8"
-      size="small"
-      severity="secondary"
-      (click)="visibleTrueFalse = false"
-    />
-    <p-button label="Save" size="small" (click)="OnClickSaveRule()" />
-  </div>
-
-
-  </div>
-  
 </p-dialog>
 
 <p-dialog
