@@ -28,9 +28,9 @@ export class AdminVonComponent {
       this.locationid = params['locationid'];
 
       if (this.brandid && this.dealerid && this.locationid) {
-        localStorage.setItem('brandid', this.brandid);
-        localStorage.setItem('dealerid', this.dealerid);
-        localStorage.setItem('locationid', this.locationid);
+        sessionStorage.setItem('brandid', this.brandid);
+        sessionStorage.setItem('dealerid', this.dealerid);
+        sessionStorage.setItem('locationid', this.locationid);
 
         this.fetchDealerData(this.brandid);
         this.fetchlocation(this.dealerid);
@@ -53,7 +53,7 @@ export class AdminVonComponent {
     this.fetchNature();
     this.fetchPartType();
     this.fetchSeasonaData();
-    //this.adminvonservice.setlocalStorage();
+    //this.adminvonservice.setsessionStorage();
 
     this.maxData = [
       { name: 'Planned', code: '1' },
@@ -140,19 +140,19 @@ export class AdminVonComponent {
   onclickDealer() {
     const dealerId = this.adminFilterData.value.dealer ?? ''; // Default to an empty string if null/undefined
     this.fetchlocation(dealerId);
-    localStorage.setItem('dealerid', dealerId);
+    sessionStorage.setItem('dealerid', dealerId);
   }
   // fetching brands
   onClickBrand() {
     const brandId = String(this.adminFilterData.value.brand ?? ''); // Default to an empty string if null/undefined
     this.fetchDealerData(brandId);
-    localStorage.setItem('brandid', brandId);
+    sessionStorage.setItem('brandid', brandId);
     this.fetchModel(brandId);
   }
   // setting location for local storage
   onClickLocation() {
     const locationId = this.adminFilterData.value.location ?? ''; // Default to an empty string if null/undefined
-    localStorage.setItem('locationid', locationId);
+    sessionStorage.setItem('locationid', locationId);
   }
   // Reset Filter values
   onClickResetField() {
@@ -287,15 +287,15 @@ export class AdminVonComponent {
   //  getting admin view logs for row wise
   onClickViewLog(rowData: any) {
     this.fetchAdminViewlog(
-      localStorage.getItem('brandid'),
-      localStorage.getItem('dealerid'),
-      localStorage.getItem('locationid'),
+      sessionStorage.getItem('brandid'),
+      sessionStorage.getItem('dealerid'),
+      sessionStorage.getItem('locationid'),
       rowData.partid
     );
   }
   // getting part family
   onclickPartNumber(partnumber: any) {
-    this.fetchFamilyPart(partnumber, localStorage.getItem('brandid'));
+    this.fetchFamilyPart(partnumber, sessionStorage.getItem('brandid'));
   }
 
   onClickShowSales(rowData: any) {
@@ -323,7 +323,7 @@ export class AdminVonComponent {
     return [...data, totalObject];
   }
 
-  userid: any = localStorage.getItem('userid')
+  userid: any = sessionStorage.getItem('userid')
   submitAdminRow(rowData: any) {
     this.globalBlockUiService.startLoading();
     const validCustomRemarkRegex = /^(?![\s,@-]*$)(?!-?\d+$)[a-zA-Z0-9\s,@-]*$/;
@@ -361,9 +361,9 @@ export class AdminVonComponent {
 
         this.adminvonservice
           .submitAdminlog({
-            brandid: localStorage.getItem('brandid'),
-            dealerid: localStorage.getItem('dealerid'),
-            locationid: localStorage.getItem('locationid'),
+            brandid: sessionStorage.getItem('brandid'),
+            dealerid: sessionStorage.getItem('dealerid'),
+            locationid: sessionStorage.getItem('locationid'),
             feedbackid: rowData.feedbackid,
             AdminRemark: rowData.selectedRemark,
             customRem: rowData.customRemark,
@@ -389,9 +389,9 @@ export class AdminVonComponent {
       } else {
         this.adminvonservice
           .submitAdminlog({
-            brandid: localStorage.getItem('brandid'),
-            dealerid: localStorage.getItem('dealerid'),
-            locationid: localStorage.getItem('locationid'),
+            brandid: sessionStorage.getItem('brandid'),
+            dealerid: sessionStorage.getItem('dealerid'),
+            locationid: sessionStorage.getItem('locationid'),
             feedbackid: rowData.feedbackid,
             AdminRemark: rowData.selectedRemark,
             customeRem: null,
@@ -882,7 +882,7 @@ export class AdminVonComponent {
             this.onClickCloseSales();
             this.fetchAdminRemark(
               this.adminFilterData.value.brand,
-              localStorage.getItem('usertype')
+              sessionStorage.getItem('usertype')
             );
             this.globalBlockUiService.stopLoading();
             this.onClickCloseSales();

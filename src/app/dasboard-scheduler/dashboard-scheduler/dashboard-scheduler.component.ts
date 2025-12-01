@@ -42,7 +42,7 @@ export class DashboardSchedulerComponent {
   })
   ngOnInit(): void {
 
-    //localStorage.setItem("userid",'138032')
+    //sessionStorage.setItem("userid",'138032')
      this.sharedService.updateModuleName('Dashboard Scheduler')
     this.fetchBdm();
     
@@ -52,13 +52,13 @@ export class DashboardSchedulerComponent {
     this.dashboardInputData.controls['date'].disable();
     this.dashboardInputData.controls['time'].disable();
     this.dashboardInputData.patchValue({
-    bdmID:  localStorage.getItem('userid')
+    bdmID:  sessionStorage.getItem('userid')
     });
     this.fetchBrandData(this.dashboardInputData.value.bdmID);
 
     this.onClickBDM()
 
-    //this.getDashboardService.setlocalStorage();
+    //this.getDashboardService.setsessionStorage();
     this.fetchDashboardSchedule(this.dashboardInputData.value.bdmID);
   }
 
@@ -183,7 +183,7 @@ export class DashboardSchedulerComponent {
       this.updateDashoardSchedule(
         this.req_id,
         this.formatedDate,
-        // localStorage.getItem('userid')
+        // sessionStorage.getItem('userid')
         this.dashboardInputData.value.bdmID
       );
     }

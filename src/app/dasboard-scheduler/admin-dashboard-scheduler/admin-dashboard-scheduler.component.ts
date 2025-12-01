@@ -43,7 +43,7 @@ export class AdminDashboardSchedulerComponent {
   })
   ngOnInit(): void {
 
-    //localStorage.setItem("userid",'138032')
+    //sessionStorage.setItem("userid",'138032')
      this.sharedService.updateModuleName('Dashboard Scheduler')
     //this.fetchBdm();
     
@@ -53,7 +53,7 @@ export class AdminDashboardSchedulerComponent {
     this.dashboardInputData.controls['date'].disable();
     this.dashboardInputData.controls['time'].disable();
     this.dashboardInputData.patchValue({
-    bdmID:  localStorage.getItem('userid')
+    bdmID:  sessionStorage.getItem('userid')
     });
     this.fetchBrandData();
 
@@ -62,7 +62,7 @@ export class AdminDashboardSchedulerComponent {
     
     this.onClickBDM()
 
-    //this.getDashboardService.setlocalStorage();
+    //this.getDashboardService.setsessionStorage();
     this.fetchDashboardSchedule(this.dashboardInputData.value.bdmID);
   }
 
@@ -188,7 +188,7 @@ export class AdminDashboardSchedulerComponent {
       this.updateDashoardSchedule(
         this.req_id,
         this.formatedDate,
-        // localStorage.getItem('userid')
+        // sessionStorage.getItem('userid')
         this.dashboardInputData.value.bdmID
       );
     }

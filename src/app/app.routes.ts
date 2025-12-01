@@ -8,8 +8,8 @@ export const routes: Routes = [
     {
         path:'part-ledger',
         loadChildren:()=> import('../app/part-ledger/part-ledger.module').then(m=>m.PartLedgerModule),
-          //canLoad:[authGuard],
-          //canActivate:[authGuard]
+        //   canLoad:[authGuard],
+        //   canActivate:[authGuard]
     },
     {
         path:'mapping',
@@ -21,8 +21,8 @@ export const routes: Routes = [
     {
         path:'auto',
         loadChildren:()=> import('../app/auto-approval/auto-approval.module').then(m=>m.AutoApprovalModule),
-          canLoad:[authGuard],
-          canActivate:[authGuard]
+        //   canLoad:[authGuard],
+        //   canActivate:[authGuard]
     },
 
     {
@@ -65,8 +65,8 @@ export const routes: Routes = [
     {
         path:'user',
         loadChildren:()=>import('../app/user-management/user-management.module').then(m=>m.UserManagementModule),
-          canLoad:[authGuard],
-          canActivate:[authGuard]
+        //   canLoad:[authGuard],
+        //   canActivate:[authGuard]
     },
     {
         path:'role',
@@ -87,3 +87,5 @@ export const routes: Routes = [
         component:PageNotFoundComponent
     }
 ];
+
+

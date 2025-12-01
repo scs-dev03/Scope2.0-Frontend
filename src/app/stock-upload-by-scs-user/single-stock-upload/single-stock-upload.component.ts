@@ -85,7 +85,7 @@ export class SingleStockUploadComponent {
     this.visibleSidebar=visible;
   });
 
-  this.userId=localStorage.getItem('userid');
+  this.userId=sessionStorage.getItem('userid');
 
   this.userService.allUserData$.subscribe((users:any)=>{
     this.users=users;
@@ -171,7 +171,7 @@ export class SingleStockUploadComponent {
        }
 
      let locationId=this.slForm.value.location;
-     this.userId=localStorage.getItem('userid');
+     this.userId=sessionStorage.getItem('userid');
       
        let formData = new FormData();
        formData.append('excelFile', this.file, this.fileName);
@@ -379,7 +379,7 @@ export class SingleStockUploadComponent {
    getLocations(){
        
     // this.globalBlockUiService.startLoading();
-     this.utilitiesService.getLocations({dealer_id:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
+     this.utilitiesService.getLocations({dealer_id:sessionStorage.getItem('dealerid')}).subscribe((res:any)=>{
       if(res?.data?.error){
         // console.log("res ",res.data.error)
         this.globalBlockUiService.stopLoading();

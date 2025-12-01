@@ -32,7 +32,7 @@ export class AuthService {
 
   // Refresh access token using the refresh token
    refreshAccessToken(): Observable<any> {
-    const refreshToken = localStorage.getItem(this.refreshTokenKey);
+    const refreshToken = sessionStorage.getItem(this.refreshTokenKey);
 
     if (!refreshToken) {
       // this.messageService.add({severity:'warn',summary:'Kindly re-login Again !!!',life:20000000})
@@ -54,23 +54,23 @@ export class AuthService {
   }
 
 
-  // Get the access token from localStorage
+  // Get the access token from sessionStorage
   getAccessToken(): string | null {
-    return localStorage.getItem(this.accessTokenKey);
+    return sessionStorage.getItem(this.accessTokenKey);
   }
 
 
   // Logout the user by clearing the tokens
   logout(): void {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userId')
-    localStorage.removeItem('designationId')
-    localStorage.removeItem('roleId')
-    localStorage.removeItem('status')
-    localStorage.removeItem('name')
-    localStorage.setItem('isLoggedIn','false')
+    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('userId')
+    sessionStorage.removeItem('designationId')
+    sessionStorage.removeItem('roleId')
+    sessionStorage.removeItem('status')
+    sessionStorage.removeItem('name')
+    sessionStorage.setItem('isLoggedIn','false')
     this.cookieService.deleteAll()
-    // localStorage.removeItem(this.refreshTokenKey);
+    // sessionStorage.removeItem(this.refreshTokenKey);
     this.loggedIn.next(false);
     this.router.navigate(['/login'])
   }
@@ -85,7 +85,7 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     // You can check for a token in local storage or session
-    return !!localStorage.getItem('usertoken'); 
+    return !!sessionStorage.getItem('usertoken'); 
   }
 
   twoFactorAuthentication(data:any):Observable<any>{

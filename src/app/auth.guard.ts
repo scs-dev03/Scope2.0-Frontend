@@ -11,7 +11,7 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   // 1) Not authenticated → hard redirect (external)
   if (!auth.isAuthenticated()) {
-    localStorage.clear();
+    sessionStorage.clear();
     sessionStorage.clear();
     window.location.href = environment.frontendUserUrl; // external login/home
     return false;

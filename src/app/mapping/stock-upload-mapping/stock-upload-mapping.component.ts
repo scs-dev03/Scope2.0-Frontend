@@ -163,7 +163,7 @@ export class StockUploadMappingComponent {
   ngOnInit() {
     // Disable the fields after initialization
      this.sharedService.updateModuleName('Stock Upload Mapping')
-    this.userId=localStorage.getItem('userid');
+    this.userId=sessionStorage.getItem('userid');
     this.editOlderDaysStockForm.get('partNumber')?.disable();
     this.editOlderDaysStockForm.get('stockQty')?.disable();
     this.editOlderDaysStockForm.get('location')?.disable();

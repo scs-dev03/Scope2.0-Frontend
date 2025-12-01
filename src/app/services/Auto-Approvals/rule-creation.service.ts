@@ -42,6 +42,14 @@ export class RuleCreationService {
   CreateRule(data:any):Observable<any>{
     return this.http.post(`${this.apiurl}add-rule`,data)
   }
+
+  CreateRuleTemplate(data:any): Observable<any>{
+    return this.http.post(`${this.apiurl}add-template`,data)
+  }
+
+  fetchRuleAction():Observable<any>{
+    return this.http.get(`${this.apiurl}view-ruleoutput`)
+  }
   
 
 

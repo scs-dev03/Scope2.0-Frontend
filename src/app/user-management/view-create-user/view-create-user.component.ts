@@ -57,7 +57,7 @@ export class ViewCreateUserComponent {
     locations:any=[];
     showBDL:boolean=false;
     selectedDesignationId:any;
-     userType:any=localStorage.getItem('usertype');
+     userType:any=sessionStorage.getItem('usertype');
     userPermissions:any=[];
     allUsers:any=[];
     @ViewChild('dt') dt: any;
@@ -185,8 +185,8 @@ export class ViewCreateUserComponent {
       
         this.getRoles();
     
-      this.userId=localStorage.getItem('userid');
-      this.token=localStorage.getItem('usertoken');
+      this.userId=sessionStorage.getItem('userid');
+      this.token=sessionStorage.getItem('usertoken');
       this.authService.checkEmail({email:this.editUserForm.value.email}).subscribe(
         (response) => {
           this.emailArray=response.data;
@@ -603,7 +603,7 @@ filteredUsers.forEach((item: any) => {
     
       viewUser(event?:any){
         
-        //  localStorage.setItem('usertype','d');
+        //  sessionStorage.setItem('usertype','d');
        // console.log('user Type ',this.userType)
         if(this.userType=='D'){
           this.users=[];

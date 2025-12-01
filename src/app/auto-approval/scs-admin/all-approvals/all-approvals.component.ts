@@ -28,6 +28,7 @@ export class AllApprovalsComponent {
       dealer: [null],
       location: [null],
       user: [null],
+      status: [null],
       fromDate: [null],
       toDate: [null],
       orderType: [[]],   // multiselect = array

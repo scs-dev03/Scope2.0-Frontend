@@ -18,6 +18,9 @@ const routes: Routes = [{
 },{
   path: 'va',
   component: VehicleApprovalsComponent
+},{
+  path: 'all',
+  component: AllApprovalsComponent
 }];
 
 @NgModule({

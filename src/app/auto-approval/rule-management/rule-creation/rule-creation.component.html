@@ -2,61 +2,150 @@
   <!-- <h1 class="text-2xl font-serif ml-2">Rule Creation</h1> -->
   <div class="flex flex-wrap gap-4 p-2">
     <div class="flex items-center">
-      <p-radiobutton
-        name="ruleType"
-        value="numeric"
-        inputId="numericRule"
-        [(ngModel)]="selectedRuleType"
-        (onClick)="onRuleTypeChange()"
-      />
-      <label for="numericRule" class="ml-2 mt-[10px] text-sm"
-        >Numeric Rule</label
-      >
-    </div>
-
-    <div class="flex items-center">
-      <p-radiobutton
-        name="ruleType"
-        value="alphanumeric"
-        inputId="alphaNumericRule"
-        [(ngModel)]="selectedRuleType"
-        (onClick)="onRuleTypeChange()"
-      />
-      <label for="alphaNumericRule" class="ml-2 mt-[10px] text-sm"
-        >Alpha Numeric Rule</label
-      >
-    </div>
-
-    <div class="flex items-center">
       <p-checkbox
-    [(ngModel)]="locationSpecific"
-    [binary]="true"
-    (ngModelChange)="onlocationSpecificEnable($event)"
-  ></p-checkbox>
-  <label class="ml-2 mt-[10px] text-sm">Location Specific</label>
+        [(ngModel)]="locationSpecific"
+        [binary]="true"
+        (ngModelChange)="onlocationSpecificEnable($event)"
+      ></p-checkbox>
+      <label class="ml-2 mt-[10px] text-sm">Location Specific</label>
     </div>
-    <br>
+    <div class="flex items-center">
+      <p-checkbox [(ngModel)]="SaveAsTemplate" [binary]="true"></p-checkbox>
+      <label class="ml-2 mt-[10px] text-sm">Save As Template</label>
+    </div>
+    <br />
   </div>
 
   <div class="p-2 gap-3 flex" [formGroup]="LocationSpecificName">
-    <p-select [filter]="true" [filter]="true" formControlName = "brand"  optionLabel="name" size="small" placeholder="Select a Brand" class="w-44 " />
-    <p-select [filter]="true" [filter]="true" formControlName = "dealer"  optionLabel="name" size="small" placeholder="Select a Dealer" class="w-44 " />
-    <p-select [filter]="true" [filter]="true" formControlName = "location"  optionLabel="name" size="small" placeholder="Select a Location" class="w-44 " />
+    <p-select
+      [filter]="true"
+      [filter]="true"
+      formControlName="brand"
+      [options]="Brand"
+      optionLabel="vcbrand"
+      optionValue="bigid"
+      size="small"
+      (onChange)="OnClickBrand()"
+      placeholder="Select a Brand"
+      class="w-44"
+    />
+    <p-select
+      [filter]="true"
+      [filter]="true"
+      formControlName="dealer"
+      [options]="Dealer"
+      optionLabel="dealer"
+      optionValue="dealerid"
+      size="small"
+      (onChange)="OnClickDealer()"
+      placeholder="Select a Dealer"
+      class="w-44"
+    />
+    <p-select
+      [filter]="true"
+      [filter]="true"
+      formControlName="location"
+      optionLabel="location"
+      optionValue="locationid"
+      [options]="Location"
+      size="small"
+      placeholder="Select a Location"
+      class="w-44"
+    />
   </div>
-  <br>
+  <br />
 
+  <div class="flex flex-wrap w-full p-2 gap-5" [formGroup]="RuleName">
+    <!-- Rule Name -->
+    <div class="flex flex-col w-auto sm:w-1/2">
+      <p-floatlabel variant="on">
+        <input
+          type="text"
+          id="rulename"
+          formControlName="NameofRule"
+          pSize="small"
+          pInputText
+        />
+        <label for="rulename" class="text-xs">Name of Rule</label>
+      </p-floatlabel>
 
-  <div class="flex flex-wrap w-full p-2 gap-5">
-    <p-floatlabel variant="on">
-      <input type="text" id="rulename" pSize="small" pInputText />
-      <label for="rulename" class="text-xs">Name of Rule Name</label>
-    </p-floatlabel>
+      <!-- Validation messages -->
+      <div
+        class="text-red-500 text-xs mt-1"
+        *ngIf="
+          RuleName.get('NameofRule')?.touched &&
+          RuleName.get('NameofRule')?.invalid
+        "
+      >
+        <span *ngIf="RuleName.get('NameofRule')?.errors?.['required']"
+          >Rule name is required.</span
+        >
+        <span *ngIf="RuleName.get('NameofRule')?.errors?.['minlength']"
+          >Minimum 3 characters required.</span
+        >
+      </div>
+    </div>
 
-    <p-floatlabel variant="on">
-      <input type="text" id="description" pSize="small" pInputText />
-      <label for="description" class="text-xs">Description</label>
-    </p-floatlabel>
+    <!-- Description -->
+    <div class="flex flex-col w-auto sm:w-1/2">
+      <p-floatlabel variant="on">
+        <input
+          type="text"
+          id="description"
+          formControlName="Description"
+          pSize="small"
+          pInputText
+        />
+        <label for="description" class="text-xs">Description</label>
+      </p-floatlabel>
+
+      <!-- Validation messages -->
+      <div
+        class="text-red-500 text-xs mt-1"
+        *ngIf="
+          RuleName.get('Description')?.touched &&
+          RuleName.get('Description')?.invalid
+        "
+      >
+        <span *ngIf="RuleName.get('Description')?.errors?.['required']"
+          >Description is required.</span
+        >
+        <span *ngIf="RuleName.get('Description')?.errors?.['minlength']"
+          >Minimum 5 characters required.</span
+        >
+      </div>
+    </div>
+    <div class="flex flex-col w-auto sm:w-1/2">
+      <p-floatlabel variant="on">
+        <p-select
+          [filter]="true"
+          [filter]="true"
+          formControlName="RuleType"
+          [options]="ruleType"
+          optionLabel="name"
+          optionValue="value"
+          size="small"
+          (onChange)="OnClickDealer()"
+          class="w-44 h-9"
+        />
+        <label for="description" class="text-xs">Rule Type</label>
+      </p-floatlabel>
+
+      <!-- Validation messages -->
+      <div
+        class="text-red-500 text-xs mt-1"
+        *ngIf="
+          RuleName.get('RuleType')?.touched &&
+          RuleName.get('RuleType')?.invalid
+        "
+      >
+        <span *ngIf="RuleName.get('RuleType')?.errors?.['required']"
+          >Rule Type is required.</span
+        >
+      </div>
+    </div>
   </div>
+
   <br />
 
   <div class="min-w-full !min-h-[100px] flex items-center justify-start px-2">
@@ -70,43 +159,61 @@
           class="min-h-auto flex flex-wrap items-center justify-start p-2 gap-2 border bg-gray-50 border-gray-200"
         >
           <p-floatlabel variant="on">
-            <p-select [filter]="true" [filter]="true"
+            <p-select
+              [filter]="true"
               size="small"
-              [options]="parametersNumeric"
+              [options]="Bucket"
               formControlName="selectedBucket"
-              optionValue="value"
-              optionLabel="label"
+              optionLabel="Bucket"
+              (onChange)="OnClickBucket()"
               styleClass="w-44"
             />
             <label for="parameter" class="text-sm">Bucket</label>
           </p-floatlabel>
 
           <p-floatlabel variant="on">
-            <p-select [filter]="true" [filter]="true"
+            <p-select
+              [filter]="true"
+              [filter]="true"
               size="small"
               [options]="parametersNumeric"
               formControlName="selectedParameter"
-              optionValue="value"
-              optionLabel="label"
+              optionLabel="Parameter"
               styleClass="w-44 text-wrap"
             />
             <label for="parameter" class="text-sm">Parameters</label>
           </p-floatlabel>
 
           <p-floatlabel variant="on">
-            <p-select [filter]="true" [filter]="true"
+            <p-select
+              [filter]="true"
+              [filter]="true"
               size="small"
-              [options]="operators"
+              [options]="OperatorList"
               formControlName="selectedOperator"
-              optionValue="value"
-              optionLabel="label"
+              optionLabel="Operator"
+              optionValue="Operator"
               styleClass="w-44"
             />
             <label for="operator" class="text-sm">List of operators</label>
           </p-floatlabel>
 
+          <p-floatlabel variant="on">
+            <p-select
+              [filter]="true"
+              [filter]="true"
+              size="small"
+              [options]="OperatorList"
+              formControlName="SubParameters"
+              optionLabel="Operator"
+              optionValue="Operator"
+              styleClass="w-44"
+            />
+            <label for="operator" class="text-sm">Sub Parameters</label>
+          </p-floatlabel>
+
           <input
-            type="number"
+            
             formControlName="enteredValue"
             placeholder="Enter Value (Optional)"
             class="p-inputtext !text-sm h-8 w-44"
@@ -137,189 +244,116 @@
         <span class="text-black font-bold">Expression:</span>
         <span class="ml-3 text-red-500">{{ expression }}</span>
       </div>
-
-      <!-- second rule window -->
     </div>
   </div>
   <br />
-  <div class="min-w-full !min-h-[100px] flex items-center p-2">
-    <div
-      class="min-w-full min-h-[150px] flex-col flex-wrap p-2 border-dashed border-2 bg-gray-50 border-gray-200"
-    >
-      <h1>Alpha-Numeric Rule Creation</h1>
-      <br />
-      <form [formGroup]="AlphaNumericRule">
-        <div
-          class="min-h-auto flex flex-wrap items-center justify-start p-2 gap-x-2 gap-y-4 border bg-gray-50 border-gray-200"
-        >
-          <p-floatlabel variant="on">
-            <p-select [filter]="true" [filter]="true"
-              size="small"
-              [options]="parametersNumeric"
-              formControlName="bucket"
-              optionValue="value"
-              optionLabel="label"
-              styleClass="w-44"
-            />
-            <label for="parameter" class="text-sm">Bucket</label>
-          </p-floatlabel>
-
-          <p-floatlabel variant="on">
-            <p-select [filter]="true" [filter]="true"
-              size="small"
-              [options]="parametersAN"
-              formControlName="parameter"
-              optionValue="value"
-              optionLabel="label"
-              styleClass="w-44"
-            />
-            <label for="parameter" class="text-sm">Parameters</label>
-          </p-floatlabel>
-
-          <p-floatlabel variant="on">
-            <p-select [filter]="true" [filter]="true"
-              size="small"
-              [options]="parametersAN"
-              formControlName="keyword"
-              optionValue="value"
-              optionLabel="label"
-              styleClass="w-44"
-            />
-            <label for="operator" class="text-sm">Keyword</label>
-          </p-floatlabel>
-          <p-floatlabel variant="on">
-            <p-select [filter]="true" [filter]="true"
-              size="small"
-              [options]="operators"
-              formControlName="operator"
-              optionValue="value"
-              optionLabel="label"
-              styleClass="w-44"
-            />
-            <label for="operator" class="text-sm">List of operators</label>
-          </p-floatlabel>
-
-          <input
-            type="number"
-            formControlName="enteredValue"
-            placeholder="Enter Value (Optional)"
-            class="p-inputtext w-44 !text-sm h-8"
-          />
-
-          <p-button
-            label="Add to Rule"
-            size="small"
-            (click)="appendToRuleAlphaNumeric()"
-          />
-          <p-button
-            label="Backspace"
-            size="small"
-            (click)="removeLastAlphaChunk()"
-            class="p-button-secondary"
-          />
-          <p-button
-            label="Save"
-            size="small"
-            (click)="showDialogForfinalCondition()"
-            class="p-button-secondary"
-          />
-        </div>
-      </form>
-
-      <br />
-      <div>
-        <div class="flex flex-wrap gap-2 mt-2">
-          Expression:
-          <ng-container *ngFor="let chunk of ruleChunks2">
-            <p-tag
-              *ngIf="chunk.type === 'param'"
-              [value]="chunk.value"
-              severity="info"
-              [rounded]="true"
-            ></p-tag>
-          </ng-container>
-          <span class="ml-1 mt-[2px] text-red-500">
-            {{ expression2 }}
-          </span>
-        </div>
-
-        <!-- Text view for the rest -->
-      </div>
-      <br />
-
-      <p-dialog
-        header="Rule Output Condition"
-        [modal]="true"
-        [(visible)]="visible"
-        [style]="{ width: '40rem', height: '80%' }"
-      >
-      
-        <span class="p-text-secondary block mb-8 text-lg font-semibold"
-          >If Success</span
-        >
-        <div class="flex items-center gap-4 mb-4">
-          <label for="success" class="text-sm w-24">Remark for Success</label>
-          <p-select [filter]="true" [filter]="true"
-            [options]="ActionList"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Select a Action "
-            class="w-full h-8 md:w-48 "
-          />
-
-          <input pInputText id="success" pSize="small" class="flex-auto" autocomplete="off" />
-
-          <p-select [filter]="true" [filter]="true"
-           
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Parameters"
-            class="w-full h-8 md:w-48 "
-          />
-        </div>
-        <span class="p-text-secondary block mb-8 text-lg font-semibold"
-          >If Failure</span
-        >
-
-        <div class="flex items-center gap-4 mb-8">
-          <label for="faileur" class="text-sm w-24">Remark for Failure</label>
-          <p-select [filter]="true" [filter]="true"
-            [options]="ActionList"
-            optionLabel="label"
-            appendTo="body"
-            optionValue="value"
-            placeholder="Select a Action "
-            class="w-full h-8 md:w-48"
-          />
-          <input
-            pInputText
-            pSize="small"
-            id="faileur"
-            class="flex-auto"
-            autocomplete="off"
-          />
-
-           <p-select [filter]="true" [filter]="true"
-            optionLabel="label"
-            
-            optionValue="value"
-            placeholder="Parameters"
-            class="w-full h-8 md:w-48 "
-          />
-        </div>
-        <div class="flex justify-end gap-2">
-          <p-button
-            label="Cancel"
-            class="!h-8"
-            size="small"
-            severity="secondary"
-            (click)="visible = false"
-          />
-          <p-button label="Save" size="small" (click)="visible = false" />
-        </div>
-      </p-dialog>
-
-      <!-- second rule window -->
-    </div>
-  </div>
 </div>
+<p-dialog
+  header="Rule Output Condition"
+  [modal]="true"
+  [(visible)]="visibleTrueFalse"
+  [style]="{ width: '40rem', height: '80%' }"
+>
+  <span class="p-text-secondary block mb-8 text-lg font-semibold"
+    >If Success</span
+  >
+  <div [formGroup]="trueFalseInput">
+
+    <div class="flex items-center gap-4 mb-4">
+    <label for="success" class="text-sm w-24">Remark for Success</label>
+    <p-select
+      [filter]="true"
+      [filter]="true"
+      [options]="ActionList"
+      optionLabel="Condition"
+      optionValue="Id"
+      formControlName="trueAction"
+      placeholder="Select a Action "
+      class="w-full h-8 md:w-48"
+    />
+
+    <input
+      pInputText
+      id="success"
+      formControlName="trueRemark"
+      pSize="small"
+      [(ngModel)]="trueRemarktext"
+      class="flex-auto"
+      autocomplete="off"
+    />
+
+    <p-select
+      [filter]="true"
+      [filter]="true"
+      optionLabel="label"
+      formControlName="trueParameter"
+      optionValue="value"
+      placeholder="Parameters"
+      class="w-full h-8 md:w-48"
+    />
+  </div>
+  <span class="p-text-secondary block mb-8 text-lg font-semibold"
+    >If Failure</span
+  >
+
+  <div class="flex items-center gap-4 mb-8">
+    <label for="faileur" class="text-sm w-24">Remark for Failure</label>
+    <p-select
+      [filter]="true"
+      [filter]="true"
+      [options]="ActionList"
+      optionLabel="Condition"
+      optionValue="Id"
+      appendTo="body"
+      formControlName="falseAction"
+      placeholder="Select a Action "
+      class="w-full h-8 md:w-48"
+    />
+    <input
+      pInputText
+      pSize="small"
+      id="faileur"
+      formControlName="falseRemark"
+      class="flex-auto"
+      autocomplete="off"
+    />
+
+    <p-select
+      [filter]="true"
+      [filter]="true"
+      optionLabel="label"
+      formControlName="falseParameter"
+      optionValue="value"
+      placeholder="Parameters"
+      class="w-full h-8 md:w-48"
+    />
+  </div>
+  <div class="flex justify-end gap-2">
+    <p-button
+      label="Cancel"
+      class="!h-8"
+      size="small"
+      severity="secondary"
+      (click)="visibleTrueFalse = false"
+    />
+    <p-button label="Save" size="small" (click)="OnClickSaveRule()" />
+  </div>
+
+
+  </div>
+  
+</p-dialog>
+
+<p-dialog
+  header="Information"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p>
+    {{ Result }}
+  </p>
+</p-dialog>

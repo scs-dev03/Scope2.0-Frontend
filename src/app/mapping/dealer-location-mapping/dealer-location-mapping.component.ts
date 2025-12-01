@@ -79,7 +79,7 @@ export class DealerLocationMappingComponent {
    this.visibleSidebar=visible;
   })
 
-  this.userId=localStorage.getItem('userid');
+  this.userId=sessionStorage.getItem('userid');
 
   this.userService.allUserData$.subscribe((users:any)=>{
     this.users=users;

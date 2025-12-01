@@ -4,6 +4,7 @@ import { BucketManagementComponent } from './bucket-management/bucket-management
 import { KeywordManagementComponent } from './keyword-management/keyword-management.component';
 import { RuleCreationComponent } from './rule-creation/rule-creation.component';
 import { ViewEditExportComponent } from './view-edit-export/view-edit-export.component';
+import { CalculativeParametersComponent } from './calculative-parameters/calculative-parameters.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,11 @@ const routes: Routes = [
   },{
     path: 'rc',
     component: RuleCreationComponent
+  },
+  {
+    path: 'cp',
+    component: CalculativeParametersComponent
+
   },
   {
     path: 'rcv',

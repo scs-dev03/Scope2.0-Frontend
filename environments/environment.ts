@@ -25,10 +25,10 @@ export const environment = {
 
   //logout
   //frontend Live
-  //  frontendAdminUrl:'http://web13.185.238.new.ocpwebserver.com/UAD_SC_WAC/Login.aspx',
-  //  frontendUserUrl:'http://web13.185.238.new.ocpwebserver.com/UAP_SC/Login.aspx',
-  frontendAdminUrl: 'https://scope.sparecare.in/UAD_SC_WAC/Login.aspx',
-  frontendUserUrl: 'https://scope.sparecare.in/UAP_SC/Login.aspx',
+    frontendAdminUrl:'http://web13.185.238.new.ocpwebserver.com/UAD_SC_WAC/Login.aspx',
+    frontendUserUrl:'http://web13.185.238.new.ocpwebserver.com/UAP_SC/Login.aspx',
+  // frontendAdminUrl: 'https://scope.sparecare.in/UAD_SC_WAC/Login.aspx',
+  // frontendUserUrl: 'https://scope.sparecare.in/UAP_SC/Login.aspx',
 
 
   //profile photo for Live server
@@ -41,24 +41,24 @@ export const environment = {
 
 
   // Scope Diverter Redirect
-  // DiverterAdmin: 'http://web13.185.238.new.ocpwebserver.com/uad_sc_wac/Home.aspx',
-  // DiverterUser: 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Home.aspx',
-  DiverterAdmin: 'https://scope.sparecare.in/UAD_SC_WAC/home.aspx',
-  DiverterUser: 'https://scope.sparecare.in/UAP_SC/home.aspx',
+   DiverterAdmin: 'http://web13.185.238.new.ocpwebserver.com/uad_sc_wac/Home.aspx',
+   DiverterUser: 'http://web13.185.238.new.ocpwebserver.com/uap_sc/Home.aspx',
+  // DiverterAdmin: 'https://scope.sparecare.in/UAD_SC_WAC/home.aspx',
+  // DiverterUser: 'https://scope.sparecare.in/UAP_SC/home.aspx',
 
 
 
   //Ayush Module API Url
   //EnvApiUrlMaster: 'http://web36.185.238.new.ocpwebserver.com/api/v1/',
   //EnvApiUrlMaster: 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/',
-  EnvApiUrlMaster: 'https://scopeapi.sparecare.in/api/v1/',
-  //EnvApiUrlMaster: 'http://web10.185.238.new.ocpwebserver.com/api/v1/',
+  //EnvApiUrlMaster: 'https://scopeapi.sparecare.in/api/v1/',
+  EnvApiUrlMaster: 'http://web10.185.238.new.ocpwebserver.com/api/v1/',
 
-  apiUrl: 'https://scopeapi.sparecare.in/api/',
-  //apiUrl: 'http://web36.185.238.new.ocpwebserver.com/api/',
+  //apiUrl: 'https://scopeapi.sparecare.in/api/',
+  apiUrl: 'http://web10.185.238.new.ocpwebserver.com/api/',
 
 
-
+  //  http://localhost:4200/core/landing?usertoken=0x020000000FAEDBF6C5D79C7B5769B42968A351A95F78DF8C9EA047E231C6F7E7D824B79C&usertype=a
 };
 
 

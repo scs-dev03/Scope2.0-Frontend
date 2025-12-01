@@ -1,44 +1,398 @@
 <div class="min-w-full bg-gray-100">
-  <!-- <h1 class="text-2xl font-serif ml-2">Not In Master</h1> -->
-  <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
-    <div
-      class="min-w-full min-h-[15vh] flex-wrap flex p-2 gap-3 items-center rounded bg-gray-50"
-    >
-      <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">Part Number</label>
-      </p-floatlabel>
-      <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">Description</label>
-      </p-floatlabel>
-      <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">MRP</label>
-      </p-floatlabel>
-      <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">Latest Part</label>
-      </p-floatlabel>
-      <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">Rate / NDP Price</label>
-      </p-floatlabel>
-      <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">Model</label>
-      </p-floatlabel>
-      <p-floatlabel variant="on">
-        <input type="text" id="keyworinput" pSize="small" pInputText />
-        <label for="keyworinput" class="text-xs">MOQ</label>
-      </p-floatlabel>
+  <!-- <h1 class="text-2xl font-serif ml-2">All Approvals</h1> -->
 
-      <p-button
-        size="small"
-        [style]="{ 'background-color': '#008080', color: '#fff' }"
-        icon="pi pi-check"
-        iconPos="right"
-      />
+  <div class="min-w-full !min-h-auto flex items-center justify-start p-2">
+    <div
+      class="min-w-full min-h-[15vh] flex-wrap items-center justify-center flex-col p-2 gap-3 shadow-lg bg-white rounded-md"
+    >
+      <div class="flex flex-wrap gap-4">
+        <form [formGroup]="NotinMasterInputData">
+          <div class="flex flex-wrap gap-4">
+            <!-- Brand -->
+            <p-floatlabel variant="on">
+              <p-select
+                formControlName="brand"
+                [options]="BrandData"
+                (onChange)="OnclickBrands()"
+                optionLabel="vcbrand"
+                optionValue="bigid"
+                size="small"
+                class="w-44 h-8"
+              />
+              <label for="brand" class="text-xs">Select Brand</label>
+            </p-floatlabel>
+
+            <!-- Dealer -->
+            <p-floatlabel variant="on">
+              <p-select
+                formControlName="dealer"
+                optionLabel="dealer"
+                optionValue="dealerid"
+                [options]="DealerData"
+                size="small"
+                class="w-44 h-8"
+                (onChange)="OnclickDealer()"
+              />
+              <label for="dealer" class="text-xs">Select Dealer</label>
+            </p-floatlabel>
+
+            <!-- Location -->
+            <p-floatlabel variant="on">
+              <p-select
+                formControlName="location"
+                optionLabel="location"
+                optionValue="locationid"
+                [options]="LocationData"
+                size="small"
+                class="w-44 h-8"
+              />
+              <label for="location" class="text-xs">Select Location</label>
+            </p-floatlabel>
+
+            <p-floatlabel variant="on">
+              <p-multiselect
+                formControlName="status"
+                optionLabel="name"
+                size="small"
+                class="w-44 h-8"
+              />
+              <label for="user" class="text-xs">Status</label>
+            </p-floatlabel>
+
+            <!-- Pending Since -->
+            <p-floatlabel variant="on">
+              <p-select
+                formControlName="pendingSince"
+                [size]="'small'"
+                [options]="periodOptions"
+                optionLabel="name"
+                optionValue="value"
+                class="!w-44 !h-8"
+              />
+              <label for="pendingSince" class="text-xs">Pending Since</label>
+            </p-floatlabel>
+
+            <!-- Buttons -->
+            <p-button
+              size="small"
+              label="View"
+              [style]="{ 'background-color': '#008080', color: '#fff' }"
+              icon="pi pi-eye"
+              iconPos="left"
+              (onClick)="OnClickViewData()"
+            />
+            <p-button
+              size="small"
+              label="Reset"
+              [style]="{ 'background-color': '#008080', color: '#fff' }"
+              icon="pi pi-filter-slash"
+              iconPos="left"
+              (onClick)="onReset()"
+            />
+          </div>
+        </form>
+
+        <!-- <p-button
+          size="small"
+          icon="pi pi-sliders-h"
+          label="Configure Table"
+          [raised]="true"
+          (onClick)="showDialog()"
+          severity="secondary"
+        /> -->
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+    *ngIf="VisiTableData"
+  >
+    <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+      <p-table
+        #dt1
+        [scrollable]="true"
+        scrollHeight="400px"
+        [value]="NotInMasterData"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 30, 40, 50, 100]"
+        [showGridlines]="true"
+        paginatorDropdownAppendTo="body"
+        class="!w-[90vw]"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [globalFilterFields]="[
+          'id',
+          'Brand',
+          'BrandId',
+          'Dealer',
+          'DealerId',
+          'Location',
+          'LocationId',
+          'PartNumber',
+          'LatestPartNumber',
+          'PartDesc',
+          'MRP',
+          'LandedCost',
+          'MOQ',
+          'PartType',
+          'PartTypeId',
+          'Model',
+          'GSTPer',
+          'QtyPerVehicle',
+          'HSNCode',
+          'HSNID',
+          'Name',
+          'Addedby',
+          
+          'Remarks',
+          'SCSRemarks',
+          
+        ]"
+      >
+        <ng-template let-item pTemplate="paginatordropdownitem">
+          {{ item.value === NotInMasterData?.length ? "All" : item.value }}
+        </ng-template>
+
+        <ng-template pTemplate="caption">
+          <div class="flex items-center">
+            <p-button
+              label="Clear"
+              size="small"
+              [outlined]="true"
+              icon="pi pi-filter-slash"
+              (click)="clear(dt1)"
+            ></p-button>
+
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                size="small"
+                (input)="onGlobalFilter($event)"
+                placeholder="Search keyword"
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              S.No
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Brand
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Dealer
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Location
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Part Number
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Latest Part Number
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Part Description
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              MOQ
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              MRP
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              HSNID
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Part Type ID
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              GST Percentage
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Qty Per Vechile
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Model
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              View Attachment
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              User Remark
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Submitted By
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Submitted On
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              SCS Remark
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Action
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+          <tr
+            class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+          >
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ i + 1 }}
+            </td>
+
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Brand }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Dealer }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Location }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.PartNumber }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.LatestPartNumber }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.PartDesc }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.MOQ }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.MRP }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.HSNCode }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.PartType }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.GSTPer }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.QtyPerVehicle }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Model }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              <button
+                *ngIf="rowData.Image"
+                pButton
+                type="button"
+                icon="pi pi-download"
+                class="p-button-text p-button-sm"
+                (click)="downloadImage(rowData)"
+              ></button>
+            </td>
+
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Remarks }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Name }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.DaetailsAddedon | date : "dd-MM-yyyy HH:mm:ss a" : "UTC"  }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              <input
+                type="text"
+                placeholder="Remarks"
+                pInputText
+                class="text-xs h-8 w-44"
+                [(ngModel)]="rowData.SCSRemarks"
+              />
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              <p-button
+                icon="pi pi-check"
+                [rounded]="true"
+                [text]="true"
+                severity="info"
+                (onClick)="SendAdminAction(rowData)"
+              />
+              <p-button
+                icon="pi pi-times"
+                [rounded]="true"
+                [text]="true"
+                severity="danger"
+                (onClick)="RemoveRow(rowData)"
+              />
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
   </div>
 </div>
+<p-dialog
+  header="⚙️ Configure Table Columns"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '95vw' }"
+  [style]="{ width: '40vw' }"
+  [contentStyle]="{ 'max-height': '60vh', 'overflow-y': 'auto' }"
+  [draggable]="true"
+  [resizable]="false"
+>
+  <!-- Content -->
+  <div class="grid grid-cols-2 gap-3 p-2">
+    <div
+      class="flex items-center bg-gray-50 hover:bg-gray-100 rounded-lg px-3 py-2 transition"
+      *ngFor="let col of tableColumns"
+    >
+      <p-checkbox
+        [inputId]="col.field"
+        name="columns"
+        [value]="col.field"
+        [(ngModel)]="selectedColumns"
+        binary="true"
+      />
+      <label
+        [for]="col.field"
+        class="ml-2 mt-2 text-sm text-gray-700 cursor-pointer select-none"
+      >
+        {{ col.header }}
+      </label>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3 mt-3">
+      <button
+        pButton
+        label="Save as Default"
+        severity="info"
+        class="p-button-outlined p-button-sm"
+        (click)="visible = false"
+      ></button>
+      <button
+        pButton
+        label="Cancel"
+        class="p-button-outlined p-button-sm"
+        (click)="visible = false"
+      ></button>
+      <button pButton label="Apply for Now" class="p-button-sm"></button>
+    </div>
+  </ng-template>
+</p-dialog>

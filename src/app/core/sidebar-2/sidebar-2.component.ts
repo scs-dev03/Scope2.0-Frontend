@@ -18,11 +18,11 @@ export class Sidebar2Component {
   @Output() close = new EventEmitter<void>();
 
   items: MenuItem[] = [];
-  username: any = localStorage.getItem('username');
+  username: any = sessionStorage.getItem('username');
 
   ngOnInit() {
 
-    if(localStorage.getItem('usertype') == 'U'){
+    if(sessionStorage.getItem('usertype') == 'U'){
 
       this.items = [
         {
@@ -47,7 +47,7 @@ export class Sidebar2Component {
         }
       ];
     }
-    else if(localStorage.getItem('usertype') == 'A'){
+    else if(sessionStorage.getItem('usertype') == 'A'){
       this.items = [
         {
           label: 'Home',

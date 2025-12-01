@@ -92,8 +92,8 @@ export class DealerViewCreateUserComponent {
 //   this.editUserForm.get('location')?.enable();
 // }
 //    // console.log(this.currentRoute)
-   localStorage.setItem('dealerid',"20304");
-   localStorage.setItem('userid',"293");
+   sessionStorage.setItem('dealerid',"20304");
+   sessionStorage.setItem('userid',"293");
   }
     
   
@@ -131,7 +131,7 @@ export class DealerViewCreateUserComponent {
     // console.log(this.slForm.value)
     // this.globalBlockUiService.startLoading();
  
-    this.utilitiesService.getLocations({dealer_id:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
+    this.utilitiesService.getLocations({dealer_id:sessionStorage.getItem('dealerid')}).subscribe((res:any)=>{
       this.locations=res.data;
       this.globalBlockUiService.stopLoading();
       // console.log(this.brands)
@@ -159,7 +159,7 @@ export class DealerViewCreateUserComponent {
 // }
       if(this.actionName=='Add User'){
         //this.viewUser();
-          this.utilitiesService.getLocations({dealer_id:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
+          this.utilitiesService.getLocations({dealer_id:sessionStorage.getItem('dealerid')}).subscribe((res:any)=>{
             this.locations=res.data; 
           })
         this.editUserForm.reset();
@@ -229,8 +229,8 @@ export class DealerViewCreateUserComponent {
       
         this.getRoles();
    
-      this.userId=localStorage.getItem('userid');
-      this.token=localStorage.getItem('usertoken');
+      this.userId=sessionStorage.getItem('userid');
+      this.token=sessionStorage.getItem('usertoken');
       this.authService.checkDealerEmail({email:this.editUserForm.value.email}).subscribe(
         (response) => {
           this.emailArray=response.data;
@@ -485,9 +485,9 @@ export class DealerViewCreateUserComponent {
     
       viewUser(event?:any){
          this.globalBlockUiService.startLoading();
-        //  localStorage.setItem('usertype','d');
+        //  sessionStorage.setItem('usertype','d');
       //  console.log('user Type ',this.userType)
-        this.userService.viewUser({userType:this.userType,dealerId:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
+        this.userService.viewUser({userType:this.userType,dealerId:sessionStorage.getItem('dealerid')}).subscribe((res:any)=>{
            this.globalBlockUiService.stopLoading();
            let userArray=[];
          //  console.log("resdata ",res?.data)
@@ -532,7 +532,7 @@ export class DealerViewCreateUserComponent {
           if(this.actionName=='Add User'){
             
             this.globalBlockUiService.startLoading();
-            this.userService.createUser({...this.editUserForm.value,userId:this.userId,token:this.token,link:link,dealer:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
+            this.userService.createUser({...this.editUserForm.value,userId:this.userId,token:this.token,link:link,dealer:sessionStorage.getItem('dealerid')}).subscribe((res:any)=>{
               this.globalBlockUiService.stopLoading();
               this.viewUser();
               this.visible = false;
@@ -550,7 +550,7 @@ export class DealerViewCreateUserComponent {
           else{
             this.globalBlockUiService.startLoading();
            // console.log("edit user ",this.editUserForm.value)
-            this.userService.editUser({...this.editUserForm.value,userId:this.rowId,updatedBy:this.userId,token:this.token,dealer:localStorage.getItem('dealerid')}).subscribe((res:any)=>{
+            this.userService.editUser({...this.editUserForm.value,userId:this.rowId,updatedBy:this.userId,token:this.token,dealer:sessionStorage.getItem('dealerid')}).subscribe((res:any)=>{
               this.globalBlockUiService.stopLoading();
               this.viewUser();
               this.visible = false;

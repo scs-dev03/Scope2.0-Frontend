@@ -178,9 +178,9 @@ export class CreateRoleComponent {
       .get('checkboxes')
       ?.valueChanges.subscribe(() => this.checkAtLeastOneChecked());
   
-    this.userId=localStorage.getItem('userid');
-   // localStorage.setItem('userid',"293");
-    this.token=localStorage.getItem('usertoken');
+    this.userId=sessionStorage.getItem('userid');
+   // sessionStorage.setItem('userid',"293");
+    this.token=sessionStorage.getItem('usertoken');
     this.sharedService.updateModuleName('Create Role')
   }
 

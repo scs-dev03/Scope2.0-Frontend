@@ -27,13 +27,13 @@ export class PermissionService {
   isRouteAllowed(route: string): boolean {
     this.setModules();
 
-    console.log("from Is route all module    " + this.allowedRoutes);
-    console.log("from isroute  " + route);
+    // console.log("from Is route all module    " + this.allowedRoutes);
+    // console.log("from isroute  " + route);
 
 
 
 
-    console.log(this.allowedRoutes.includes(route));
+    //console.log(this.allowedRoutes.includes(route));
     return true;
 
   }

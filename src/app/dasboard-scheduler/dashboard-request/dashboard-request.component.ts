@@ -88,7 +88,7 @@ export class DashboardRequestComponent {
         this.dealername.dealerid,
         this.dealername.dealer,
         this.formatedDate,
-        localStorage.getItem('userid')
+        sessionStorage.getItem('userid')
       );
       this.requestInputData.value.dealerID.reset();
     }

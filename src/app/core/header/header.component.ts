@@ -28,7 +28,7 @@ export class HeaderComponent {
 
 
   redirectToLegacyScope() {
-    if (localStorage.getItem('usertype') == 'A') {
+    if (sessionStorage.getItem('usertype') == 'A') {
       window.location.href = 'https://scope.sparecare.in/UAD_SC_WAC/home.aspx';
     }
     else {

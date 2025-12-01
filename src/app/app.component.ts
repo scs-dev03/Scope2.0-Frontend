@@ -1,4 +1,4 @@
-import { Component, EnvironmentInjector, Renderer2, ViewChild } from '@angular/core';
+import { Component, EnvironmentInjector, HostListener, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { CoreModule } from './core/core.module';
 import { SidebarComponent } from "./core/sidebar/sidebar.component";
@@ -63,7 +63,35 @@ export class AppComponent {
       locationId: new FormControl(),
     })
 
-    this.UserName = localStorage.getItem('username') ?? ''
+  }
+
+
+
+  isMobile = window.innerWidth < 640; // Tailwind 'sm'
+  mobileDrawerOpen = false;
+
+
+
+  @HostListener('window:resize')
+  onResize() {
+    this.isMobile = window.innerWidth < 640;
+
+    // Auto-close the mobile drawer when switching to desktop
+    if (!this.isMobile) {
+      this.mobileDrawerOpen = false;
+    }
+  }
+
+  toggleSidebar() {
+    if (this.isMobile) {
+      this.mobileDrawerOpen = !this.mobileDrawerOpen;
+    } else {
+      this.visibleSidebar = !this.visibleSidebar;
+    }
+  }
+
+  closeMobileDrawer() {
+    this.mobileDrawerOpen = false;
   }
 
 
@@ -72,7 +100,6 @@ export class AppComponent {
       label: 'Logout',
       icon: 'pi pi-sign-out',
       command: () => this.logOut()
-      ,
 
     },
 
@@ -84,23 +111,29 @@ export class AppComponent {
 
   ngOnInit() {
 
-    //  localStorage.setItem('userid',"293")
+    this.onResize();
+
+    this.sharedService.UserName.subscribe(user => {
+      this.UserName = user && user.trim() !== '' ? user : sessionStorage.getItem('username') || '';
+
+    })
+
     this.is404Page = this.pageStateService.is404;
-    // console.log(this.is404Page)
+
     this.globalBlockUIService.loading$.subscribe((loading: any) => {
       this.isLoading = loading;
     })
 
 
     this.homeData.patchValue({
-      locationId: localStorage.getItem('def_location')
+      locationId: sessionStorage.getItem('def_location')
     })
 
     setTimeout(() => {
       this.sharedService.profilePhoto$.subscribe(photo => {
-      this.profilePhoto = photo;
-    });
-      
+        this.profilePhoto = photo;
+      });
+
     }, 2000);
 
 
@@ -138,26 +171,9 @@ export class AppComponent {
       const token = params['token'];
       // console.log('Received token:', token);
     });
+    let userToken = sessionStorage.getItem('usertoken');
 
-    this.userService.loadDataOnce();
-    // localStorage.setItem('usertype', 'A');
-    localStorage.setItem('usertoken', '0x02000000A1A10E0E3C3F02614A152D6D6C1ABAE100872B2C19AF91D870591BEEBBC69AD9E55280B12158FC00E3E22D95C7B72B1A')
-    let userToken = localStorage.getItem('usertoken');
 
-    this.utilitiesService
-      .getUserInfo({ token: userToken })
-      .pipe(take(1))
-      .subscribe({
-        next: (res: any) => {
-          const user = Array.isArray(res?.data) ? res.data[0] : res?.data;
-          if (!user) return;
-
-          localStorage.setItem('userid', String(user.userId ?? ''));
-          localStorage.setItem('username', user.username ?? '');
-          this.globalBlockUIService.stopLoading()
-        },
-        error: (err) => this.globalBlockUIService.stopLoading()
-      });
 
     this.sharedService.moduleName.subscribe((header: any) => {
       //console.log("header ",header)
@@ -196,24 +212,24 @@ export class AppComponent {
     this.updateLoaderHeight(); // Adjust height when content updates
   }
 
-  toggleSidebar() {
-    this.visibleSidebar = !this.visibleSidebar;
-    //this.sidebarService.toggle();
-  }
+  // toggleSidebar() {
+  //   this.visibleSidebar = !this.visibleSidebar;
+  //   //this.sidebarService.toggle();
+  // }
 
-  getModules() {
-    this.isLoading = true;
-    this.sidebarService.getModules().subscribe((res: any) => {
-      this.sidebarItems = res.data.modules;
-      //  console.log(res.data);
-      this.isLoading = false;
-      // this.transformData(this.sidebarItems)
-      // this.sharedService.updateSidebarData(this.sidebarItems);
-    }, (error: any) => {
-      // this.globalBlockUiService.stopLoading();
-      this.isLoading = false;
-    })
-  }
+  // getModules() {
+  //   this.isLoading = true;
+  //   this.sidebarService.getModules().subscribe((res: any) => {
+  //     this.sidebarItems = res.data.modules;
+  //     //  console.log(res.data);
+  //     this.isLoading = false;
+  //     // this.transformData(this.sidebarItems)
+  //     // this.sharedService.updateSidebarData(this.sidebarItems);
+  //   }, (error: any) => {
+  //     // this.globalBlockUiService.stopLoading();
+  //     this.isLoading = false;
+  //   })
+  // }
 
   onClickLocation() {
     // console.log("location id in app component ",this.homeData,this.homeData.value.locationId)
@@ -222,23 +238,18 @@ export class AppComponent {
 
 
   redirectToLegacyScope() {
-    if (localStorage.getItem('usertype') == 'A') {
-      window.location.href = environment.DiverterAdmin;
-    }
-    else {
-      window.location.href = environment.DiverterUser;
-    }
+
+    window.location.href = environment.DiverterAdmin;
+
+
   }
 
   logOut() {
 
-    if (localStorage.getItem('usertype') == 'A') {
-      window.location.href = environment.frontendAdminUrl;
-    } else {
 
-      window.location.href = environment.frontendUserUrl;
-    }
-    localStorage.clear();
+    window.location.href = environment.frontendAdminUrl;
+
+    sessionStorage.clear();
     sessionStorage.clear();
   }
 

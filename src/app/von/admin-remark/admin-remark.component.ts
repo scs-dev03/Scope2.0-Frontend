@@ -20,7 +20,7 @@ import { GlobalBlockUiService } from '../../services/global-block-ui.service';
 export class AdminRemarkComponent {
 
   ngOnInit(): void {
-    //this.adminvonservice.setlocalStorage()
+    //this.adminvonservice.setsessionStorage()
     this.typeData = [
       { name: 'Admin', code: 'A' },
       { name: 'User', code: 'U' },
@@ -59,7 +59,7 @@ export class AdminRemarkComponent {
     this.remarkCreation(
       this.adminRemarkInputData.value.remarkInput,
       this.adminRemarkInputData.value.brand,
-      localStorage.getItem('userid'),
+      sessionStorage.getItem('userid'),
       this.adminRemarkInputData.value.type
     );
 
@@ -94,7 +94,7 @@ export class AdminRemarkComponent {
       .newRemarkCreation({
         remark: remark,
         brandid: brandid,
-        addedby: localStorage.getItem('userid'),
+        addedby: sessionStorage.getItem('userid'),
         usertype: usertype,
       })
       .subscribe({

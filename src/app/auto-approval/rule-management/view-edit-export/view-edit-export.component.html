@@ -1,6 +1,6 @@
 <div class="min-w-full h-full bg-gray-100">
   <!-- <h1 class="text-2xl font-serif ml-2">View Rules</h1> -->
-  <div class="min-w-full !min-h-[100px] flex items-center justify-start px-2">
+  <!-- <div class="min-w-full !min-h-[100px] flex items-center justify-start px-2">
     <div
       class="min-w-full min-h-[50px] flex flex-wrap p-2 gap-3 border-dashed border-2 bg-gray-50 border-gray-200"
     >
@@ -8,23 +8,51 @@
       <p-select [filter]="true" placeholder="Status" class="w-44" />
       <p-select [filter]="true" placeholder="Nature" class="w-44" />
     </div>
-  </div>
+  </div> -->
 
   <div class="min-w-full !min-h-[100px] flex items-start justify-start px-2">
     <div
       class="min-w-full min-h-[50px] flex flex-wrap p-2 gap-3 border-dashed border-2 bg-gray-50 border-gray-200"
+      [formGroup]="BrandInputData"
     >
-      <p-select [filter]="true" placeholder="Brand" class="w-44" />
-      <p-select [filter]="true" placeholder="Dealer" class="w-44" />
-      <p-select [filter]="true" placeholder="Location" class="w-44" />
+      <p-select
+        [filter]="true"
+        [options]="Brand"
+        formControlName="brand"
+        optionLabel="vcbrand"
+        optionValue="bigid"
+        placeholder="Brand"
+        (onChange)="OnClickBrand()"
+        class="w-44"
+      />
+      <p-select
+        [filter]="true"
+        placeholder="Dealer"
+        [options]="Dealer"
+        formControlName="dealer"
+        optionLabel="dealer"
+        optionValue="dealerid"
+        (onChange)="OnClickDealer()"
+        class="w-44"
+      />
+      <p-select
+        [filter]="true"
+        formControlName="location"
+        placeholder="Location"
+        optionLabel="location"
+        optionValue="locationid"
+        [options]="Location"
+        class="w-44"
+      />
       <p-select [filter]="true" placeholder="Rule Name" class="w-44" />
-      <p-button size="small" icon="pi pi-eye" label="View"/>
+      <p-button size="small" icon="pi pi-check" label="Save" />
+      <p-button size="small" icon="pi pi-eye" label="View" />
+      <p-button size="small" icon="pi pi-eye" label="View Template" />
       <p-button size="small" icon="pi pi-download" label="Export" />
-      <p-button size="small" icon="pi pi-download" label="Upload" />
+      <p-button size="small" icon="pi pi-upload" label="Upload" />
     </div>
   </div>
 
-  
   <!--View Rules Table -->
 
   <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">

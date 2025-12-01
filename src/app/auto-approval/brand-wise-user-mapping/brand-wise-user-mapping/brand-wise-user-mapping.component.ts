@@ -5,6 +5,9 @@ import { PrimengModuleModule } from '../../../shared/primeng-module/primeng-modu
 import { SharedServiceService } from '../../../services/shared-service.service';
 import { PaginatorState } from 'primeng/paginator';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MasterServiceService } from '../../../services/master-service/master-service.service';
+import { BrandWiseUserMappingServiceService } from '../../../services/Auto-Approvals/brand-wise-user-mapping-service.service';
+import { GlobalBlockUiService } from '../../../services/global-block-ui.service';
 
 @Component({
   selector: 'app-brand-wise-user-mapping',
@@ -15,7 +18,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class BrandWiseUserMappingComponent {
 
   BrandUserMapping: FormGroup;
-  constructor(private sharedService: SharedServiceService, private fb: FormBuilder) {
+  constructor(private globalBlockUiService : GlobalBlockUiService, private sharedService: SharedServiceService, private fb: FormBuilder, private MasterService: MasterServiceService,private BrandUserMappingService: BrandWiseUserMappingServiceService) {
     this.BrandUserMapping = this.fb.group({
       Brand: (null),
       Dealer: (null),
@@ -25,34 +28,93 @@ export class BrandWiseUserMappingComponent {
   }
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     this.sharedService.updateModuleName('Brand Wise User Mapping');
+    this.FetchBrandData()
+    this.FetchUsersData()
   }
 
   onClickSave(){
     console.log(this.BrandUserMapping.value);
   }
 
-  first: number = 0;
 
-  rows: number = 10;
+  BrandData: any
+  FetchBrandData() {
+    this.globalBlockUiService.startLoading()
+    this.MasterService.getBrandMaster().subscribe({
+      next: (res: any) => {
+        this.BrandData = res
+        this.globalBlockUiService.stopLoading();
 
-  onPageChange(event: PaginatorState) {
-    this.first = event.first ?? 0;
-    this.rows = event.rows ?? 10;
+      },
+      error: (err: any) => {
+        console.log(err);
+      }
+    })
   }
 
 
-
-  showTable: boolean = false;
-  onClickViewUserMapping() {
-    if (this.showTable !== true) {
-      this.showTable = true;
-    } else {
-      this.showTable = false;
-    }
+  OnclickBrands() {
+    this.FetchDealerData(this.BrandUserMapping.value.Brand)
   }
+
+
+  DealerData: any
+  FetchDealerData(brandid: any) {
+    this.globalBlockUiService.startLoading()
+    this.MasterService.getDealersMasterMulti({ BrandIds: brandid }).subscribe({
+      next: (res: any) => {
+        this.DealerData = res.data
+        this.globalBlockUiService.stopLoading();
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.globalBlockUiService.stopLoading();
+      }
+    })
+  }
+
+  OnclickDealer() {
+    this.FetchLocationData(this.BrandUserMapping.value.Dealer)
+  }
+
+  LocationData: any
+  FetchLocationData(dealerid: any) {
+    this.globalBlockUiService.startLoading();
+    this.MasterService.getlocationMasterMulti({ DealerIds: dealerid }).subscribe({
+      next: (res: any) => {
+        this.LocationData = res.data
+        this.globalBlockUiService.stopLoading()
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.globalBlockUiService.stopLoading()
+
+      }
+    })
+  }
+
+  UserData:any
+
+  FetchUsersData(){
+    this.globalBlockUiService.startLoading();
+    this.MasterService.getUsersData().subscribe({
+      next: (res:any)=>{
+        this.UserData = res.data
+        this.globalBlockUiService.stopLoading()
+      },
+      error: (err:any)=>{
+        console.log(err);
+        this.globalBlockUiService.stopLoading()
+        
+      }
+    })
+  }
+
+  
+
+
+
 
 }
   

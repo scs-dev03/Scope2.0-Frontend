@@ -6,8 +6,8 @@ const routes: Routes = [
   {
     path: 'rule',
     loadChildren: () => import('../auto-approval/rule-management/rule-management.module').then(m => m.RuleManagementModule),
-    canLoad:[authGuard],
-    canActivate:[authGuard]
+    // canLoad:[authGuard],
+    // canActivate:[authGuard]
   },{
     path: 'mapping',
     loadChildren: () => import('../auto-approval/brand-wise-user-mapping/brand-wise-user-mapping.module').then(m => m.BrandWiseUserMappingModule),

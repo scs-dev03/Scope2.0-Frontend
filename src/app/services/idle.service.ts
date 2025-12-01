@@ -55,14 +55,14 @@ export class IdleService {
 
   private logout(): void {
     // Clear local/session storage if needed
-    if(localStorage.getItem('usertype')=='A')
+    if(sessionStorage.getItem('usertype')=='A')
   {
 window.location.href = environment.frontendAdminUrl;
   }else{
     
     window.location.href = environment.frontendUserUrl;
   }
-   localStorage.clear();
+   sessionStorage.clear();
    sessionStorage.clear();
   }
 }

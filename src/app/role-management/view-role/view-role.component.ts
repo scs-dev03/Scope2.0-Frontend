@@ -50,8 +50,8 @@ export class ViewRoleComponent {
     
   ){
     this.viewRole();
-    this.token=localStorage.getItem('token');
-    this.userId=localStorage.getItem('userid');
+    this.token=sessionStorage.getItem('token');
+    this.userId=sessionStorage.getItem('userid');
     this.currentRoute=router.url;
     this.sharedService.updateModuleName('View & Edit Roles')
   }

@@ -1,0 +1,102 @@
+<div
+  class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+  *ngIf="VisiTableData"
+>
+  <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+    <p-table
+      #dt1
+      [scrollable]="true"
+      scrollHeight="400px"
+      [value]="DashboardBrandWise"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 30, 40, 50, 100]"
+      [showGridlines]="true"
+      paginatorDropdownAppendTo="body"
+      class="!w-[90vw]"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [globalFilterFields]="[
+        
+        'Brand',
+        'Dealer',
+        'Pending',
+        'NotinMaster'
+      ]"
+    >
+      <ng-template let-item pTemplate="paginatordropdownitem">
+        {{ item.value === DashboardBrandWise?.length ? "All" : item.value }}
+      </ng-template>
+
+      <ng-template pTemplate="caption">
+        <div class="flex items-center">
+          <p-button
+            label="Clear"
+            size="small"
+            [outlined]="true"
+            icon="pi pi-filter-slash"
+            (click)="clear(dt1)"
+          ></p-button>
+
+          <p-iconfield iconPosition="left" class="ml-auto">
+            <p-inputicon>
+              <i class="pi pi-search"></i>
+            </p-inputicon>
+            <input
+              pInputText
+              type="text"
+              size="small"
+              (input)="onGlobalFilter($event)"
+              placeholder="Search keyword"
+            />
+          </p-iconfield>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr class="bg-gray-200 text-gray-800 text-sm font-semibold" >
+          <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">S.No</th>
+          <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            Brand
+          </th>
+          <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            Dealer
+          </th>
+
+          <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            Pending Approvals
+          </th>
+          <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+            Not In Master
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+        <tr (click)="navigateToApprovalSummary(rowData)"
+          class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+        >
+          <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+            {{ i + 1 }}
+          </td>
+
+          <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+            {{ rowData.Brand }}
+          </td>
+          <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+            {{ rowData.Dealer }}
+          </td>
+          
+          <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+            {{ rowData.Pending }}
+          </td>
+          <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+            {{ rowData.NotinMaster }}
+          </td>
+          
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

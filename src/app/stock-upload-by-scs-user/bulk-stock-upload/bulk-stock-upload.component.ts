@@ -81,7 +81,7 @@ export class BulkStockUploadComponent {
    this.min = new Date();
    this.min.setMonth(this.max.getMonth() - 3);
   //  this.userId=this.users[0].id;
-  this.userId=localStorage.getItem('userid');
+  this.userId=sessionStorage.getItem('userid');
 
    this.sidebarService.visibleSidebar$.subscribe((visible:any)=>{
     this.visibleSidebar=visible;

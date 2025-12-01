@@ -28,7 +28,7 @@ export class HomePageComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.UserName = localStorage.getItem('username') ?? ''
+    this.UserName = sessionStorage.getItem('username') ?? ''
   }
 
   constructor(
@@ -37,23 +37,7 @@ export class HomePageComponent {
     private sharedService: SharedServiceService
   ) { }
 
-
-
-
-
-
-
- 
-
-
-
   chart2: any
-
-
-
-
-
-
   // chart2 = {
   //   color: ['#4F46E5', '#10B981', '#F59E0B'],
   //   tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },

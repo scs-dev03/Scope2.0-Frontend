@@ -7,65 +7,191 @@
       <div class="flex flex-wrap gap-4">
         <form [formGroup]="remarkForm">
           <div class="flex flex-wrap gap-4">
-            <p-floatlabel variant="on">
-              <p-select
-                optionLabel="name"
-                formControlName="user"
-                size="small"
-                class="w-44 h-8"
-              />
-              <label class="text-xs">User</label>
-            </p-floatlabel>
+            <!-- User Type -->
+            <div class="flex flex-col">
+              <p-floatlabel variant="on">
+                <p-select
+                  optionLabel="Name"
+                  optionValue="Id"
+                  [options]="UserTypeData"
+                  formControlName="userType"
+                  size="small"
+                  class="w-44 h-8"
+                />
+                <label for="userType" class="text-xs">User Type</label>
+              </p-floatlabel>
 
-            <p-floatlabel variant="on">
-              <p-select
-                optionLabel="name"
-                formControlName="brand"
-                size="small"
-                class="w-44 h-8"
-              />
-              <label class="text-xs">Select Brand</label>
-            </p-floatlabel>
+              <div
+                class="text-red-500 text-[11px] mt-1"
+                *ngIf="
+                  remarkForm.get('userType')?.touched &&
+                  remarkForm.get('userType')?.hasError('required')
+                "
+              >
+                User Type is required
+              </div>
+            </div>
 
-            <p-floatlabel variant="on">
-              <p-select
-                optionLabel="name"
-                formControlName="dealer"
-                size="small"
-                class="w-44 h-8"
-              />
-              <label class="text-xs">Select Dealer</label>
-            </p-floatlabel>
+            <!-- User -->
+            <div class="flex flex-col">
+              <p-floatlabel variant="on">
+                <p-select
+                  optionLabel="Name"
+                  optionValue="bintId_Pk"
+                  [options]="UserData"
+                  formControlName="user"
+                  size="small"
+                  class="w-44 h-8"
+                />
+                <label class="text-xs">User</label>
+              </p-floatlabel>
 
-            <p-floatlabel variant="on">
-              <p-select
-                optionLabel="name"
-                formControlName="location"
-                size="small"
-                class="w-44 h-8"
-              />
-              <label class="text-xs">Select Location</label>
-            </p-floatlabel>
+              <div
+                class="text-red-500 text-[11px] mt-1"
+                *ngIf="
+                  remarkForm.get('user')?.touched &&
+                  remarkForm.get('user')?.hasError('required')
+                "
+              >
+                User is required
+              </div>
+            </div>
 
-            <p-floatlabel variant="on">
-              <input
-                type="text"
-                class="h-8 w-52"
-                id="keyworinput"
-                pSize="small"
-                pInputText
-                formControlName="remark"
-              />
-              <label for="keyworinput" class="text-xs">Enter Remark</label>
-            </p-floatlabel>
+            <!-- Remark Type -->
+            <div class="flex flex-col">
+              <p-floatlabel variant="on">
+                <p-multiselect
+                  optionLabel="Remark"
+                  optionValue="Id"
+                  [options]="RemarkData"
+                  formControlName="remarkType"
+                  size="small"
+                  class="w-44 h-8"
+                />
+                <label class="text-xs">Remark Type</label>
+              </p-floatlabel>
 
+              <div
+                class="text-red-500 text-[11px] mt-1"
+                *ngIf="
+                  remarkForm.get('remarkType')?.touched &&
+                  remarkForm.get('remarkType')?.hasError('required')
+                "
+              >
+                Remark Type is required
+              </div>
+            </div>
+
+            <!-- Brand -->
+            <div class="flex flex-col">
+              <p-floatlabel variant="on">
+                <p-select
+                  optionLabel="vcbrand"
+                  [options]="BrandData"
+                  optionValue="bigid"
+                  formControlName="brand"
+                  size="small"
+                  class="w-44 h-8"
+                  (onChange)="OnclickBrands()"
+                />
+                <label class="text-xs">Select Brand</label>
+              </p-floatlabel>
+
+              <div
+                class="text-red-500 text-[11px] mt-1"
+                *ngIf="
+                  remarkForm.get('brand')?.touched &&
+                  remarkForm.get('brand')?.hasError('required')
+                "
+              >
+                Brand is required
+              </div>
+            </div>
+
+            <!-- Dealer -->
+            <div class="flex flex-col">
+              <p-floatlabel variant="on">
+                <p-select
+                  [options]="DealerData"
+                  optionLabel="dealer"
+                  optionValue="dealerid"
+                  formControlName="dealer"
+                  size="small"
+                  class="w-44 h-8"
+                  (onChange)="OnclickDealer()"
+                />
+                <label class="text-xs">Select Dealer</label>
+              </p-floatlabel>
+
+              <div
+                class="text-red-500 text-[11px] mt-1"
+                *ngIf="
+                  remarkForm.get('dealer')?.touched &&
+                  remarkForm.get('dealer')?.hasError('required')
+                "
+              >
+                Dealer is required
+              </div>
+            </div>
+
+            <!-- Location -->
+            <div class="flex flex-col">
+              <p-floatlabel variant="on">
+                <p-select
+                  optionLabel="location"
+                  optionValue="locationid"
+                  formControlName="location"
+                  [options]="LocationData"
+                  size="small"
+                  class="w-44 h-8"
+                />
+                <label class="text-xs">Select Location</label>
+              </p-floatlabel>
+
+              <div
+                class="text-red-500 text-[11px] mt-1"
+                *ngIf="
+                  remarkForm.get('location')?.touched &&
+                  remarkForm.get('location')?.hasError('required')
+                "
+              >
+                Location is required
+              </div>
+            </div>
+
+            <!-- Remark Input -->
+            <div class="flex flex-col">
+              <p-floatlabel variant="on">
+                <input
+                  type="text"
+                  class="h-8 w-52"
+                  id="keyworinput"
+                  pSize="small"
+                  pInputText
+                  formControlName="remark"
+                />
+                <label for="keyworinput" class="text-xs">Enter Remark</label>
+              </p-floatlabel>
+
+              <div
+                class="text-red-500 text-[11px] mt-1"
+                *ngIf="
+                  remarkForm.get('remark')?.touched &&
+                  remarkForm.get('remark')?.hasError('required')
+                "
+              >
+                Remark is required
+              </div>
+            </div>
+
+            <!-- Buttons -->
             <p-button
               size="small"
               label="Save"
               [style]="{ 'background-color': '#008080', color: '#fff' }"
               icon="pi pi-check"
               iconPos="left"
-              (onClick)="onSave()"
+              (onClick)="onClickSendData()"
             />
             <p-button
               size="small"
@@ -73,89 +199,325 @@
               [style]="{ 'background-color': '#008080', color: '#fff' }"
               icon="pi pi-eye"
               iconPos="left"
-              (onClick)="onClickViewRemarkTable()"
+              (onClick)="OnClickViewData()"
             />
           </div>
         </form>
       </div>
     </div>
   </div>
-  <div
-    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
-    *ngIf="showTable"
-  >
+  <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
+        #dt1
         [scrollable]="true"
-        scrollHeight="600px"
+        scrollHeight="400px"
+        [value]="RemarksDataTable"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 30, 40, 50, 100]"
         [showGridlines]="true"
-        scrollDirection="both"
+        paginatorDropdownAppendTo="body"
         class="!w-[90vw]"
         [tableStyle]="{ 'min-width': '50rem' }"
+        [globalFilterFields]="[
+          'id',
+          'Brand',
+          'BrandId',
+          'Dealer',
+          'DealerId',
+          'Location',
+          'LocationId',
+          'PartNumber',
+          'LatestPartNumber',
+          'PartDesc',
+          'MRP',
+          'LandedCost',
+          'MOQ',
+          'PartType',
+          'PartTypeId',
+          'Model',
+          'GSTPer',
+          'QtyPerVehicle',
+          'HSNCode',
+          'HSNID',
+          'Name',
+          'Addedby',
+
+          'Remarks',
+          'SCSRemarks'
+        ]"
       >
-        <ng-template #header>
-          <tr class="">
-            <th
-              class="!px-1 flex-auto !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px] !min-h-[22px]"
-            >
+        <ng-template let-item pTemplate="paginatordropdownitem">
+          {{ item.value === RemarksDataTable?.length ? "All" : item.value }}
+        </ng-template>
+
+        <ng-template pTemplate="caption">
+          <div class="flex items-center">
+            <p-button
+              label="Clear"
+              size="small"
+              [outlined]="true"
+              icon="pi pi-filter-slash"
+              (click)="clear(dt1)"
+            ></p-button>
+
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                size="small"
+                (input)="onGlobalFilter($event)"
+                placeholder="Search keyword"
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               S.No
             </th>
-            <th
-              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
-            >
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               Brand
-              <p-columnFilter type="text" field="" display="menu" />
             </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
-            >
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               Dealer
             </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
-            >
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               Location
             </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
-            >
-              User
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Remark
             </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
-              Status
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Remark For
             </th>
-            <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
-            >
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Remark Type
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Added By
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Added On
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               Action
             </th>
           </tr>
         </ng-template>
 
-        <ng-template #body let-rowData let-i="rowIndex">
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
           <tr
             class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
           >
-            <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
-            <td
-              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
-            >
-              {{ rowData.Dashboard }}
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ i + 1 }}
+            </td>
+
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Brand }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Dealer }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Location }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Remark }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.RemarkFor }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Type }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Addedby }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.AddedOn | date : "dd-MM-yyyy HH:mm:ss a" : "UTC" }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              <p-button
+                icon="pi pi-pencil"
+                size="small"
+                severity="success"
+                (click)="OnClickUpdateRemark(rowData)"
+              ></p-button>
             </td>
           </tr>
         </ng-template>
       </p-table>
-      <p-paginator
-        class="h-6 text-sm"
-        (onPageChange)="onPageChange($event)"
-        [first]="first"
-        [rows]="rows"
-        dropdownAppendTo="body"
-        [totalRecords]="120"
-        [rowsPerPageOptions]="[10, 20, 30]"
-      />
     </div>
   </div>
 </div>
+
+<p-dialog
+  header="Update Advisor Info"
+  [(visible)]="editDialogVisible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw', height: '50vh' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="EditRemarkForm">
+    <div class="flex flex-wrap gap-4">
+      
+      <!-- Remark Type -->
+      <div class="flex flex-col">
+        <p-floatlabel variant="on">
+          <p-multiselect
+            optionLabel="Remark"
+            optionValue="Id"
+            [options]="RemarkData"
+            formControlName="remarkType"
+            size="small"
+            class="w-44 h-8"
+          />
+          <label class="text-xs">Remark Type</label>
+        </p-floatlabel>
+
+        <div
+          class="text-red-500 text-[11px] mt-1"
+          *ngIf="
+            EditRemarkForm.get('remarkType')?.touched &&
+            EditRemarkForm.get('remarkType')?.hasError('required')
+          "
+        >
+          Remark Type is required
+        </div>
+      </div>
+
+      <!-- Brand -->
+      <div class="flex flex-col">
+        <p-floatlabel variant="on">
+          <p-select
+            optionLabel="vcbrand"
+            [options]="BrandData"
+            optionValue="bigid"
+            formControlName="brand"
+            size="small"
+            class="w-44 h-8"
+            (onChange)="OnclickBrands()"
+          />
+          <label class="text-xs">Select Brand</label>
+        </p-floatlabel>
+
+        <div
+          class="text-red-500 text-[11px] mt-1"
+          *ngIf="
+            EditRemarkForm.get('brand')?.touched &&
+            EditRemarkForm.get('brand')?.hasError('required')
+          "
+        >
+          Brand is required
+        </div>
+      </div>
+
+      <!-- Dealer -->
+      <div class="flex flex-col">
+        <p-floatlabel variant="on">
+          <p-select
+            [options]="DealerData"
+            optionLabel="dealer"
+            optionValue="dealerid"
+            formControlName="dealer"
+            size="small"
+            class="w-44 h-8"
+            (onChange)="OnclickDealer()"
+          />
+          <label class="text-xs">Select Dealer</label>
+        </p-floatlabel>
+
+        <div
+          class="text-red-500 text-[11px] mt-1"
+          *ngIf="
+            EditRemarkForm.get('dealer')?.touched &&
+            EditRemarkForm.get('dealer')?.hasError('required')
+          "
+        >
+          Dealer is required
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div class="flex flex-col">
+        <p-floatlabel variant="on">
+          <p-select
+            optionLabel="location"
+            optionValue="locationid"
+            formControlName="location"
+            [options]="LocationData"
+            size="small"
+            class="w-44 h-8"
+          />
+          <label class="text-xs">Select Location</label>
+        </p-floatlabel>
+
+        <div
+          class="text-red-500 text-[11px] mt-1"
+          *ngIf="
+            EditRemarkForm.get('location')?.touched &&
+            EditRemarkForm.get('location')?.hasError('required')
+          "
+        >
+          Location is required
+        </div>
+      </div>
+
+      <!-- Remark Input -->
+      <div class="flex flex-col">
+        <p-floatlabel variant="on">
+          <input
+            type="text"
+            class="h-8 w-52"
+            id="keyworinput"
+            pSize="small"
+            pInputText
+            formControlName="remark"
+          />
+          <label for="keyworinput" class="text-xs">Enter Remark</label>
+        </p-floatlabel>
+
+        <div
+          class="text-red-500 text-[11px] mt-1"
+          *ngIf="
+            EditRemarkForm.get('remark')?.touched &&
+            EditRemarkForm.get('remark')?.hasError('required')
+          "
+        >
+          Remark is required
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2">
+      <button
+        pButton
+        size="small"
+        label="Cancel"
+        class="p-button-text"
+        
+      ></button>
+      <button
+        pButton
+        size="small"
+        label="Save"
+        icon="pi pi-check"
+       
+      ></button>
+    </div>
+  </ng-template>
+</p-dialog>

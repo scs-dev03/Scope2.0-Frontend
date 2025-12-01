@@ -66,8 +66,11 @@
           <div class="h-12 w-auto flex items-center">
             <p-button icon="pi pi-bell" [rounded]="true" [text]="true" />
             <p-avatar
-              
-              [image]="profilePhoto!='' && profilePhoto?profilePhoto: '/man_4140048.png'"
+              [image]="
+                profilePhoto != '' && profilePhoto
+                  ? profilePhoto
+                  : '/man_4140048.png'
+              "
               class="mr-2"
               shape="circle"
             />
@@ -83,7 +86,11 @@
                 (click)="onButtonClick($event)"
               />
 
-              <p-tieredMenu #menu [model]="items || []" [popup]="true"></p-tieredMenu>
+              <p-tieredMenu
+                #menu
+                [model]="items || []"
+                [popup]="true"
+              ></p-tieredMenu>
             </div>
           </div>
         </div>
@@ -91,25 +98,45 @@
     </div>
   </header>
 
-  <div class="flex h-full overflow-hidden bg-">
+  <div class="flex h-full overflow-hidden">
     <!-- Sidebar -->
     <div
       *ngIf="!isLoginPage"
-      [ngClass]="{
-        'w-[20%]': visibleSidebar,
-        'w-0 overflow-hidden': !visibleSidebar
-      }"
-      class="transition-all duration-300 h-full bg-white shadow-md flex-shrink-0"
+      class="fixed top-12 left-0 bottom-0 z-40 bg-white border-r shadow-md transition-all duration-300"
+      [class.w-14]="isMobile ? !mobileDrawerOpen : !visibleSidebar"
+      [class.w-[250px]]="isMobile ? mobileDrawerOpen : visibleSidebar"
+      [class.overflow-hidden]="isMobile ? !mobileDrawerOpen : !visibleSidebar"
     >
-      <app-sidebar></app-sidebar>
+      <!-- Pass collapsed based on device + drawer state -->
+      <app-sidebar
+        class="h-full w-full overflow-y-auto"
+        [collapsed]="isMobile ? !mobileDrawerOpen : !visibleSidebar"
+      ></app-sidebar>
     </div>
+
+    <!-- Backdrop for mobile drawer -->
+    <div
+      *ngIf="isMobile && mobileDrawerOpen"
+      class="fixed inset-0 z-30 bg-black/40 backdrop-blur-[1px]"
+      (click)="closeMobileDrawer()"
+    ></div>
 
     <!-- Main Content -->
     <div
       class="flex-1 bg-white transition-all duration-300 overflow-y-auto overflow-x-hidden relative"
-      [ngClass]="{ 'bg-white': is404Page, }"
+      [ngClass]="
+        isLoginPage
+          ? 'ml-0'
+          : isMobile
+          ? mobileDrawerOpen
+            ? 'ml-0'
+            : 'ml-16'
+          : visibleSidebar
+          ? 'ml-[255px]'
+          : 'ml-16'
+      "
+      [class.bg-white]="is404Page"
     >
-      <!-- Main Content -->
       <router-outlet></router-outlet>
     </div>
   </div>

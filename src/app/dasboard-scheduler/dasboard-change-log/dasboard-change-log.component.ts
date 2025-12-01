@@ -72,7 +72,7 @@ export class DasboardChangeLogComponent {
         this.changeLogInputData.value.workspaceID,
         this.changeLogInputData.value.brandID,
         this.changeLogInputData.value.dealerID,
-        localStorage.getItem('userid'),
+        sessionStorage.getItem('userid'),
         this.changeLogInputData.value.requestedByID,
         this.newdate,
         this.changeLogInputData.value.url,
