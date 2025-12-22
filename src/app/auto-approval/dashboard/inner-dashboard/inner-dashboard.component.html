@@ -16,8 +16,8 @@
               filter="true"
               size="small"
               class="w-full h-8"
-              [options]="BrandData"
               formControlName="Brand"
+              [options]="BrandData"
               optionValue="bigid"
               optionLabel="vcbrand"
               (onClick)="OnclickBrand()"
@@ -25,7 +25,7 @@
             <label class="text-xs">Select Brand</label>
           </p-floatlabel>
 
-          <!-- ✨ Error Message -->
+          
           <small
             class="text-red-500 text-xs mt-1"
             *ngIf="
@@ -47,8 +47,8 @@
               size="small"
               filter="true"
               class="w-full h-8"
-              [options]="DealerData"
               formControlName="Dealer"
+              [options]="DealerData"
               optionValue="dealerid"
               optionLabel="dealer"
               (onChange)="OnClickDealer()"
@@ -56,7 +56,7 @@
             <label class="text-xs">Select Dealer</label>
           </p-floatlabel>
 
-          <!-- ✨ Error Message -->
+         
           <small
             class="text-red-500 text-xs mt-1"
             *ngIf="
@@ -80,8 +80,8 @@
               filter="true"
               size="small"
               class="w-full h-8"
-              [options]="LocationData"
               formControlName="Location"
+              [options]="LocationData"
               optionValue="locationid"
               optionLabel="location"
             />
@@ -91,9 +91,10 @@
 
         <!-- From Date -->
         <div class="flex flex-col h-11">
-          <p-floatlabel
-            class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+          <p-floatlabel 
+            class="force-float w-full sm:w-44 md:w-52 lg:w-[185px]"
             variant="on"
+            alwaysFloatLabel="true"
           >
             <input
               pInputText
@@ -101,7 +102,7 @@
               id="fromDate"
               type="date"
               [max]="today"
-              [value]="firstDayOfMonth"
+             
               class="w-full h-8"
             />
             <label for="fromDate" class="text-xs">From Date</label>
@@ -109,7 +110,7 @@
         </div>
 
         <!-- To Date -->
-        <div class="flex flex-col h-11">
+        <div class="flex force-float flex-col h-11">
           <p-floatlabel
             class="w-full sm:w-44 md:w-52 lg:w-[185px]"
             variant="on"
@@ -240,3 +241,19 @@
     </div>
   </div>
 </div>
+
+
+<p-dialog
+  header="Message"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="text-lg">
+    {{ Result }}
+  </p>
+</p-dialog>
+

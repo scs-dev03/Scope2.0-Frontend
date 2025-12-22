@@ -77,6 +77,22 @@
             <p-columnFilter type="text" field="Pending" display="menu" />
           </th>
           <th
+            pSortableColumn="PendingMI"
+            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+          >
+            Pending Manual Intervention
+            <p-sortIcon field="PendingMI" />
+            <p-columnFilter type="text" field="PendingMI" display="menu" />
+          </th>
+          <th
+            pSortableColumn="PendingIA"
+            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+          >
+            Pending Internal Approval
+            <p-sortIcon field="PendingIA" />
+            <p-columnFilter type="text" field="PendingIA" display="menu" />
+          </th>
+          <th
             pSortableColumn="NotinMaster"
             class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
           >
@@ -105,6 +121,12 @@
 
           <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
             {{ rowData.Pending }}
+          </td>
+          <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+            {{ rowData.PendingMI }}
+          </td>
+          <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+            {{ rowData.PendingIA }}
           </td>
           <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
             {{ rowData.NotinMaster }}

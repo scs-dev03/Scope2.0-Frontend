@@ -5,6 +5,7 @@ import { KeywordManagementComponent } from './keyword-management/keyword-managem
 import { RuleCreationComponent } from './rule-creation/rule-creation.component';
 import { ViewEditExportComponent } from './view-edit-export/view-edit-export.component';
 import { CalculativeParametersComponent } from './calculative-parameters/calculative-parameters.component';
+import { EditRuleComponent } from './edit-rule/edit-rule.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,10 @@ const routes: Routes = [
   {
     path: 'rcv',
     component: ViewEditExportComponent
+  },
+  {
+    path: 're',
+    component: EditRuleComponent
   }
 ];
 

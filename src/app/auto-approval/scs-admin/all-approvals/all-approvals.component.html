@@ -12,9 +12,13 @@
             <p-floatlabel variant="on">
               <p-select
                 formControlName="brand"
-                optionLabel="name"
+                [filter]="true"
+                [options]="BrandData"
+                optionValue="bigid"
+                optionLabel="vcbrand"
                 size="small"
                 class="w-44 h-8"
+                (onClick)="OnclickBrand()"
               />
               <label for="brand" class="text-xs">Select Brand</label>
             </p-floatlabel>
@@ -22,10 +26,14 @@
             <!-- Dealer -->
             <p-floatlabel variant="on">
               <p-select
+                [filter]="true"
                 formControlName="dealer"
-                optionLabel="name"
+                [options]="DealerData"
+                optionValue="dealerid"
+                optionLabel="dealer"
                 size="small"
                 class="w-44 h-8"
+                (onChange)="OnClickDealer()"
               />
               <label for="dealer" class="text-xs">Select Dealer</label>
             </p-floatlabel>
@@ -33,28 +41,23 @@
             <!-- Location -->
             <p-floatlabel variant="on">
               <p-select
+                [filter]="true"
                 formControlName="location"
-                optionLabel="name"
+                [options]="LocationData"
+                optionValue="locationid"
+                optionLabel="location"
                 size="small"
                 class="w-44 h-8"
               />
               <label for="location" class="text-xs">Select Location</label>
             </p-floatlabel>
 
-            <!-- User -->
-            <p-floatlabel variant="on">
-              <p-select
-                formControlName="user"
-                optionLabel="name"
-                size="small"
-                class="w-44 h-8"
-              />
-              <label for="user" class="text-xs">User</label>
-            </p-floatlabel>
             <p-floatlabel variant="on">
               <p-multiselect
                 formControlName="status"
-                optionLabel="name"
+                optionLabel="Name"
+                optionValue="id"
+                [options]="StatusData"
                 size="small"
                 class="w-44 h-8"
               />
@@ -62,61 +65,50 @@
             </p-floatlabel>
 
             <!-- From Date -->
-            <p-floatlabel
-              class="w-full sm:w-44 md:w-52 lg:w-[185px]"
-              variant="on"
-            >
-              <p-datepicker
-                formControlName="fromDate"
-                inputId="fromDate"
-                size="small"
-                dateFormat="mm/dd/yy"
-                iconDisplay="input"
-                [readonlyInput]="true"
-                [panelStyle]="{
-                  position: 'absolute',
-                  left: '0px',
-                  top: '100%',
-                  'z-index': '1000',
-                  transform: 'scale(0.7)',
-                  'transform-origin': 'top left'
-                }"
-                class="w-full !h-8"
-                [styleClass]="'w-full sm:w-44 md:w-52 lg:w-[185px]'"
-              />
-              <label for="fromDate" class="text-xs">From Date</label>
-            </p-floatlabel>
+            <div class="flex flex-col h-11">
+              <p-floatlabel
+                class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                variant="on"
+              >
+                <input
+                  pInputText
+                  formControlName="fromDate"
+                  id="fromDate"
+                  type="date"
+                  [max]="today"
+                  [value]="firstDayOfMonth"
+                  class="w-full h-8"
+                />
+                <label for="fromDate" class="text-xs">From Date</label>
+              </p-floatlabel>
+            </div>
 
             <!-- To Date -->
-            <p-floatlabel
-              class="w-full sm:w-44 md:w-52 lg:w-[185px]"
-              variant="on"
-            >
-              <p-datepicker
-                formControlName="toDate"
-                inputId="toDate"
-                size="small"
-                dateFormat="mm/dd/yy"
-                iconDisplay="input"
-                [readonlyInput]="true"
-                [panelStyle]="{
-                  position: 'absolute',
-                  'z-index': '1201',
-                  transform: 'scale(0.7)',
-                  'transform-origin': 'top left'
-                }"
-                class="w-full !h-8"
-                [styleClass]="'w-full sm:w-44 md:w-52 lg:w-[185px]'"
-              />
-              <label for="toDate" class="text-xs">To Date</label>
-            </p-floatlabel>
+            <div class="flex flex-col h-11">
+              <p-floatlabel
+                class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                variant="on"
+              >
+                <input
+                  pInputText
+                  formControlName="toDate"
+                  type="date"
+                  [max]="today"
+                  class="w-full h-8"
+                />
+                <label for="ToDate" class="text-xs">To Date</label>
+              </p-floatlabel>
+            </div>
 
             <!-- Order Type -->
             <p-floatlabel variant="on">
               <p-multiselect
                 formControlName="orderType"
+                [options]="RequestTypeData"
+                optionLabel="Name"
+                optionValue="id"
                 [size]="'small'"
-                optionLabel="name"
+                
                 class="!w-44 !h-8"
               />
               <label for="orderType" class="text-xs">Order Type</label>
@@ -127,6 +119,8 @@
               <p-multiselect
                 formControlName="pendingSince"
                 [size]="'small'"
+                [options]="periodOptions"
+                optionValue="value"
                 optionLabel="name"
                 class="!w-44 !h-8"
               />
@@ -152,18 +146,9 @@
             />
           </div>
         </form>
-
-        <p-button
-          size="small"
-          icon="pi pi-sliders-h"
-          label="Configure Table"
-          [raised]="true"
-          (onClick)="showDialog()"
-          severity="secondary"
-        />
       </div>
     </div>
-  </div> 
+  </div>
 
   <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
@@ -334,22 +319,10 @@
           </tr>
         </ng-template>
       </p-table>
-      <p-paginator
-        #mypage
-        class="h-6 text-sm"
-        (onPageChange)="onPageChange($event)"
-        [first]="first"
-        [rows]="rows"
-        [styleClass]="'z-0'"
-        [appendTo]="body"
-        [totalRecords]="120"
-        [rowsPerPageOptions]="[10, 20, 30]"
-        [styleClass]="'z-0'"
-      />
     </div>
   </div>
 </div>
-<p-dialog
+<!-- <p-dialog
   header="⚙️ Configure Table Columns"
   [(visible)]="visible"
   [modal]="true"
@@ -362,7 +335,6 @@
 
 
 >
-  <!-- Content -->
   <div class="grid grid-cols-2 gap-3 p-2">
     <div
       class="flex items-center bg-gray-50 hover:bg-gray-100 rounded-lg px-3 py-2 transition"
@@ -384,7 +356,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <ng-template pTemplate="footer">
     <div class="flex justify-end gap-3 mt-3">
       <button
@@ -408,7 +379,4 @@
       ></button>
     </div>
   </ng-template>
-</p-dialog>
-
-
-
+</p-dialog> -->

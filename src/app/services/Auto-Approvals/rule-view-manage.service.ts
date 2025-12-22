@@ -29,9 +29,19 @@ export class RuleViewManageService {
     return this.http.post(`${this.apiurl}rule-mappings`, data)
   }
   
-  fetchTemplateRule(data:any){
-    return this.http.post(`${this.apiurl}template`, data)
+  FetchViewRuleData(data:any): Observable<any>{
+    return this.http.post(`${this.apiurl}view-rule`,data)
   }
 
+  FetchRule():Observable<any>{
+    return this.http.get(`${this.apiurl}view-rules`)
+  }
+
+
+  EditPriority(data:any):Observable<any>{
+    return this.http.put(`${this.apiurl}modify-priority`,data)
+  }
+
+  
 
 }

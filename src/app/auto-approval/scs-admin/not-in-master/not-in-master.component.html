@@ -12,6 +12,7 @@
             <p-floatlabel variant="on">
               <p-select
                 formControlName="brand"
+                filter="true"
                 [options]="BrandData"
                 (onChange)="OnclickBrands()"
                 optionLabel="vcbrand"
@@ -25,6 +26,7 @@
             <!-- Dealer -->
             <p-floatlabel variant="on">
               <p-select
+              filter="true"
                 formControlName="dealer"
                 optionLabel="dealer"
                 optionValue="dealerid"
@@ -39,6 +41,7 @@
             <!-- Location -->
             <p-floatlabel variant="on">
               <p-select
+              filter="true"
                 formControlName="location"
                 optionLabel="location"
                 optionValue="locationid"
@@ -49,10 +52,48 @@
               <label for="location" class="text-xs">Select Location</label>
             </p-floatlabel>
 
+            <div class="flex flex-col h-11">
+              <p-floatlabel
+                class="w-full force-float sm:w-44 md:w-52 lg:w-[185px]"
+                variant="on"
+              >
+                <input
+                  pInputText
+                  formControlName="FromDate"
+                  id="fromDate"
+                  type="date"
+                  [max]="today"
+                  [value]="firstDayOfMonth"
+                  class="w-full h-8"
+                />
+                <label for="fromDate" class="text-xs">From Date</label>
+              </p-floatlabel>
+            </div>
+
+            <!-- To Date -->
+            <div class="flex flex-col h-11">
+              <p-floatlabel
+                class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                variant="on"
+              >
+                <input
+                  pInputText
+                  formControlName="ToDate"
+                  type="date"
+                  [max]="today"
+                  class="w-full h-8"
+                />
+                <label for="ToDate" class="text-xs">To Date</label>
+              </p-floatlabel>
+            </div>
+
             <p-floatlabel variant="on">
-              <p-multiselect
+              <p-select
+                showClear="true"
                 formControlName="status"
-                optionLabel="name"
+                optionLabel="Name"
+                optionValue="Value"
+                [options]="Status"
                 size="small"
                 class="w-44 h-8"
               />
@@ -89,6 +130,15 @@
               iconPos="left"
               (onClick)="onReset()"
             />
+            <p-button
+              size="small"
+              label="Export"
+              [style]="{ 'background-color': '#008080', color: '#fff' }"
+              icon="pi pi-download"
+              iconPos="left"
+              *ngIf="ExportButtonVisible"
+              (onClick)="exportToExcel()"
+            />
           </div>
         </form>
 
@@ -105,7 +155,7 @@
   </div>
 
   <div
-    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+    class="m-2 flex flex-col justify-between rounded-lg bg-white shadow-lg p-2"
     *ngIf="VisiTableData"
   >
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
@@ -181,155 +231,271 @@
 
         <ng-template pTemplate="header">
           <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
+            <!-- S.No -->
             <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               S.No
             </th>
-            <th
-              pSortableColumn="Brand"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Brand
-              <p-sortIcon field="Brand" />
-              <p-columnFilter type="text" field="Brand" display="menu" />
+
+            <!-- Brand -->
+            <th pSortableColumn="Brand" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">Brand</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="Brand"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Brand"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="Dealer"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Dealer
-              <p-sortIcon field="Dealer" />
-              <p-columnFilter type="text" field="Dealer" display="menu" />
+
+            <!-- Dealer -->
+            <th pSortableColumn="Dealer" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">Dealer</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="Dealer"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Dealer"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="Location"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Location
-              <p-sortIcon field="Location" />
-              <p-columnFilter type="text" field="Location" display="menu" />
+
+            <!-- Location -->
+            <th pSortableColumn="Location" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">Location</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="Location"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Location"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="PartNumber"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Part Number
-              <p-sortIcon field="PartNumber" />
-              <p-columnFilter type="text" field="PartNumber" display="menu" />
+
+            <!-- Part Number -->
+            <th pSortableColumn="PartNumber" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">Part Number</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="PartNumber"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="PartNumber"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
+
+            <!-- Latest Part Number -->
             <th
               pSortableColumn="LatestPartNumber"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 !bg-gray-300"
             >
-              Latest Part Number
-              <p-sortIcon field="LatestPartNumber" />
-              <p-columnFilter
-                type="text"
-                field="LatestPartNumber"
-                display="menu"
-              />
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">Latest Part Number</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="LatestPartNumber"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="LatestPartNumber"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="PartDesc"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Part Description
-              <p-sortIcon field="PartDesc" />
-              <p-columnFilter type="text" field="PartDesc" display="menu" />
+
+            <!-- Part Description -->
+            <th pSortableColumn="PartDesc" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">Part Description</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="PartDesc"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="PartDesc"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="MOQ"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              MOQ
-              <p-sortIcon field="MOQ" />
-              <p-columnFilter type="text" field="MOQ" display="menu" />
+
+            <!-- MOQ -->
+            <th pSortableColumn="MOQ" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">MOQ</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="MOQ"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="MOQ"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="MRP"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              MRP
-              <p-sortIcon field="MRP" />
-              <p-columnFilter type="text" field="MRP" display="menu" />
+
+            <!-- MRP -->
+            <th pSortableColumn="MRP" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">MRP</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="MRP"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="MRP"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="HSNCode"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              HSNID
-              <p-sortIcon field="HSNCode" />
-              <p-columnFilter type="text" field="HSNCode" display="menu" />
+
+            <!-- HSN -->
+            <th pSortableColumn="HSNCode" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">HSN ID</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="HSNCode"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="HSNCode"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="PartType"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Part Type ID
-              <p-sortIcon field="PartType" />
-              <p-columnFilter type="text" field="PartType" display="menu" />
+
+            <!-- Part Type -->
+            <th pSortableColumn="PartType" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">Part Type ID</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="PartType"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="PartType"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="GSTPer"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              GST Percentage
-              <p-sortIcon field="GSTPer" />
-              <p-columnFilter type="text" field="GSTPer" display="menu" />
+
+            <!-- GST -->
+            <th pSortableColumn="GSTPer" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">GST %</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="GSTPer"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="GSTPer"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
+
+            <!-- Qty -->
             <th
               pSortableColumn="QtyPerVehicle"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 !bg-gray-300"
             >
-              Qty Per Vechile
-              <p-sortIcon field="QtyPerVehicle" />
-              <p-columnFilter
-                type="text"
-                field="QtyPerVehicle"
-                display="menu"
-              />
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">Qty / Vehicle</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="QtyPerVehicle"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="QtyPerVehicle"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="Model"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Model
-              <p-sortIcon field="Model" />
-              <p-columnFilter type="text" field="Model" display="menu" />
+
+            <!-- Model -->
+            <th pSortableColumn="Model" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">Model</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="Model"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Model"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
+
+            <!-- View Attachment -->
             <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               View Attachment
             </th>
-            <th
-              pSortableColumn="Remarks"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              User Remark
-              <p-sortIcon field="Remarks" />
-              <p-columnFilter type="text" field="Remarks" display="menu" />
+
+            <!-- User Remark -->
+            <th pSortableColumn="Remarks" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">User Remark</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="Remarks"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Remarks"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="Name"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Submitted By
-              <p-sortIcon field="Name" />
-              <p-columnFilter type="text" field="Name" display="menu" />
+
+            <!-- Submitted By -->
+            <th pSortableColumn="Name" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">Submitted By</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="Name"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Name"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
+
+            <!-- Submitted On -->
             <th
               pSortableColumn="DaetailsAddedon"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+              class="!px-1 !py-1 !bg-gray-300"
             >
-              Submitted On
-              <p-sortIcon field="DaetailsAddedon" />
-              <p-columnFilter
-                type="text"
-                field="DaetailsAddedon"
-                display="menu"
-              />
+              <div class="flex flex-col justify-between">
+                <span class="text-xs">Submitted On</span>
+                <div class="flex gap-2 items-center mt-1">
+                  <p-sortIcon field="DaetailsAddedon"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="DaetailsAddedon"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
+
+            <!-- SCS Remark -->
             <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               SCS Remark
             </th>
+
+            <!-- Action -->
             <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               Action
             </th>
@@ -439,7 +605,6 @@
 </div>
 <p-dialog
   header="⚙️ Configure Table Columns"
-  [(visible)]="visible"
   [modal]="true"
   [breakpoints]="{ '1199px': '75vw', '575px': '95vw' }"
   [style]="{ width: '40vw' }"
@@ -488,4 +653,18 @@
       <button pButton label="Apply for Now" class="p-button-sm"></button>
     </div>
   </ng-template>
+</p-dialog>
+
+<p-dialog
+  header="Message"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="text-lg">
+    {{ Result }}
+  </p>
 </p-dialog>

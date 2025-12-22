@@ -1,13 +1,3 @@
-:host ::ng-deep .p-dialog-mask,
-.p-sidebar-mask,
-.p-overlay-mask {
-  z-index: 10000 !important;
-}
-:host ::ng-deep.p-dialog,
-.p-sidebar {
-  z-index: 10001 !important;
-}
-
 /* Push paginator controls behind overlays */
 :host ::ng-deep.p-paginator,
 .p-paginator .p-paginator-first,
@@ -20,12 +10,4 @@
 .p-paginator .p-ripple-element {
   position: relative;
   z-index: 0 !important;
-}
-
-
-
-.force-float label{
-  transform: translateY(-1.2rem) scale(0.85) !important;
-  background: white;            /* optional: overlap clean */
-  padding: 0 4px;               /* optional */
 }

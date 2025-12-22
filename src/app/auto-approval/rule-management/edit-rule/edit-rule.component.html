@@ -1,0 +1,175 @@
+<p>edit-rule works!</p>
+<div
+    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+   
+  >
+    <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
+      <p-table
+        #dt1
+        [scrollable]="true"
+        scrollHeight="400px"
+        
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 30, 40, 50, 100]"
+        [showGridlines]="true"
+        paginatorDropdownAppendTo="body"
+        class="!w-[90vw]"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [globalFilterFields]="[
+          'id',
+          'Brand',
+          'BrandId',
+          'Dealer',
+          'DealerId',
+          'Location',
+          'LocationId',
+          'PartNumber',
+          'LatestPartNumber',
+          'PartDesc',
+          'MRP',
+          'LandedCost',
+          'MOQ',
+          'PartType',
+          'PartTypeId',
+          'Model',
+          'GSTPer',
+          'QtyPerVehicle',
+          'HSNCode',
+          'HSNID',
+          'Name',
+          'Addedby',
+          'Remarks',
+          'Addedon',
+          'Remark',
+          'Type',
+          'Addedby',
+          'RemarkFor'
+        ]"
+      >
+        <ng-template let-item pTemplate="paginatordropdownitem">
+          
+        </ng-template>
+
+        <ng-template pTemplate="caption">
+          <div class="flex items-center">
+            <p-button
+              label="Clear"
+              size="small"
+              [outlined]="true"
+              icon="pi pi-filter-slash"
+              
+            ></p-button>
+
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                size="small"
+                
+                placeholder="Search keyword"
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              S.No
+            </th>
+            <th
+              pSortableColumn="Brand"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
+              Brand
+              <p-sortIcon field="Brand" />
+              <p-columnFilter type="text" field="Brand" display="menu" />
+            </th>
+            <th
+              pSortableColumn="Dealer"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
+              Dealer
+              <p-sortIcon field="Dealer" />
+              <p-columnFilter type="text" field="Dealer" display="menu" />
+            </th>
+            <th
+              pSortableColumn="Location"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
+              Location
+              <p-sortIcon field="Location" />
+              <p-columnFilter type="text" field="Location" display="menu" />
+            </th>
+            <th
+              pSortableColumn="Name"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
+              Asssigned User
+              <p-sortIcon field="Name" />
+              <p-columnFilter type="text" field="Name" display="menu" />
+            </th>
+            <th
+              pSortableColumn="Addedon"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
+              Added On
+              <p-sortIcon field="Addedon" />
+              <p-columnFilter type="text" field="Addedon" display="menu" />
+            </th>
+            <th
+              pSortableColumn="AddedBy"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
+              Added By
+              <p-sortIcon field="AddedBy" />
+              <p-columnFilter type="text" field="AddedBy" display="menu" />
+            </th>
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
+              Action
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+          <tr class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0">
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ i + 1 }}
+            </td>
+
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Brand }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Dealer }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Location }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Name }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Addedon | date : "dd-MM-yyyy HH:mm:ss a" : "UTC" }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.AddedBy }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              <p-button
+                icon="pi pi-pencil"
+                size="small"
+                severity="success"
+              ></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>

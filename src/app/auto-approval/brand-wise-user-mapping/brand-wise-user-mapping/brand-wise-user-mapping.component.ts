@@ -11,6 +11,8 @@ import { GlobalBlockUiService } from '../../../services/global-block-ui.service'
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
 import { Table } from 'primeng/table';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-brand-wise-user-mapping',
@@ -22,12 +24,12 @@ export class BrandWiseUserMappingComponent {
 
   BrandUserMapping: FormGroup;
   constructor(private globalBlockUiService: GlobalBlockUiService, private sharedService: SharedServiceService, private fb: FormBuilder, private MasterService: MasterServiceService, private BrandUserMappingService: BrandWiseUserMappingServiceService) {
-   this.BrandUserMapping = this.fb.group({
-  Brand: [null, Validators.required],
-  Dealer: [null, Validators.required],
-  Location: [null, Validators.required],
-  AssignedUser: [null, Validators.required]
-});
+    this.BrandUserMapping = this.fb.group({
+      Brand: [null, Validators.required],
+      Dealer: [null, Validators.required],
+      Location: [null, Validators.required],
+      AssignedUser: [null, Validators.required]
+    });
   }
 
 
@@ -45,6 +47,7 @@ export class BrandWiseUserMappingComponent {
   userid: any;
   visibleTableData: boolean = false;
   editDialogVisible: boolean = false;
+  visibleExportButton: boolean = false;
 
   ngOnInit(): void {
     this.sharedService.updateModuleName('Brand Wise User Mapping');
@@ -113,7 +116,7 @@ export class BrandWiseUserMappingComponent {
     this.FetchLocationData(this.BrandUserMapping.value.Dealer)
   }
 
-  OnclickEditBrand(){
+  OnclickEditBrand() {
     this.fetchDealerEditData(this.EditBrandUserMapping.value.Brand)
   }
 
@@ -156,7 +159,7 @@ export class BrandWiseUserMappingComponent {
   }
 
 
-  OnClickEditDealer(){
+  OnClickEditDealer() {
     this.fetchlocation(this.EditBrandUserMapping.value.Dealer)
   }
 
@@ -169,7 +172,7 @@ export class BrandWiseUserMappingComponent {
         this.LocationEditData = res;
         //this.globalBlockUiService.stopLoading();
         console.log(this.LocationEditData);
-        
+
       },
       error: (err: any) => {
         console.error("Error fetching location data:", err);
@@ -197,38 +200,121 @@ export class BrandWiseUserMappingComponent {
   }
 
 
+  DealerMapping: any[] = []
+
+  ExtractDealerObject(dealerArray: any[]) {
+    if (dealerArray.length == null) {
+      this.DealerMapping = []
+      return;
+    }
+    this.DealerMapping = this.DealerData.filter(
+      (d: any) => dealerArray.includes(d.DealerID)
+    );
+  }
+
+  BrandMapping: any[] = []
+  FromateBrandObject(brandArray: any[]) {
+
+    this.BrandMapping = brandArray.map(id => ({ BrandId: id.bigid, DealerId: null, LocationId: null }));
+  }
+
+  LocationMapping: any[] = []
+  ExtractLocationObject(locationArray: any[]) {
+    if (locationArray.length == null) {
+      this.LocationMapping = []
+      return;
+    }
+    this.LocationMapping = this.LocationData.filter(
+      (l: any) => locationArray.includes(l.LocationID)
+
+    );
+
+
+  }
+
+  MapUseridToLocaiton() {
+    const userIds: number[] = this.BrandUserMapping.value.AssignedUser;
+
+    this.LocationMapping = this.LocationMapping.flatMap((loc: any) =>
+      userIds.map((uid: number) => ({
+        BrandId: loc.BrandId,
+        DealerId: loc.DealerId,
+        LocationId: loc.LocationId,
+        Location: loc.Location,
+        userId: uid
+      }))
+    );
+
+    console.log(this.LocationMapping);
+  }
+
+
+
+
   CreatePayload() {
-    const brands = this.BrandUserMapping.value.Brand || [];
-    const dealers = this.BrandUserMapping.value.Dealer || [];
-    const locations = this.BrandUserMapping.value.Location || [];
-    const users = this.BrandUserMapping.value.AssignedUser || [];
+    this.FromateBrandObject(this.BrandUserMapping.value.Brand);
+    if (this.BrandUserMapping.value.Dealer != null && this.BrandUserMapping.value.Dealer.length > 0) {
+      this.ExtractDealerObject(this.BrandUserMapping.value.Dealer);
+    }
+    if (this.BrandUserMapping.value.Location != null && this.BrandUserMapping.value.Location.length > 0) {
+      this.ExtractLocationObject(this.BrandUserMapping.value.Location);
+    }
 
-    const payload: any[] = [];
-
-    brands.forEach((BrandId: any) => {
-      dealers.forEach((DealerId: any) => {
-        locations.forEach((LocationId: any) => {
-          users.forEach((userId: any) => {
-            payload.push({
-              BrandId,
-              DealerId,
-              LocationId,
-              userId
-            });
-          });
-        });
-      });
+    this.LocationMapping = this.LocationMapping.map((loc: any) => {
+      return {
+        ...loc,
+        LocationId: loc.LocationID,
+      };
     });
+    this.MapUseridToLocaiton();
 
-    console.log("FINAL PAYLOAD", payload);
 
-    if(this.BrandUserMapping.valid){
-      this.SendUserMapping(payload, this.userid);
-      
+    if (this.LocationMapping.length > 0) {
+      if (this.BrandUserMapping.valid) {
+        this.SendUserMapping(this.LocationMapping, this.userid);
+      }
+      else {
+        this.BrandUserMapping.markAllAsTouched()
+      }
     }
-    else{
-      this.BrandUserMapping.markAllAsTouched()
-    }
+    //  if(this.DealerMapping.length > 0 && this.LocationMapping.length == 0){
+    //   this.SendUserMapping(this.DealerMapping, this.userid);
+    //  }
+    //  if (this.BrandMapping.length > 0 && this.DealerMapping.length == 0 && this.LocationMapping.length == 0) {
+    //   this.SendUserMapping(this.BrandMapping, this.userid);  
+    // }
+
+    // const brands = this.BrandUserMapping.value.Brand || [];
+    // const dealers = this.BrandUserMapping.value.Dealer || [];
+    // const locations = this.BrandUserMapping.value.Location || [];
+    // const users = this.BrandUserMapping.value.AssignedUser || [];
+
+    // const payload: any[] = [];
+
+    // brands.forEach((BrandId: any) => {
+    //   dealers.forEach((DealerId: any) => {
+    //     locations.forEach((LocationId: any) => {
+    //       users.forEach((userId: any) => {
+    //         payload.push({
+    //           BrandId,
+    //           DealerId,
+    //           LocationId,
+    //           userId
+    //         });
+    //       });
+    //     });
+    //   });
+    // });
+
+    // console.log("FINAL PAYLOAD", payload);
+
+    // if (this.BrandUserMapping.valid) {
+    //   this.SendUserMapping(payload, this.userid);
+
+    // }
+    // else {
+    //   this.BrandUserMapping.markAllAsTouched()
+    // }
 
 
   }
@@ -236,7 +322,7 @@ export class BrandWiseUserMappingComponent {
 
   SendUserMapping(payload: any, addedby: any) {
     this.globalBlockUiService.startLoading();
-    this.BrandUserMappingService.SendBrandWiseUserMapping({ payload, addedby }).subscribe({
+    this.BrandUserMappingService.SendBrandWiseUserMapping({ payload: payload, addedby: addedby }).subscribe({
       next: (res: any) => {
 
         this.Result = res.message
@@ -266,9 +352,14 @@ export class BrandWiseUserMappingComponent {
         this.ViewMappingData = res.data
         this.globalBlockUiService.stopLoading()
         this.visibleTableData = true;
+        this.visibleExportButton = this.ViewMappingData.length > 0;
       },
       error: (err: any) => {
         this.globalBlockUiService.stopLoading()
+        this.Result = err?.error?.message || "Something went wrong!";
+        this.visible = true;
+        this.visibleTableData = false;
+        this.visibleExportButton = false;
 
       }
     })
@@ -281,55 +372,88 @@ export class BrandWiseUserMappingComponent {
   }
 
   OnclickSendEditBrandWiseUserMapping() {
-   
+
   }
 
-EditBrandWiseUserMapping() {
+  EditBrandWiseUserMapping() {
 
-  if(this.EditBrandUserMapping.valid){
+    if (this.EditBrandUserMapping.valid) {
 
-    this.globalBlockUiService.startLoading();
+      this.globalBlockUiService.startLoading();
 
-  const formValue = this.EditBrandUserMapping.value;
+      const formValue = this.EditBrandUserMapping.value;
 
-  const requestBody = {
-    payload: [
-      {
-        BrandId: formValue.Brand,
-        DealerId: formValue.Dealer,
-        LocationId: formValue.Location,
-        userId: formValue.AssignedUser
-      }
-    ],
-    addedby: this.userid  
-  };
+      const requestBody = {
+        payload: [
+          {
+            BrandId: formValue.Brand,
+            DealerId: formValue.Dealer,
+            LocationId: formValue.Location,
+            userId: formValue.AssignedUser
+          }
+        ],
+        addedby: this.userid
+      };
 
-  this.BrandUserMappingService.EditBrandWiseUserMapping(requestBody)
-    .subscribe({
-      next: (res: any) => {
-        this.Result = res.message;
-        this.visible = true;
-        this.globalBlockUiService.stopLoading();
-        this.EditBrandUserMapping.reset();
-      },
+      this.BrandUserMappingService.EditBrandWiseUserMapping(requestBody)
+        .subscribe({
+          next: (res: any) => {
+            this.Result = res.message;
+            this.visible = true;
+            this.globalBlockUiService.stopLoading();
+            this.EditBrandUserMapping.reset();
+          },
 
-      error: (err: any) => {
-        this.Result = err?.error?.message || "Something went wrong!";
-        this.visible = true;
-        this.globalBlockUiService.stopLoading();
-         this.EditBrandUserMapping.reset();
-      }
+          error: (err: any) => {
+            this.Result = err?.error?.message || "Something went wrong!";
+            this.visible = true;
+            this.globalBlockUiService.stopLoading();
+            this.EditBrandUserMapping.reset();
+          }
+        });
+    }
+    else {
+      this.EditBrandUserMapping.markAllAsTouched()
+    }
+
+  }
+
+
+  exportToExcel() {
+    const formattedData = this.ViewMappingData.map((item: any) => ({
+      Brand: item.Brand ?? '',
+      Dealer: item.Dealer ?? '',
+      Location: item.Location ?? '',
+      Name: item.Name ?? '',
+      AddedOn: item.Addedon
+        ? new Date(item.Addedon).toLocaleString()
+        : '',
+      AddedBy: item.AddedBy ?? ''
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'View Mapping': worksheet },
+      SheetNames: ['View Mapping']
+    };
+
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array'
     });
+
+    this.saveExcelFile(excelBuffer, 'View_Mapping_Data');
   }
-  else{
-    this.EditBrandUserMapping.markAllAsTouched()
+
+
+  saveExcelFile(buffer: any, fileName: string) {
+    const data: Blob = new Blob([buffer], {
+      type:
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+    });
+
+    saveAs(data, `${fileName}_${new Date().getTime()}.xlsx`);
   }
-
-
-
-  
-}
-
 
 
 

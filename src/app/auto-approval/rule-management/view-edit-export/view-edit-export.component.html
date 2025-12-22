@@ -13,10 +13,11 @@
   <div class="min-w-full !min-h-[100px] flex items-start justify-start px-2">
     <div
       class="min-w-full min-h-[50px] flex flex-wrap p-2 gap-3 border-dashed border-2 bg-gray-50 border-gray-200"
-      [formGroup]="BrandInputData"
+      [formGroup]="RuleViewBrandInputData"
     >
       <p-select
         [filter]="true"
+        [showClear]="true"
         [options]="Brand"
         formControlName="brand"
         optionLabel="vcbrand"
@@ -27,6 +28,7 @@
       />
       <p-select
         [filter]="true"
+        [showClear]="true"
         placeholder="Dealer"
         [options]="Dealer"
         formControlName="dealer"
@@ -37,6 +39,7 @@
       />
       <p-select
         [filter]="true"
+        [showClear]="true"
         formControlName="location"
         placeholder="Location"
         optionLabel="location"
@@ -44,105 +47,285 @@
         [options]="Location"
         class="w-44"
       />
-      <p-select [filter]="true" placeholder="Rule Name" class="w-44" />
-      <p-button size="small" icon="pi pi-check" label="Save" />
-      <p-button size="small" icon="pi pi-eye" label="View" />
-      <p-button size="small" icon="pi pi-eye" label="View Template" />
-      <p-button size="small" icon="pi pi-download" label="Export" />
-      <p-button size="small" icon="pi pi-upload" label="Upload" />
+      <p-select [filter]="true" [showClear]="true" formControlName="Rule" [options]="RuleData" optionValue="Id" optionLabel="Name" placeholder="Rule Name" class="w-44" />
+      
+      <p-button size="small" icon="pi pi-eye" label="View" (onClick)="OnClickViewRule()" />
+      
     </div>
   </div>
 
   <!--View Rules Table -->
 
-  <div class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2">
+ 
+
+  <div
+    class="m-2 flex flex-col items-center rounded-lg bg-white shadow-lg p-2"
+    
+  >
     <div class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden">
       <p-table
+        #dt1
         [scrollable]="true"
-        scrollHeight="600px"
+        scrollHeight="400px"
+        [value]="ViewRuleData"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 30, 40, 50, 100]"
         [showGridlines]="true"
-        scrollDirection="both"
+        paginatorDropdownAppendTo="body"
         class="!w-[90vw]"
         [tableStyle]="{ 'min-width': '50rem' }"
+        [globalFilterFields]="[
+          'id',
+          'Brand',
+          'BrandId',
+          'Dealer',
+          'DealerId',
+          'Location',
+          'LocationId',
+          'PartNumber',
+          'LatestPartNumber',
+          'PartDesc',
+          'MRP',
+          'LandedCost',
+          'MOQ',
+          'PartType',
+          'PartTypeId',
+          'Model',
+          'GSTPer',
+          'QtyPerVehicle',
+          'HSNCode',
+          'HSNID',
+          'Name',
+          'Addedby',
+          'Remarks',
+          'SCSRemarks'
+        ]"
       >
-        <ng-template #header>
-          <tr class="">
-            <th
-              class="!px-1 flex-auto !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px] !min-h-[22px]"
-            >
+        <ng-template let-item pTemplate="paginatordropdownitem">
+          {{ item.value === ViewRuleData?.length ? "All" : item.value }}
+        </ng-template>
+
+        <ng-template pTemplate="caption">
+          <div class="flex items-center">
+            <p-button
+              label="Clear"
+              size="small"
+              [outlined]="true"
+              icon="pi pi-filter-slash"
+              (click)="clear(dt1)"
+            ></p-button>
+
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                size="small"
+                (input)="onGlobalFilter($event)"
+                placeholder="Search keyword"
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
+            <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               S.No
             </th>
             <th
-              class="!px-1 flex-2 !py-1 !text-center text-[12px] !bg-gray-300 !max-w-[60px]"
+              pSortableColumn="Brand"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
               Brand
-              <p-columnFilter type="text" field="" display="menu" />
+              <p-sortIcon field="Brand" />
+              <p-columnFilter type="text" field="Brand" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+              pSortableColumn="Dealer"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
               Dealer
+              <p-sortIcon field="Dealer" />
+              <p-columnFilter type="text" field="Dealer" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+              pSortableColumn="Location"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
               Location
+              <p-sortIcon field="Location" />
+              <p-columnFilter type="text" field="Location" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 !min-w-[60px]"
+              pSortableColumn="Name"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
               Rule Name
+              <p-sortIcon field="Name" />
+              <p-columnFilter type="text" field="Name" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="Rule"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+            >
+              Rule Expression
+              <p-sortIcon field="Rule" />
+              <p-columnFilter type="text" field="Rule" display="menu" />
+            </th>
+            <th
+              pSortableColumn="LatestPartNumber"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
               Created By
+              <p-sortIcon field="LatestPartNumber" />
+              <p-columnFilter
+                type="text"
+                field="LatestPartNumber"
+                display="menu"
+              />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="PartDesc"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
-              Created On
+            Created On
+              <p-sortIcon field="PartDesc" />
+              <p-columnFilter type="text" field="PartDesc" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="MOQ"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
               Status
+              <p-sortIcon field="MOQ" />
+              <p-columnFilter type="text" field="MOQ" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              pSortableColumn="priority"
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
               Priority
+              <p-sortIcon field="priority" />
+              <p-columnFilter type="text" field="priority" display="menu" />
             </th>
             <th
-              class="!px-1 !py-1 !text-center text-[12px] !bg-gray-300 font-semibold !min-w-[60px]"
+              
+              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
             >
-              Action
+              Edit Priority
+              
             </th>
+           
+            
           </tr>
         </ng-template>
 
-        <ng-template #body let-rowData let-i="rowIndex">
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
           <tr
             class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
           >
-            <td class="p-1 text-[10px] text-center">{{ i + 1 }}</td>
-            <td
-              class="!px-1 !py-1 !text-center !h-[20px] text-[13px] text-gray-700"
-            >
-              {{ rowData.Dashboard }}
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ i + 1 }}
             </td>
+
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Brand }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Dealer }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Location }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Name }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.Rule }}
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              <p-toggleswitch
+                [(ngModel)]="rowData.Status"
+                
+              />
+            </td>
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              {{ rowData.priority  }}
+            </td>
+            
+            <td class="!px-1 !py-1 text-center text-[13px] text-gray-700">
+              <p-button size="small" icon="pi pi-pencil" (onClick)="OnClickEditPriority(rowData)" />
+            </td>
+            
+            
           </tr>
         </ng-template>
       </p-table>
-      <p-paginator
-        class="h-6 text-sm"
-        (onPageChange)="onPageChange($event)"
-        [first]="first"
-        [rows]="rows"
-        [appendTo]="body"
-        [totalRecords]="120"
-        [rowsPerPageOptions]="[10, 20, 30]"
-      />
     </div>
   </div>
 </div>
+
+
+<p-dialog
+  header="Information"
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p>
+    {{ Result }}
+  </p>
+</p-dialog>
+
+
+<p-dialog
+  header="Edit Priority"
+  [(visible)]="EditPriorityDialog"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '40vw', '575px': '90vw' }"
+  [style]="{ width: '30vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="mt-2">
+    <label class="text-sm font-semibold text-gray-600">Update Priority</label>
+    <input
+      type="number"
+      [(ngModel)]="Priority"
+      placeholder="Enter Priority"
+      class="p-inputtext p-component w-full mt-2 py-2 px-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all"
+    />
+  </div>
+
+  <div class="flex justify-end gap-3 mt-6">
+    <button
+      pButton
+      label="Cancel"
+      class="p-button-text"
+      (click)="EditPriorityDialog = false"
+    ></button>
+
+    <button
+      pButton
+      label="Save"
+      class="p-button-primary"
+      (click)="onClickEditPriority()"
+    ></button>
+  </div>
+</p-dialog>
+

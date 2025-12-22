@@ -50,6 +50,17 @@ export class RuleCreationService {
   fetchRuleAction():Observable<any>{
     return this.http.get(`${this.apiurl}view-ruleoutput`)
   }
+
+
+  FetchRemarkParameter():Observable<any>{
+    return this.http.get(`${this.apiurl}remark-parameter`)
+  }
+
+
+  FetchPreDefinedParameter(data:any):Observable<any>{
+    return this.http.post(`${this.apiurl}parameter`,data)
+  }
+  
   
 
 

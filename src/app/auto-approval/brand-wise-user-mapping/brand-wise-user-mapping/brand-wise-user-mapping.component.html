@@ -127,6 +127,14 @@
         iconPos="right"
         (onClick)="onclickViewUsermapping()"
       ></p-button>
+      <p-button
+        size="small"
+        [style]="{ 'background-color': '#008080', color: '#fff' }"
+        icon="pi pi-download"
+        iconPos="right"
+        (onClick)="exportToExcel()"
+        *ngIf="visibleExportButton"
+      ></p-button>
     </div>
   </div>
 
@@ -213,57 +221,102 @@
 
         <ng-template pTemplate="header">
           <tr class="bg-gray-200 text-gray-800 text-sm font-semibold">
+            <!-- S.No -->
             <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               S.No
             </th>
-            <th
-              pSortableColumn="Brand"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Brand
-              <p-sortIcon field="Brand" />
-              <p-columnFilter type="text" field="Brand" display="menu" />
+
+            <!-- Brand -->
+            <th pSortableColumn="Brand" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col items-center">
+                <span class="text-xs">Brand</span>
+                <div class="flex items-center gap-2 mt-1">
+                  <p-sortIcon field="Brand"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Brand"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="Dealer"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Dealer
-              <p-sortIcon field="Dealer" />
-              <p-columnFilter type="text" field="Dealer" display="menu" />
+
+            <!-- Dealer -->
+            <th pSortableColumn="Dealer" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col items-center">
+                <span class="text-xs">Dealer</span>
+                <div class="flex items-center gap-2 mt-1">
+                  <p-sortIcon field="Dealer"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Dealer"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="Location"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Location
-              <p-sortIcon field="Location" />
-              <p-columnFilter type="text" field="Location" display="menu" />
+
+            <!-- Location -->
+            <th pSortableColumn="Location" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col items-center">
+                <span class="text-xs">Location</span>
+                <div class="flex items-center gap-2 mt-1">
+                  <p-sortIcon field="Location"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Location"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="Name"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Asssigned User
-              <p-sortIcon field="Name" />
-              <p-columnFilter type="text" field="Name" display="menu" />
+
+            <!-- Assigned User -->
+            <th pSortableColumn="Name" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col items-center">
+                <span class="text-xs">Assigned User</span>
+                <div class="flex items-center gap-2 mt-1">
+                  <p-sortIcon field="Name"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Name"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="Addedon"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Added On
-              <p-sortIcon field="Addedon" />
-              <p-columnFilter type="text" field="Addedon" display="menu" />
+
+            <!-- Added On -->
+            <th pSortableColumn="Addedon" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col items-center">
+                <span class="text-xs">Added On</span>
+                <div class="flex items-center gap-2 mt-1">
+                  <p-sortIcon field="Addedon"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="Addedon"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
-            <th
-              pSortableColumn="AddedBy"
-              class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
-            >
-              Added By
-              <p-sortIcon field="AddedBy" />
-              <p-columnFilter type="text" field="AddedBy" display="menu" />
+
+            <!-- Added By -->
+            <th pSortableColumn="AddedBy" class="!px-1 !py-1 !bg-gray-300">
+              <div class="flex flex-col items-center">
+                <span class="text-xs">Added By</span>
+                <div class="flex items-center gap-2 mt-1">
+                  <p-sortIcon field="AddedBy"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="AddedBy"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </div>
             </th>
+
+            <!-- Action -->
             <th class="!px-1 !py-1 text-center text-[12px] !bg-gray-300">
               Action
             </th>

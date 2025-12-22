@@ -34,6 +34,13 @@ const routes: Routes = [
      canLoad:[authGuard],
     canActivate:[authGuard]
 
+  },
+  {
+    path: 'ic',
+    loadChildren : () => import('../auto-approval/internal-and-cluster-rule/internal-and-cluster-rule.module').then(m => m.InternalAndClusterRuleModule),
+    canLoad:[authGuard],
+    canActivate: [authGuard]
+
   }
   
 ];

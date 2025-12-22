@@ -1,0 +1,5 @@
+.force-float label{
+  transform: translateY(-1.2rem) scale(0.85) !important;
+  background: white;            /* optional: overlap clean */
+  padding: 0 4px;               /* optional */
+}

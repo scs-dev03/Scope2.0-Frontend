@@ -5,6 +5,9 @@ import { SHARED_IMPORTS } from '../../../shared/shared-imports/shared-module';
 import { PaginatorState } from 'primeng/paginator';
 import { SharedServiceService } from '../../../services/shared-service.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MasterServiceService } from '../../../services/master-service/master-service.service';
+import { GlobalBlockUiService } from '../../../services/global-block-ui.service';
+import { ScsadminServiceService } from '../../../services/Auto-Approvals/scsadmin-service.service';
 
 @Component({
   selector: 'app-all-approvals',
@@ -14,24 +17,23 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class AllApprovalsComponent {
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    this.sharedService.updateModuleName('All Approvals Stock Order')
-
+    this.fetchBrandData();
+    this.sharedService.updateModuleName('Approvals ')
+    this.FetchUserData();
   }
 
   filterForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private sharedService: SharedServiceService) {
+  constructor(private fb: FormBuilder,private scsadminservice: ScsadminServiceService,private globalBlockUiService: GlobalBlockUiService, private sharedService: SharedServiceService, private masterservice: MasterServiceService) {
     this.filterForm = this.fb.group({
       brand: [null],
       dealer: [null],
       location: [null],
       user: [null],
       status: [null],
-      fromDate: [null],
-      toDate: [null],
-      orderType: [[]],   // multiselect = array
+      fromDate: [this.today],
+      toDate: [this.firstDayOfMonth],
+      orderType: [this.RequestTypeData.map(x => x.id)],   // multiselect = array
       pendingSince: [[]] // multiselect = array
     });
   }
@@ -48,20 +50,47 @@ export class AllApprovalsComponent {
   visible: boolean = false;
 
   
-  
-  first: number = 0;
-  
-  rows: number = 10;
-  
-  onPageChange(event: PaginatorState) {
-    this.first = event.first ?? 0;
-    this.rows = event.rows ?? 10;
-  }
-  
-  showDialog() {
-    this.visible = true;
-  }
-  // Table headers list
+  today = new Date().toISOString().split('T')[0];
+  firstDayOfMonth = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    1
+  ).toLocaleDateString('en-CA');
+
+
+  RequestTypeData = [{
+    Name: 'Stock',
+    id: 'S'
+  }, {
+    Name: 'Vehicle',
+    id: 'V'
+  }]
+
+  StatusData = [{
+    Name: 'Decline',
+    id: 'D'
+  }, {
+    Name: 'Approve',
+    id: 'A'
+  }, {
+    Name: 'Pending',
+    id: 'P'
+  }, {
+    Name: 'Internal Approval',
+    id: 'I'
+  }]
+
+
+  periodOptions = [
+    { name: 'Last 30 Min', value: '30min' },
+    { name: 'Last One hour', value: '1hr' },
+    { name: 'Last Two hour', value: '2hr' },
+    { name: 'Yesterday', value: 'lastWeek' },
+  ];
+
+
+
+
 tableColumns = [
   { field: 'sno', header: 'S.No' },
   { field: 'partNumber', header: 'Part Number' },
@@ -93,7 +122,96 @@ tableColumns = [
   { field: 'actionFields', header: 'Action Fields' }
 ];
 
-// Initially all columns selected
-selectedColumns: string[] = this.tableColumns.map(c => c.field);
+
+BrandData: any
+
+  fetchBrandData() {
+    // this.globalBlockUiService.startLoading();
+    this.masterservice.getBrandMaster().subscribe((res: any) => {
+     
+      this.BrandData = res;
+
+      //this.globalBlockUiService.stopLoading();
+      console.log(this.BrandData);
+    });
+  }
+  OnclickBrand() {
+    this.fetchDealerData(this.filterForm.value.brand)
+  }
+
+  DealerData: any
+  // Fetch Dealer Data
+  fetchDealerData(brandid: any) {
+    //this.globalBlockUiService.startLoading();
+    this.masterservice.getDealersMaster({ brandid }).subscribe({
+      next: (res: any) => {
+       
+
+        this.DealerData = res;
+        this.DealerData.sort((a: any, b: any) =>
+          a.dealer.localeCompare(b.dealer)
+        );
+        //this.globalBlockUiService.stopLoading();
+      },
+      error: (err: any) => {
+        console.error('Error fetching dealer data:', err);
+        //this.globalBlockUiService.stopLoading();
+      },
+    });
+  }
+  OnClickDealer() {
+    this.fetchlocation(this.filterForm.value.dealer)
+  }
+
+
+
+  LocationData: any
+  fetchlocation(dealerid: any) {
+    //this.globalBlockUiService.startLoading();
+    this.masterservice.getlocationMaster({ dealerid: dealerid }).subscribe({
+      next: (res: any) => {
+        this.LocationData = res;
+        //this.globalBlockUiService.stopLoading();
+      },
+      error: (err: any) => {
+        console.error("Error fetching location data:", err);
+        //this.globalBlockUiService.stopLoading();
+      }
+    });
+  }
+
+  UserData: any
+
+  FetchUserData() {
+    this.masterservice.getUsersData().subscribe({
+      next: (res: any) => {
+        this.UserData = res.data
+      },
+      error: (err: any) => {
+        console.error("Error fetching User data:", err);
+      }
+    })
+  }
+
+
+  ApprovalSummary:any
+  FetchApprovalSummaryData(DealerId: any, LocationIds: any, RequestType: any, From: any, To: any, OrderTypeIds: any, PartNumbers: any, VehicleNumbers: any, JobCardNumbers: any, AdvisorIds: any, Status: any){
+    this.globalBlockUiService.startLoading()
+    this.scsadminservice.FetechApprovalSummary({
+      DealerId, LocationIds, RequestType, From, To, OrderTypeIds, PartNumbers, VehicleNumbers, JobCardNumbers, AdvisorIds, Status
+    }).subscribe({
+      next: (res:any)=>{
+        this.ApprovalSummary = res.data
+      },
+      error: (err:any)=>{
+        console.error("error Fetching data");
+        
+      }
+    })
+  }
+  onClickViewApprovalSummary(){
+    this.FetchUserData()
+  }
+
 
 }

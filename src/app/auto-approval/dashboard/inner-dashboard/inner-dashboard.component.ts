@@ -35,6 +35,7 @@ export class InnerDashboardComponent {
         //this.fetchDealerData(this.InnerDashboardInputData.value.Brand)
         this.InnerDashboardInputData.get("Brand")?.patchValue(this.brandid)
         this.InnerDashboardInputData.get("Dealer")?.patchValue(params['dealerid'])
+        this.InnerDashboardInputData.get("FromDate")?.patchValue(null)
 
         this.fetchDealerData(this.brandid);
         this.fetchlocation(this.dealerid)
@@ -42,8 +43,6 @@ export class InnerDashboardComponent {
 
       }
     })
-
-    //console.log(typeof(this.brandid));
 
   }
 
@@ -140,7 +139,7 @@ export class InnerDashboardComponent {
   OrderTypeData: any
 
   fetchOrderType() {
-    
+
     this.innerdashboardservice.getOrderType().subscribe({
       next: (res: any) => {
         this.OrderTypeData = res.data;
@@ -153,8 +152,8 @@ export class InnerDashboardComponent {
 
   periodOptions = [
     { name: 'Last 30 Min', value: '30min' },
-    { name: 'Last 1 hr', value: '1hr' },
-    { name: 'Last 2 hr', value: '2hr' },
+    { name: 'Last One hour', value: '1hr' },
+    { name: 'Last Two hour', value: '2hr' },
     { name: 'Yesterday', value: 'lastWeek' },
   ];
 
@@ -195,7 +194,7 @@ export class InnerDashboardComponent {
             NotInMaster: res.data[0].NotInMaster || 0,
             Decline: res.data[0].Decline || 0,
             Approve: res.data[0].Approve || 0,
-            PendingCount: res.data[0].Pending || 0,
+            PendingCount: res.data[0].Manual || 0,
             Internal: res.data[0].Internal || 0,
           };
 
@@ -210,6 +209,8 @@ export class InnerDashboardComponent {
         },
         error: (err: any) => {
           console.error('Error fetching Dashboard data:', err);
+          this.Result = err?.error?.message
+          this.visible = true
           this.globalBlockUiService.stopLoading();
         },
       });
@@ -284,8 +285,25 @@ export class InnerDashboardComponent {
 
 
   RedirectToNotInMaster() {
-    this.router.navigate(['/auto/master/nim']);
-  }
+  const formValue = this.InnerDashboardInputData.value;
+  console.log(formValue);
+
+  this.router.navigate(
+    ['/auto/scsadmin/nim'],
+    {
+      queryParams: {
+        brandId: formValue.Brand ?? null,
+        dealerId: formValue.Dealer ?? null,
+        locationId: formValue.Location ?? null,
+        From: formValue.FromDate ? formValue.FromDate : 'N',
+        To: formValue.ToDate ?? null
+      }
+    }
+  );
+}
+
+
+
   RedirectToStatus() {
     this.router.navigate(['/auto/status/os']);
   }

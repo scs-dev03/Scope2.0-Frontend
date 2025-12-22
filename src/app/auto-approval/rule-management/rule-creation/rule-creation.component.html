@@ -2,49 +2,157 @@
   <!-- <h1 class="text-2xl font-serif ml-2">Rule Creation</h1> -->
   <div class="flex flex-wrap gap-4 p-2">
     <div class="flex items-center">
-      <p-checkbox [(ngModel)]="locationSpecific" [binary]="true"></p-checkbox>
+      <p-checkbox
+        [(ngModel)]="locationSpecific"
+        [binary]="true"
+        (onChange)="onLocationChange()"
+      ></p-checkbox>
       <label class="ml-2 mt-[10px] text-sm">Location Specific</label>
     </div>
+
     <div class="flex items-center">
-      <p-checkbox [(ngModel)]="GeneralRule" [binary]="true"></p-checkbox>
+      <p-checkbox
+        [(ngModel)]="GeneralRule"
+        [binary]="true"
+        (onChange)="onGeneralChange()"
+      ></p-checkbox>
       <label class="ml-2 mt-[10px] text-sm">General Rule</label>
     </div>
-    <br />
   </div>
 
-  <div class="p-2 gap-3 flex" [formGroup]="LocationSpecificName">
-    <p-select
-      [filter]="true"
-      formControlName="brand"
-      [options]="Brand"
-      optionLabel="vcbrand"
-      optionValue="bigid"
-      size="small"
-      (onChange)="OnClickBrand()"
-      placeholder="Select a Brand"
-      class="w-44"
-    />
-    <p-select
-      [filter]="true"
-      formControlName="dealer"
-      [options]="Dealer"
-      optionLabel="dealer"
-      optionValue="dealerid"
-      size="small"
-      (onChange)="OnClickDealer()"
-      placeholder="Select a Dealer"
-      class="w-44"
-    />
-    <p-select
-      [filter]="true"
-      formControlName="location"
-      optionLabel="location"
-      optionValue="locationid"
-      [options]="Location"
-      size="small"
-      placeholder="Select a Location"
-      class="w-44"
-    />
+  <div
+    class="p-2 gap-3 flex"
+    [formGroup]="GeneralRuleName"
+    *ngIf="!locationSpecific"
+  >
+    <div class="flex flex-col">
+      <p-multiselect
+        [filter]="true"
+        formControlName="brand"
+        [options]="Brand"
+        optionLabel="vcbrand"
+        optionValue="bigid"
+        size="small"
+        (onChange)="OnClickBrand()"
+        placeholder="Select a Brand"
+        class="w-44"
+      >
+      </p-multiselect>
+
+      <small
+        class="text-red-500 text-xs"
+        *ngIf="
+          GeneralRuleName.get('brand')?.invalid &&
+          (GeneralRuleName.get('brand')?.touched ||
+            GeneralRuleName.get('brand')?.dirty)
+        "
+      >
+        Brand is required
+      </small>
+    </div>
+
+    <div class="flex flex-col">
+      <p-multiselect
+        [filter]="true"
+        formControlName="dealer"
+        [options]="Dealer"
+        optionLabel="Dealer"
+        optionValue="DealerID"
+        size="small"
+        (onChange)="OnClickDealer()"
+        placeholder="Select a Dealer"
+        class="w-44"
+      />
+    </div>
+
+    <div class="flex flex-col">
+      <p-multiselect
+        [filter]="true"
+        formControlName="location"
+        optionLabel="Location"
+        optionValue="LocationID"
+        [options]="Location"
+        size="small"
+        placeholder="Select a Location"
+        class="w-44"
+      />
+    </div>
+  </div>
+
+  <div
+    class="p-2 gap-3 flex"
+    [formGroup]="LocationSpecificName"
+    *ngIf="locationSpecific"
+  >
+    <div class="flex flex-col">
+      <p-select
+        [filter]="true"
+        formControlName="brand"
+        [options]="Brand"
+        optionLabel="vcbrand"
+        optionValue="bigid"
+        size="small"
+        placeholder="Select a Brand"
+        class="w-44"
+        (onChange)="OnclickBrandSingle()"
+      ></p-select>
+
+      <small
+        class="text-red-500"
+        *ngIf="
+          LocationSpecificName.get('brand')?.invalid &&
+          LocationSpecificName.get('brand')?.touched
+        "
+      >
+        Brand is required
+      </small>
+    </div>
+
+    <div class="flex flex-col">
+      <p-select
+        [filter]="true"
+        formControlName="dealer"
+        [options]="dealerData"
+        optionLabel="dealer"
+        optionValue="dealerid"
+        size="small"
+        placeholder="Select a Dealer"
+        class="w-44"
+        (onChange)="OnclickDealerSingle()"
+      ></p-select>
+
+      <small
+        class="text-red-500"
+        *ngIf="
+          LocationSpecificName.get('dealer')?.invalid &&
+          LocationSpecificName.get('dealer')?.touched
+        "
+      >
+        Dealer is required
+      </small>
+    </div>
+    <div class="flex flex-col">
+      <p-select
+        [filter]="true"
+        formControlName="location"
+        [options]="locaitonData"
+        optionLabel="location"
+        optionValue="locationid"
+        size="small"
+        placeholder="Select a Location"
+        class="w-44"
+      ></p-select>
+
+      <small
+        class="text-red-500"
+        *ngIf="
+          LocationSpecificName.get('location')?.invalid &&
+          LocationSpecificName.get('location')?.touched
+        "
+      >
+        Location is required
+      </small>
+    </div>
   </div>
 
   <br />
@@ -114,15 +222,15 @@
         <p-select
           [filter]="true"
           [filter]="true"
-          formControlName="RuleType"
-          [options]="ruleType"
+          formControlName="RuleFor"
+          [options]="ruleFor"
           optionLabel="name"
           optionValue="value"
           size="small"
           (onChange)="OnClickDealer()"
           class="w-44 h-9"
         />
-        <label for="description" class="text-xs">Rule Type</label>
+        <label for="description" class="text-xs">Rule For</label>
       </p-floatlabel>
 
       <!-- Validation messages -->
@@ -133,7 +241,7 @@
         "
       >
         <span *ngIf="RuleName.get('RuleType')?.errors?.['required']"
-          >Rule Type is required.</span
+          >Rule For is required.</span
         >
       </div>
     </div>
@@ -145,7 +253,7 @@
     <div
       class="min-w-full min-h-[50px] flex-col flex-wrap p-2 gap-3 items-stretch border-dashed border-2 bg-gray-50 border-gray-200"
     >
-      <h1>Numeric Rule Creation</h1>
+      <h1>Rule Creation</h1>
       <br />
       <form [formGroup]="NumericRule">
         <div
@@ -172,6 +280,7 @@
               [options]="parametersNumeric"
               formControlName="selectedParameter"
               optionLabel="Parameter"
+              (onChange)="OnclickParameter()"
               styleClass="w-44 text-wrap"
             />
             <label for="parameter" class="text-sm">Parameters</label>
@@ -196,7 +305,7 @@
               [filter]="true"
               [filter]="true"
               size="small"
-              [options]="OperatorList"
+              [options]="PreDefinedParameter"
               formControlName="SubParameters"
               optionLabel="Operator"
               optionValue="Operator"
@@ -241,8 +350,6 @@
   <br />
 </div>
 
-
-
 <p-dialog
   header="Rule Output Condition"
   [modal]="true"
@@ -252,76 +359,137 @@
   <span class="p-text-secondary block mb-8 text-lg font-semibold"
     >If Success</span
   >
+  <!-- true-false.component.html -->
   <div [formGroup]="trueFalseInput">
-    <div class="flex items-center gap-4 mb-4">
-      <label for="success" class="text-sm w-24">Remark for Success</label>
-      <p-select
-        [filter]="true"
-        [filter]="true"
-        [options]="ActionList"
-        optionLabel="Condition"
-        optionValue="Id"
-        formControlName="trueAction"
-        placeholder="Select a Action "
-        class="w-full h-8 md:w-48"
-      />
+    <div class="flex items-start gap-4 mb-4">
+      <!-- Label -->
+      <label for="success" class="text-sm w-24 mt-2">Remark for Success</label>
 
-      <input
-        pInputText
-        id="success"
-        formControlName="trueRemark"
-        pSize="small"
-        [(ngModel)]="trueRemarktext"
-        class="flex-auto"
-        autocomplete="off"
-      />
+      <!-- Right Side Wrapper -->
+      <div class="flex flex-col w-full">
+        <!-- Top Row: Action + Parameters + Add Button -->
+        <div class="flex gap-4">
+          <!-- Action Select (REQUIRED) -->
+          <div class="flex flex-col">
+            <p-select
+              [filter]="true"
+              [options]="ActionList"
+              optionLabel="Condition"
+              optionValue="Id"
+              formControlName="trueAction"
+              placeholder="Select an Action"
+              class="w-48 h-8"
+            ></p-select>
 
-      <p-select
-        [filter]="true"
-        [filter]="true"
-        optionLabel="label"
-        formControlName="trueParameter"
-        optionValue="value"
-        placeholder="Parameters"
-        class="w-full h-8 md:w-48"
-      />
+            <small class="p-error mt-1" *ngIf="isInvalid('trueAction')">
+              Action is required
+            </small>
+          </div>
+
+          <!-- Parameter + Add Button -->
+          <div class="flex gap-2">
+            <p-select
+              [options]="RemarkParameter"
+              [filter]="true"
+              optionLabel="Parameter"
+              formControlName="trueParameter"
+              optionValue="Parameter"
+              placeholder="Parameters"
+              class="w-48 h-8"
+            ></p-select>
+
+            <p-button
+              label="Add"
+              class="!h-8"
+              size="small"
+              severity="secondary"
+              (onClick)="OnclickAddRemarkParameterInTrueRemark()"
+            ></p-button>
+          </div>
+        </div>
+
+        <!-- Input Field (REQUIRED) -->
+        <input
+          pInputText
+          id="success"
+          formControlName="trueRemark"
+          pSize="small"
+          class="mt-2"
+          autocomplete="off"
+        />
+
+        <small class="p-error mt-1" *ngIf="isInvalid('trueRemark')">
+          Remark is required
+        </small>
+      </div>
     </div>
+
     <span class="p-text-secondary block mb-8 text-lg font-semibold"
       >If Failure</span
     >
 
-    <div class="flex items-center gap-4 mb-8">
-      <label for="faileur" class="text-sm w-24">Remark for Failure</label>
-      <p-select
-        [filter]="true"
-        [filter]="true"
-        [options]="ActionList"
-        optionLabel="Condition"
-        optionValue="Id"
-        appendTo="body"
-        formControlName="falseAction"
-        placeholder="Select a Action "
-        class="w-full h-8 md:w-48"
-      />
-      <input
-        pInputText
-        pSize="small"
-        id="faileur"
-        formControlName="falseRemark"
-        class="flex-auto"
-        autocomplete="off"
-      />
+    <div class="flex items-start gap-4 mb-8">
+      <!-- Label -->
+      <label for="faileur" class="text-sm w-24 mt-2">Remark for Failure</label>
 
-      <p-select
-        [filter]="true"
-        [filter]="true"
-        optionLabel="label"
-        formControlName="falseParameter"
-        optionValue="value"
-        placeholder="Parameters"
-        class="w-full h-8 md:w-48"
-      />
+      <!-- Right Side Wrapper -->
+      <div class="flex flex-col w-full">
+        <!-- Top Row: Action + Parameter -->
+        <div class="flex gap-4">
+          <!-- Action Select (REQUIRED) -->
+          <div class="flex flex-col">
+            <p-select
+              [filter]="true"
+              [options]="ActionList"
+              optionLabel="Condition"
+              optionValue="Id"
+              appendTo="body"
+              formControlName="falseAction"
+              placeholder="Select an Action"
+              class="w-48 h-8"
+            ></p-select>
+
+            <small class="p-error mt-1" *ngIf="isInvalid('falseAction')">
+              Action is required
+            </small>
+          </div>
+
+          <!-- Parameter Select -->
+          <p-select
+            [filter]="true"
+            optionLabel="Parameter"
+            [options]="RemarkParameter"
+            formControlName="falseParameter"
+            optionValue="Parameter"
+            placeholder="Parameters"
+            class="w-48 h-8"
+          ></p-select>
+
+          <p-button
+            label="Add"
+            class="!h-8"
+            size="small"
+            severity="secondary"
+            (onClick)="OnclickAddRemarkParameterInFalseRemark()"
+          ></p-button>
+        </div>
+
+        <!-- Input Field (REQUIRED) -->
+        <input
+          pInputText
+          pSize="small"
+          id="faileur"
+          formControlName="falseRemark"
+          class="mt-2"
+          autocomplete="off"
+        />
+
+        <small class="p-error mt-1" *ngIf="isInvalid('falseRemark')">
+          Remark is required
+        </small>
+      </div>
     </div>
+
     <div class="flex justify-end gap-2">
       <p-button
         label="Cancel"
@@ -329,8 +497,13 @@
         size="small"
         severity="secondary"
         (click)="visibleTrueFalse = false"
-      />
-      <p-button label="Save" size="small" (click)="OnClickSaveRule()" />
+      ></p-button>
+
+      <p-button
+        label="Save"
+        size="small"
+        (click)="OnClickSaveRule()"
+      ></p-button>
     </div>
   </div>
 </p-dialog>

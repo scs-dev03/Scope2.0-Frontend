@@ -58,7 +58,7 @@ export const environment = {
   apiUrl: 'http://web10.185.238.new.ocpwebserver.com/api/',
 
 
-  //  http://localhost:4200/core/landing?usertoken=0x020000000FAEDBF6C5D79C7B5769B42968A351A95F78DF8C9EA047E231C6F7E7D824B79C&usertype=a
 };
 
 
+//  http://localhost:4200/core/landing?usertoken=0x020000000FAEDBF6C5D79C7B5769B42968A351A95F78DF8C9EA047E231C6F7E7D824B79C&usertype=a

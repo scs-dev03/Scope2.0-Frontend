@@ -1,0 +1,814 @@
+<div class="min-w-full h-full bg-gray-100">
+  <h1 class="text-xl font-serif ml-2">Counter Sale Request</h1>
+
+  <div class="min-w-full !min-h-auto flex items-center justify-start px-2">
+    <div
+      class="min-w-full min-h-[15vh] flex-wrap flex-col p-2 gap-3 shadow-lg border-dashed border-2 bg-white rounded-md border-white"
+    >
+      <p-tabs value="0">
+        <p-tablist>
+          <p-tab class="text-sm" value="0">Internal Rule</p-tab>
+          <p-tab class="text-sm" value="1">Cluster Rule</p-tab>
+        </p-tablist>
+        <p-tabpanels>
+          <p-tabpanel value="0">
+            <div class="flex flex-col flex-wrap w-auto h-auto">
+              <div class="flex justify-between items-center">
+                <span class="font-semibold">
+                  Internal Transfer Rule - List
+                </span>
+                <p-button
+                  label="New Internal Rule"
+                  severity="info"
+                  icon="pi pi-plus"
+                  size="small"
+                />
+              </div>
+              <br />
+              <div class="flex gap-2" [formGroup]="InternalTransferInputData">
+                <div class="flex flex-col h-15">
+                  <p-floatlabel
+                    class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                    variant="on"
+                  >
+                    <p-select
+                      [showClear]="true"
+                      filter="true"
+                      size="small"
+                      class="w-44 h-8"
+                      formControlName="Brand"
+                      [options]="BrandData"
+                      optionValue="bigid"
+                      optionLabel="vcbrand"
+                      (onClick)="OnclickBrand()"
+                    />
+                    <label class="text-xs">Select Brand</label>
+                  </p-floatlabel>
+
+                  <small
+                    class="text-red-500 text-xs mt-1"
+                    *ngIf="
+                      InternalTransferInputData.get('Brand')?.invalid &&
+                      (InternalTransferInputData.get('Brand')?.touched ||
+                        InternalTransferInputData.get('Brand')?.dirty)
+                    "
+                  >
+                    This field is required
+                  </small>
+                </div>
+
+                <div class="flex flex-col h-15">
+                  <p-floatlabel
+                    class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                    variant="on"
+                  >
+                    <p-select
+                      size="small"
+                      filter="true"
+                      class="w-full h-8"
+                      formControlName="Dealer"
+                      [options]="DealerData"
+                      optionValue="dealerid"
+                      optionLabel="dealer"
+                      (onChange)="OnClickDealer()"
+                    />
+                    <label class="text-xs">Select Dealer</label>
+                  </p-floatlabel>
+
+                  <small
+                    class="text-red-500 text-xs mt-1"
+                    *ngIf="
+                      InternalTransferInputData.get('Dealer')?.invalid &&
+                      (InternalTransferInputData.get('Dealer')?.touched ||
+                        InternalTransferInputData.get('Dealer')?.dirty)
+                    "
+                  >
+                    This field is required
+                  </small>
+                </div>
+
+                <!-- Location -->
+                <div class="flex flex-col h-11">
+                  <p-floatlabel
+                    class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                    variant="on"
+                  >
+                    <p-select
+                      [showClear]="true"
+                      filter="true"
+                      size="small"
+                      class="w-full h-8"
+                      formControlName="Location"
+                      [options]="LocationData"
+                      optionValue="locationid"
+                      optionLabel="location"
+                    />
+                    <label class="text-xs">Location</label>
+                  </p-floatlabel>
+                </div>
+                <div class="flex flex-col h-11">
+                  <p-floatlabel
+                    class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                    variant="on">
+                    <input
+                      pInputText
+                      id="on_search"
+                      formControlName="Search"
+                      autocomplete="off"
+                      pSize="small"
+                    />
+                    <label class="text-xs" for="on_search">Search</label>
+                  </p-floatlabel>
+                </div>
+              </div>
+              <div
+                class="flex flex-col justify-between rounded-lg bg-white shadow-lg p-2"
+              >
+                <div
+                  class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden"
+                >
+                  <p-table
+                    #dt1
+                    [scrollable]="true"
+                    scrollHeight="400px"
+                    [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    [paginator]="true"
+                    [rows]="10"
+                    [rowsPerPageOptions]="[10, 30, 40, 50, 100]"
+                    [showGridlines]="true"
+                    paginatorDropdownAppendTo="body"
+                    class="!w-[90vw]"
+                    [tableStyle]="{ 'min-width': '50rem' }"
+                    [globalFilterFields]="[
+                      'Brand',
+                      'Dealer',
+                      'Pending',
+                      'NotinMaster'
+                    ]"
+                  >
+                    <!-- <ng-template let-item pTemplate="paginatordropdownitem">
+                    {{
+                      item.value === DashboardBrandWise?.length
+                        ? "All"
+                        : item.value
+                    }}
+                  </ng-template> -->
+
+                    <!-- <ng-template pTemplate="caption">
+                    <div class="flex items-center">
+                      <p-button
+                        label="Clear"
+                        size="small"
+                        [outlined]="true"
+                        icon="pi pi-filter-slash"
+                        (click)="clear(dt1)"
+                      ></p-button>
+
+                      <p-iconfield iconPosition="left" class="ml-auto">
+                        <p-inputicon>
+                          <i class="pi pi-search"></i>
+                        </p-inputicon>
+                        <input
+                          pInputText
+                          type="text"
+                          size="small"
+                          (input)="onGlobalFilter($event)"
+                          placeholder="Search keyword"
+                        />
+                      </p-iconfield>
+                    </div>
+                  </ng-template> -->
+
+                    <ng-template pTemplate="header">
+                      <tr
+                        class="bg-gray-200 text-gray-800 text-sm font-semibold"
+                      >
+                        <th
+                          class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                        >
+                          S.No
+                        </th>
+                        <th
+                          pSortableColumn="Brand"
+                          class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                        >
+                          Rule Name
+                          <p-sortIcon field="Brand" />
+                          <p-columnFilter
+                            type="text"
+                            field="Brand"
+                            display="menu"
+                          />
+                        </th>
+                        <th
+                          pSortableColumn="Dealer"
+                          class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                        >
+                          Brand(s)
+                          <p-sortIcon field="Dealer" />
+                          <p-columnFilter
+                            type="text"
+                            field="Dealer"
+                            display="menu"
+                          />
+                        </th>
+
+                        <th
+                          pSortableColumn="Pending"
+                          class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                        >
+                          Dealer
+                          <p-sortIcon field="Pending" />
+                          <p-columnFilter
+                            type="text"
+                            field="Pending"
+                            display="menu"
+                          />
+                        </th>
+                        <th
+                          pSortableColumn="PendingMI"
+                          class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                        >
+                          Receiver Location
+                          <p-sortIcon field="PendingMI" />
+                          <p-columnFilter
+                            type="text"
+                            field="PendingMI"
+                            display="menu"
+                          />
+                        </th>
+                        <th
+                          pSortableColumn="PendingIA"
+                          class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                        >
+                          Part Category
+                          <p-sortIcon field="PendingIA" />
+                          <p-columnFilter
+                            type="text"
+                            field="PendingIA"
+                            display="menu"
+                          />
+                        </th>
+                        <th
+                          pSortableColumn="NotinMaster"
+                          class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                        >
+                          Receiver Quality
+                          <p-sortIcon field="NotinMaster" />
+                          <p-columnFilter
+                            type="text"
+                            field="NotinMaster"
+                            display="menu"
+                          />
+                        </th>
+                        <th
+                          pSortableColumn="NotinMaster"
+                          class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                        >
+                          Rate Condition
+                          <p-sortIcon field="NotinMaster" />
+                          <p-columnFilter
+                            type="text"
+                            field="NotinMaster"
+                            display="menu"
+                          />
+                        </th>
+                        <th
+                          pSortableColumn="NotinMaster"
+                          class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                        >
+                          Priority
+                          <p-sortIcon field="NotinMaster" />
+                          <p-columnFilter
+                            type="text"
+                            field="NotinMaster"
+                            display="menu"
+                          />
+                        </th>
+                        <th
+                          pSortableColumn="NotinMaster"
+                          class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                        >
+                          Status
+                          <p-sortIcon field="NotinMaster" />
+                          <p-columnFilter
+                            type="text"
+                            field="NotinMaster"
+                            display="menu"
+                          />
+                        </th>
+                        <th
+                          pSortableColumn="NotinMaster"
+                          class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                        >
+                          Actions
+                          <p-sortIcon field="NotinMaster" />
+                          <p-columnFilter
+                            type="text"
+                            field="NotinMaster"
+                            display="menu"
+                          />
+                        </th>
+                      </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+                      <tr
+                        class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+                      >
+                        <td
+                          class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                        >
+                          {{ i + 1 }}
+                        </td>
+
+                        <td
+                          class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                        >
+                          {{ rowData.Brand }}
+                        </td>
+                        <td
+                          class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                        >
+                          {{ rowData.Dealer }}
+                        </td>
+
+                        <td
+                          class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                        >
+                          {{ rowData.Pending }}
+                        </td>
+                        <td
+                          class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                        >
+                          {{ rowData.PendingMI }}
+                        </td>
+                        <td
+                          class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                        >
+                          {{ rowData.PendingIA }}
+                        </td>
+                        <td
+                          class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                        >
+                          {{ rowData.NotinMaster }}
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </div>
+              </div>
+              <br />
+
+              <div class="card flex flex-col p-2">
+                <div class="flex">
+                  <span class="font-semibold text-sm"
+                    >Create/Edit Internal Transfer Rule
+                  </span>
+                </div>
+                <div class="flex">
+                  <span class="font-semibold text-xs mt-1"
+                    >Receiver Conditions
+                  </span>
+                </div>
+                <div
+                  class="flex flex-wrap gap-2"
+                  [formGroup]="InternalTransferRuleInputData"
+                >
+                  <div class="flex flex-col h-11">
+                    <p-floatlabel
+                      class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                      variant="on"
+                    >
+                      <input
+                        pInputText
+                        id="on_search"
+                        formControlName="Search"
+                        autocomplete="off"
+                        pSize="small"
+                      />
+                      <label class="text-xs" for="on_search">Rule Name</label>
+                    </p-floatlabel>
+                  </div>
+                  <div class="flex flex-col h-15">
+                    <p-floatlabel
+                      class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                      variant="on"
+                    >
+                      <p-select
+                        [showClear]="true"
+                        filter="true"
+                        size="small"
+                        class="w-44 h-8"
+                        formControlName="Brand"
+                        [options]="BrandData"
+                        optionValue="bigid"
+                        optionLabel="vcbrand"
+                        (onClick)="OnclickBrand()"
+                      />
+                      <label class="text-xs">Select Brand</label>
+                    </p-floatlabel>
+
+                    <small
+                      class="text-red-500 text-xs mt-1"
+                      *ngIf="
+                        InternalTransferInputData.get('Brand')?.invalid &&
+                        (InternalTransferInputData.get('Brand')?.touched ||
+                          InternalTransferInputData.get('Brand')?.dirty)
+                      "
+                    >
+                      This field is required
+                    </small>
+                  </div>
+
+                  <div class="flex flex-col h-15">
+                    <p-floatlabel
+                      class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                      variant="on"
+                    >
+                      <p-select
+                        size="small"
+                        filter="true"
+                        class="w-full h-8"
+                        formControlName="Dealer"
+                        [options]="DealerData"
+                        optionValue="dealerid"
+                        optionLabel="dealer"
+                        (onChange)="OnClickDealer()"
+                      />
+                      <label class="text-xs">Select Dealer</label>
+                    </p-floatlabel>
+
+                    <small
+                      class="text-red-500 text-xs mt-1"
+                      *ngIf="
+                        InternalTransferInputData.get('Dealer')?.invalid &&
+                        (InternalTransferInputData.get('Dealer')?.touched ||
+                          InternalTransferInputData.get('Dealer')?.dirty)
+                      "
+                    >
+                      This field is required
+                    </small>
+                  </div>
+
+                  <!-- Location -->
+                  <div class="flex flex-col h-11">
+                    <p-floatlabel
+                      class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                      variant="on"
+                    >
+                      <p-select
+                        [showClear]="true"
+                        filter="true"
+                        size="small"
+                        class="w-full h-8"
+                        formControlName="Location"
+                        [options]="LocationData"
+                        optionValue="locationid"
+                        optionLabel="location"
+                      />
+                      <label class="text-xs">Receiver Location</label>
+                    </p-floatlabel>
+                  </div>
+                  <div class="flex flex-col h-11">
+                    <p-floatlabel
+                      class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                      variant="on"
+                    >
+                      <p-select
+                        [showClear]="true"
+                        filter="true"
+                        size="small"
+                        class="w-full h-8"
+                        formControlName="PartCategory"
+                        [options]="LocationData"
+                        optionValue="locationid"
+                        optionLabel="location"
+                      />
+                      <label class="text-xs">Part Category</label>
+                    </p-floatlabel>
+                  </div>
+                  <div class="flex flex-col h-11">
+                    <p-floatlabel
+                      class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                      variant="on"
+                    >
+                      <p-select
+                        [showClear]="true"
+                        filter="true"
+                        size="small"
+                        class="w-full h-8"
+                        formControlName="ReceiverStockQty"
+                        [options]="LocationData"
+                        optionValue="locationid"
+                        optionLabel="location"
+                      />
+                      <label class="text-xs">Receiver Stock Quality</label>
+                    </p-floatlabel>
+                  </div>
+                  <div class="flex flex-col h-11">
+                    <p-floatlabel
+                      class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                      variant="on"
+                    >
+                      <p-select
+                        [showClear]="true"
+                        filter="true"
+                        size="small"
+                        class="w-full h-8"
+                        formControlName="PartRateOper"
+                        [options]="LocationData"
+                        optionValue="locationid"
+                        optionLabel="location"
+                      />
+                      <label class="text-xs">Part Rate Opeartor</label>
+                    </p-floatlabel>
+                  </div>
+                  <div class="flex flex-col h-11">
+                    <p-floatlabel
+                      class="w-full sm:w-44 md:w-52 lg:w-[185px]" variant="on"
+                    >
+                      <p-select
+                        [showClear]="true"
+                        filter="true"
+                        size="small"
+                        class="w-full h-8"
+                        formControlName="PartRateVal1"
+                        [options]="LocationData"
+                        optionValue="locationid"
+                        optionLabel="location"
+                      />
+                      <label class="text-xs">Part Rate Value 1</label>
+                    </p-floatlabel>
+                  </div>
+                  <div class="flex flex-col h-11">
+                    <p-floatlabel
+                      class="w-full sm:w-44 md:w-52 lg:w-[185px]"
+                      variant="on"
+                    >
+                      <p-select
+                        [showClear]="true"
+                        filter="true"
+                        size="small"
+                        class="w-full h-8"
+                        formControlName="PartRateVal2"
+                        [options]="LocationData"
+                        optionValue="locationid"
+                        optionLabel="location"
+                      />
+                      <label class="text-xs"
+                        >Part Rate Value 2(for Between)</label
+                      >
+                    </p-floatlabel>
+                  </div>
+                </div>
+
+                <br />
+
+                <div class="rounded bg-gray-200 p-2">
+                  <span class="text-[10px] text-gray-600"
+                    >If a user from the selected Receiver Location with the
+                    given Part Category / Quality/Rate requests a part, the
+                    system will try to pull stock from the sender locations
+                    defined below.</span
+                  >
+                </div>
+
+                <p-divider />
+                <div class="flex">
+                  <span class="font-semibold text-xs mt-1"
+                    >Sender Location & Conditions
+                  </span>
+                </div>
+
+                <div
+                  class="flex flex-col justify-between rounded-lg bg-white shadow-lg p-2"
+                >
+                  <div
+                    class="bg-gray-50 h-auto rounded-lg shadow-lg w-full overflow-hidden"
+                  >
+                    <p-table
+                      #dt1
+                      [scrollable]="true"
+                      scrollHeight="400px"
+                      [showCurrentPageReport]="true"
+                      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                      [paginator]="true"
+                      [rows]="10"
+                      [rowsPerPageOptions]="[10, 30, 40, 50, 100]"
+                      [showGridlines]="true"
+                      paginatorDropdownAppendTo="body"
+                      class="!w-[90vw]"
+                      [tableStyle]="{ 'min-width': '50rem' }"
+                      [globalFilterFields]="[
+                        'Brand',
+                        'Dealer',
+                        'Pending',
+                        'NotinMaster'
+                      ]"
+                    >
+                      <!-- <ng-template let-item pTemplate="paginatordropdownitem">
+                    {{
+                      item.value === DashboardBrandWise?.length
+                        ? "All"
+                        : item.value
+                    }}
+                  </ng-template> -->
+
+                      <!-- <ng-template pTemplate="caption">
+                    <div class="flex items-center">
+                      <p-button
+                        label="Clear"
+                        size="small"
+                        [outlined]="true"
+                        icon="pi pi-filter-slash"
+                        (click)="clear(dt1)"
+                      ></p-button>
+
+                      <p-iconfield iconPosition="left" class="ml-auto">
+                        <p-inputicon>
+                          <i class="pi pi-search"></i>
+                        </p-inputicon>
+                        <input
+                          pInputText
+                          type="text"
+                          size="small"
+                          (input)="onGlobalFilter($event)"
+                          placeholder="Search keyword"
+                        />
+                      </p-iconfield>
+                    </div>
+                  </ng-template> -->
+
+                      <ng-template pTemplate="header">
+                        <tr
+                          class="bg-gray-200 text-gray-800 text-sm font-semibold"
+                        >
+                          <th
+                            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                          >
+                            S.No
+                          </th>
+                          <th
+                            pSortableColumn="Brand"
+                            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                          >
+                            Sender Location
+                            <p-sortIcon field="Brand" />
+                            <p-columnFilter
+                              type="text"
+                              field="Brand"
+                              display="menu"
+                            />
+                          </th>
+                          <th
+                            pSortableColumn="Dealer"
+                            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                          >
+                            Sender Stock Quality
+                            <p-sortIcon field="Dealer" />
+                            <p-columnFilter
+                              type="text"
+                              field="Dealer"
+                              display="menu"
+                            />
+                          </th>
+
+                          <th
+                            pSortableColumn="Pending"
+                            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                          >
+                            Rate Min (>=)
+                            <p-sortIcon field="Pending" />
+                            <p-columnFilter
+                              type="text"
+                              field="Pending"
+                              display="menu"
+                            />
+                          </th>
+                          <th
+                            pSortableColumn="PendingMI"
+                            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                          >
+                            Rate Max (<=)
+                            <p-sortIcon field="PendingMI" />
+                            <p-columnFilter
+                              type="text"
+                              field="PendingMI"
+                              display="menu"
+                            />
+                          </th>
+                          <th
+                            pSortableColumn="PendingIA"
+                            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                          >
+                            Excess Days at Sender (>=)
+                            <p-sortIcon field="PendingIA" />
+                            <p-columnFilter
+                              type="text"
+                              field="PendingIA"
+                              display="menu"
+                            />
+                          </th>
+                          <th
+                            pSortableColumn="NotinMaster"
+                            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                          >
+                            Transfer Qty Type
+                            <p-sortIcon field="NotinMaster" />
+                            <p-columnFilter
+                              type="text"
+                              field="NotinMaster"
+                              display="menu"
+                            />
+                          </th>
+                          <th
+                            pSortableColumn="NotinMaster"
+                            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                          >
+                            Fixed Qty
+                            <p-sortIcon field="NotinMaster" />
+                            <p-columnFilter
+                              type="text"
+                              field="NotinMaster"
+                              display="menu"
+                            />
+                          </th>
+                          <th
+                            pSortableColumn="NotinMaster"
+                            class="!px-1 !py-1 text-center text-[12px] !bg-gray-300"
+                          >
+                            Action
+                            <p-sortIcon field="NotinMaster" />
+                            <p-columnFilter
+                              type="text"
+                              field="NotinMaster"
+                              display="menu"
+                            />
+                          </th>
+                        </tr>
+                      </ng-template>
+
+                      <ng-template
+                        pTemplate="body"
+                        let-rowData
+                        let-i="rowIndex"
+                      >
+                        <tr
+                          class="!border-b hover:!shadow-xl !hover:!border-2 !transition duration-100 transform hover:-translate-y-1 active:translate-y-0"
+                        >
+                          <td
+                            class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                          >
+                            {{ i + 1 }}
+                          </td>
+
+                          <td
+                            class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                          >
+                            {{ rowData.Brand }}
+                          </td>
+                          <td
+                            class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                          >
+                            {{ rowData.Dealer }}
+                          </td>
+
+                          <td
+                            class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                          >
+                            {{ rowData.Pending }}
+                          </td>
+                          <td
+                            class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                          >
+                            {{ rowData.PendingMI }}
+                          </td>
+                          <td
+                            class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                          >
+                            {{ rowData.PendingIA }}
+                          </td>
+                          <td
+                            class="!px-1 !py-1 text-center text-[13px] text-gray-700"
+                          >
+                            {{ rowData.NotinMaster }}
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </p-tabpanel>
+          <p-tabpanel value="1"> </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
+
+      <br />
+    </div>
+  </div>
+  <br />
+</div>
